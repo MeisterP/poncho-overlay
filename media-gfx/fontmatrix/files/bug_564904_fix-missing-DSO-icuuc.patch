@@ -1,0 +1,18 @@
+--- src/CMakeLists.txt.old	2009-08-11 09:58:39.000000000 +0530
++++ src/CMakeLists.txt	2010-02-16 11:26:43.000000000 +0530
+@@ -120,6 +120,7 @@
+ 	SET(PYTHONQT_LIB PythonQt)
+ ENDIF(WANT_PYTHONQT)
+ 
++SET(LIBICUUC icuuc)
+ 
+ SET(fontmatrix_MOC_HDRS
+ aboutwidget.h
+@@ -272,6 +273,7 @@
+ 	${SHAPERS_LIBRARIES}
+ 	${PYTHON_LIBRARIES}
+ 	${LIBPODOFO_LIBRARY}
++        ${LIBICUUC}
+ 	)
+ 
+ 	INSTALL(TARGETS fontmatrix

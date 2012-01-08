@@ -1,0 +1,12 @@
+diff --git a/highlighters/main/main-highlighter.zsh b/highlighters/main/main-highlighter.zsh
+index 7aede14..96382f6 100755
+--- a/highlighters/main/main-highlighter.zsh
++++ b/highlighters/main/main-highlighter.zsh
+@@ -61,6 +61,7 @@ _zsh_highlight_main_highlighter_predicate()
+ # Main syntax highlighting function.
+ _zsh_highlight_main_highlighter()
+ {
++  emulate -L zsh
+   setopt localoptions extendedglob bareglobqual
+   local start_pos=0 end_pos highlight_glob=true new_expression=true arg style
+   typeset -a ZSH_HIGHLIGHT_TOKENS_COMMANDSEPARATOR
