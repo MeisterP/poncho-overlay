@@ -57,5 +57,5 @@ src_configure() {
 
 src_install() {
 	default
-	dodoc AUTHORS NEWS README
+	dodoc AUTHORS README
 }
