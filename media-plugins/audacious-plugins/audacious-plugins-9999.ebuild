@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-plugins/audacious-plugins/audacious-plugins-3.1.1.ebuild,v 1.1 2011/12/05 22:47:41 chainsaw Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-plugins/audacious-plugins/audacious-plugins-3.1.1.ebuild,v 1.2 2012/01/17 13:18:35 klausman Exp $
 
 EAPI=4
 
@@ -15,14 +15,14 @@ EGIT_REPO_URI="https://github.com/audacious-media-player/audacious-plugins.git"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="aac adplug alsa aqua bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
-lame libnotify libsamplerate midi mms mp3 mtp nls oss pulseaudio scrobbler sid sndfile sse2 vorbis wavpack"
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
+lame libnotify libsamplerate midi mms mp3 mtp nls oss pulseaudio scrobbler sid sndfile vorbis wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	>=media-sound/audacious-3.1.1
+	>=media-sound/audacious-3.2
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	aac? ( >=media-libs/faad2-2.7 )
@@ -69,17 +69,13 @@ src_prepare () {
 
 src_configure() {
 	mp3_warning
-
 	econf \
-		--enable-chardet \
 		--enable-modplug \
 		--enable-neon \
 		$(use_enable adplug) \
 		$(use_enable aac) \
 		$(use_enable alsa) \
 		$(use_enable alsa amidiplug-alsa) \
-		$(use_enable aqua coreaudio) \
-		$(use_enable aqua dockalbumart) \
 		$(use_enable bs2b) \
 		$(use_enable cdda cdaudio) \
 		$(use_enable cue) \
@@ -103,7 +99,6 @@ src_configure() {
 		$(use_enable scrobbler) \
 		$(use_enable sid) \
 		$(use_enable sndfile) \
-		$(use_enable sse2) \
 		$(use_enable vorbis) \
 		$(use_enable vorbis filewriter_vorbis) \
 		$(use_enable wavpack)
