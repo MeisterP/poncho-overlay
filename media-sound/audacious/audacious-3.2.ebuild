@@ -9,13 +9,13 @@ MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
-SRC_URI="http://distfiles.atheme.org/${MY_P}.tar.bz2
+SRC_URI="http://distfiles.audacious-media-player.org/${MY_P}.tar.bz2
 	 mirror://gentoo/gentoo_ice-xmms-0.2.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux"
-IUSE="altivec chardet nls session sse2"
+IUSE="chardet nls session"
 
 RDEPEND=">=dev-libs/dbus-glib-0.60
 	>=dev-libs/glib-2.16
@@ -32,13 +32,9 @@ DEPEND="${RDEPEND}
 	chardet? ( >=app-i18n/libguess-1.1 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND=">=media-plugins/audacious-plugins-3.1.1"
+PDEPEND=">=media-plugins/audacious-plugins-3.2"
 
 src_configure() {
-	# Some gccs don't like "-z defs" on their command line. Explicitly make it a
-	# linker flag (bug 395213).
-	epatch "${FILESDIR}/audacious_ldflags.patch"
-
 	# D-Bus is a mandatory dependency, remote control,
 	# session management and some plugins depend on this.
 	# Building without D-Bus is *unsupported* and a USE-flag
@@ -48,16 +44,14 @@ src_configure() {
 	econf \
 		--enable-dbus \
 		--enable-gtk3 \
-		$(use_enable altivec) \
 		$(use_enable chardet) \
 		$(use_enable nls) \
-		$(use_enable session sm) \
-		$(use_enable sse2)
+		$(use_enable session sm)
 }
 
 src_install() {
 	default
-	dodoc AUTHORS NEWS README
+	dodoc AUTHORS README
 
 	# Gentoo_ice skin installation; bug #109772
 	insinto /usr/share/audacious/Skins/gentoo_ice

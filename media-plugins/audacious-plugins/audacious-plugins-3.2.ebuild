@@ -10,19 +10,19 @@ MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
-SRC_URI="http://distfiles.atheme.org/${MY_P}.tar.bz2"
+SRC_URI="http://distfiles.audacious-media-player.org/${MY_P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux"
-IUSE="aac adplug alsa aqua bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
-lame libnotify libsamplerate midi mms mp3 mtp nls oss pulseaudio scrobbler sid sndfile sse2 vorbis wavpack"
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
+lame libnotify libsamplerate midi mms mp3 mtp nls oss pulseaudio scrobbler sid sndfile vorbis wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	>=media-sound/audacious-3.1.1
+	>=media-sound/audacious-3.2
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	aac? ( >=media-libs/faad2-2.7 )
@@ -65,19 +65,13 @@ mp3_warning() {
 
 src_configure() {
 	mp3_warning
-	# Turn "-z defs" into "-Wl,-z,defs" because some versions of gcc don't like
-	# it (bug 395213)
-	epatch "${FILESDIR}/audacious-plugins_ldflags.patch"
 	econf \
-		--enable-chardet \
 		--enable-modplug \
 		--enable-neon \
 		$(use_enable adplug) \
 		$(use_enable aac) \
 		$(use_enable alsa) \
 		$(use_enable alsa amidiplug-alsa) \
-		$(use_enable aqua coreaudio) \
-		$(use_enable aqua dockalbumart) \
 		$(use_enable bs2b) \
 		$(use_enable cdda cdaudio) \
 		$(use_enable cue) \
@@ -101,7 +95,6 @@ src_configure() {
 		$(use_enable scrobbler) \
 		$(use_enable sid) \
 		$(use_enable sndfile) \
-		$(use_enable sse2) \
 		$(use_enable vorbis) \
 		$(use_enable vorbis filewriter_vorbis) \
 		$(use_enable wavpack)
