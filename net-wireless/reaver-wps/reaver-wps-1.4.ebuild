@@ -22,6 +22,8 @@ S="${WORKDIR}"/${MY_P}/src
 
 src_install() {
 	newsbin reaver reaver_wps
+	newsbin wash wash_wps
 	cd ../docs
-	dodoc README
+	dodoc README README.REAVER README.WASH
+	newman reaver.1.gz reaver_wps.1.gz
 }
