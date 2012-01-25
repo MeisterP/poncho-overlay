@@ -1,0 +1,170 @@
+From 9d1ea95a3487c88e69b87ff2f7044c5080f39fd1 Mon Sep 17 00:00:00 2001
+From: gfxmonk <tim@gfxmonk.net>
+Date: Sun, 3 Apr 2011 20:55:21 +1000
+Subject: [PATCH 04/12] keybindings for shellshape
+
+---
+ src/core/all-keybindings.h |   42 ++++++++++++++++++++++++++++++++++++++++++
+ src/core/keybindings.c     |   37 +++++++++++++++++++++++++++++++++++++
+ src/meta/prefs.h           |   40 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 119 insertions(+), 0 deletions(-)
+
+diff --git a/src/core/all-keybindings.h b/src/core/all-keybindings.h
+index d676f1b..e3adca7 100644
+--- a/src/core/all-keybindings.h
++++ b/src/core/all-keybindings.h
+@@ -396,5 +396,47 @@ keybind (move_to_center, handle_move_to_center, 0,
+         BINDING_PER_WINDOW, NULL,
+         _("Move window to center of screen"))
+ 
++
++/* used for tiling windows, but not within metacity... */
++// remember to modify keybindings.c and prefs.h when you change this file!!!
++keybind (key_win_tab,         handle_win_tab, 0, 0,                          "<Mod4>Tab", _("Win-tab"))
++keybind (key_win_space,       handle_win_space, 0, 0,                        "<Mod4>space", _("Win-space"))
++keybind (key_win_return,      handle_win_return, 0, 0,                       "<Mod4>Return", _("Win-return"))
++keybind (key_win_shift_tab,   handle_win_shift_tab, 0, 0,                    "<Mod4><Shift>Tab", _("Win-shift-tab"))
++keybind (key_win_shift_space, handle_win_shift_space, 0, BINDING_PER_WINDOW, "<Mod4><Shift>space", _("Win-shift-space"))
++keybind (key_win_shift_p,     handle_win_shift_p, 0, BINDING_PER_WINDOW,     "<Mod4><Shift>p", _("Win-shift-p"))
++keybind (key_win_shift_j,     handle_win_shift_j, 0, BINDING_PER_WINDOW,     "<Mod4><Shift>j", _("Win-shift-j"))
++keybind (key_win_shift_k,     handle_win_shift_k, 0, BINDING_PER_WINDOW,     "<Mod4><Shift>k", _("Win-shift-k"))
++keybind (key_win_alt_j,       handle_win_alt_j, 0, 0,                        "<Mod4><Alt>j", _("Win-alt-j"))
++keybind (key_win_alt_k,       handle_win_alt_k, 0, 0,                        "<Mod4><Alt>k", _("Win-alt-k"))
++keybind (key_win_alt_shift_j, handle_win_alt_shift_j, 0, BINDING_PER_WINDOW, "<Mod4><Alt><Shift>j", _("Win-alt-shift-j"))
++keybind (key_win_alt_shift_k, handle_win_alt_shift_k, 0, BINDING_PER_WINDOW, "<Mod4><Alt><Shift>k", _("Win-alt-shift-k"))
++
++keybind (key_win_d,           handle_win_d, 0, 0,                            "<Mod4>d", _("Win-d"))
++keybind (key_win_f,           handle_win_f, 0, 0,                            "<Mod4>f", _("Win-f"))
++
++keybind (key_win_p,           handle_win_p, 0, BINDING_PER_WINDOW,           "<Mod4>p", _("Win-p"))
++keybind (key_win_y,           handle_win_y, 0, BINDING_PER_WINDOW,           "<Mod4>y", _("Win-y"))
++
++keybind (key_win_j,           handle_win_j, 0, BINDING_PER_WINDOW,           "<Mod4>j", _("Win-j"))
++keybind (key_win_k,           handle_win_k, 0, BINDING_PER_WINDOW,           "<Mod4>k", _("Win-k"))
++keybind (key_win_h,           handle_win_h, 0, BINDING_PER_WINDOW,           "<Mod4>h", _("Win-h"))
++keybind (key_win_l,           handle_win_l, 0, BINDING_PER_WINDOW,           "<Mod4>l", _("Win-l"))
++keybind (key_win_u,           handle_win_u, 0, BINDING_PER_WINDOW,           "<Mod4>u", _("Win-u"))
++keybind (key_win_i,           handle_win_i, 0, BINDING_PER_WINDOW,           "<Mod4>i", _("Win-i"))
++
++keybind (key_win_shift_h,     handle_win_shift_h, 0, BINDING_PER_WINDOW,     "<Mod4><Shift>h", _("Win-Shift-h"))
++keybind (key_win_shift_l,     handle_win_shift_l, 0, BINDING_PER_WINDOW,     "<Mod4><Shift>l", _("Win-Shift-l"))
++keybind (key_win_shift_u,     handle_win_shift_u, 0, BINDING_PER_WINDOW,     "<Mod4><Shift>u", _("Win-Shift-u"))
++keybind (key_win_shift_i,     handle_win_shift_i, 0, BINDING_PER_WINDOW,     "<Mod4><Shift>i", _("Win-Shift-i"))
++
++keybind (key_win_minus,       handle_win_minus, 0, BINDING_PER_WINDOW,       "<Mod4>minus", _("Win-minus"))
++keybind (key_win_plus,        handle_win_plus, 0, BINDING_PER_WINDOW,        "<Mod4>equal", _("Win-plus"))
++
++keybind (key_win_shift_m,     handle_win_shift_m, 0, 0,                      "<Mod4><Shift>m", _("Win-Shift-m"))
++keybind (key_win_z,           handle_win_z, 0, BINDING_PER_WINDOW,           "<Mod4>z", _("Win-z"))
++keybind (key_win_dot,         handle_win_dot, 0, 0,                          "<Mod4>period", _("Win-dot"))
++keybind (key_win_comma,       handle_win_comma, 0, 0,                        "<Mod4>comma", _("Win-comma"))
++
+ /* eof all-keybindings.h */
+ 
+diff --git a/src/core/keybindings.c b/src/core/keybindings.c
+index 0e7d355..03f6835 100644
+--- a/src/core/keybindings.c
++++ b/src/core/keybindings.c
+@@ -60,11 +60,48 @@ handler (MetaDisplay    *display,\
+ #include "all-keybindings.h"
+ #undef keybind
+ 
++/* These are only here to have something that compiles when I add keybindings... */
++static void handle_win_tab          (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_space        (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_return       (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_tab    (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_space  (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_p      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_j      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_k      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_alt_j        (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_alt_k        (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_alt_shift_j  (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_alt_shift_k  (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_d            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_f            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_p            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_y            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_j            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_k            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_h            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_l            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_u            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_i            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_plus         (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_minus        (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_h      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_l      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_u      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_i      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_shift_m      (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_z            (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_dot          (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++static void handle_win_comma        (MetaDisplay *display, MetaScreen *screen, MetaWindow *window, XEvent *event, MetaKeyBinding *binding, gpointer dummy){}
++
++
+ /* These can't be bound to anything, but they are used to handle
+  * various other events.  TODO: Possibly we should include them as event
+  * handler functions and have some kind of flag to say they're unbindable.
+  */
+ 
++
++
+ static void handle_workspace_switch  (MetaDisplay    *display,
+                                       MetaScreen     *screen,
+                                       MetaWindow     *window,
+diff --git a/src/meta/prefs.h b/src/meta/prefs.h
+index 31256d4..2cf1a64 100644
+--- a/src/meta/prefs.h
++++ b/src/meta/prefs.h
+@@ -266,6 +266,46 @@ typedef enum _MetaKeyBindingAction
+   META_KEYBINDING_ACTION_MOVE_TO_SIDE_W,
+   META_KEYBINDING_ACTION_MOVE_TO_CENTER,
+ 
++
++  META_KEYBINDING_ACTION_WIN_TAB,
++  META_KEYBINDING_ACTION_WIN_SPACE,
++  META_KEYBINDING_ACTION_WIN_RETURN,
++  META_KEYBINDING_ACTION_WIN_SHIFT_TAB,
++  META_KEYBINDING_ACTION_WIN_SHIFT_SPACE,
++  META_KEYBINDING_ACTION_WIN_SHIFT_P,
++  META_KEYBINDING_ACTION_WIN_SHIFT_J,
++  META_KEYBINDING_ACTION_WIN_SHIFT_K,
++
++  META_KEYBINDING_ACTION_WIN_ALT_J,
++  META_KEYBINDING_ACTION_WIN_ALT_K,
++  META_KEYBINDING_ACTION_WIN_ALT_SHIFT_J,
++  META_KEYBINDING_ACTION_WIN_ALT_SHIFT_K,
++  META_KEYBINDING_ACTION_WIN_D,
++  META_KEYBINDING_ACTION_WIN_F,
++  META_KEYBINDING_ACTION_WIN_P,
++  META_KEYBINDING_ACTION_WIN_Y,
++  META_KEYBINDING_ACTION_WIN_J,
++  META_KEYBINDING_ACTION_WIN_K,
++  META_KEYBINDING_ACTION_WIN_H,
++  META_KEYBINDING_ACTION_WIN_L,
++  META_KEYBINDING_ACTION_WIN_U,
++  META_KEYBINDING_ACTION_WIN_I,
++  META_KEYBINDING_ACTION_WIN_PLUS,
++  META_KEYBINDING_ACTION_WIN_MINUS,
++
++
++  META_KEYBINDING_ACTION_WIN_SHIFT_H,
++  META_KEYBINDING_ACTION_WIN_SHIFT_L,
++  META_KEYBINDING_ACTION_WIN_SHIFT_U,
++  META_KEYBINDING_ACTION_WIN_SHIFT_I,
++
++  META_KEYBINDING_ACTION_WIN_SHIFT_M,
++  META_KEYBINDING_ACTION_WIN_Z,
++  META_KEYBINDING_ACTION_WIN_DOT,
++  META_KEYBINDING_ACTION_WIN_COMMA,
++
++
++
+   META_KEYBINDING_ACTION_LAST
+ } MetaKeyBindingAction;
+ 
+-- 
+1.7.3.4
+

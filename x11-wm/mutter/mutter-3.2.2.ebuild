@@ -13,7 +13,7 @@ HOMEPAGE="http://git.gnome.org/browse/mutter/"
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="+introspection test xinerama"
+IUSE="+introspection shellshape test xinerama"
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND=">=x11-libs/pango-1.2[X,introspection?]
@@ -73,6 +73,21 @@ pkg_setup() {
 src_prepare() {
 	# Compat with Ubuntu metacity themes (e.g. x11-themes/light-themes)
 	epatch "${FILESDIR}/${PN}-3.2.1-ignore-shadow-and-padding.patch"
+	
+	if use shellshape; then
+	    epatch "${FILESDIR}/0001-window.c-add-meta_window_move_resize_frame.patch"
+	    epatch "${FILESDIR}/0002-added-gir-headers-for-move-resize-window-methods.patch"
+	    epatch "${FILESDIR}/0003-workaround-for-super-based-keybindings-not-working.patch"
+	    epatch "${FILESDIR}/0004-keybindings-for-shellshape.patch"
+	    epatch "${FILESDIR}/0005-add-archive.patch"
+	    epatch "${FILESDIR}/0006-Revert-Improve-handling-of-Super-key-combinations.patch"
+	    epatch "${FILESDIR}/0007-remove-mutter-dependencies-and-rely-on-the-user-alre.patch"
+	    #epatch "${FILESDIR}/0008-commit-ubuntu-specific-04_ignore_shadow_and_padding..patch"
+	    epatch "${FILESDIR}/0009-minor-0install-changes.patch"
+	    epatch "${FILESDIR}/0010-binary-impl-for-shellshape-0.3.2.patch"
+	    epatch "${FILESDIR}/0011-bumped-version-for-0compiled-version-to-trump-binary.patch"
+	    epatch "${FILESDIR}/0012-add-shortcut-for-vertical-tiled-layout.patch"
+	fi
 
 	gnome2_src_prepare
 }

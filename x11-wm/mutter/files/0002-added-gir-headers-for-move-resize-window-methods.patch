@@ -1,0 +1,56 @@
+From d48b044d259c9bfca92f7ee2df974b7b1203772c Mon Sep 17 00:00:00 2001
+From: gfxmonk <tim@gfxmonk.net>
+Date: Sun, 20 Feb 2011 12:57:03 +1100
+Subject: [PATCH 02/12] added gir headers for move/resize window methods
+
+---
+ src/core/window.c |    9 +++++++++
+ src/meta/window.h |   12 ++++++++++++
+ 2 files changed, 21 insertions(+), 0 deletions(-)
+
+diff --git a/src/core/window.c b/src/core/window.c
+index 41fed28..e78ba77 100644
+--- a/src/core/window.c
++++ b/src/core/window.c
+@@ -5052,6 +5052,15 @@ meta_window_move_to_monitor (MetaWindow  *window,
+   meta_window_move_between_rects (window, &old_area, &new_area);
+ }
+ 
++/**
++ * meta_window_move_resize:
++ * @window: a #MetaWindow
++ * @user_op: true if this is a user-requested operation
++ * @root_x_nw: new x position
++ * @root_y_nw: new y position
++ * @w: new width
++ * @h: new height
++ */
+ void
+ meta_window_move_resize (MetaWindow  *window,
+                          gboolean     user_op,
+diff --git a/src/meta/window.h b/src/meta/window.h
+index 832d4b8..499e905 100644
+--- a/src/meta/window.h
++++ b/src/meta/window.h
+@@ -144,6 +144,18 @@ void        meta_window_minimize           (MetaWindow  *window);
+ void        meta_window_unminimize         (MetaWindow  *window);
+ void        meta_window_raise              (MetaWindow  *window);
+ void        meta_window_lower              (MetaWindow  *window);
++
++
++void
++meta_window_move_resize (MetaWindow  *window,
++                         gboolean     user_op,
++                         int          root_x_nw,
++                         int          root_y_nw,
++                         int          w,
++                         int          h);
++
++
++
+ const char *meta_window_get_title (MetaWindow *window);
+ MetaWindow *meta_window_get_transient_for (MetaWindow *window);
+ Window      meta_window_get_transient_for_as_xid (MetaWindow *window);
+-- 
+1.7.3.4
+
