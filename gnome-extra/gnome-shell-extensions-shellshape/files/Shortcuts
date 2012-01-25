@@ -1,0 +1,46 @@
+Keyboard Shortcuts
+
+Many shortcuts are the same as bluetile, except where functionality differs. Here's the full list:
+
+Selecting layouts:
+win+d switch current workspace to horizontal tiled mode
+win+shift+d switch current workspace to vertical tiled mode
+win+f switch current workspace to floating mode
+
+Window navigation:
+win+j, win-tab select next window
+win+k, win-shift-tab select prev window
+win+space select main window
+
+Window manipulation:
+win+shift+j swap with next window
+win+shift+k swap with prev window
+win+shift+space swap with main window
+
+Tile management:
+win+p tile (place) the current window
+win+y untile (yank) the current window
+win+shift+p adjust tile boundaries to fit window
+win+, more windows in the master area
+win+. less windows in the master area
+
+Resizing tiles:
+win+h shrink master area
+win+l grow master area
+win+u shrink a slave area
+win+i grow a slave area
+
+Resizing windows:
+win+shift+h decrease window's width
+win+shift+l increase window's width
+win+shift+u decrease window's height
+win+shift+i increase window's height
+win+equal increase window's size
+win+minus decrease window's size
+win+z toggle window maximized state
+
+Workspace actions:
+win+alt+j go to workspace below
+win+alt+k go to workspace above
+win+alt+shift+j move window to workspace below
+win+alt+shift+k move window to workspace above

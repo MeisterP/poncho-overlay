@@ -54,7 +54,7 @@ src_install()   {
 		insinto /usr/share/icons/hicolor/scalable/status
 		doins icons/status/*.svg
 		
-		dodoc README.md
+		dodoc README.md "${FILESDIR}"/Shortcuts
 }
 
 pkg_preinst() {
