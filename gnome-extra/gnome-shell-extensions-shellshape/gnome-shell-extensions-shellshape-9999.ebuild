@@ -48,6 +48,9 @@ src_install()   {
         insinto /usr/share/icons/hicolor/scalable/status
 		doins icons/status/*.svg
 		
+		insinto /usr/share/gnome-shell/js
+		doins lib/*.js
+		
 		dodoc README.md
 }
 
