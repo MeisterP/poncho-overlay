@@ -44,28 +44,31 @@ src_compile()   {
 src_install()   {
         insinto /usr/share/gnome-shell/extensions/shellshape@gfxmonk.net
         doins shellshape/*.{js,json}
-
-        insinto /usr/share/icons/hicolor/scalable/status
-		doins icons/status/*.svg
 		
 		insinto /usr/share/gnome-shell/js
 		doins lib/*.js
+		
+		#insinto /usr/share/glib-2.0/schemas
+		#doins schemas/*.xml
+		
+		insinto /usr/share/icons/hicolor/scalable/status
+		doins icons/status/*.svg
 		
 		dodoc README.md
 }
 
 pkg_preinst() {
-		gnome2_schemas_savelist
+		#gnome2_schemas_savelist
 		gnome2_icon_savelist
 }
 
 pkg_postinst() {
-		gnome2_schemas_update
+		#gnome2_schemas_update
 		gnome2_icon_cache_update
 }
 
 pkg_postrm() {
-		gnome2_schemas_update --uninstall
+		#gnome2_schemas_update --uninstall
 		gnome2_icon_cache_update
 }
 
