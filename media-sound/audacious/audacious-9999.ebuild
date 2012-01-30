@@ -20,7 +20,6 @@ IUSE="chardet nls session"
 RDEPEND=">=dev-libs/dbus-glib-0.60
 	>=dev-libs/glib-2.16
 	>=dev-libs/libmcs-0.7.1-r2
-	>=dev-libs/libmowgli-0.9.50
 	dev-libs/libxml2
 	>=x11-libs/cairo-1.2.6
 	>=x11-libs/pango-1.8.0
