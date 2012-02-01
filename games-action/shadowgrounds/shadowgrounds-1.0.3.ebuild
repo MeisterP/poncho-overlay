@@ -26,6 +26,7 @@ IUSE=""
 
 RDEPEND="
 	>=dev-libs/boost-1.42
+	media-libs/glew
 	media-libs/libsdl[audio,video,joystick,X,opengl]
 	media-libs/sdl-sound
 	media-libs/sdl-image
