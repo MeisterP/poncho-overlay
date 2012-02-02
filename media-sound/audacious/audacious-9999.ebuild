@@ -15,14 +15,15 @@ EGIT_REPO_URI="https://github.com/audacious-media-player/audacious.git"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="chardet nls session"
+IUSE="chardet +gtk gtk3 nls session"
 
 RDEPEND=">=dev-libs/dbus-glib-0.60
 	>=dev-libs/glib-2.16
 	dev-libs/libxml2
 	>=x11-libs/cairo-1.2.6
 	>=x11-libs/pango-1.8.0
-	x11-libs/gtk+:3
+	gtk? ( x11-libs/gtk+:2 )
+	gtk3? ( x11-libs/gtk+:3 )
 	session? ( x11-libs/libSM )"
 
 DEPEND="${RDEPEND}
@@ -31,6 +32,7 @@ DEPEND="${RDEPEND}
 	nls? ( dev-util/intltool )"
 
 PDEPEND=">=media-plugins/audacious-plugins-3.2"
+REQUIRED_USE="^^ ( gtk gtk3 )"
 
 src_prepare () {
 	./autogen.sh
@@ -45,7 +47,7 @@ src_configure() {
 	# Use of GTK+2 causes plugin build failures, bug #384185
 	econf \
 		--enable-dbus \
-		--enable-gtk3 \
+		$(use_enable gtk3) \
 		$(use_enable chardet) \
 		$(use_enable nls) \
 		$(use_enable session sm)

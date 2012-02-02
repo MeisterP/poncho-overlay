@@ -15,7 +15,7 @@ EGIT_REPO_URI="https://github.com/audacious-media-player/audacious-plugins.git"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome +gtk gtk3 ipv6 jack
 lame libnotify libsamplerate midi mms mp3 mtp nls oss pulseaudio scrobbler sid sndfile vorbis wavpack"
 
 RDEPEND="app-arch/unzip
@@ -24,7 +24,8 @@ RDEPEND="app-arch/unzip
 	media-libs/libmodplug
 	>=media-sound/audacious-3.2
 	>=net-libs/neon-0.26.4
-	x11-libs/gtk+:3
+	gtk? ( x11-libs/gtk+:2 )
+	gtk3? ( x11-libs/gtk+:3 )
 	aac? ( >=media-libs/faad2-2.7 )
 	adplug? ( >=dev-cpp/libbinio-1.4 )
 	alsa? ( >=media-libs/alsa-lib-1.0.16 )
@@ -57,6 +58,8 @@ DEPEND="${RDEPEND}
 	nls? ( dev-util/intltool )
 	>=dev-util/pkgconfig-0.9.0"
 
+REQUIRED_USE="^^ ( gtk gtk3 )"
+
 mp3_warning() {
 	if ! use mp3 ; then
 		ewarn "MP3 support is optional, you may want to enable the mp3 USE-flag"
@@ -69,6 +72,7 @@ src_prepare () {
 
 src_configure() {
 	mp3_warning
+
 	econf \
 		--enable-modplug \
 		--enable-neon \
@@ -83,6 +87,7 @@ src_configure() {
 		$(use_enable flac flacng) \
 		$(use_enable fluidsynth amidiplug-flsyn) \
 		$(use_enable flac filewriter_flac) \
+		$(use_enable gtk3) \
 		$(use_enable ipv6) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \
