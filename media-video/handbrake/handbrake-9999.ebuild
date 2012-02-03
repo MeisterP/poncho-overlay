@@ -21,7 +21,6 @@ RDEPEND="sys-libs/zlib
 	gtk? (	>=x11-libs/gtk+-2.8
 			dev-libs/glib
 			dev-libs/dbus-glib
-			net-libs/webkit-gtk
 			x11-libs/libnotify
 			media-libs/gstreamer
 			media-libs/gst-plugins-base
@@ -35,12 +34,7 @@ DEPEND="=sys-devel/automake-1.10*
 	|| ( >=net-misc/wget-1.11.4 >=net-misc/curl-7.19.4 ) 
 	$RDEPEND"
 
-#src_prepare() {
-#	epatch "${FILESDIR}/${PN}-dbus-glib.patch"
-#	epatch "${FILESDIR}/${PN}-libnotify-0.7.patch"
-#	cd gtk
-#	eautoreconf
-#}
+MAKEOPTS="${MAKEOPTS} -j1"
 
 src_configure() {
 	local myconf=""

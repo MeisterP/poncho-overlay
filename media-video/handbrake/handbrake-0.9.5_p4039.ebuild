@@ -60,7 +60,6 @@ RDEPEND="sys-libs/zlib
 			dev-libs/libtasn1
 			dev-libs/libxml2
 			dev-libs/libxslt
-			net-libs/webkit-gtk
 			media-libs/fontconfig
 			media-libs/gst-plugins-base
 			media-libs/gstreamer
@@ -81,6 +80,8 @@ DEPEND="dev-lang/yasm
 	dev-lang/python
 	dev-util/pkgconfig
 	${RDEPEND}"
+
+MAKEOPTS="${MAKEOPTS} -j1"
 
 # Handbrake attempts to download tarballs itself in its build system,
 # so copy them to the expected location instead.
@@ -103,6 +104,7 @@ src_unpack() {
 src_configure() {
 	# Python configure script doesn't accept all econf flags
 	./configure --force --prefix=/usr \
+		--disable-gtk-update-checks \
 		$(use_enable gtk) \
 		|| die "configure failed"
 }
