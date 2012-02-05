@@ -28,11 +28,11 @@ RDEPEND="${DEPEND}
 
 src_prepare(){
 	# path fix
-	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/paths.py
+	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/paths.py || die "sed failed"
 
 	# make locale
-	scons mo
-	rm po/*.po
+	scons mo || die "scons failed"
+	rm po/*.po || die "rm *.po failed"
 }
 
 src_install() {
