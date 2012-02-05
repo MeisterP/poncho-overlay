@@ -28,7 +28,7 @@ RDEPEND="${DEPEND}
 
 src_prepare(){
 	# path fix
-	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/paths.py || die "sed failed"
+	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
 
 	# make locale
 	scons mo || die "scons failed"
