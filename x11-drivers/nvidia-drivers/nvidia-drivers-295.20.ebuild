@@ -13,8 +13,7 @@ X86_FBSD_NV_PACKAGE="NVIDIA-FreeBSD-x86-${PV}"
 DESCRIPTION="NVIDIA X11 driver and GLX libraries"
 HOMEPAGE="http://www.nvidia.com/"
 SRC_URI="x86? ( ftp://download.nvidia.com/XFree86/Linux-x86/${PV}/${X86_NV_PACKAGE}.run )
-	 amd64? ( ftp://download.nvidia.com/XFree86/Linux-x86_64/${PV}/${AMD64_NV_PACKAGE}.run )
-	 x86-fbsd? ( ftp://download.nvidia.com/XFree86/FreeBSD-x86/${PV}/${X86_FBSD_NV_PACKAGE}.tar.gz )"
+	 amd64? ( ftp://download.nvidia.com/XFree86/Linux-x86_64/${PV}/${AMD64_NV_PACKAGE}.run )"
 
 LICENSE="NVIDIA"
 SLOT="0"
@@ -38,12 +37,12 @@ PDEPEND=">=x11-libs/libvdpau-0.3-r1
 	gtk? ( media-video/nvidia-settings )"
 
 QA_TEXTRELS_x86="
-	usr/lib/libOpenCL.so.1.0.0
+	usr/lib/OpenCL/vendors/nvidia/libOpenCL.so.1.0.0
 	usr/lib/libXvMCNVIDIA.so.${PV}
-	usr/lib/libcuda.so.${PV}
+	usr/lib/OpenCL/vendors/nvidia/libcuda.so.${PV}
 	usr/lib/libnvcuvid.so.${PV}
 	usr/lib/libnvidia-cfg.so.${PV}
-	usr/lib/libnvidia-compiler.so.${PV}
+	usr/lib/OpenCL/vendors/nvidia/libnvidia-compiler.so.${PV}
 	usr/lib/libnvidia-glcore.so.${PV}
 	usr/lib/libnvidia-ml.so.${PV}
 	usr/lib/libvdpau_nvidia.so.${PV}
@@ -62,9 +61,9 @@ QA_TEXTRELS_x86_fbsd="boot/modules/nvidia.ko
 
 QA_TEXTRELS_amd64="usr/lib32/opengl/nvidia/lib/libnvidia-tls.so.${PV}
 	usr/lib32/libnvidia-glcore.so.${PV}
+	usr/lib32/libvdpau_nvidia.so.${PV}
 	usr/lib32/opengl/nvidia/lib/libGL.so.${PV}
 	usr/lib32/OpenCL/vendors/nvidia/libcuda.so.${PV}
-	usr/lib32/libvdpau_nvidia.so.${PV}
 	usr/lib32/OpenCL/vendors/nvidia/libOpenCL.so.1.0.0
 	usr/lib32/OpenCL/vendors/nvidia/libnvidia-compiler.so.${PV}"
 
@@ -73,19 +72,18 @@ QA_EXECSTACK_x86="usr/lib/opengl/nvidia/lib/libGL.so.${PV}
 	usr/lib/opengl/nvidia/extensions/libglx.so.${PV}
 	usr/lib64/libXvMCNVIDIA.so.${PV}
 	usr/lib/libXvMCNVIDIA.a:NVXVMC.o
-	usr/lib/libnvidia-compiler.so.${PV}
 	usr/lib/libvdpau_nvidia.so.${PV}
-	usr/lib/libcuda.so.${PV}
-	usr/lib/libOpenCL.so.1.0.0"
+	usr/lib/OpenCL/vendors/nvidia/libnvidia-compiler.so.${PV}
+	usr/lib/OpenCL/vendors/nvidia/libcuda.so.${PV}
+	usr/lib/OpenCL/vendors/nvidia/libOpenCL.so.1.0.0"
 
 QA_EXECSTACK_amd64="usr/lib32/libnvidia-glcore.so.${PV}
 	usr/lib32/opengl/nvidia/lib/libGL.so.${PV}
-	usr/lib32/OpenCL/vendors/nvidia/libnvidia-compiler.so.${PV}
 	usr/lib32/opengl/nvidia/lib/libnvidia-tls.so.${PV}
 	usr/lib32/libvdpau_nvidia.so.${PV}
 	usr/lib32/OpenCL/vendors/nvidia/libcuda.so.${PV}
 	usr/lib32/OpenCL/vendors/nvidia/libOpenCL.so.1.0.0
-	usr/lib64/OpenCL/vendors/nvidia/libnvidia-compiler.so.${PV}
+	usr/lib32/OpenCL/vendors/nvidia/libnvidia-compiler.so.${PV}
 	usr/lib64/libXvMCNVIDIA.a:NVXVMC.o
 	usr/lib64/libnvidia-cfg.so.${PV}
 	usr/lib64/libnvidia-ml.so.${PV}
@@ -97,6 +95,7 @@ QA_EXECSTACK_amd64="usr/lib32/libnvidia-glcore.so.${PV}
 	usr/lib64/libXvMCNVIDIA.so.${PV}
 	usr/lib64/OpenCL/vendors/nvidia/libcuda.so.${PV}
 	usr/lib64/OpenCL/vendors/nvidia/libOpenCL.so.1.0.0
+	usr/lib64/OpenCL/vendors/nvidia/libnvidia-compiler.so.${PV}
 	usr/lib64/xorg/modules/drivers/nvidia_drv.so
 	usr/bin/nvidia-smi
 	usr/bin/nvidia-xconfig
@@ -522,6 +521,7 @@ pkg_postinst() {
 
 	# Switch to the nvidia implementation
 	eselect opengl set --use-old nvidia
+	eselect opencl set --use-old nvidia
 
 	echo
 	elog "You must be in the video group to use the NVIDIA device"
@@ -535,6 +535,8 @@ pkg_postinst() {
 	elog
 
 	elog "To use the NVIDIA GLX, run \"eselect opengl set nvidia\""
+	elog
+	elog "To use the NVIDIA CUDA/OpenCL, run \"eselect opencl set nvidia\""
 	elog
 	elog "NVIDIA has requested that any bug reports submitted have the"
 	elog "output of /usr/bin/nvidia-bug-report.sh included."
