@@ -1,0 +1,6 @@
+== poncho-overlay ==
+
+This is a Gentoo overlay for packages not in the main tree.
+The ebuilds are written by myself or copied from other peoples overlays.
+
+[https://poncho.spahan.ch poncho]
