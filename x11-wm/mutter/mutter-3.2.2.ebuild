@@ -14,7 +14,7 @@ HOMEPAGE="http://git.gnome.org/browse/mutter/"
 LICENSE="GPL-2"
 SLOT="0"
 IUSE="+introspection shellshape test xinerama"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 
 COMMON_DEPEND=">=x11-libs/pango-1.2[X,introspection?]
 	>=x11-libs/cairo-1.10[X]
