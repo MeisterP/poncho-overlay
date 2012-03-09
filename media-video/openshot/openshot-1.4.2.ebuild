@@ -1,36 +1,37 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=3
 
 PYTHON_DEPEND=2:2.5
 PYTHON_USE_WITH=xml
 
-inherit distutils fdo-mime python
+inherit versionator distutils fdo-mime python
 
 DESCRIPTION="OpenShot Video Editor is a non-linear video editor"
 HOMEPAGE="http://www.openshotvideo.com"
-SRC_URI="http://launchpad.net/openshot/1.3/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/openshot/$(get_version_component_range 1-2)/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="dv faac flac ieee1394 mp3 ogg quicktime theora vorbis wavpack x264 xvid"
+IUSE=""
 
 DEPEND=""
 RDEPEND="
-	>=x11-libs/gtk+-2.18
+	>=x11-libs/gtk+-2.18:2
 	dev-python/pygtk
 	dev-python/pygoocanvas
 	dev-python/pyxdg
 	dev-python/librsvg-python
 	dev-python/httplib2
-	>=media-libs/mlt-0.4.6-r1[dv?,ffmpeg,frei0r,gtk,melt,python,quicktime?,sdl,vorbis?,xml]
-	media-sound/sox[encode,ffmpeg,flac?,ogg?,wavpack?]
-	>=media-video/ffmpeg-0.6[encode,faac?,ieee1394?,mp3?,sdl,theora?,vorbis?,vpx,x264?,xvid?]
+	>=media-libs/mlt-0.4.6-r1[ffmpeg,frei0r,gtk,melt,python,sdl,xml]
+	media-sound/sox[encode,ffmpeg]
+	>=virtual/ffmpeg-0.6[encode,sdl]
+	dev-python/imaging
 	"
-
+#>=virtual/ffmpeg-0.6[encode,faac?,ieee1394?,mp3?,sdl,theora?,vorbis?,vpx,x264?,xvid?]
 pkg_setup() {
 	python_set_active_version 2
 	python_pkg_setup
@@ -68,4 +69,3 @@ pkg_postrm() {
 	fdo-mime_desktop_database_update
 	distutils_pkg_postrm
 }
-
