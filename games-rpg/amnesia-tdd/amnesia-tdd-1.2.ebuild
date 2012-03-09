@@ -4,97 +4,111 @@
 
 EAPI=3
 
-inherit eutils games
+inherit check-reqs eutils games unpacker
 
 MY_PN="${PN//-/_}"
+MY_ARCH="${ARCH/amd64/x86_64}"
 
 DESCRIPTION="Amnesia: The Dark Descent is a first person survival horror. A game about immersion, discovery and living through a nightmare."
-HOMEPAGE="http://www.amnesiagame.com"
+HOMEPAGE="http://www.amnesiagame.com/"
 SRC_URI="${MY_PN}_${PV}.sh"
 
 RESTRICT="fetch strip"
 LICENSE="Frictional_Games-EULA"
 
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="doc -glew-bundled linguas_de linguas_en linguas_es linguas_fr linguas_it"
+KEYWORDS="amd64 x86"
+IUSE="doc linguas_de linguas_es linguas_fr linguas_it linguas_ru"
 
 DEPEND="app-arch/xz-utils"
 RDEPEND="media-libs/freealut
-        !glew-bundled? ( <media-libs/glew-1.6 )
-        media-libs/jpeg:62
-        media-libs/libogg
-        media-libs/libvorbis
-        media-libs/libpng:1.2
-        media-libs/libtheora
-        media-libs/openal
-        media-libs/sdl-image
-        media-libs/sdl-ttf
-        sys-libs/zlib
-        <x11-libs/fltk-1.2
-        x11-libs/libX11
-        x11-libs/libXau
-        x11-libs/libxcb
-        x11-libs/libXdmcp
-        x11-libs/libXext
-        virtual/glu
-        virtual/opengl"
+	>=media-libs/glew-1.5
+	media-libs/jpeg:62
+	media-libs/libpng:1.2
+	media-libs/libtheora
+	media-libs/libvorbis
+	media-libs/openal
+	media-libs/sdl-image
+	media-libs/sdl-ttf
+	sys-libs/zlib
+	x11-libs/libxcb
+	x11-libs/libXext
+	virtual/glu
+	virtual/opengl"
+	#x11-libs/fltk:1
 
 S="${WORKDIR}/${PN}"
 
 GAMEDIR="${GAMES_PREFIX_OPT}/${PN}"
 
 pkg_nofetch() {
+	einfo ""
 	einfo "Please buy and download \"${SRC_URI}\" from:"
 	einfo "  ${HOMEPAGE}"
-	einfo "and move it to \"${DISTDIR}\""
-	einfo
+	einfo "and move/link it to \"${DISTDIR}\""
+	einfo ""
+}
+
+pkg_setup() {
+	einfo "arch = $ARCH"
+	return
 }
 
 src_unpack() {
-	mkdir "tmp" || die "mkdir \"tmp\" failed"
-	cd "./tmp" || die "cd \"tmp\" failed"
+	# Check if we have enough space for unpack:
+	CHECKREQS_DISK_BUILD="3500M"
+	check-reqs_pkg_setup
+
+	einfo "\nUnpacking files.  This will take several minutes.\n"
+
+	mkdir "tmp" || die "mkdir 'tmp' failed"
+	cd "./tmp" || die "cd 'tmp' failed"
 
 	unpack_makeself || die "unpack_makeself failed"
 
-	mv "subarch" "installer.tar.lzma" || die "move \"subarch\" failed"
-	unpack "./installer.tar.lzma" || die "unpack \"installer.tar.lzma\" failed"
+	mv "subarch" "installer.tar.lzma" || die "move 'subarch' failed"
+	unpack "./installer.tar.lzma" || die "unpack 'installer.tar.lzma' failed"
 
-	mv "instarchive_all" "../${P}.tar.lzma" || die "move \"instarchive_all\" failed"
-	if use amd64
-	then
-		mv "instarchive_all_x86_64" "../${P}-amd64.tar.lzma" || die "move \"instarchive_all_x86_64\" failed"
-	fi
-	if use x86
-	then
-		mv "instarchive_all_x86" "../${P}-x86.tar.lzma" || die "move \"instarchive_all_x86\" failed"
-	fi
-	mv "icon.xpm" "../${PN}.xpm"
+	mv "instarchive_all" "../${P}.tar.lzma" || die "move 'instarchive_all' failed"
+	mv "instarchive_all_${MY_ARCH}" "../${P}-${MY_ARCH}.tar.lzma" || die "move 'instarchive_all_${MY_ARCH}' failed"
+	mv "icon.xpm" "../${PN}.xpm" || die "mv 'icon.xml' failed"
 
-	cd "${WORKDIR}" || die "cd \"${WORKDIR}\" failed"
-	unpack ./*.tar.lzma || die "unpack failed"
-	mv "Amnesia" "${PN}" || die "mv \"Amnesia\" failed"
+	cd "${WORKDIR}" || die "cd '${WORKDIR}' failed"
+	rm -rf "./tmp"
 
-	rm ./*.tar.lzma
-	rm -r "./tmp"
+	unpack "./${P}.tar.lzma" || die "unpack '${P}.tar.lzma' failed"
+	rm "./${P}.tar.lzma"
+
+	unpack "./${P}-${MY_ARCH}.tar.lzma" || die "unpack '${P}-${MY_ARCH}.tar.lzma' failed"
+	rm "./${P}-${MY_ARCH}.tar.lzma"
+
+	mv "Amnesia" "${PN}" || die "mv 'Amnesia' failed"
+
+	# libfltk.so.1.1 is needed because it's no longer in portage
+	einfo "PWD = $PWD"
+	mv "${S}"/libs*/all/libfltk* "${S}"/libs*/
 }
 
 src_prepare() {
 	# Files to remove.
-	REMOVE="libs*/all
-		Amnesia.png
-		AmnesiaPDF.png
-		checklibs*.sh"
+	REMOVE="libs*/*
+		*.pdf
+		*.png
+		*.rtf
+		*.sh"
+
+	# Files to keep.
+	# Bundled LibIL (media-libs/devil) isn't in portage as too old
+	KEEP="libs*/libIL*
+		libs*/libfltk*"
 
 	# Collect infos about languages...
-	LINGUAS_ARRAY=()
-	LANG_ARRAY=()
-	LANGUAGE_ARRAY=()
-	USE_ARRAY=()
-	DEF_ARRAY=()
-	DOC_ARRAY=()
+	LINGUAS_ARRAY=()		# Linguas - string: E.g.: "linguas_en"
+	LANG_ARRAY=()			# Lang - string: E.g.: "en"
+	LANGUAGE_ARRAY=()		# Language - string: E.g.: "english"
+	LANGUAGE_SHORT_ARRAY=()		# Language Short - string: E.g.: "eng"
+	USE_ARRAY=()			# Used - bool (0,1)
 
-	local linguas_def="0"
 	local linguas_in_use="0"
 	for use in ${IUSE}
 	do
@@ -108,80 +122,80 @@ src_prepare() {
 
 			case "${tmp}" in
 			    "de") tmp="german";;
-			    "en") tmp="english";;
 			    "es") tmp="spanish";;
 			    "fr") tmp="french";;
 			    "it") tmp="italian";;
+			    "ru") tmp="russian";;
 			    *) tmp="";;
 			esac
 			LANGUAGE_ARRAY=(${LANGUAGE_ARRAY[@]} "${tmp}")
+			LANGUAGE_SHORT_ARRAY=(${LANGUAGE_SHORT_ARRAY[@]} "${tmp:0:3}")
 
 			if use ${use}
 			then
 				USE_ARRAY=(${USE_ARRAY[@]} "1")
-
-				case "${use}" in
-					"linguas_${LANG:0:2}") DEF_ARRAY=(${DEF_ARRAY[@]} "2"); linguas_def="2";;
-					"linguas_en") DEF_ARRAY=(${DEF_ARRAY[@]} "1"); linguas_def="$(( ${linguas_def:-0} < 2 ? 1 : 2 ))";;
-					*) DEF_ARRAY=(${DEF_ARRAY[@]} "0");;
-				esac
-
-				if use doc
-				then
-					DOC_ARRAY=(${DOC_ARRAY[@]} "1")
-				else
-					DOC_ARRAY=(${DOC_ARRAY[@]} "0")
-				fi
-
 				linguas_in_use="$(( ${linguas_in_use} + 1 ))"
 			else
 				USE_ARRAY=(${USE_ARRAY[@]} "0")
-				DEF_ARRAY=(${DEF_ARRAY[@]} "0")
-				DOC_ARRAY=(${DOC_ARRAY[@]} "0")
 			fi
 		fi
 	done
 
 	# ...then process them.
 	local n="0"
-	local linguas_set="0"
+	local docs_eng="0"
 	while [[ "${n}" -lt "${#LINGUAS_ARRAY[@]}" ]]
 	do
-		if [[ "${USE_ARRAY[${n}]}" != "1" ]]
+		if [[ "${USE_ARRAY[${n}]}" -gt "0" ]]
 		then
-			# If no linguas keep at least english.
-			if [[ "${linguas_in_use}" == "0" && "${LINGUAS_ARRAY[${n}]}" == "linguas_en" ]]
-			then
-				if use doc
-				then
-					DOC_ARRAY[${n}]="1"
-				fi
-			else
-				REMOVE="${REMOVE} config/base_${LANGUAGE_ARRAY[${n}]}.lang config/lang_main/${LANGUAGE_ARRAY[${n}]}.lang"
-			fi
-		else
-			# Prefer languages in this order: system lang - english - first of others. Don't change anything if english (linguas_def == 1).
-			if [[ "${DEF_ARRAY[${n}]}" == "${linguas_def}" && "${linguas_def}" != "1" && "${linguas_set}" != "1" ]]
+			# If only one lang is selected, use it as default.
+			if [[ "${linguas_in_use}" == "1" ]]
 			then
 				sed -e "s#english.lang#${LANGUAGE_ARRAY[${n}]}.lang#g" \
-				    -i "./config/main_init.cfg" || die "sed \"./config/main_init.cfg\" failed"
-
-				linguas_set="1"
+				    -i config/*main_init.cfg || die "sed \"config/*main_init.cfg\" failed"
+			fi
+		else
+			REMOVE="${REMOVE} $(find config -type f -name "*${LANGUAGE_ARRAY[${n}]}.lang")"
+			if [[ -d "lang/${LANGUAGE_SHORT_ARRAY[${n}]}" ]]
+			then
+				REMOVE="${REMOVE} lang/${LANGUAGE_SHORT_ARRAY[${n}]}"
 			fi
 		fi
 
-		if [[ "${DOC_ARRAY[${n}]}" != "1" ]]
+		if use doc
 		then
-			REMOVE="${REMOVE} EULA_${LANG_ARRAY[${n}]}.rtf Manual_${LANG_ARRAY[${n}]}.pdf"
+			if [[ -f "EULA_${LANG_ARRAY[${n}]}.rtf" && -f "Manual_${LANG_ARRAY[${n}]}.pdf" ]]
+			then
+				KEEP="${KEEP} EULA_${LANG_ARRAY[${n}]}.rtf Manual_${LANG_ARRAY[${n}]}.pdf"
+			else
+				local docs_eng="1"
+			fi
 		fi
 
 		n="$(( ${n} + 1 ))"
 	done
 
+	if use doc && [[ ( "${linguas_in_use}" == "0" || "${docs_eng}" != "0" ) ]]
+	then
+		KEEP="${KEEP} EULA_en.rtf Manual_en.pdf Remember*.pdf"
+	fi
+
 	einfo " Removing useless files ..."
 	for remove in ${REMOVE}
 	do
-		rm -r "${S}/"${remove} || die "rm \"${remove}\" failed"
+		local removable="1"
+		for keep in ${KEEP}
+		do
+			if [[ "${remove}" == "${keep}" && "${removable}" == "1" ]]
+			then
+				local removable="0"
+			fi
+		done
+
+		if [[ "${removable}" == "1" ]]
+		then
+			rm -r "${S}/"${remove} &> /dev/null
+		fi
 	done
 
 	if use amd64
@@ -193,7 +207,7 @@ src_prepare() {
 
 src_install() {
 	# Install data
-	insinto "${GAMEDIR}" || die "insinto \"${GAMEDIR}\" failed"
+	insinto "${GAMEDIR}"
 
 	einfo " Installing game data files ..."
 	for directory in $(find * -maxdepth 0 -type d ! -name "libs*")
@@ -215,36 +229,40 @@ src_install() {
 	if use amd64
 	then
 		local libsdir="${GAMEDIR}/libs64"
-	fi
-	if use x86
-	then
+	else
 		local libsdir="${GAMEDIR}/libs"
 	fi
 
-	# Used LibIL (media-libs/devil) isn't in portage as too old
 	exeinto "${libsdir}" || die "exeinto \"${libsdir}\" failed"
-	doexe libs*/libIL* || die "doexe \"libs\" failed"
-    if use glew-bundled
-        then
-            # Used LibGlEW may not be installed. There is game is using 1.5, there is 1.6 in portage
-            doexe libs*/libGLEW* || die "doexe \"libs\" failed"
-        fi
+	doexe libs*/* || die "doexe \"libs\" failed"
+
+	dosym "/usr/$(get_libdir)/libGLEW.so" "${libsdir}/libGLEW.so.1.5"
+	#dosym "/usr/$(get_libdir)/fltk-1/libfltk.so" "${libsdir}/libfltk.so.1.1"
+
 	exeinto "${GAMEDIR}" || die "exeinto \"${GAMEDIR}\" failed"
 	doexe *.bin || die "doexe \".bin\" binaries failed"
 
 
 	# Make game wrapper
-	mkdir -p "${D}/${GAMES_BINDIR}" || die "mkdir \"${D}/${GAMES_BINDIR}\" failed"
+	dodir "${GAMES_BINDIR}" || die "dodir \"${GAMES_BINDIR}\" failed"
 
 	local wrapper="${D}/${GAMES_BINDIR}/${PN}"
+	local ext="${PN}-justine"
 	touch "${wrapper}" || die "touch \"${wrapper}\" failed"
+	ln -s "${wrapper}" "${D}/${GAMES_BINDIR}/${ext}" || die "ln -s \"${ext}\" failed"
 
 	cat << EOF >> "${wrapper}" || die "echo failed"
 #!/bin/sh
 cd "${GAMEDIR}"
+
+if [[ "\$(basename "\${0}")" == "${ext}" ]]
+then
+  params="ptest \${@}"
+fi
+
 if [[ -w "\${HOME}/.frictionalgames/Amnesia/Main/main_settings.cfg" ]]
 then
-  exec ./Amnesia.bin "\${@}"
+  exec ./Amnesia.bin \${params:-"\${@}"}
 else
   exec ./Launcher.bin "\${@}"
 fi
@@ -252,14 +270,15 @@ EOF
 
 
 	# Install icon and desktop file
-	doicon "../${PN}.xpm" || die "newicon \"icon.xpm\" failed"
-	make_desktop_entry "${PN}" "Amnesia: The Dark Descent" || die "make_desktop_entry failed"
+	local icon="${PN}.xpm"
+	doicon "../${icon}" || die "newicon \"${icon}\" failed"
+	make_desktop_entry "${PN}" "Amnesia: The Dark Descent" "/usr/share/pixmaps/${icon}" || die "make_desktop_entry failed"
+	make_desktop_entry "${ext}" "Amnesia: The Dark Descent - Justine" "/usr/share/pixmaps/${icon}" || die "make_desktop_entry failed"
 
 
 	# Install documentation
 	if use doc
 	then
-		docinto ${PN}
 		dodoc *.rtf *.pdf || die "dodoc failed"
 	fi
 
@@ -271,15 +290,12 @@ EOF
 
 pkg_postinst() {
 	ewarn ""
-	ewarn "Amnesia: The Dark Descent needs video drivers"
-	ewarn "that provide a complete GLSL 1.20 implementation."
-	ewarn ""
-	ewarn "Please visit \"http://www.frictionalgames.com/forum/thread-3760.html\""
-	ewarn "for more infos."
+	ewarn "Amnesia: The Dark Descent needs video drivers that provide a complete".
+	ewarn "GLSL 1.20 implementation.  For more information, please visit:"
+	ewarn "http://www.frictionalgames.com/forum/thread-3760.html"
 	ewarn ""
 	ewarn "--------------------------------------------------------------------"
 	ewarn ""
-	ewarn "If you was playing version 1.0 you might experience some oddities"
-	ewarn "due to save game differences between 1.0 and 1.0.1."
+	ewarn "Saved games from previous versions may not be fully compatible."
 	ewarn ""
 }
