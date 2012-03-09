@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="2"
-inherit eutils games
+inherit eutils games unpacker
 
 DESCRIPTION="Scary first-person adventure game which focuses on story, immersion and puzzles"
 HOMEPAGE="http://www.penumbra-overture.com/"
