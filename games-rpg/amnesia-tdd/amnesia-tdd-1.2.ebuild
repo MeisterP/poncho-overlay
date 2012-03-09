@@ -17,7 +17,7 @@ RESTRICT="fetch strip"
 LICENSE="Frictional_Games-EULA"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="doc linguas_de linguas_es linguas_fr linguas_it linguas_ru"
 
 DEPEND="app-arch/xz-utils"
