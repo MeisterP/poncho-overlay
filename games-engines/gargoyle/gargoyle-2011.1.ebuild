@@ -9,16 +9,13 @@
 # Since we don't compile or install any of the bundled fonts, their licenses
 # don't apply. (Fonts are installed through dependencies instead.)
 
-MY_PV="2011.1"
-MY_P="${PN}-${MY_PV}"
-
 EAPI=3
 
 inherit eutils games
 
 DESCRIPTION="An Interactive Fiction (IF) player supporting all major formats"
 HOMEPAGE="http://ccxvii.net/gargoyle/"
-SRC_URI="http://garglk.googlecode.com/files/${MY_P}-sources.zip"
+SRC_URI="http://garglk.googlecode.com/files/${P}-sources.zip"
 
 LICENSE="BSD GPL-2 MIT Hugo Glulxe"
 SLOT="0"
@@ -55,11 +52,12 @@ src_prepare() {
 }
 
 src_compile() {
+	local jamopts=$(echo "${MAKEOPTS}" | sed -ne "/-j/ { s/.*\(-j[[:space:]]*[0-9]\+\).*/\1/; p }")
 	jam \
 		-sGARGLKINI="${GAMES_SYSCONFDIR}/garglk.ini" \
 		-sUSESDL=yes \
 		-sBUNDLEFONTS=no \
-		${MAKEOPTS} || die
+		${jamopts} || die
 }
 
 src_install() {
