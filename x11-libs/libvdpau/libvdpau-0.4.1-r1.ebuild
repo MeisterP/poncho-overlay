@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/libvdpau/libvdpau-0.4.1-r1.ebuild,v 1.1 2012/02/15 14:41:04 scarabeus Exp $
 
 EAPI=4
-inherit multilib
+inherit multilib eutils
 
 DESCRIPTION="VDPAU wrapper and trace libraries"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/VDPAU"
@@ -34,6 +34,10 @@ DEPEND="${RDEPEND}
 	)"
 
 DOCS="AUTHORS ChangeLog"
+
+src_prepare() {
+	epatch "${FILESDIR}"/0001-vdpau_trace-WAR-Flash-quirks.patch
+}
 
 src_configure() {
 	econf \
