@@ -9,7 +9,7 @@ inherit gnome2-utils git-2
 DESCRIPTION="Simple extension for controlling any MPRIS capable Mediaplayer"
 HOMEPAGE="https://github.com/eonpatapon/gnome-shell-extensions-mediaplayer"
 EGIT_REPO_URI="https://github.com/eonpatapon/gnome-shell-extensions-mediaplayer"
-EGIT_BRANCH="master"
+EGIT_BRANCH="gnome-shell-3.2"
 
 LICENSE="GPL-2"
 SLOT="0"
