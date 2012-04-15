@@ -19,7 +19,6 @@ RDEPEND=">=media-libs/t1lib-1.3.1
 	media-libs/freetype
 	virtual/jpeg"
 DEPEND="${RDEPEND}
-	>=sys-apps/coreutils-8.16
 	!<media-libs/ming-0.4.0_rc2"
 
 src_prepare() {
