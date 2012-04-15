@@ -4,12 +4,13 @@
 
 EAPI="4"
 
-EGIT_REPO_URI="git://github.com/robbyrussell/${PN}.git"
-[ -n "${EVCS_OFFLINE}" ] || EGIT_REPACK=true
+EGIT_REPO_URI="git://github.com/sorin-ionescu/${PN}.git"
+EGIT_HAS_SUBMODULES="yes"
+
 inherit git-2
 
 DESCRIPTION="Directory of help-files (for run-help) for your current zsh"
-HOMEPAGE="https://github.com/robbyrussell/oh-my-zsh"
+HOMEPAGE="https://github.com/sorin-ionescu/oh-my-zsh"
 
 LICENSE="ZSH"
 SLOT="0"
@@ -20,18 +21,11 @@ PROPERTIES="live"
 RDEPEND="app-shells/zsh"
 
 ZSH_DEST="${EPREFIX%/}/usr/share/zsh/site-contrib/${PN}"
-ZSH_TEMPLATE="templates/zshrc.zsh-template"
+ZSH_TEMPLATE="templates/zshrc"
 
 src_prepare() {
-	local i
-	for i in "${S}"/tools/*install* "${S}"/tools/*upgrade*
-	do	test -f "${i}" && : >"${i}"
-	done
-	sed -i -e 's!^ZSH=.*$!ZSH='"${ZSH_DEST}"'!' \
-		   -e 's!~/.oh-my-zsh!'"${ZSH_DEST}"'!' "${S}/${ZSH_TEMPLATE}"
-	sed -i -e 's!~/.oh-my-zsh!'"${ZSH_DEST}"'!' \
-		"${S}/plugins/dirpersist/dirpersist.plugin.zsh"
-	sed -i -e '/zstyle.*cache/d' "${S}/lib/completion.zsh"
+    sed -i -e 's!$HOME/.oh-my-zsh!'"${ZSH_DEST}"'!' \
+    "${S}/${ZSH_TEMPLATE}" || die "sed failed"
 }
 
 src_install() {
