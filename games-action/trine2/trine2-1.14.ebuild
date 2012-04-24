@@ -15,7 +15,7 @@ LICENSE=""
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
 
-IUSE="+bundled-libs launcher"
+IUSE="+bundled-libs"
 RESTRICT="fetch strip"
 
 DEPEND="app-arch/tar"
@@ -26,8 +26,7 @@ RDEPEND="amd64? (
 	  app-emulation/emul-linux-x86-sdl
 	  app-emulation/emul-linux-x86-soundlibs
 	  app-emulation/emul-linux-x86-xlibs 
-	  launcher? (
-	    app-emulation/emul-linux-x86-gtklibs ) )
+	  app-emulation/emul-linux-x86-gtklibs )
 	  
 	x86? (
 	  dev-libs/glib
@@ -42,18 +41,17 @@ RDEPEND="amd64? (
 	    media-gfx/libphysx
 	    >=media-libs/libsdl-1.3
 	    media-gfx/nvidia-cg-toolkit )
-	  launcher? (
-	    dev-libs/atk
-	    dev-libs/glib
-	    media-libs/fontconfig
-	    sys-libs/glibc
-	    x11-libs/gdk-pixbuf
-	    x11-libs/gtk+
-	    x11-libs/libSM
-	    x11-libs/libX11
-	    x11-libs/libXinerama
-	    x11-libs/libXxf86vm
-	    x11-libs/pango ) )"
+	  dev-libs/atk
+	  dev-libs/glib
+	  media-libs/fontconfig
+	  sys-libs/glibc
+	  x11-libs/gdk-pixbuf
+	  x11-libs/gtk+
+	  x11-libs/libSM
+	  x11-libs/libX11
+	  x11-libs/libXinerama
+	  x11-libs/libXxf86vm
+	  x11-libs/pango )"
 
 S="${WORKDIR}"
 GAMEDIR="${GAMES_PREFIX_OPT}/${PN}"
@@ -103,13 +101,15 @@ src_install() {
 	# Install executables and libraries:
 	exeinto "${GAMEDIR}" || die "exeinto \"${GAMEDIR}\" failed"
 	newexe "bin/trine2_linux_32bit" "${PN}" || die "newexe \"${PN}\" failed"
-	use launcher && ( newexe "bin/trine2_linux_launcher_32bit" "${PN}-launcher" || die "newexe \"${PN}-launcher\" failed" )
+	newexe "bin/trine2_linux_launcher_32bit" "${PN}-launcher" || die "newexe \"${PN}-launcher\" failed"
 	
 	exeinto "${GAMEDIR}/lib" || die "exeinto \"${GAMEDIR}/lib\" failed"
 	( use "amd64" || use "bundled-libs" ) && ( find lib*/lib* -type f -iname '*.so*' -exec doexe '{}' \+ || die "doins bundled libs failed" )
 
 	# Make game wrapper:
-	games_make_wrapper "${PN}" "$( usex "launcher" "./${PN}-launcher &> /dev/null" "./${PN} &> /dev/null" )" "${GAMEDIR}" "$( ( use "amd64" || use "bundled-libs" ) && echo "${GAMEDIR}/lib" )" || die "games_make_wrapper \"${PN}\" failed"
+	games_make_wrapper "${PN}" "./${PN} &> /dev/null" "${GAMEDIR}" "$( ( use "amd64" || use "bundled-libs" ) && echo "${GAMEDIR}/lib" )" || die "games_make_wrapper \"${PN}\" failed"
+	games_make_wrapper "${PN}-launcher" "./${PN}-launcher &> /dev/null" "${GAMEDIR}" "$( ( use "amd64" || use "bundled-libs" ) && echo "${GAMEDIR}/lib" )" || die "games_make_wrapper \"${PN}-launcher\" failed"
+
 
 	# Install icon and desktop files:
 	doicon "${PN}.png" || die "doicon \"${PN}.png\" failed"
