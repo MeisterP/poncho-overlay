@@ -26,6 +26,8 @@ ZSH_TEMPLATE="templates/zshrc"
 src_prepare() {
     sed -i -e 's!$HOME/.oh-my-zsh!'"${ZSH_DEST}"'!' \
     "${S}/${ZSH_TEMPLATE}" || die "sed failed"
+    for i in $(find "${S}" -name ".git*"); do rm -rf "$i"; done
+
 }
 
 src_install() {
