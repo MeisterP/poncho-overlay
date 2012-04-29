@@ -9,7 +9,7 @@ inherit eutils gnome2-utils git-2
 DESCRIPTION="Weather extensions for GNOME Shell"
 HOMEPAGE="http://github.com/simon04/gnome-shell-extension-weather"
 EGIT_REPO_URI="http://github.com/simon04/gnome-shell-extension-weather"
-EGIT_BRANCH="master"
+EGIT_BRANCH="gnome3.4"
 
 LICENSE="GPL-2"
 SLOT="0"
