@@ -1,0 +1,11 @@
+--- a/python/mainwindow.py
++++ b/python/mainwindow.py
+@@ -68,7 +68,7 @@
+ 		
+ 			if(playonlinux.convertVersionToInt(os.environ["VERSION"]) < playonlinux.convertVersionToInt(self.WebVersion)):
+ 				self.sendToStatusBar(_('An updated version of {0} is available').format(os.environ["APPLICATION_TITLE"])+" ("+self.WebVersion+")",False)
+-				self.sendAlert(_('An updated version of {0} is available').format(os.environ["APPLICATION_TITLE"])+" ("+self.WebVersion+")")
++				#self.sendAlert(_('An updated version of {0} is available').format(os.environ["APPLICATION_TITLE"])+" ("+self.WebVersion+")")
+ 			else:
+ 				self.Show = False
+ 		
