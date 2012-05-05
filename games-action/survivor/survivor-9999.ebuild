@@ -37,7 +37,7 @@ RDEPEND="
 	media-libs/openal
 "
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 "
 
 src_configure() {

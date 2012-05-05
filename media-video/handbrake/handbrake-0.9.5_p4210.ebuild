@@ -78,7 +78,7 @@ RDEPEND="sys-libs/zlib
 	)"
 DEPEND="dev-lang/yasm
 	dev-lang/python
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	${RDEPEND}"
 
 MAKEOPTS="${MAKEOPTS} -j1"

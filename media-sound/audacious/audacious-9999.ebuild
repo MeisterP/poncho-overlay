@@ -27,7 +27,7 @@ RDEPEND=">=dev-libs/dbus-glib-0.60
 	session? ( x11-libs/libSM )"
 
 DEPEND="${RDEPEND}
-	>=dev-util/pkgconfig-0.9.0
+	virtual/pkgconfig
 	chardet? ( >=app-i18n/libguess-1.1 )
 	nls? ( dev-util/intltool )"
 

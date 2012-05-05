@@ -56,7 +56,7 @@ RDEPEND="app-arch/unzip
 
 DEPEND="${RDEPEND}
 	nls? ( dev-util/intltool )
-	>=dev-util/pkgconfig-0.9.0"
+	virtual/pkgconfig"
 
 REQUIRED_USE="^^ ( gtk gtk3 )"
 

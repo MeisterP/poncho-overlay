@@ -25,7 +25,7 @@ RDEPEND="x11-libs/libX11
 	!=x11-drivers/nvidia-drivers-190.36
 	!=x11-drivers/nvidia-drivers-190.40"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	>=x11-proto/dri2proto-2.2
 	doc? (
 		app-doc/doxygen

@@ -26,7 +26,7 @@ RDEPEND="${COMMON_DEPEND}
         x11-libs/pango[introspection]"
 DEPEND="${COMMON_DEPEND}
         sys-devel/gettext
-        >=dev-util/pkgconfig-0.22
+        virtual/pkgconfig
         >=dev-util/intltool-0.26
         gnome-base/gnome-common"
 
