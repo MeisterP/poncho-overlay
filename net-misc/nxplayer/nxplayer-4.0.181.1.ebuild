@@ -23,7 +23,7 @@ RDEPEND="x11-libs/libXft
 	x11-libs/libXdmcp
 	x11-libs/libXau"
 
-S=${WORKDIR}/NX/etc/NX/packages/player/
+S=${WORKDIR}/NX/etc/NX/player/packages/
 
 src_install()
 {
