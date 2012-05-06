@@ -42,7 +42,7 @@ src_install()
 	for size in *; do
 		dodir /usr/share/icons/hicolor/${size}/apps
 		for icon in desktop icon; do
-			dosym /usr/NX/share/icons/${size}/nxplayer-${icon}.png \
+			dosym ${NXROOT}/share/icons/${size}/nxplayer-${icon}.png \
 				/usr/share/icons/hicolor/${size}/apps
 			done
 		done
