@@ -7,7 +7,7 @@ EAPI=4
 inherit qt4-r2 cmake-utils
 
 DESCRIPTION="A font manager"
-HOMEPAGE="http://www.fontmatrix.net/"
+HOMEPAGE="http://fontmatrix.be/"
 SRC_URI="http://www.fontmatrix.net/archives/${P}-Source.tar.gz"
 
 LICENSE="GPL-2"

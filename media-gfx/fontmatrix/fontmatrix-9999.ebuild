@@ -10,7 +10,7 @@ ESVN_REPO_URI="http://svn.gna.org/svn/undertype/trunk/tools/typotek"
 #ESVN_REPO_URI="http://svn.gna.org/svn/undertype/trunk/tools/typotek@1073"
 
 DESCRIPTION="A font manager"
-HOMEPAGE="http://www.fontmatrix.net/"
+HOMEPAGE="http://fontmatrix.be/"
 SRC_URI=""
 
 LICENSE="GPL-2"
