@@ -46,7 +46,6 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}"/disable_update_alert.diff
-	epatch "${FILESDIR}"/gnome-terminal.diff
 	sed -i -e "s/\(Categories=\).*/\1Game;Emulator;/" etc/PlayOnLinux.desktop \
 		|| die "sed failed"
 	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i lib/variables || die "sed failed"
