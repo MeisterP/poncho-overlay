@@ -32,9 +32,7 @@ UIRDEPEND="virtual/jpeg
 	alsa? ( media-libs/alsa-lib )
 	sdl? ( media-libs/libsdl )
 	x11-libs/libX11
-	x11-libs/libXau
-	x11-libs/libXdmcp
-	x11-libs/libXext
+	x11-libs/libXpm
 	x11-libs/libXxf86dga
 	x11-libs/libXxf86vm"
 UIDEPEND="x11-proto/xextproto
