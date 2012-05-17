@@ -4,6 +4,8 @@
 
 EAPI=2
 
+inherit eutils
+
 DESCRIPTION="A font management application for the GNOME desktop"
 HOMEPAGE="http://code.google.com/p/font-manager"
 SRC_URI="http://font-manager.googlecode.com/files/${P}.tar.bz2"
@@ -22,6 +24,14 @@ RDEPEND="${DEPEND}
 	media-libs/fontconfig
 	>=media-libs/freetype-2.3.11
 	dev-db/sqlite:3"
+
+src_prepare(){
+	# http://code.google.com/p/font-manager/source/detail?r=261
+	epatch "${FILESDIR}"/nonexistent_cache.patch
+	
+	# https://code.google.com/p/font-manager/issues/detail?id=71
+	epatch "${FILESDIR}"/gcc47.patch
+}
 
 src_install() {
 	emake DESTDIR="${D}" install || die
