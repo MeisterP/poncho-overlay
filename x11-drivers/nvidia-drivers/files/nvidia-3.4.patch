@@ -1,0 +1,69 @@
+diff -ur a/kernel/conftest.sh b/kernel/conftest.sh
+--- a/kernel/conftest.sh	2012-04-27 22:50:12.000000000 +0400
++++ b/kernel/conftest.sh	2012-05-09 20:59:52.136000128 +0400
+@@ -101,7 +101,7 @@
+ 
+     if [ "$OUTPUT" != "$SOURCES" ]; then
+         MACH_CFLAGS="-I$HEADERS/asm-$ARCH/mach-default"
+-        if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" ]; then
++        if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" -o "$ARCH" = "x86" ]; then
+             MACH_CFLAGS="$MACH_CFLAGS -I$HEADERS/asm-x86/mach-default"
+             MACH_CFLAGS="$MACH_CFLAGS -I$SOURCES/arch/x86/include/asm/mach-default"
+         elif [ "$ARCH" = "arm" ]; then
+@@ -112,7 +112,7 @@
+         fi
+     else
+         MACH_CFLAGS="-I$HEADERS/asm/mach-default"
+-        if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" ]; then
++        if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" -o "$ARCH" = "x86" ]; then
+             MACH_CFLAGS="$MACH_CFLAGS -I$HEADERS/asm-x86/mach-default"
+             MACH_CFLAGS="$MACH_CFLAGS -I$SOURCES/arch/x86/include/asm/mach-default"
+         elif [ "$ARCH" = "arm" ]; then
+@@ -125,7 +125,7 @@
+ 
+     CFLAGS="$BASE_CFLAGS $MACH_CFLAGS $OUTPUT_CFLAGS -I$HEADERS $AUTOCONF_CFLAGS"
+ 
+-    if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" ]; then
++    if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" -o "$ARCH" = "x86" ]; then
+         CFLAGS="$CFLAGS -I$SOURCES/arch/x86/include -I$OUTPUT/arch/x86/include/generated"
+     elif [ "$ARCH" = "arm" ]; then
+         CFLAGS="$CFLAGS -I$SOURCES/arch/arm/include -I$OUTPUT/arch/arm/include/generated"
+@@ -512,7 +512,6 @@
+             # and if it as an 'event' member.
+             #
+             echo "$CONFTEST_PREAMBLE
+-            #include <asm/system.h>
+             #include <linux/pm.h>
+             void conftest_pm_message_t(pm_message_t state) {
+                 pm_message_t *p = &state;
+diff -ur a/kernel/nv-linux.h b/kernel/nv-linux.h
+--- a/kernel/nv-linux.h	2012-04-27 22:50:12.000000000 +0400
++++ b/kernel/nv-linux.h	2012-05-08 05:41:51.366000256 +0400
+@@ -111,7 +111,6 @@
+ #include <linux/timer.h>
+ 
+ #include <asm/div64.h>              /* do_div()                         */
+-#include <asm/system.h>             /* cli, sli, save_flags             */
+ #include <asm/io.h>                 /* ioremap, virt_to_phys            */
+ #include <asm/uaccess.h>            /* access_ok                        */
+ #include <asm/page.h>               /* PAGE_OFFSET                      */
+@@ -992,9 +991,19 @@
+ #  define NV_IS_SUSER()                 capable(CAP_SYS_ADMIN)
+ #  define NV_PCI_DEVICE_NAME(dev)       ((dev)->pretty_name)
+ #  define NV_NUM_CPUS()                 num_online_cpus()
++
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,4,0)
++# include <asm/system.h>
+ #  define NV_CLI()                      local_irq_disable()
+ #  define NV_SAVE_FLAGS(eflags)         local_save_flags(eflags)
+ #  define NV_RESTORE_FLAGS(eflags)      local_irq_restore(eflags)
++#else
++# include <asm/irqflags.h>
++# define NV_CLI()                       arch_local_irq_disable()
++# define NV_SAVE_FLAGS(eflags)          eflags = arch_local_save_flags()
++# define NV_RESTORE_FLAGS(eflags)       arch_local_irq_restore(eflags)
++#endif
++
+ #  define NV_MAY_SLEEP()                (!irqs_disabled() && !in_interrupt() && !NV_IN_ATOMIC())
+ #  define NV_MODULE_PARAMETER(x)        module_param(x, int, 0)
+ #  define NV_MODULE_STRING_PARAMETER(x) module_param(x, charp, 0)
