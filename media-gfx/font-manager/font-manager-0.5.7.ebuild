@@ -28,6 +28,9 @@ RDEPEND="${DEPEND}
 src_prepare(){
 	# http://code.google.com/p/font-manager/source/detail?r=261
 	epatch "${FILESDIR}"/nonexistent_cache.patch
+
+    # https://code.google.com/p/font-manager/issues/detail?id=70
+	epatch "${FILESDIR}"/local_conf.patch
 	
 	# https://code.google.com/p/font-manager/issues/detail?id=71
 	epatch "${FILESDIR}"/gcc47.patch

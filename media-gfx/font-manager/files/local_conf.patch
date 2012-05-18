@@ -1,0 +1,13 @@
+diff -uNrp font-manager-0.5.7/src/core/__init__.py.in font-manager-0.5.7-fix/src/core/__init__.py.in
+--- font-manager-0.5.7/src/core/__init__.py.in	2010-12-24 04:05:14.000000000 +0100
++++ font-manager-0.5.7-fix/src/core/__init__.py.in	2012-05-18 15:15:42.556727897 +0200
+@@ -908,7 +908,8 @@ else:
+     CONFIG_NEEDS_UPDATE = True
+ if CONFIG_NEEDS_UPDATE:
+     logging.info('Updating {0}'.format(USER_FONT_CONFIG))
+-    not exists(USER_FONT_CONFIG) or _relocate_user_config(CONFIG_CONTENT)
++    # https://code.google.com/p/font-manager/issues/detail?id=70
++    #not exists(USER_FONT_CONFIG) or _relocate_user_config(CONFIG_CONTENT)
+     with open(USER_FONT_CONFIG, 'wb') as conf:
+         conf.write(VALID_USER_FONT_CONFIG)
+ else:
