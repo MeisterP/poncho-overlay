@@ -289,10 +289,10 @@ src_prepare() {
 			"${NV_SRC}"/Makefile.kbuild
 
 		# Fix building with Linux 3.3.x wrt #408841
-		sed -i \
-			-e '/CFLAGS="$CFLAGS/s:-I$SOURCES/arch/x86/include:& -I$OUTPUT/arch/x86/include/generated:' \
-			kernel/conftest.sh || die
-
+		#sed -i \
+		#	-e '/CFLAGS="$CFLAGS/s:-I$SOURCES/arch/x86/include:& -I$OUTPUT/arch/x86/include/generated:' \
+		#	kernel/conftest.sh || die
+		epatch "${FILESDIR}"/nvidia-3.4.patch
 		# If you set this then it's your own fault when stuff breaks :)
 		use custom-cflags && sed -i "s:-O:${CFLAGS}:" "${NV_SRC}"/Makefile.*
 
