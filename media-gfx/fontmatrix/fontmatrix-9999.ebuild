@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit qt4-r2 cmake-utils subversion 
+inherit eutils qt4-r2 cmake-utils subversion
 
 ESVN_REPO_URI="http://svn.gna.org/svn/undertype/trunk/tools/typotek"
 #ESVN_REPO_URI="http://svn.gna.org/svn/undertype/trunk/tools/typotek@1073"
