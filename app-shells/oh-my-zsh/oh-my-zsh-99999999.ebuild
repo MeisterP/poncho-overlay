@@ -1,6 +1,6 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header $
+# $Header: $
 
 EAPI="4"
 
@@ -24,9 +24,9 @@ ZSH_DEST="${EPREFIX%/}/usr/share/zsh/site-contrib/${PN}"
 ZSH_TEMPLATE="templates/zshrc"
 
 src_prepare() {
-    sed -i -e 's!$HOME/.oh-my-zsh!'"${ZSH_DEST}"'!' \
-    "${S}/${ZSH_TEMPLATE}" || die "sed failed"
-    for i in $(find "${S}" -name ".git*"); do rm -rf "$i"; done
+	sed -i -e 's!$HOME/.oh-my-zsh!'"${ZSH_DEST}"'!' \
+	"${S}/${ZSH_TEMPLATE}" || die "sed failed"
+	for i in $(find "${S}" -name ".git*"); do rm -rf "$i"; done
 
 }
 
@@ -41,4 +41,3 @@ pkg_postinst() {
 	elog "or copy a modification of that file to your ~/.zshrc"
 	elog "If you just want to try, enter the above command in your zsh."
 }
-

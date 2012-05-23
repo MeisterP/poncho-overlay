@@ -1,10 +1,10 @@
-# Copyright 1999-2009 Tiziano Mueller
+# Copyright 1999-2012 Tiziano Mueller
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="2"
 
-inherit bash-completion distutils
+inherit bash-completion-r1 distutils
 
 DESCRIPTION="CD ripper aiming for accuracy over speed."
 HOMEPAGE="http://thomas.apestaart.org/morituri/trac/wiki"

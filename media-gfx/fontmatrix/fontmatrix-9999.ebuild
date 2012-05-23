@@ -1,4 +1,4 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -27,7 +27,7 @@ RDEPEND="x11-libs/qt-gui:4
 	media-libs/freetype:2
 	icu? ( dev-libs/icu )
 	m17? ( dev-libs/m17n-lib )
-	pdf? ( media-libs/podofo )"
+	pdf? ( app-text/podofo )"
 DEPEND=${RPEDEND}
 
 pkg_setup() {

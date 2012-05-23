@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Tiziano Mueller
+# Copyright 1999-2012 Tiziano Mueller
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -72,4 +72,3 @@ pkg_postrm()
 {
 	return
 }
-

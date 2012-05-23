@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -51,7 +51,7 @@ src_install() {
 	insinto /usr/share/locale
 	doins -r po/*
 
-	dodoc AUTHORS COPYING CHANGES HACKING README
+	dodoc AUTHORS CHANGES HACKING README
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 }

@@ -17,7 +17,7 @@ ESVN_BOOTSTRAP="autogen.sh"
 EGIT_REPO_URI="https://github.com/thomasvs/python-musicbrainz-ngs.git"
 EGIT_SOURCEDIR="${S}/${PN}/extern/python-musicbrainz-ngs"
 
-LICENSE=""
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
 IUSE="alac bash-completion +cddb +cdio doc +flac test wav wavpack"
@@ -40,12 +40,12 @@ DEPEND="${RDEPEND}
 	test? ( dev-python/pychecker )"
 
 src_unpack() {
-    subversion_src_unpack
-    git-2_src_unpack
+	subversion_src_unpack
+	git-2_src_unpack
 }
 
 src_prepare() {
-    subversion_src_prepare 
+	subversion_src_prepare
 
 	use doc && die "doc building currently broken"
 }
