@@ -1,0 +1,21 @@
+--- HandBrake-0.9.6/make/include/main.defs	2011-10-25 04:18:15.000000000 +0200
++++ HandBrake-0.9.6-unbundle/make/include/main.defs	2012-06-02 14:27:58.503138449 +0200
+@@ -23,10 +23,7 @@ endif
+ 
+ MODULES += contrib/faac
+ MODULES += contrib/ffmpeg
+-MODULES += contrib/fontconfig
+-MODULES += contrib/freetype
+ MODULES += contrib/lame
+-MODULES += contrib/libass
+ MODULES += contrib/libdca
+ MODULES += contrib/libdvdread
+ MODULES += contrib/libdvdnav
+@@ -36,7 +33,6 @@ MODULES += contrib/libogg
+ MODULES += contrib/libsamplerate
+ MODULES += contrib/libtheora
+ MODULES += contrib/libvorbis
+-MODULES += contrib/libxml2
+ MODULES += contrib/mp4v2
+ MODULES += contrib/mpeg2dec
+ 
