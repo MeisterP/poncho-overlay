@@ -57,20 +57,22 @@ DEPEND="=sys-devel/automake-1.11*
 	|| ( >=net-misc/wget-1.11.4 >=net-misc/curl-7.19.4 )
 	$RDEPEND"
 
-# Handbrake attempts to download tarballs itself in its build system,
-# so copy them to the expected location instead.
 src_prepare() {
+	# Handbrake attempts to download tarballs itself in its build system,
+	# so copy them to the expected location instead.
 	mkdir "${S}"/download
 	for x in ${A}; do
 		cp "${DISTDIR}"/${x} "${S}"/download/ || die "copying failed"
 	done
 	cp "${DISTDIR}"/a52dec-0.7.4-${P}.tar.gz \
 		"${S}"/download/a52dec-0.7.4.tar.gz || die "copying died"
+
+	epatch "${FILESDIR}"/fix-fribidi-glib.patch
 }
 
-# Don't waste time unpacking all the tarballs, when we just
-# need the handbrake one.
 src_unpack() {
+	# Don't waste time unpacking all the tarballs, when we just
+	# need the handbrake one.
 	unpack ${MY_PN}-${PV}.tar.bz2
 }
 
@@ -91,8 +93,8 @@ src_install() {
 
 	if use doc; then
 		emake -C build doc
-			dodoc AUTHORS CREDITS NEWS THANKS \
-				build/doc/articles/txt/* || die "docs failed"
+		dodoc AUTHORS CREDITS NEWS THANKS \
+			build/doc/articles/txt/* || die "docs failed"
 	fi
 }
 

@@ -1,0 +1,8 @@
+--- HandBrake-0.9.6-orig/contrib/libass/module.defs	2011-10-22 18:35:35.000000000 +0200
++++ HandBrake-0.9.6/contrib/libass/module.defs	2012-06-02 12:17:52.675943463 +0200
+@@ -13,4 +13,4 @@ LIBASS.CONFIGURE.extra = \
+     FONTCONFIG_LIBS="-L$(call fn.ABSOLUTE,$(CONTRIB.build/))lib -lfontconfig" \
+     FONTCONFIG_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include" \
+     FRIBIDI_LIBS="-L$(call fn.ABSOLUTE,$(CONTRIB.build/))lib -lfribidi" \
+-    FRIBIDI_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include"
++    FRIBIDI_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include"
