@@ -18,7 +18,6 @@ SRC_URI="http://handbrake.fr/rotation.php?file=${MY_PN}-${PV}.tar.bz2
 		${SRC_HB}faac-1.28.tar.gz
 		${SRC_HB}ffmpeg-v0.7-1696-gcae4f4b.tar.bz2
 		${SRC_HB}lame-3.98.tar.gz
-		${SRC_HB}libbluray-0.0.1-pre-213-ga869da8.tar.gz
 		${SRC_HB}libdca-r81-strapped.tar.gz
 		${SRC_HB}libdvdnav-svn1168.tar.gz
 		${SRC_HB}libdvdread-svn1168.tar.gz
@@ -46,7 +45,8 @@ RDEPEND="sys-libs/zlib
 			media-libs/gst-plugins-base
 			>=sys-fs/udev-147 )
 	>=media-libs/libass-0.10.0[fontconfig]
-	dev-libs/libxml2"
+	dev-libs/libxml2
+	media-libs/libbluray"
 DEPEND="=sys-devel/automake-1.11*
 	dev-lang/yasm
 	dev-libs/fribidi
@@ -66,6 +66,7 @@ src_prepare() {
 
 	epatch "${FILESDIR}"/Fix-make-and-test.patch
 	epatch "${FILESDIR}"/Remove-contrib.patch
+	epatch "${FILESDIR}"/Fix-for-compilation-with-libbluray.patch
 }
 
 src_unpack() {

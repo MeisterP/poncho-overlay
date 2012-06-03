@@ -1,8 +1,8 @@
 diff --git a/make/include/main.defs b/make/include/main.defs
-index e68f679..deaf564 100644
+index e68f679..4685c1f 100644
 --- a/make/include/main.defs
 +++ b/make/include/main.defs
-@@ -23,10 +23,7 @@ endif
+@@ -23,20 +23,15 @@ endif
  
  MODULES += contrib/faac
  MODULES += contrib/ffmpeg
@@ -13,7 +13,9 @@ index e68f679..deaf564 100644
  MODULES += contrib/libdca
  MODULES += contrib/libdvdread
  MODULES += contrib/libdvdnav
-@@ -36,7 +33,6 @@ MODULES += contrib/libogg
+-MODULES += contrib/libbluray
+ MODULES += contrib/libmkv
+ MODULES += contrib/libogg
  MODULES += contrib/libsamplerate
  MODULES += contrib/libtheora
  MODULES += contrib/libvorbis
@@ -22,7 +24,7 @@ index e68f679..deaf564 100644
  MODULES += contrib/mpeg2dec
  
 diff --git a/test/module.defs b/test/module.defs
-index 5030e6f..dc23610 100644
+index 5030e6f..8b6405c 100644
 --- a/test/module.defs
 +++ b/test/module.defs
 @@ -10,10 +10,12 @@ TEST.c.o = $(patsubst $(SRC/)%.c,$(BUILD/)%.o,$(TEST.c))
@@ -32,10 +34,10 @@ index 5030e6f..dc23610 100644
 -        a52 ass avcodec avformat avutil dca dvdnav dvdread faac fontconfig freetype mkv mpeg2 mp3lame mp4v2 \
 -        ogg samplerate swscale theora vorbis vorbisenc x264 xml2 bluray, \
 +        a52 avcodec avformat avutil dca dvdnav dvdread faac mkv mpeg2 mp3lame mp4v2 \
-+        ogg samplerate swscale theora vorbis vorbisenc x264 bluray, \
++        ogg samplerate swscale theora vorbis vorbisenc x264, \
          $(CONTRIB.build/)lib/lib$(n).a )
  
-+TEST.libs += -lass -lfontconfig -lfreetype -lxml2
++TEST.libs += -lass -lfontconfig -lfreetype -lxml2 -lbluray
 +
  TEST.install.exe = $(DESTDIR)$(PREFIX/)bin/$(notdir $(TEST.exe))
  

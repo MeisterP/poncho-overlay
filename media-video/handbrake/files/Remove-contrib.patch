@@ -20782,6 +20782,38 @@ index 67a5ab6..0000000
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,LIBASS))
 -$(eval $(call import.CONTRIB.rules,LIBASS))
+diff --git a/contrib/libbluray/module.defs b/contrib/libbluray/module.defs
+deleted file mode 100644
+index d3371d0..0000000
+--- a/contrib/libbluray/module.defs
++++ /dev/null
+@@ -1,18 +0,0 @@
+-$(eval $(call import.MODULE.defs,LIBBLURAY,libbluray,LIBXML2))
+-$(eval $(call import.CONTRIB.defs,LIBBLURAY))
+-
+-LIBBLURAY.FETCH.url = http://download.handbrake.fr/handbrake/contrib/libbluray-0.0.1-pre-213-ga869da8.tar.gz
+-
+-LIBBLURAY.CONFIGURE.bootstrap = rm -fr aclocal.m4 autom4te.cache; ./bootstrap;
+-
+-ifneq (max,$(LIBBLURAY.GCC.g))
+-	LIBBLURAY.CONFIGURE.extra += --disable-debug
+-else
+-	LIBBLURAY.CONFIGURE.extra += --enable-debug
+-endif
+-
+-ifeq (none,$(LIBBLURAY.GCC.O))
+-	LIBBLURAY.CONFIGURE.extra += --disable-optimizations
+-endif
+-
+-LIBBLURAY.CONFIGURE.extra += --disable-examples
+diff --git a/contrib/libbluray/module.rules b/contrib/libbluray/module.rules
+deleted file mode 100644
+index ddea021..0000000
+--- a/contrib/libbluray/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,LIBBLURAY))
+-$(eval $(call import.CONTRIB.rules,LIBBLURAY))
 diff --git a/contrib/libxml2/module.defs b/contrib/libxml2/module.defs
 deleted file mode 100644
 index 8d25756..0000000
