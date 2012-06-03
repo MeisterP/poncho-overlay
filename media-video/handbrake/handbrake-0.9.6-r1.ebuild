@@ -45,7 +45,7 @@ RDEPEND="sys-libs/zlib
 			media-libs/gstreamer
 			media-libs/gst-plugins-base
 			>=sys-fs/udev-147 )
-	media-libs/libass[fontconfig]
+	>=media-libs/libass-0.10.0[fontconfig]
 	dev-libs/libxml2"
 DEPEND="=sys-devel/automake-1.11*
 	dev-lang/yasm
