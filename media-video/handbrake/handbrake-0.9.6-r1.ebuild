@@ -25,7 +25,7 @@ SRC_URI="http://handbrake.fr/rotation.php?file=${MY_PN}-${PV}.tar.bz2
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 
 IUSE="css doc gtk"
 RDEPEND="sys-libs/zlib
@@ -103,6 +103,9 @@ pkg_preinst() {
 
 pkg_postinst() {
 	gnome2_icon_cache_update
+
+	elog "Unbundled libs are not supported by upstream"
+	elog "Don't report bugs to them."
 }
 
 pkg_postrm() {
