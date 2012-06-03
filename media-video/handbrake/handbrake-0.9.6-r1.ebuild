@@ -15,17 +15,13 @@ HOMEPAGE="http://handbrake.fr/"
 SRC_URI="http://handbrake.fr/rotation.php?file=${MY_PN}-${PV}.tar.bz2
 		-> ${MY_PN}-${PV}.tar.bz2
 		${SRC_HB}a52dec-0.7.4.tar.gz -> a52dec-0.7.4-${P}.tar.gz
-		${SRC_HB}faac-1.28.tar.gz
 		${SRC_HB}ffmpeg-v0.7-1696-gcae4f4b.tar.bz2
 		${SRC_HB}libdca-r81-strapped.tar.gz
 		${SRC_HB}libdvdnav-svn1168.tar.gz
 		${SRC_HB}libdvdread-svn1168.tar.gz
 		${SRC_HB}libmkv-0.6.5-0-g82075ae.tar.gz
-		${SRC_HB}libtheora-1.1.0.tar.bz2
-		${SRC_HB}libvorbis-aotuv_b6.03.tar.bz2
 		${SRC_HB}mp4v2-trunk-r355.tar.bz2
-		${SRC_HB}mpeg2dec-0.5.1.tar.gz
-		${SRC_HB}x264-r2146-bcd41db.tar.gz"
+		${SRC_HB}mpeg2dec-0.5.1.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -46,7 +42,11 @@ RDEPEND="sys-libs/zlib
 	media-libs/libbluray
 	media-sound/lame
 	media-libs/libogg
-	media-libs/libsamplerate"
+	media-libs/libsamplerate
+	media-libs/faac
+	media-libs/libtheora
+	media-libs/libvorbis
+	media-libs/x264"
 DEPEND="=sys-devel/automake-1.11*
 	dev-lang/yasm
 	dev-libs/fribidi

@@ -1,3 +1,110 @@
+diff --git a/contrib/faac/A00-bitrates.patch b/contrib/faac/A00-bitrates.patch
+deleted file mode 100644
+index 50b11ec..0000000
+--- a/contrib/faac/A00-bitrates.patch
++++ /dev/null
+@@ -1,60 +0,0 @@
+-diff -Naur faac-1.28/libfaac/frame.c ../build.debug/contrib/faac/faac-1.28/libfaac/frame.c
+---- faac-1.28.orig/libfaac/frame.c	2004-11-17 06:26:06.000000000 -0800
+-+++ faac-1.28/libfaac/frame.c	2010-04-10 12:26:28.200614437 -0700
+-@@ -196,6 +196,8 @@
+- 			{47000, 10000},
+- 			{64000, 16000},
+- 			{76000, 20000},
+-+			{128000, 22000},
+-+			{160000, 22000},
+- #endif
+- 			{0, 0}
+- 		};
+-@@ -242,8 +244,6 @@
+- 		config->bitRate = tmpbitRate * hEncoder->sampleRate / 44100;
+- #endif
+- 
+--		if (config->bandWidth > bwbase)
+--		  config->bandWidth = bwbase;
+- 	}
+- 
+-     hEncoder->config.bitRate = config->bitRate;
+-@@ -251,6 +251,7 @@
+-     if (!config->bandWidth)
+-     {
+-         config->bandWidth = (config->quantqual - 100) * bwmult + bwbase;
+-+        config->bandWidth *= (double)hEncoder->sampleRate / 44100;
+-     }
+- 
+-     hEncoder->config.bandWidth = config->bandWidth;
+-@@ -261,8 +262,8 @@
+-     if (hEncoder->config.bandWidth > (hEncoder->sampleRate / 2))
+- 		hEncoder->config.bandWidth = hEncoder->sampleRate / 2;
+- 
+--    if (config->quantqual > 500)
+--		config->quantqual = 500;
+-+    if (config->quantqual > 700)
+-+		config->quantqual = 700;
+-     if (config->quantqual < 10)
+- 		config->quantqual = 10;
+- 
+-@@ -328,8 +329,6 @@
+-     hEncoder->config.useTns = 0;
+-     hEncoder->config.bitRate = 0; /* default bitrate / channel */
+-     hEncoder->config.bandWidth = bwfac * hEncoder->sampleRate;
+--    if (hEncoder->config.bandWidth > bwbase)
+--		hEncoder->config.bandWidth = bwbase;
+-     hEncoder->config.quantqual = 100;
+-     hEncoder->config.psymodellist = (psymodellist_t *)psymodellist;
+-     hEncoder->config.psymodelidx = 0;
+-@@ -888,8 +887,8 @@
+- 		if (((diff > 0) && (fix > 0.0)) || ((diff < 0) && (fix < 0.0)))
+- 		{
+- 			hEncoder->aacquantCfg.quality *= (1.0 - fix);
+--			if (hEncoder->aacquantCfg.quality > 300)
+--				hEncoder->aacquantCfg.quality = 300;
+-+			if (hEncoder->aacquantCfg.quality > 700)
+-+				hEncoder->aacquantCfg.quality = 700;
+-             if (hEncoder->aacquantCfg.quality < 50)
+-                 hEncoder->aacquantCfg.quality = 50;
+- 		}
+diff --git a/contrib/faac/P00-cygwin.patch b/contrib/faac/P00-cygwin.patch
+deleted file mode 100644
+index a5da42d..0000000
+--- a/contrib/faac/P00-cygwin.patch
++++ /dev/null
+@@ -1,12 +0,0 @@
+-diff -Naur faac-1.28.orig/include/faac.h faac-1.28/include/faac.h
+---- faac-1.28.orig/include/faac.h	2009-01-25 13:50:32.000000000 -0500
+-+++ faac-1.28/include/faac.h	2009-03-20 03:31:46.000000000 -0400
+-@@ -50,7 +50,7 @@
+- typedef void *faacEncHandle;
+- 
+- #ifndef HAVE_INT32_T
+--typedef signed int int32_t;
+-+//typedef signed int int32_t;
+- #endif
+- 
+- /*
+diff --git a/contrib/faac/module.defs b/contrib/faac/module.defs
+deleted file mode 100644
+index b7d91e1..0000000
+--- a/contrib/faac/module.defs
++++ /dev/null
+@@ -1,9 +0,0 @@
+-$(eval $(call import.MODULE.defs,FAAC,faac))
+-$(eval $(call import.CONTRIB.defs,FAAC))
+-
+-FAAC.FETCH.url = http://download.handbrake.fr/handbrake/contrib/faac-1.28.tar.gz
+-FAAC.EXTRACT.tarbase = faac-1.28
+-
+-# If faac not already bootstrapped then add the following
+-#FAAC.CONFIGURE.bootstrap = ./bootstrap;
+-FAAC.CONFIGURE.extra     = --without-mp4v2
+diff --git a/contrib/faac/module.rules b/contrib/faac/module.rules
+deleted file mode 100644
+index 5c31130..0000000
+--- a/contrib/faac/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,FAAC))
+-$(eval $(call import.CONTRIB.rules,FAAC))
 diff --git a/contrib/fontconfig/A00-config.patch b/contrib/fontconfig/A00-config.patch
 deleted file mode 100644
 index ae4b603..0000000
@@ -20945,6 +21052,98 @@ index ef63385..0000000
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,LIBSAMPLERATE))
 -$(eval $(call import.CONTRIB.rules,LIBSAMPLERATE))
+diff --git a/contrib/libtheora/module.defs b/contrib/libtheora/module.defs
+deleted file mode 100644
+index db29a89..0000000
+--- a/contrib/libtheora/module.defs
++++ /dev/null
+@@ -1,13 +0,0 @@
+-$(eval $(call import.MODULE.defs,LIBTHEORA,libtheora,LIBOGG LIBVORBIS))
+-$(eval $(call import.CONTRIB.defs,LIBTHEORA))
+-
+-LIBTHEORA.FETCH.url = http://download.handbrake.fr/handbrake/contrib/libtheora-1.1.0.tar.bz2
+-
+-LIBTHEORA.CONFIGURE.extra = \
+-    --disable-examples \
+-    --disable-oggtest \
+-    --disable-sdltest \
+-    --disable-vorbistest \
+-    --with-ogg=$(call fn.ABSOLUTE,$(CONTRIB.build/)) \
+-    --with-vorbis=$(call fn.ABSOLUTE,$(CONTRIB.build/)) \
+-    HAVE_PKG_CONFIG=no
+diff --git a/contrib/libtheora/module.rules b/contrib/libtheora/module.rules
+deleted file mode 100644
+index c30224b..0000000
+--- a/contrib/libtheora/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,LIBTHEORA))
+-$(eval $(call import.CONTRIB.rules,LIBTHEORA))
+diff --git a/contrib/libvorbis/P00-darwin-O4.patch b/contrib/libvorbis/P00-darwin-O4.patch
+deleted file mode 100644
+index a8aba93..0000000
+--- a/contrib/libvorbis/P00-darwin-O4.patch
++++ /dev/null
+@@ -1,21 +0,0 @@
+---- aotuv-b6.03_20110424.orig/configure.ac	2010-11-01 12:27:12.000000000 -0700
+-+++ aotuv-b6.03_20110424/configure.ac	2011-10-19 16:58:27.295806257 -0700
+-@@ -7,6 +7,7 @@
+- 
+- AC_INIT([libvorbis],[1.3.2],[vorbis-dev@xiph.org])
+- 
+-+AC_CONFIG_MACRO_DIR([m4])
+- AC_CONFIG_SRCDIR([lib/mdct.c])
+- 
+- AC_CANONICAL_TARGET([])
+-@@ -199,8 +200,8 @@
+- 		PROFILE="-pg -g -O20 -D__NO_MATH_INLINES -fsigned-char $sparc_cpu" ;;
+- 	*-*-darwin*)
+- 		DEBUG="-DDARWIN -fno-common -force_cpusubtype_ALL -Wall -g -O0 -fsigned-char"
+--		CFLAGS="-DDARWIN -fno-common -force_cpusubtype_ALL -Wall -g -O4 -ffast-math -fsigned-char"
+--		PROFILE="-DDARWIN -fno-common -force_cpusubtype_ALL -Wall -g -pg -O4 -ffast-math -fsigned-char";;
+-+		CFLAGS="-DDARWIN -fno-common -force_cpusubtype_ALL -Wall -g -O3 -ffast-math -fsigned-char"
+-+		PROFILE="-DDARWIN -fno-common -force_cpusubtype_ALL -Wall -g -pg -O3 -ffast-math -fsigned-char";;
+- 	*-*-os2*)
+- 		# Use -W instead of -Wextra because gcc on OS/2 is an old version.
+- 		DEBUG="-g -Wall -W -D_REENTRANT -D__NO_MATH_INLINES -fsigned-char"
+diff --git a/contrib/libvorbis/P01-darwin-automake.patch b/contrib/libvorbis/P01-darwin-automake.patch
+deleted file mode 100644
+index 4626fcd..0000000
+--- a/contrib/libvorbis/P01-darwin-automake.patch
++++ /dev/null
+@@ -1,9 +0,0 @@
+---- aotuv-b6.03_20110424.orig/Makefile.am	2010-03-25 18:56:26.000000000 -0700
+-+++ aotuv-b6.03_20110424/Makefile.am	2011-10-19 16:59:21.274432667 -0700
+-@@ -1,5 +1,6 @@
+- ## Process this file with automake to produce Makefile.in
+- 
+-+ACLOCAL_AMFLAGS= -I m4
+- AUTOMAKE_OPTIONS = 1.7 foreign dist-zip dist-bzip2
+- 
+- SUBDIRS = m4 include vq lib test doc
+diff --git a/contrib/libvorbis/module.defs b/contrib/libvorbis/module.defs
+deleted file mode 100644
+index 84d018f..0000000
+--- a/contrib/libvorbis/module.defs
++++ /dev/null
+@@ -1,9 +0,0 @@
+-$(eval $(call import.MODULE.defs,LIBVORBIS,libvorbis,LIBOGG))
+-$(eval $(call import.CONTRIB.defs,LIBVORBIS))
+-
+-LIBVORBIS.FETCH.url = http://download.handbrake.fr/handbrake/contrib/libvorbis-aotuv_b6.03.tar.bz2
+-LIBVORBIS.EXTRACT.tarbase = aotuv-b6.03_20110424
+-
+-LIBVORBIS.CONFIGURE.extra = --with-ogg=$(call fn.ABSOLUTE,$(CONTRIB.build/)) HAVE_PKG_CONFIG="no"
+-
+-LIBVORBIS.CONFIGURE.bootstrap = rm -fr aclocal.m4 autom4te.cache configure; autoreconf -I m4 -fiv;
+diff --git a/contrib/libvorbis/module.rules b/contrib/libvorbis/module.rules
+deleted file mode 100644
+index 418dfe0..0000000
+--- a/contrib/libvorbis/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,LIBVORBIS))
+-$(eval $(call import.CONTRIB.rules,LIBVORBIS))
 diff --git a/contrib/libxml2/module.defs b/contrib/libxml2/module.defs
 deleted file mode 100644
 index 8d25756..0000000
@@ -20969,3 +21168,77 @@ index 0715628..0000000
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,LIBXML2))
 -$(eval $(call import.CONTRIB.rules,LIBXML2))
+diff --git a/contrib/x264/P01-solaris.patch b/contrib/x264/P01-solaris.patch
+deleted file mode 100644
+index 3c0e1da..0000000
+--- a/contrib/x264/P01-solaris.patch
++++ /dev/null
+@@ -1,31 +0,0 @@
+-diff -ru x264/Makefile x264.solaris/Makefile
+---- x264/Makefile	Mon Jun  9 01:36:08 2008
+-+++ x264.solaris/Makefile	Thu Jun 19 11:54:53 2008
+-@@ -150,8 +150,10 @@
+- 	$(MAKE) -C gtk distclean
+- 
+- install: x264$(EXE) $(SONAME)
+--	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(includedir)
+--	install -d $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkgconfig
+-+	install -d $(DESTDIR)$(bindir) 
+-+	install -d $(DESTDIR)$(includedir)
+-+	install -d $(DESTDIR)$(libdir) 
+-+	install -d $(DESTDIR)$(libdir)/pkgconfig
+- 	install -m 644 x264.h $(DESTDIR)$(includedir)
+- 	install -m 644 libx264.a $(DESTDIR)$(libdir)
+- 	install -m 644 x264.pc $(DESTDIR)$(libdir)/pkgconfig
+-diff -ru x264/configure x264.solaris/configure
+---- x264/configure	Tue Aug 12 03:26:58 2008
+-+++ x264.modified/configure	Tue Aug 19 16:09:32 2008
+-@@ -329,8 +327,10 @@
+- 
+- echo "unsigned int endian = 'B' << 24 | 'I' << 16 | 'G' << 8 | 'E';" > conftest.c
+- $CC $CFLAGS conftest.c -c -o conftest.o 2>$DEVNULL || die "endian test failed"
+--grep -q BIGE conftest.o && CFLAGS="$CFLAGS -DWORDS_BIGENDIAN"
+-+/usr/bin/tr -cd "BIGE" < conftest.o | /usr/xpg4/bin/grep -q BIGE && CFLAGS="$CFLAGS -DWORDS_BIGENDIAN"
+- 
+-+echo $CFLAGS
+-+
+- # autodetect options that weren't forced nor disabled
+- 
+- libpthread=""
+diff --git a/contrib/x264/module.defs b/contrib/x264/module.defs
+deleted file mode 100644
+index 5371640..0000000
+--- a/contrib/x264/module.defs
++++ /dev/null
+@@ -1,23 +0,0 @@
+-$(eval $(call import.MODULE.defs,X264,x264,YASM PTHREADW32))
+-$(eval $(call import.CONTRIB.defs,X264))
+-
+-X264.FETCH.url = http://download.handbrake.fr/handbrake/contrib/x264-r2146-bcd41db.tar.gz
+-X264.EXTRACT.tarbase = x264
+-
+-X264.CONFIGURE.deps   =
+-X264.CONFIGURE.shared =
+-X264.CONFIGURE.static =
+-
+-X264.CONFIGURE.extra = --disable-cli --enable-static --enable-strip
+-X264.CONFIGURE.extra += --disable-gpac --disable-avs --disable-lavf --disable-ffms --disable-swscale
+-
+-ifeq (1-mingw,$(BUILD.cross)-$(BUILD.system))
+-    X264.CONFIGURE.extra += --cross-prefix=$(BUILD.spec)-
+-    X264.CONFIGURE.env.CFLAGS = CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/)include) $(call fn.ARGS,X264.GCC,*archs *sysroot *minver ?extra)"
+-    X264.CONFIGURE.env.LDFLAGS = LDFLAGS="-L$(call fn.ABSOLUTE,$(CONTRIB.build/)lib) $(call fn.ARGS,X264.GCC,*archs *sysroot *minver)"
+-endif
+-
+-ifeq (1,$(FEATURE.local_yasm))
+-    X264.CONFIGURE.env.LOCAL_PATH = PATH="$(call fn.ABSOLUTE,$(CONTRIB.build/)bin):$(PATH)"
+-    X264.BUILD.env = PATH="$(call fn.ABSOLUTE,$(CONTRIB.build/)bin):$(PATH)"
+-endif
+diff --git a/contrib/x264/module.rules b/contrib/x264/module.rules
+deleted file mode 100644
+index 182ede8..0000000
+--- a/contrib/x264/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,X264))
+-$(eval $(call import.CONTRIB.rules,X264))
