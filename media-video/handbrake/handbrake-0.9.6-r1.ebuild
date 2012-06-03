@@ -17,13 +17,10 @@ SRC_URI="http://handbrake.fr/rotation.php?file=${MY_PN}-${PV}.tar.bz2
 		${SRC_HB}a52dec-0.7.4.tar.gz -> a52dec-0.7.4-${P}.tar.gz
 		${SRC_HB}faac-1.28.tar.gz
 		${SRC_HB}ffmpeg-v0.7-1696-gcae4f4b.tar.bz2
-		${SRC_HB}lame-3.98.tar.gz
 		${SRC_HB}libdca-r81-strapped.tar.gz
 		${SRC_HB}libdvdnav-svn1168.tar.gz
 		${SRC_HB}libdvdread-svn1168.tar.gz
 		${SRC_HB}libmkv-0.6.5-0-g82075ae.tar.gz
-		${SRC_HB}libogg-1.3.0.tar.gz
-		${SRC_HB}libsamplerate-0.1.4.tar.gz
 		${SRC_HB}libtheora-1.1.0.tar.bz2
 		${SRC_HB}libvorbis-aotuv_b6.03.tar.bz2
 		${SRC_HB}mp4v2-trunk-r355.tar.bz2
@@ -46,7 +43,10 @@ RDEPEND="sys-libs/zlib
 			>=sys-fs/udev-147 )
 	>=media-libs/libass-0.10.0[fontconfig]
 	dev-libs/libxml2
-	media-libs/libbluray"
+	media-libs/libbluray
+	media-sound/lame
+	media-libs/libogg
+	media-libs/libsamplerate"
 DEPEND="=sys-devel/automake-1.11*
 	dev-lang/yasm
 	dev-libs/fribidi

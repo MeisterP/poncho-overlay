@@ -20752,6 +20752,59 @@ index d4ebbda..0000000
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,FREETYPE))
 -$(eval $(call import.CONTRIB.rules,FREETYPE))
+diff --git a/contrib/lame/P00-darwin-xmmintrin.patch b/contrib/lame/P00-darwin-xmmintrin.patch
+deleted file mode 100644
+index de19e55..0000000
+--- a/contrib/lame/P00-darwin-xmmintrin.patch
++++ /dev/null
+@@ -1,28 +0,0 @@
+-diff -Naur lame.orig/configure lame/configure
+---- lame.orig/configure	2008-06-29 17:40:05.000000000 -0400
+-+++ lame/configure	2008-10-14 05:01:29.000000000 -0400
+-@@ -21031,7 +21031,14 @@
+- 
+- 
+- 
+--
+-+case $host_cpu in
+-+powerpc*)
+-+    check_xmmintrin=
+-+    ;;
+-+*)
+-+    check_xmmintrin="xmmintrin.h"
+-+    ;;
+-+esac
+- 
+- for ac_header in \
+- 		 errno.h \
+-@@ -21042,7 +21049,7 @@
+- 		 sys/soundcard.h \
+- 		 sys/time.h \
+- 		 unistd.h \
+--		 xmmintrin.h \
+-+		 $check_xmmintrin \
+- 		 linux/soundcard.h
+- do
+- as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
+diff --git a/contrib/lame/module.defs b/contrib/lame/module.defs
+deleted file mode 100644
+index fbe842a..0000000
+--- a/contrib/lame/module.defs
++++ /dev/null
+@@ -1,5 +0,0 @@
+-$(eval $(call import.MODULE.defs,LAME,lame))
+-$(eval $(call import.CONTRIB.defs,LAME))
+-
+-LAME.FETCH.url = http://download.handbrake.fr/handbrake/contrib/lame-3.98.tar.gz
+-LAME.EXTRACT.tarbase = lame
+diff --git a/contrib/lame/module.rules b/contrib/lame/module.rules
+deleted file mode 100644
+index 058bc7b..0000000
+--- a/contrib/lame/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,LAME))
+-$(eval $(call import.CONTRIB.rules,LAME))
 diff --git a/contrib/libass/module.defs b/contrib/libass/module.defs
 deleted file mode 100644
 index 556d7cc..0000000
@@ -20814,6 +20867,84 @@ index ddea021..0000000
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,LIBBLURAY))
 -$(eval $(call import.CONTRIB.rules,LIBBLURAY))
+diff --git a/contrib/libogg/P00-darwin-O4.patch b/contrib/libogg/P00-darwin-O4.patch
+deleted file mode 100644
+index 3b218d2..0000000
+--- a/contrib/libogg/P00-darwin-O4.patch
++++ /dev/null
+@@ -1,13 +0,0 @@
+---- libogg-1.3.0.orig/configure.in	2011-08-04 10:11:08.000000000 -0700
+-+++ libogg-1.3.0/configure.in	2011-10-19 14:31:35.370790124 -0700
+-@@ -56,8 +56,8 @@
+- 		;;
+- 	*-*-darwin*)
+- 		DEBUG="-fno-common -g -Wall -fsigned-char"
+--		CFLAGS="-fno-common -O4 -Wall -fsigned-char -ffast-math"
+--		PROFILE="-fno-common -O4 -Wall -pg -g -fsigned-char -ffast-math"
+-+		CFLAGS="-fno-common -O3 -Wall -fsigned-char -ffast-math"
+-+		PROFILE="-fno-common -O3 -Wall -pg -g -fsigned-char -ffast-math"
+- 		;;
+-         *)
+-                 DEBUG="-g -Wall -fsigned-char"
+diff --git a/contrib/libogg/P01-darwin-automake-1.10.patch b/contrib/libogg/P01-darwin-automake-1.10.patch
+deleted file mode 100644
+index 6d8f0ba..0000000
+--- a/contrib/libogg/P01-darwin-automake-1.10.patch
++++ /dev/null
+@@ -1,11 +0,0 @@
+---- libogg-1.3.0.orig/Makefile.am	2011-08-04 10:37:15.000000000 -0700
+-+++ libogg-1.3.0/Makefile.am	2011-10-19 14:31:58.203289946 -0700
+-@@ -2,7 +2,7 @@
+- 
+- 
+- #AUTOMAKE_OPTIONS = foreign 1.6 dist-zip
+--AUTOMAKE_OPTIONS = foreign 1.11 dist-zip dist-xz
+-+AUTOMAKE_OPTIONS = foreign 1.10 dist-zip
+- 
+- SUBDIRS = src include doc
+- 
+diff --git a/contrib/libogg/module.defs b/contrib/libogg/module.defs
+deleted file mode 100644
+index 4b1c8c9..0000000
+--- a/contrib/libogg/module.defs
++++ /dev/null
+@@ -1,9 +0,0 @@
+-$(eval $(call import.MODULE.defs,LIBOGG,libogg))
+-$(eval $(call import.CONTRIB.defs,LIBOGG))
+-
+-LIBOGG.FETCH.url = http://download.handbrake.fr/handbrake/contrib/libogg-1.3.0.tar.gz
+-LIBOGG.EXTRACT.tarbase = libogg-1.3.0
+-
+-LIBOGG.CONFIGURE.extra = --disable-sdl
+-
+-LIBOGG.CONFIGURE.bootstrap = rm -fr aclocal.m4 autom4te.cache configure; autoreconf -fiv;
+diff --git a/contrib/libogg/module.rules b/contrib/libogg/module.rules
+deleted file mode 100644
+index 956fe07..0000000
+--- a/contrib/libogg/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,LIBOGG))
+-$(eval $(call import.CONTRIB.rules,LIBOGG))
+diff --git a/contrib/libsamplerate/module.defs b/contrib/libsamplerate/module.defs
+deleted file mode 100644
+index c99ae3a..0000000
+--- a/contrib/libsamplerate/module.defs
++++ /dev/null
+@@ -1,5 +0,0 @@
+-$(eval $(call import.MODULE.defs,LIBSAMPLERATE,libsamplerate))
+-$(eval $(call import.CONTRIB.defs,LIBSAMPLERATE))
+-
+-LIBSAMPLERATE.FETCH.url = http://download.handbrake.fr/handbrake/contrib/libsamplerate-0.1.4.tar.gz
+-LIBSAMPLERATE.EXTRACT.tarbase = libsamplerate
+diff --git a/contrib/libsamplerate/module.rules b/contrib/libsamplerate/module.rules
+deleted file mode 100644
+index ef63385..0000000
+--- a/contrib/libsamplerate/module.rules
++++ /dev/null
+@@ -1,2 +0,0 @@
+-$(eval $(call import.MODULE.rules,LIBSAMPLERATE))
+-$(eval $(call import.CONTRIB.rules,LIBSAMPLERATE))
 diff --git a/contrib/libxml2/module.defs b/contrib/libxml2/module.defs
 deleted file mode 100644
 index 8d25756..0000000
