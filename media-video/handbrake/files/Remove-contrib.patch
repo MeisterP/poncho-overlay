@@ -1,6 +1,8 @@
-diff -uNrp HandBrake-0.9.6/contrib/fontconfig/A00-config.patch HandBrake-0.9.6-unbundle/contrib/fontconfig/A00-config.patch
---- HandBrake-0.9.6/contrib/fontconfig/A00-config.patch	2012-01-09 18:45:28.000000000 +0100
-+++ HandBrake-0.9.6-unbundle/contrib/fontconfig/A00-config.patch	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/fontconfig/A00-config.patch b/contrib/fontconfig/A00-config.patch
+deleted file mode 100644
+index ae4b603..0000000
+--- a/contrib/fontconfig/A00-config.patch
++++ /dev/null
 @@ -1,20621 +0,0 @@
 -diff -Nur fontconfig-2.8.0-orig/aclocal.m4 fontconfig-2.8.0-config/aclocal.m4
 ---- fontconfig-2.8.0-orig/aclocal.m4	2009-11-18 15:49:34.000000000 -0800
@@ -20623,9 +20625,11 @@ diff -uNrp HandBrake-0.9.6/contrib/fontconfig/A00-config.patch HandBrake-0.9.6-u
 - mandir = @mandir@
 - mkdir_p = @mkdir_p@
 - ms_librarian = @ms_librarian@
-diff -uNrp HandBrake-0.9.6/contrib/fontconfig/module.defs HandBrake-0.9.6-unbundle/contrib/fontconfig/module.defs
---- HandBrake-0.9.6/contrib/fontconfig/module.defs	2012-01-09 18:45:28.000000000 +0100
-+++ HandBrake-0.9.6-unbundle/contrib/fontconfig/module.defs	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/fontconfig/module.defs b/contrib/fontconfig/module.defs
+deleted file mode 100644
+index 2309159..0000000
+--- a/contrib/fontconfig/module.defs
++++ /dev/null
 @@ -1,94 +0,0 @@
 -__deps__ := FREETYPE LIBXML2
 -$(eval $(call import.MODULE.defs,FONTCONFIG,fontconfig,$(__deps__)))
@@ -20721,30 +20725,38 @@ diff -uNrp HandBrake-0.9.6/contrib/fontconfig/module.defs HandBrake-0.9.6-unbund
 -
 -# disable fc-cache test during install phase
 -FONTCONFIG.INSTALL.extra = RUN_FC_CACHE_TEST=false
-diff -uNrp HandBrake-0.9.6/contrib/fontconfig/module.rules HandBrake-0.9.6-unbundle/contrib/fontconfig/module.rules
---- HandBrake-0.9.6/contrib/fontconfig/module.rules	2010-09-29 00:10:49.000000000 +0200
-+++ HandBrake-0.9.6-unbundle/contrib/fontconfig/module.rules	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/fontconfig/module.rules b/contrib/fontconfig/module.rules
+deleted file mode 100644
+index 72ebbd9..0000000
+--- a/contrib/fontconfig/module.rules
++++ /dev/null
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,FONTCONFIG))
 -$(eval $(call import.CONTRIB.rules,FONTCONFIG))
-diff -uNrp HandBrake-0.9.6/contrib/freetype/module.defs HandBrake-0.9.6-unbundle/contrib/freetype/module.defs
---- HandBrake-0.9.6/contrib/freetype/module.defs	2011-10-21 20:24:38.000000000 +0200
-+++ HandBrake-0.9.6-unbundle/contrib/freetype/module.defs	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/freetype/module.defs b/contrib/freetype/module.defs
+deleted file mode 100644
+index 4f00d68..0000000
+--- a/contrib/freetype/module.defs
++++ /dev/null
 @@ -1,5 +0,0 @@
 -$(eval $(call import.MODULE.defs,FREETYPE,freetype))
 -$(eval $(call import.CONTRIB.defs,FREETYPE))
 -
 -FREETYPE.FETCH.url = http://download.handbrake.fr/handbrake/contrib/freetype-2.4.7.tar.bz2
 -
-diff -uNrp HandBrake-0.9.6/contrib/freetype/module.rules HandBrake-0.9.6-unbundle/contrib/freetype/module.rules
---- HandBrake-0.9.6/contrib/freetype/module.rules	2010-09-29 00:10:49.000000000 +0200
-+++ HandBrake-0.9.6-unbundle/contrib/freetype/module.rules	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/freetype/module.rules b/contrib/freetype/module.rules
+deleted file mode 100644
+index d4ebbda..0000000
+--- a/contrib/freetype/module.rules
++++ /dev/null
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,FREETYPE))
 -$(eval $(call import.CONTRIB.rules,FREETYPE))
-diff -uNrp HandBrake-0.9.6/contrib/libass/module.defs HandBrake-0.9.6-unbundle/contrib/libass/module.defs
---- HandBrake-0.9.6/contrib/libass/module.defs	2011-10-22 18:35:35.000000000 +0200
-+++ HandBrake-0.9.6-unbundle/contrib/libass/module.defs	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/libass/module.defs b/contrib/libass/module.defs
+deleted file mode 100644
+index 556d7cc..0000000
+--- a/contrib/libass/module.defs
++++ /dev/null
 @@ -1,16 +0,0 @@
 -__deps__ := FONTCONFIG FREETYPE FRIBIDI
 -$(eval $(call import.MODULE.defs,LIBASS,libass,$(__deps__)))
@@ -20762,15 +20774,19 @@ diff -uNrp HandBrake-0.9.6/contrib/libass/module.defs HandBrake-0.9.6-unbundle/c
 -    FONTCONFIG_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include" \
 -    FRIBIDI_LIBS="-L$(call fn.ABSOLUTE,$(CONTRIB.build/))lib -lfribidi" \
 -    FRIBIDI_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include"
-diff -uNrp HandBrake-0.9.6/contrib/libass/module.rules HandBrake-0.9.6-unbundle/contrib/libass/module.rules
---- HandBrake-0.9.6/contrib/libass/module.rules	2010-09-29 00:10:49.000000000 +0200
-+++ HandBrake-0.9.6-unbundle/contrib/libass/module.rules	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/libass/module.rules b/contrib/libass/module.rules
+deleted file mode 100644
+index 67a5ab6..0000000
+--- a/contrib/libass/module.rules
++++ /dev/null
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,LIBASS))
 -$(eval $(call import.CONTRIB.rules,LIBASS))
-diff -uNrp HandBrake-0.9.6/contrib/libxml2/module.defs HandBrake-0.9.6-unbundle/contrib/libxml2/module.defs
---- HandBrake-0.9.6/contrib/libxml2/module.defs	2011-02-04 20:54:10.000000000 +0100
-+++ HandBrake-0.9.6-unbundle/contrib/libxml2/module.defs	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/libxml2/module.defs b/contrib/libxml2/module.defs
+deleted file mode 100644
+index 8d25756..0000000
+--- a/contrib/libxml2/module.defs
++++ /dev/null
 @@ -1,10 +0,0 @@
 -$(eval $(call import.MODULE.defs,LIBXML2,libxml2))
 -$(eval $(call import.CONTRIB.defs,LIBXML2))
@@ -20782,9 +20798,11 @@ diff -uNrp HandBrake-0.9.6/contrib/libxml2/module.defs HandBrake-0.9.6-unbundle/
 -# in the MinGW environment.
 -LIBXML2.CONFIGURE.extra = \
 -    --without-python --without-threads
-diff -uNrp HandBrake-0.9.6/contrib/libxml2/module.rules HandBrake-0.9.6-unbundle/contrib/libxml2/module.rules
---- HandBrake-0.9.6/contrib/libxml2/module.rules	2010-09-29 00:10:49.000000000 +0200
-+++ HandBrake-0.9.6-unbundle/contrib/libxml2/module.rules	1970-01-01 01:00:00.000000000 +0100
+diff --git a/contrib/libxml2/module.rules b/contrib/libxml2/module.rules
+deleted file mode 100644
+index 0715628..0000000
+--- a/contrib/libxml2/module.rules
++++ /dev/null
 @@ -1,2 +0,0 @@
 -$(eval $(call import.MODULE.rules,LIBXML2))
 -$(eval $(call import.CONTRIB.rules,LIBXML2))

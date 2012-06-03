@@ -64,7 +64,8 @@ src_prepare() {
 	cp "${DISTDIR}"/a52dec-0.7.4-${P}.tar.gz \
 		"${S}"/download/a52dec-0.7.4.tar.gz || die "copying died"
 
-	epatch "${FILESDIR}"/000{1,2,3}-unbundle.patch
+	epatch "${FILESDIR}"/Fix-make-and-test.patch
+	epatch "${FILESDIR}"/Remove-contrib.patch
 }
 
 src_unpack() {
