@@ -11,7 +11,7 @@ MY_ARCH="${ARCH/amd64/x86_64}"
 
 DESCRIPTION="Amnesia: The Dark Descent is a first person survival horror. A game about immersion, discovery and living through a nightmare."
 HOMEPAGE="http://www.amnesiagame.com/"
-SRC_URI="${MY_PN}_${PV}-1.sh"
+SRC_URI="${MY_PN}_${PV}-2.sh"
 
 RESTRICT="fetch strip"
 LICENSE="Frictional_Games-EULA"
