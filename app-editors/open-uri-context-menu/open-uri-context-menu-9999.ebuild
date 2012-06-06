@@ -26,4 +26,3 @@ src_install() {
 	doins ${PN}.{plugin,py}
 	dodoc doc/{LISEZ-MOI,README}.mkd
 }
-
