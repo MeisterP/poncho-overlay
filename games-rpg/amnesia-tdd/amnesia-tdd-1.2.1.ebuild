@@ -2,16 +2,17 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=3
 
 inherit check-reqs eutils games unpacker
 
 MY_PN="${PN//-/_}"
 MY_ARCH="${ARCH/amd64/x86_64}"
+MY_REV="-2"
 
 DESCRIPTION="Amnesia: The Dark Descent is a first person survival horror. A game about immersion, discovery and living through a nightmare."
 HOMEPAGE="http://www.amnesiagame.com/"
-SRC_URI="${MY_PN}_${PV}-2.sh"
+SRC_URI="${MY_PN}_${PV}${MY_REV}.sh"
 
 RESTRICT="fetch strip"
 LICENSE="Frictional_Games-EULA"
@@ -35,13 +36,10 @@ RDEPEND="media-libs/freealut
 	x11-libs/libXext
 	virtual/glu
 	virtual/opengl"
-	#x11-libs/fltk:1
-
-CHECKREQS_DISK_BUILD="3500M"
 
 S="${WORKDIR}/${PN}"
 
-GAMEDIR="${GAMES_DATADIR}/${PN}"
+GAMEDIR="${GAMES_PREFIX_OPT}/${PN}"
 
 pkg_nofetch() {
 	einfo ""
@@ -52,58 +50,46 @@ pkg_nofetch() {
 }
 
 pkg_setup() {
-	einfo "arch = $ARCH"
+	CHECKREQS_DISK_BUILD="3500M"
+	check-reqs_pkg_setup
 	games_pkg_setup
 }
 
 src_unpack() {
 	einfo "\nUnpacking files.  This will take several minutes.\n"
 
-	mkdir "${S}" || die "mkdir "${S}" failed"
-	cd "${S}" || die "cd 'tmp' failed"
+	mkdir "tmp" || die "mkdir 'tmp' failed"
+	cd "./tmp" || die "cd 'tmp' failed"
 
 	unpack_makeself || die "unpack_makeself failed"
-	
-	#extraction of the main install archive fails with system lzma tool
-	#mv "instarchive_all" "../${P}.tar.lzma" || die "move 'instarchive_all' failed"
+
+	mv "instarchive_all" "../${P}.tar.lzma" || die "move 'instarchive_all' failed"
 	mv "instarchive_all_${MY_ARCH}" "../${P}-${MY_ARCH}.tar.lzma" || die "move 'instarchive_all_${MY_ARCH}' failed"
-	
+
 	cd "${WORKDIR}" || die "cd '${WORKDIR}' failed"
-	
-	#unpack "./${P}.tar.lzma" || die "unpack '${P}.tar.lzma' failed"
-	#rm "./${P}.tar.lzma"
+	rm -rf "./tmp"
+
+	# This version is packed incorrectly and lzma will 'fail' at end of unpack
+	#	output tarball is ok, though, decompress manually to skip
+	#	unpack error checking of the LZMA decompression
+	echo ">>> Unpacking ./${P}.tar.lzma to /tmp/portage/games-rpg/amnesia-tdd-1.2.1/work"
+	xz -F lzma -d -c "./${P}.tar.lzma" 2>/dev/null | tar xf - \
+		|| die "unpacking '${P}.tar.lzma' failed"
+	rm "./${P}.tar.lzma"
 
 	unpack "./${P}-${MY_ARCH}.tar.lzma" || die "unpack '${P}-${MY_ARCH}.tar.lzma' failed"
 	rm "./${P}-${MY_ARCH}.tar.lzma"
+
+	mv "Amnesia" "${PN}" || die "mv 'Amnesia' failed"
+
+	# libfltk.so.1.1 is needed because it's no longer in portage
+	mv "${S}"/libs*/all/libfltk* "${S}"/libs*/
 }
 
 src_prepare() {
-	# libfltk.so.1.1 is needed because it's no longer in portage
-	case "${ARCH/amd64/x86_64}" in
-		"x86") LIBDIR="libs";;
-		"x86_64") LIBDIR="libs64";;
-		*) die "Unsupported arch";;
-	esac
-	einfo "PWD = $PWD"
-	mv ${WORKDIR}"/Amnesia/"${LIBDIR}"/all/libfltk.so.1.1" ${WORKDIR}"/Amnesia/"${LIBDIR}/ || die "libfltk extraction failed"
-
-	#run startupinstaller.sh because lzma in portage fails
-	cd ${S} || dir "cd "${S}" failed."
-	./startupinstaller.sh --unattended --accept-license --destdir ${WORKDIR}|| die "unpacker died"
-	
-	mv "icon.xpm" "../${PN}.xpm" || die "mv 'icon.xml' failed"
-
-	#reset ${S} for outprocessing
-	cd "${WORKDIR}" || die "cd "${WORKDIR}" failed"
-	rm -rf "${S}"
-	
-	mv "Amnesia" "${S}" || die "mv 'Amnesia' failed"
-	cd ${S}
-
 	# Files to remove.
 	REMOVE="libs*/*
 		*.pdf
-		*.png
 		*.rtf
 		*.sh"
 
@@ -247,7 +233,6 @@ src_install() {
 	doexe libs*/* || die "doexe \"libs\" failed"
 
 	dosym "/usr/$(get_libdir)/libGLEW.so" "${libsdir}/libGLEW.so.1.5"
-	#dosym "/usr/$(get_libdir)/fltk-1/libfltk.so" "${libsdir}/libfltk.so.1.1"
 
 	exeinto "${GAMEDIR}" || die "exeinto \"${GAMEDIR}\" failed"
 	doexe *.bin || die "doexe \".bin\" binaries failed"
@@ -280,10 +265,9 @@ EOF
 
 
 	# Install icon and desktop file
-	local icon="${PN}.xpm"
-	doicon "../${icon}" || die "newicon \"${icon}\" failed"
-	make_desktop_entry "${PN}" "Amnesia: The Dark Descent" "/usr/share/pixmaps/${icon}" || die "make_desktop_entry failed"
-	make_desktop_entry "${ext}" "Amnesia: The Dark Descent - Justine" "/usr/share/pixmaps/${icon}" || die "make_desktop_entry failed"
+	newicon "Amnesia.png" "${PN}.png" || die "newicon failed"
+	make_desktop_entry "${PN}" "Amnesia: The Dark Descent" "${PN}" || die "make_desktop_entry failed"
+	make_desktop_entry "${ext}" "Amnesia: The Dark Descent - Justine" "${PN}" || die "make_desktop_entry failed"
 
 
 	# Install documentation
