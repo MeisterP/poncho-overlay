@@ -40,7 +40,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/track_dynamic_library_handles_and_free_them_on_exit.patch
 
 	# http://lists.freedesktop.org/archives/vdpau/2012-May/000022.html
-    epatch "${FILESDIR}"/libvdpau_flashplayer.patch
+	epatch "${FILESDIR}"/libvdpau_flashplayer.patch
 
 	./autogen.sh
 }
