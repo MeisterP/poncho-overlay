@@ -41,6 +41,8 @@ src_prepare() {
 
 	# http://lists.freedesktop.org/archives/vdpau/2012-May/000022.html
     epatch "${FILESDIR}"/libvdpau_flashplayer.patch
+
+	./autogen.sh
 }
 
 src_configure() {
