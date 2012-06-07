@@ -36,7 +36,11 @@ DEPEND="${RDEPEND}
 DOCS="AUTHORS ChangeLog"
 
 src_prepare() {
-	epatch "${FILESDIR}"/0001-vdpau_trace-WAR-Flash-quirks.patch
+	# http://cgit.freedesktop.org/~aplattner/libvdpau/commit/?id=4262513e67c3572ed19bd796ec6180cdde7ccb7e
+	epatch "${FILESDIR}"/track_dynamic_library_handles_and_free_them_on_exit.patch
+
+	# http://lists.freedesktop.org/archives/vdpau/2012-May/000022.html
+    epatch "${FILESDIR}"/libvdpau_flashplayer.patch
 }
 
 src_configure() {
