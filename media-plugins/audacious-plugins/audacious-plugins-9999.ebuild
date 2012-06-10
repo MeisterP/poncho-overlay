@@ -15,17 +15,17 @@ EGIT_REPO_URI="https://github.com/audacious-media-player/audacious-plugins.git"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome +gtk gtk3 ipv6 jack
-lame libnotify libsamplerate midi mms mp3 mtp nls oss pulseaudio scrobbler sid sndfile vorbis wavpack"
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
+lame libnotify libsamplerate midi mms mp3 nls oss pulseaudio scrobbler sid sndfile vorbis wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
+	dev-libs/gobject-introspection
 	media-libs/libmodplug
-	>=media-sound/audacious-3.2
+	>=media-sound/audacious-9999
 	>=net-libs/neon-0.26.4
-	gtk? ( x11-libs/gtk+:2 )
-	gtk3? ( x11-libs/gtk+:3 )
+	x11-libs/gtk+:3
 	aac? ( >=media-libs/faad2-2.7 )
 	adplug? ( >=dev-cpp/libbinio-1.4 )
 	alsa? ( >=media-libs/alsa-lib-1.0.16 )
@@ -45,7 +45,6 @@ RDEPEND="app-arch/unzip
 	libsamplerate? ( media-libs/libsamplerate )
 	mms? ( >=media-libs/libmms-0.3 )
 	mp3? ( >=media-sound/mpg123-1.12.1 )
-	mtp? ( media-libs/libmtp )
 	pulseaudio? ( >=media-sound/pulseaudio-0.9.3 )
 	scrobbler? ( net-misc/curl )
 	sid? ( >=media-libs/libsidplay-2.1.1-r2 )
@@ -57,8 +56,6 @@ RDEPEND="app-arch/unzip
 DEPEND="${RDEPEND}
 	nls? ( dev-util/intltool )
 	virtual/pkgconfig"
-
-REQUIRED_USE="^^ ( gtk gtk3 )"
 
 mp3_warning() {
 	if ! use mp3 ; then
@@ -87,7 +84,6 @@ src_configure() {
 		$(use_enable flac flacng) \
 		$(use_enable fluidsynth amidiplug-flsyn) \
 		$(use_enable flac filewriter_flac) \
-		$(use_enable gtk3) \
 		$(use_enable ipv6) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \
@@ -97,15 +93,13 @@ src_configure() {
 		$(use_enable mms) \
 		$(use_enable mp3) \
 		$(use_enable midi amidiplug) \
-		$(use_enable mtp mtp_up) \
 		$(use_enable nls) \
-		$(use_enable oss) \
+		$(use_enable oss oss4) \
 		$(use_enable pulseaudio pulse) \
 		$(use_enable scrobbler) \
 		$(use_enable sid) \
 		$(use_enable sndfile) \
 		$(use_enable vorbis) \
-		$(use_enable vorbis filewriter_vorbis) \
 		$(use_enable wavpack)
 }
 
