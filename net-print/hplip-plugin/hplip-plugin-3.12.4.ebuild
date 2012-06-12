@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-inherit eutils multilib
+inherit eutils multilib unpacker
 
 DESCRIPTION="Proprietary plugins and firmware for HPLIP"
 HOMEPAGE="http://hplipopensource.com/hplip-web/index.html"
@@ -59,4 +59,16 @@ src_install() {
 		exeinto "${HPLIP_HOME}"/${plugin_type}/plugins
 		newexe ${plugin} ${plugin/-${hplip_arch}} || die "failed to install ${plugin}"
 	done
+}
+
+pkg_postinst() {
+    echo "# hplip.state - HPLIP runtime persistent variables." > /var/lib/hp/hplip.state
+	echo "" >> /var/lib/hp/hplip.state
+	echo "[plugin]" >> /var/lib/hp/hplip.state
+    echo "installed=1" >> /var/lib/hp/hplip.state
+    echo "eula=1" >> /var/lib/hp/hplip.state
+}
+
+pkg_postrm() {
+	sed -ri 's/(installed|eula)=1/\1=0/' /var/lib/hp/hplip.state
 }
