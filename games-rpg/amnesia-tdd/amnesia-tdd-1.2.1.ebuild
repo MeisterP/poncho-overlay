@@ -1,14 +1,14 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 inherit check-reqs eutils games unpacker
 
 MY_PN="${PN//-/_}"
-MY_ARCH="${ARCH/amd64/x86_64}"
 MY_REV="-2"
+MY_ARCH="${ARCH/amd64/x86_64}"
 
 DESCRIPTION="Amnesia: The Dark Descent is a first person survival horror. A game about immersion, discovery and living through a nightmare."
 HOMEPAGE="http://www.amnesiagame.com/"
@@ -37,6 +37,8 @@ RDEPEND="media-libs/freealut
 	virtual/glu
 	virtual/opengl"
 
+CHECKREQS_DISK_BUILD="3500M"
+
 S="${WORKDIR}/${PN}"
 
 GAMEDIR="${GAMES_PREFIX_OPT}/${PN}"
@@ -50,16 +52,13 @@ pkg_nofetch() {
 }
 
 pkg_setup() {
-	CHECKREQS_DISK_BUILD="3500M"
-	check-reqs_pkg_setup
 	games_pkg_setup
 }
 
 src_unpack() {
 	einfo "\nUnpacking files.  This will take several minutes.\n"
-
-	mkdir "tmp" || die "mkdir 'tmp' failed"
-	cd "./tmp" || die "cd 'tmp' failed"
+	mkdir "${S}" || die "mkdir "${S}" failed"
+	cd "${S}" || die "cd '${S}' failed"
 
 	unpack_makeself || die "unpack_makeself failed"
 
@@ -67,26 +66,25 @@ src_unpack() {
 	mv "instarchive_all_${MY_ARCH}" "../${P}-${MY_ARCH}.tar.lzma" || die "move 'instarchive_all_${MY_ARCH}' failed"
 
 	cd "${WORKDIR}" || die "cd '${WORKDIR}' failed"
-	rm -rf "./tmp"
 
-	# This version is packed incorrectly and lzma will 'fail' at end of unpack
-	#	output tarball is ok, though, decompress manually to skip
-	#	unpack error checking of the LZMA decompression
-	echo ">>> Unpacking ./${P}.tar.lzma to /tmp/portage/games-rpg/amnesia-tdd-1.2.1/work"
-	xz -F lzma -d -c "./${P}.tar.lzma" 2>/dev/null | tar xf - \
-		|| die "unpacking '${P}.tar.lzma' failed"
+	echo ">>> Unpacking ./${P}.tar.lzma to ${WORKDIR}"
+	#Standard unpack fails due to poor quality of archive
+	xz -F lzma -d -c "./${P}.tar.lzma" 2>/dev/null | tar xf - || die "unpacking '${P}.tar.lzma' failed"
 	rm "./${P}.tar.lzma"
 
 	unpack "./${P}-${MY_ARCH}.tar.lzma" || die "unpack '${P}-${MY_ARCH}.tar.lzma' failed"
 	rm "./${P}-${MY_ARCH}.tar.lzma"
-
-	mv "Amnesia" "${PN}" || die "mv 'Amnesia' failed"
-
-	# libfltk.so.1.1 is needed because it's no longer in portage
-	mv "${S}"/libs*/all/libfltk* "${S}"/libs*/
 }
 
 src_prepare() {
+	# libfltk.so.1.1 is needed because it's no longer in portage
+	mv "${WORKDIR}"/Amnesia/libs*/all/libfltk* "${WORKDIR}"/Amnesia/libs*/ || die "libfltk extraction failed"
+
+	#reset ${S} for outprocessing
+	rm -rf "${S}"
+	mv "${WORKDIR}/Amnesia" "${S}" || die "mv 'Amnesia' failed"
+	cd ${S}
+
 	# Files to remove.
 	REMOVE="libs*/*
 		*.pdf
@@ -117,12 +115,12 @@ src_prepare() {
 			LANG_ARRAY=(${LANG_ARRAY[@]} "${tmp}")
 
 			case "${tmp}" in
-			    "de") tmp="german";;
-			    "es") tmp="spanish";;
-			    "fr") tmp="french";;
-			    "it") tmp="italian";;
-			    "ru") tmp="russian";;
-			    *) tmp="";;
+				"de") tmp="german";;
+				"es") tmp="spanish";;
+				"fr") tmp="french";;
+				"it") tmp="italian";;
+				"ru") tmp="russian";;
+				*) tmp="";;
 			esac
 			LANGUAGE_ARRAY=(${LANGUAGE_ARRAY[@]} "${tmp}")
 			LANGUAGE_SHORT_ARRAY=(${LANGUAGE_SHORT_ARRAY[@]} "${tmp:0:3}")
@@ -222,6 +220,7 @@ src_install() {
 
 	# Install libraries and executables
 	einfo " Installing libraries and executables ..."
+
 	if use amd64
 	then
 		local libsdir="${GAMEDIR}/libs64"
@@ -229,53 +228,46 @@ src_install() {
 		local libsdir="${GAMEDIR}/libs"
 	fi
 
-	exeinto "${libsdir}" || die "exeinto \"${libsdir}\" failed"
+	exeinto "${libsdir}"
 	doexe libs*/* || die "doexe \"libs\" failed"
-
 	dosym "/usr/$(get_libdir)/libGLEW.so" "${libsdir}/libGLEW.so.1.5"
 
-	exeinto "${GAMEDIR}" || die "exeinto \"${GAMEDIR}\" failed"
+	exeinto "${GAMEDIR}"
 	doexe *.bin || die "doexe \".bin\" binaries failed"
 
-
 	# Make game wrapper
-	dodir "${GAMES_BINDIR}" || die "dodir \"${GAMES_BINDIR}\" failed"
-
-	local wrapper="${D}/${GAMES_BINDIR}/${PN}"
+	local wrapper="${S}/${PN}"
 	local ext="${PN}-justine"
-	touch "${wrapper}" || die "touch \"${wrapper}\" failed"
-	ln -s "${wrapper}" "${D}/${GAMES_BINDIR}/${ext}" || die "ln -s \"${ext}\" failed"
 
-	cat << EOF >> "${wrapper}" || die "echo failed"
+	cat << EOF > "${wrapper}" || die "echo failed"
 #!/bin/sh
-cd "${GAMEDIR}"
-
 if [[ "\$(basename "\${0}")" == "${ext}" ]]
 then
-  params="ptest \${@}"
+	params="ptest \${@}"
 fi
 
 if [[ -w "\${HOME}/.frictionalgames/Amnesia/Main/main_settings.cfg" ]]
 then
-  exec ./Amnesia.bin \${params:-"\${@}"}
+	exec ./Amnesia.bin \${params:-"\${@}"}
 else
-  exec ./Launcher.bin "\${@}"
+	exec ./Launcher.bin "\${@}"
 fi
 EOF
 
+	# Install wrapper
+	dogamesbin "${wrapper}" || die "dogamesbin ${wrapper} failed"
+	dosym "${PN}" "${GAMES_BINDIR}/${ext}"
 
 	# Install icon and desktop file
 	newicon "Amnesia.png" "${PN}.png" || die "newicon failed"
-	make_desktop_entry "${PN}" "Amnesia: The Dark Descent" "${PN}" || die "make_desktop_entry failed"
-	make_desktop_entry "${ext}" "Amnesia: The Dark Descent - Justine" "${PN}" || die "make_desktop_entry failed"
-
+	make_desktop_entry "${PN}" "Amnesia: The Dark Descent" "/usr/share/pixmaps/${PN}.png" || die "make_desktop_entry failed"
+	make_desktop_entry "${ext}" "Amnesia: The Dark Descent - Justine" "/usr/share/pixmaps/${PN}.png" || die "make_desktop_entry failed"
 
 	# Install documentation
 	if use doc
 	then
 		dodoc *.rtf *.pdf || die "dodoc failed"
 	fi
-
 
 	# Setting permissions.
 	einfo " Setting permissions ..."
