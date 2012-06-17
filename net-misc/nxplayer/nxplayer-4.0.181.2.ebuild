@@ -43,7 +43,7 @@ src_install()
 		dodir /usr/share/icons/hicolor/${size}/apps
 		for icon in desktop icon; do
 			dosym ${NXROOT}/share/icons/${size}/nxplayer-${icon}.png \
-				/usr/share/icons/hicolor/${size}/apps
+				/usr/share/icons/hicolor/${size}/apps/nxplayer-${icon}.png
 			done
 		done
 	make_desktop_entry "nxplayer" "NX Player" nxplayer-icon
