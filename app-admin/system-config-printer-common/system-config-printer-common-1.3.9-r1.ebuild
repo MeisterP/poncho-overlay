@@ -52,6 +52,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-1.3.9-split.patch"
+	epatch "${FILESDIR}/add-usr-libexec-cups-filter-to-the-filter-search-path.patch"
 	eautoreconf
 }
 
