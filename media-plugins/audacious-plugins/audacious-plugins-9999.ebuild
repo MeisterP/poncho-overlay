@@ -1,27 +1,25 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-plugins/audacious-plugins/audacious-plugins-3.1.1.ebuild,v 1.2 2012/01/17 13:18:35 klausman Exp $
+# $Header:
 
 EAPI=4
-
-inherit eutils flag-o-matic git-2
+inherit git-2
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
-HOMEPAGE="https://github.com/audacious-media-player/audacious-plugins/"
+HOMEPAGE="http://audacious-media-player.org/"
 EGIT_REPO_URI="https://github.com/audacious-media-player/audacious-plugins.git"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
 IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
-lame libnotify libsamplerate midi mms mp3 nls oss pulseaudio scrobbler sid sndfile vorbis wavpack"
+lame libnotify libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile vorbis wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
-	dev-libs/gobject-introspection
 	media-libs/libmodplug
 	>=media-sound/audacious-9999
 	>=net-libs/neon-0.26.4
@@ -33,8 +31,7 @@ RDEPEND="app-arch/unzip
 	cdda? ( >=media-libs/libcddb-1.2.1
 		>=dev-libs/libcdio-0.79-r1 )
 	cue? ( media-libs/libcue )
-	ffmpeg? ( >=media-video/ffmpeg-0.7.3
-		  !media-video/libav )
+	ffmpeg? ( >=virtual/ffmpeg-0.7.3 )
 	flac? ( >=media-libs/libvorbis-1.0
 		>=media-libs/flac-1.2.1-r1 )
 	fluidsynth? ( media-sound/fluidsynth )
@@ -43,10 +40,12 @@ RDEPEND="app-arch/unzip
 	lame? ( media-sound/lame )
 	libnotify? ( x11-libs/libnotify )
 	libsamplerate? ( media-libs/libsamplerate )
+	lirc? ( app-misc/lirc )
 	mms? ( >=media-libs/libmms-0.3 )
 	mp3? ( >=media-sound/mpg123-1.12.1 )
 	pulseaudio? ( >=media-sound/pulseaudio-0.9.3 )
 	scrobbler? ( net-misc/curl )
+	sdl? ( media-libs/libsdl[audio] )
 	sid? ( >=media-libs/libsidplay-2.1.1-r2 )
 	sndfile? ( >=media-libs/libsndfile-1.0.17-r1 )
 	vorbis? ( >=media-libs/libvorbis-1.2.0
@@ -56,6 +55,8 @@ RDEPEND="app-arch/unzip
 DEPEND="${RDEPEND}
 	nls? ( dev-util/intltool )
 	virtual/pkgconfig"
+
+DOCS="AUTHORS"
 
 mp3_warning() {
 	if ! use mp3 ; then
@@ -90,24 +91,16 @@ src_configure() {
 		$(use_enable lame filewriter_mp3) \
 		$(use_enable libnotify notify) \
 		$(use_enable libsamplerate resample) \
+		$(use_enable lirc) \
 		$(use_enable mms) \
 		$(use_enable mp3) \
 		$(use_enable midi amidiplug) \
 		$(use_enable nls) \
-		$(use_enable oss oss4) \
 		$(use_enable pulseaudio pulse) \
 		$(use_enable scrobbler) \
+		$(use_enable sdl sdlout) \
 		$(use_enable sid) \
 		$(use_enable sndfile) \
 		$(use_enable vorbis) \
 		$(use_enable wavpack)
-}
-
-src_compile() {
-	emake || die "make failed"
-}
-
-src_install() {
-	emake DESTDIR="${D}" install || die
-	dodoc AUTHORS
 }
