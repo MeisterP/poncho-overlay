@@ -51,6 +51,8 @@ pkg_setup() {
 src_prepare() {
 	sed -i -e "s/\(Categories=\).*/\1Game;Emulator;/" etc/PlayOnLinux.desktop \
 		|| die
+	sed -i -e "/^Icon=/s:\/usr/share/playonlinux/etc/playonlinux.png:${PN}:" etc/PlayOnLinux.desktop \
+		|| die
 	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i lib/variables playonlinux || die
 	python_convert_shebangs -r 2 .
 }
