@@ -28,7 +28,7 @@ src_prepare() {
 
 	for gitfile in $(find "${S}" -name ".git*");
 		do rm -rf "${gitfile}"
-    done
+	done
 
 }
 

@@ -14,6 +14,7 @@ EGIT_BRANCH="gnome3.4"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
+IUSE=""
 
 COMMON_DEPEND="
 		>=dev-libs/glib-2.26

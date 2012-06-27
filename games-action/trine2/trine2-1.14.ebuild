@@ -25,9 +25,9 @@ RDEPEND="amd64? (
 	  app-emulation/emul-linux-x86-opengl
 	  app-emulation/emul-linux-x86-sdl
 	  app-emulation/emul-linux-x86-soundlibs
-	  app-emulation/emul-linux-x86-xlibs 
+	  app-emulation/emul-linux-x86-xlibs
 	  app-emulation/emul-linux-x86-gtklibs )
-	  
+
 	x86? (
 	  dev-libs/glib
 	  media-libs/freetype
@@ -97,12 +97,12 @@ src_install() {
 	# Install data files:
 	insinto "${GAMEDIR}" || die "insinto \"${GAMEDIR}\" failed"
 	doins -r data* || die "doins \"data\" failed"
-	
+
 	# Install executables and libraries:
 	exeinto "${GAMEDIR}" || die "exeinto \"${GAMEDIR}\" failed"
 	newexe "bin/trine2_linux_32bit" "${PN}" || die "newexe \"${PN}\" failed"
 	newexe "bin/trine2_linux_launcher_32bit" "${PN}-launcher" || die "newexe \"${PN}-launcher\" failed"
-	
+
 	exeinto "${GAMEDIR}/lib" || die "exeinto \"${GAMEDIR}/lib\" failed"
 	( use "amd64" || use "bundled-libs" ) && ( find lib*/lib* -type f -iname '*.so*' -exec doexe '{}' \+ || die "doins bundled libs failed" )
 
@@ -110,11 +110,10 @@ src_install() {
 	games_make_wrapper "${PN}" "./${PN} &> /dev/null" "${GAMEDIR}" "$( ( use "amd64" || use "bundled-libs" ) && echo "${GAMEDIR}/lib" )" || die "games_make_wrapper \"${PN}\" failed"
 	games_make_wrapper "${PN}-launcher" "./${PN}-launcher &> /dev/null" "${GAMEDIR}" "$( ( use "amd64" || use "bundled-libs" ) && echo "${GAMEDIR}/lib" )" || die "games_make_wrapper \"${PN}-launcher\" failed"
 
-
 	# Install icon and desktop files:
 	doicon "${PN}.png" || die "doicon \"${PN}.png\" failed"
 	make_desktop_entry "${PN}" "${MY_PN}" "/usr/share/pixmaps/${PN}.png" || die "make_desktop_entry failed"
-	
+
 	# Install docs:
 	dodoc "KNOWN_LINUX_ISSUES" || die "dodoc failed"
 

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -62,11 +62,11 @@ src_install() {
 }
 
 pkg_postinst() {
-    echo "# hplip.state - HPLIP runtime persistent variables." > /var/lib/hp/hplip.state
+	echo "# hplip.state - HPLIP runtime persistent variables." > /var/lib/hp/hplip.state
 	echo "" >> /var/lib/hp/hplip.state
 	echo "[plugin]" >> /var/lib/hp/hplip.state
-    echo "installed=1" >> /var/lib/hp/hplip.state
-    echo "eula=1" >> /var/lib/hp/hplip.state
+	echo "installed=1" >> /var/lib/hp/hplip.state
+	echo "eula=1" >> /var/lib/hp/hplip.state
 }
 
 pkg_postrm() {

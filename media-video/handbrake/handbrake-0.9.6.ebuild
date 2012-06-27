@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit gnome2-utils eutils autotools
+inherit gnome2-utils eutils
 
 MY_PN="HandBrake"
 S="${WORKDIR}/${MY_PN}-${PV}"

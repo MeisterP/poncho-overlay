@@ -10,7 +10,7 @@ MY_PN="${PN//-/_}"
 MY_REV="-2"
 MY_ARCH="${ARCH/amd64/x86_64}"
 
-DESCRIPTION="Amnesia: The Dark Descent is a first person survival horror. A game about immersion, discovery and living through a nightmare."
+DESCRIPTION="A first person survival horror game about immersion, discovery and living through a nightmare."
 HOMEPAGE="http://www.amnesiagame.com/"
 SRC_URI="${MY_PN}_${PV}${MY_REV}.sh"
 
@@ -83,7 +83,7 @@ src_prepare() {
 	#reset ${S} for outprocessing
 	rm -rf "${S}"
 	mv "${WORKDIR}/Amnesia" "${S}" || die "mv 'Amnesia' failed"
-	cd ${S}
+	cd "${S}"
 
 	# Files to remove.
 	REMOVE="libs*/*
@@ -216,7 +216,6 @@ src_install() {
 				   ! -name "*.rtf" \
 				   ! -name "*.sh" \
 				   -exec doins '{}' \; || die "doins other files failed"
-
 
 	# Install libraries and executables
 	einfo " Installing libraries and executables ..."

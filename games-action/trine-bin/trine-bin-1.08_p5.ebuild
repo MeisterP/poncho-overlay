@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -51,7 +51,7 @@ src_unpack() {
 	# manually run unzip as the initial seek causes it to exit(1)
 	unzip -q "${DISTDIR}/TrineUpdate4.${bits}.run"
 	# overwrite existing binaries with patch
-	unpack trineUpdate5.zip || die "unpack patch failed"
+	unpack trineUpdate5.zip || die "unpack update failed"
 }
 
 src_prepare() {

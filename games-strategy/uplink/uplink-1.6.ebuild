@@ -1,3 +1,7 @@
+# Copyright 1999-2012 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
 # This should be bumped to EAPI=4 as soon as the games eclass supports it, so
 # that doins preserves symlinks.
 EAPI=3
@@ -35,7 +39,7 @@ pkg_nofetch() {
 src_unpack() {
 	local root
 
-	unpack "${A}"
+	unpack ${A}
 
 	if use amd64; then
 		root=uplink-x64
