@@ -1,4 +1,6 @@
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
 EAPI=2
 inherit eutils games
@@ -8,27 +10,29 @@ HOMEPAGE="http://www.steel-storm.com/"
 RESTRICT="mirror"
 SRC_URI="steelstorm-br-${PV}-release.tar.gz"
 
-LICENSE=""
+LICENSE="CCPL-Attribution-ShareAlike-NonCommercial-3.0"
 RESTRICT="fetch strip"
 
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
+IUSE=""
 
 DEPEND=">=games-fps/darkplaces-20110628"
+RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/${PN}
 
 src_install() {
-    # Install data
-	insinto ${GAMES_DATADIR}/${PN}
-    doins -r gamedata || die "doins failed"
-    
-    # Install wrapper
-	cat <<- EOF > ${S}/${PN}.sh
+	# Install data
+	insinto ${GAMES_DATADIR}/"${PN}"
+	doins -r gamedata || die "doins failed"
+
+	# Install wrapper
+	cat <<- EOF > ${S}/"${PN}".sh
 		#!/bin/bash
 		darkplaces -"${PN}" -basedir "${GAMES_DATADIR}/${PN}"
 	EOF
-    newbin ${S}/${PN}.sh ${PN} || die "newbin failed"
+	newbin ${S}/"${PN}".sh "${PN}" || die "newbin failed"
 
 	# Install icon and desktop file
 	newicon ./icons/ss_ep2_icon_128.png "${PN}.png" || die "newicon \"${PN}.png\" failed"
