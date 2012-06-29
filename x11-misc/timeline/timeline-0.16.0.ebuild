@@ -18,8 +18,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE="calendar doc svg"
 
 LANGS="ca de es fr gl he it lt pl pt ru sv tr vi pt_BR"
-for X in ${LANGS} ; do
-	IUSE="${IUSE} linguas_${X}"
+for lang in ${LANGS} ; do
+	IUSE="${IUSE} linguas_${lang}"
 done
 
 DEPEND=">=dev-python/wxpython-2.8.9.2
@@ -51,12 +51,10 @@ src_install() {
 		newicon -s $size icons/$size.png ${PN}.png
 	done
 
-	insinto /usr/share/locale
-	for x in "${LINGUAS}";do
-		if [[ -d po/"${x}" ]];then
-			doins -r po/"${x}"
-		else
-			einfo "LANGUAGE $x is not supported"
+	for ling in "${LINGUAS}";do
+		if [[ -d po/"${ling}" ]] && [[ ! -z ${ling} ]]; then
+			insinto /usr/share/locale/"${ling}"/LC_MESSAGES
+			doins po/"${ling}"/LC_MESSAGES/timeline.mo
 		fi
 	done
 
