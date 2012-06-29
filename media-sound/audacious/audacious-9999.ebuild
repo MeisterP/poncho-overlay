@@ -15,15 +15,14 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
 
-IUSE="chardet nls session"
+IUSE="chardet nls"
 
 RDEPEND=">=dev-libs/dbus-glib-0.60
 	>=dev-libs/glib-2.16
 	dev-libs/libxml2
 	>=x11-libs/cairo-1.2.6
 	>=x11-libs/pango-1.8.0
-	x11-libs/gtk+:3
-	session? ( x11-libs/libSM )"
+	x11-libs/gtk+:3"
 
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
@@ -37,16 +36,15 @@ src_prepare () {
 }
 
 src_configure() {
-	# D-Bus is a mandatory dependency, remote control,
-	# session management and some plugins depend on this.
+	# D-Bus is a mandatory dependency, remote control
+	# and some plugins depend on this.
 	# Building without D-Bus is *unsupported* and a USE-flag
 	# will not be added due to the bug reports that will result.
 	# Bugs #197894, #199069, #207330, #208606
 	econf \
 		--enable-dbus \
 		$(use_enable chardet) \
-		$(use_enable nls) \
-		$(use_enable session sm)
+		$(use_enable nls)
 }
 
 src_install() {
