@@ -6,7 +6,7 @@ EAPI=4
 
 PYTHON_DEPEND="2:2.5"
 
-inherit python eutils
+inherit python eutils scons-utils
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -17,8 +17,12 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="calendar doc svg"
 
+LANGS="ca de es fr gl he it lt pl pt ru sv tr vi pt_BR"
+for X in ${LANGS} ; do
+	IUSE="${IUSE} linguas_${X}"
+done
+
 DEPEND=">=dev-python/wxpython-2.8.9.2
-	dev-util/scons
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
@@ -30,9 +34,7 @@ src_prepare(){
 	# path fix
 	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
 
-	# make locale
-	scons mo || die "scons failed"
-	rm po/*.po || die "rm *.po failed"
+	escons mo
 }
 
 src_install() {
@@ -47,9 +49,14 @@ src_install() {
 	doins -r icons
 	newicon icons/48.png ${PN}.png
 
-	dodir /usr/share/locale
 	insinto /usr/share/locale
-	doins -r po/*
+	for x in "${LINGUAS}";do
+		if [[ -d po/"${x}" ]];then
+			doins -r po/"${x}"
+		else
+			einfo "LANGUAGE $x is not supported"
+		fi
+	done
 
 	dodoc AUTHORS CHANGES HACKING README
 
