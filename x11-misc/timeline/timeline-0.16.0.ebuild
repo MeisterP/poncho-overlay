@@ -18,6 +18,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="calendar doc svg"
 
 LANGS="ca de es fr gl he it lt pl pt ru sv tr vi pt_BR"
+
 for lang in ${LANGS} ; do
 	IUSE="${IUSE} linguas_${lang}"
 done
@@ -31,7 +32,6 @@ RDEPEND="${DEPEND}
 	svg? ( >=dev-python/pysvg-0.2.1 )"
 
 src_prepare(){
-	# path fix
 	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
 
 	escons mo
@@ -40,7 +40,6 @@ src_prepare(){
 src_install() {
 	newbin timeline.py timeline
 
-	dodir $(python_get_sitedir)
 	insinto $(python_get_sitedir)
 	doins -r timelinelib
 
