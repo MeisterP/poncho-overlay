@@ -12,7 +12,7 @@ DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
 SRC_URI="mirror://sourceforge/thetimelineproj/${P}.zip"
 
-LICENSE="GPL-3"
+LICENSE="GPL-3 CCPL-Attribution-ShareAlike-3.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="calendar doc svg"
@@ -44,10 +44,12 @@ src_install() {
 	insinto $(python_get_sitedir)
 	doins -r timelinelib
 
-	dodir /usr/share/${PN}
-	insinto /usr/share/${PN}
-	doins -r icons
-	newicon icons/48.png ${PN}.png
+	insinto /usr/share/${PN}/icons
+	doins icons/*.png
+
+	for size in 16 32 48; do
+		newicon -s $size icons/$size.png ${PN}.png
+	done
 
 	insinto /usr/share/locale
 	for x in "${LINGUAS}";do
