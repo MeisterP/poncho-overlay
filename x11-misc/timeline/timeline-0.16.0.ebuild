@@ -6,7 +6,7 @@ EAPI=4
 
 PYTHON_DEPEND="2:2.5"
 
-inherit python eutils scons-utils
+inherit python eutils scons-utils gnome2-utils
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -63,4 +63,16 @@ src_install() {
 	dodoc AUTHORS CHANGES HACKING README
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
 }
