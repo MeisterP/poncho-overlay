@@ -9,9 +9,10 @@ MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
-EGIT_REPO_URI="https://github.com/audacious-media-player/audacious.git"
+EGIT_REPO_URI="http://github.com/audacious-media-player/audacious.git"
+EGIT_BOOTSTRAP="autogen.sh"
 
-LICENSE="GPL-2"
+LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS=""
 
@@ -31,13 +32,9 @@ DEPEND="${RDEPEND}
 
 PDEPEND=">=media-plugins/audacious-plugins-9999"
 
-src_prepare () {
-	./autogen.sh
-}
-
 src_configure() {
-	# D-Bus is a mandatory dependency, remote control
-	# and some plugins depend on this.
+	# D-Bus is a mandatory dependency, remote control,
+	# session management and some plugins depend on this.
 	# Building without D-Bus is *unsupported* and a USE-flag
 	# will not be added due to the bug reports that will result.
 	# Bugs #197894, #199069, #207330, #208606

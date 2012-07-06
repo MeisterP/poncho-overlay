@@ -9,7 +9,8 @@ MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
-EGIT_REPO_URI="https://github.com/audacious-media-player/audacious-plugins.git"
+EGIT_REPO_URI="http://github.com/audacious-media-player/audacious-plugins.git"
+EGIT_BOOTSTRAP="autogen.sh"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -62,10 +63,6 @@ mp3_warning() {
 	if ! use mp3 ; then
 		ewarn "MP3 support is optional, you may want to enable the mp3 USE-flag"
 	fi
-}
-
-src_prepare () {
-	./autogen.sh
 }
 
 src_configure() {
