@@ -7,7 +7,7 @@ inherit autotools
 
 DESCRIPTION="A Pidgin plugin that merges the Buddy List window with a conversation window"
 HOMEPAGE="https://github.com/dm0-/window_merge"
-COMMIT="cf1dba5ff3b1006552a7a779b3bf9acfd56e9e82"
+COMMIT="37d5bd156182d664af75534c007102c9a6fd2826"
 SRC_URI="http://github.com/dm0-/${PN#pidgin-}/tarball/${COMMIT} -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
