@@ -16,9 +16,7 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND=""
-RDEPEND="${DEPEND}
-		>=app-editors/gedit-3.2.6
+RDEPEND=">=app-editors/gedit-3.2.6
 		x11-libs/gtksourceview:3.0"
 
 src_install() {
