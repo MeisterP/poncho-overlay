@@ -68,8 +68,6 @@ RDEPEND="sys-libs/zlib
 DEPEND="=dev-lang/python-2.7*
 	|| ( >=net-misc/wget-1.13.4 >=net-misc/curl-7.21.4 )
 	>=dev-lang/yasm-0.8.0
-	=sys-devel/automake-1.4*
-	=sys-devel/automake-1.9*
 	=sys-devel/automake-1.11*
 	${RDEPEND}"
 
