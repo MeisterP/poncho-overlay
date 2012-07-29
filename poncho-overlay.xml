@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
+<repositories xmlns="" version="1.0">
+   <repo quality="experimental" status="unofficial">
+      <name>poncho-overlay</name>
+      <description>Overlay for packages not in the main tree</description>
+      <homepage>https://github.com/MeisterP/poncho-overlay</homepage>
+      <owner type="person">
+         <email>poncho@spahan.ch</email>
+         <name>Poncho</name>
+      </owner>
+      <source type="git">git://github.com/MeisterP/poncho-overlay.git</source>
+      <feed>https://github.com/MeisterP/poncho-overlay/commits/master.atom</feed>
+   </repo>
+</repositories>
