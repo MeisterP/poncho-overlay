@@ -50,11 +50,8 @@ src_install() {
 	insinto /usr/include/NVCtrl
 	doins src/libXNVCtrl/*.h
 
-#	doicon doc/${PN}.png # Installed through nvidia-drivers
+	doicon doc/${PN}.png
 	make_desktop_entry ${PN} "NVIDIA X Server Settings" ${PN} Settings
-
-	# bug 412569 - Installed through nvidia-drivers
-#	rm -rf "${D}"/usr/share/man
 
 	dodoc doc/*.txt
 
