@@ -4,8 +4,9 @@
 
 EAPI="4"
 
-EGIT_REPO_URI="git://github.com/sorin-ionescu/${PN}.git"
+EGIT_REPO_URI="git://github.com/sorin-ionescu/prezto.git"
 EGIT_HAS_SUBMODULES="yes"
+EGIT_COMMIT="df82640caa4a5292eb204001248e5dd3c9f24468"
 
 inherit git-2
 
@@ -24,7 +25,7 @@ ZSH_DEST="${EPREFIX%/}/usr/share/zsh/site-contrib/${PN}"
 
 src_prepare() {
 	sed -i -e 's!$HOME/.oh-my-zsh!'"${ZSH_DEST}"'!' \
-	"${S}/templates/zshenv" || die "sed failed"
+	"${S}/runcoms/zshenv" || die "sed failed"
 
 	for gitfile in $(find "${S}" -name ".git*");
 		do rm -rf "${gitfile}"
@@ -37,7 +38,7 @@ src_install() {
 	doins -r *
 
 	insinto /etc/zsh
-	for rcfile in "${S}"/templates/z{shenv,shrc,login,logout}; do
+	for rcfile in "${S}"/runcoms/z{shenv,shrc,login,logout}; do
 		doins "${rcfile}"
 	done
 }
