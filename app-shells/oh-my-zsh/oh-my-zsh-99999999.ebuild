@@ -6,7 +6,7 @@ EAPI="4"
 
 EGIT_REPO_URI="git://github.com/sorin-ionescu/prezto.git"
 EGIT_HAS_SUBMODULES="yes"
-EGIT_COMMIT="df82640caa4a5292eb204001248e5dd3c9f24468"
+EGIT_COMMIT="2250f93fa3d9deaddbf4b8c09401496a087d8436"
 
 inherit git-2
 
