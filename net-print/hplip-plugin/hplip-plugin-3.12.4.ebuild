@@ -43,7 +43,10 @@ src_prepare() {
 src_install() {
 	local hplip_arch=$(use amd64 && echo 'x86_64' || echo 'x86_32')
 
-	insinto /$(get_libdir)/udev/rules.d
+	local udevdir=/lib/udev
+	has_version sys-fs/udev && udevdir="$($(tc-getPKG_CONFIG) --variable=udevdir udev)"
+
+	insinto "${udevdir}"/rules.d
 	doins *.rules || die
 
 	insinto "${HPLIP_HOME}"/data/firmware
