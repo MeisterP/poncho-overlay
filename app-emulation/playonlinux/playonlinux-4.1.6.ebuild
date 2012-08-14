@@ -30,6 +30,7 @@ RDEPEND="app-emulation/wine
 	x11-apps/mesa-progs
 	x11-terms/xterm
 	media-gfx/icoutils
+	net-analyzer/netcat
 	winbind? ( net-fs/samba[winbind] ) "
 
 S=${WORKDIR}/${PN}
@@ -49,12 +50,9 @@ pkg_setup() {
 }
 
 src_prepare() {
-	sed -i -e "s/\(Categories=\).*/\1Game;Emulator;/" etc/PlayOnLinux.desktop \
-		|| die
-	sed -i -e "/^Icon=/s:\/usr/share/playonlinux/etc/playonlinux.png:${PN}:" etc/PlayOnLinux.desktop \
-		|| die
 	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i lib/variables playonlinux || die
 	python_convert_shebangs -r 2 .
+	rm etc/PlayOnLinux.desktop || die "removing PlayOnLinux.desktop failed"
 }
 
 src_install() {
@@ -94,7 +92,7 @@ src_install() {
 	dodoc CHANGELOG
 
 	doicon etc/${PN}.png
-	domenu etc/${MY_PN}.desktop
+	make_desktop_entry ${PN} Playonlinux ${PN} Game
 	prepgamesdirs
 }
 
