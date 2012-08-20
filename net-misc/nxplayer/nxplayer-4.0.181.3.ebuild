@@ -9,8 +9,8 @@ MAJOR_PV="$(get_version_component_range 1-3)"
 FULL_PV="${MAJOR_PV}-$(get_version_component_range 4)"
 DESCRIPTION="New NX client interface"
 HOMEPAGE="http://www.nomachine.com/"
-SRC_URI="amd64? ( http://64.34.161.181/download/4.0/Linux/nxplayer-${FULL_PV}.x86_64.tar.gz )
-	x86? ( http://64.34.161.181/download/4.0/Linux/nxplayer-${FULL_PV}.i686.tar.gz )"
+SRC_URI="amd64? ( http://64.34.173.142/download/4.0/Linux/nxplayer-${FULL_PV}.x86_64.tar.gz )
+	x86? ( http://64.34.173.142/download/4.0/Linux/nxplayer-${FULL_PV}.i686.tar.gz )"
 LICENSE="nomachine"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
@@ -43,7 +43,7 @@ src_install()
 		dodir /usr/share/icons/hicolor/${size}/apps
 		for icon in desktop icon; do
 			dosym ${NXROOT}/share/icons/${size}/nxplayer-${icon}.png \
-				/usr/share/icons/hicolor/${size}/apps
+				/usr/share/icons/hicolor/${size}/apps/nxplayer-${icon}.png
 			done
 		done
 	make_desktop_entry "nxplayer" "NX Player" nxplayer-icon
