@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-inherit eutils multilib unpacker
+inherit eutils multilib toolchain-funcs unpacker
 
 DESCRIPTION="Proprietary plugins and firmware for HPLIP"
 HOMEPAGE="http://hplipopensource.com/hplip-web/index.html"
@@ -27,6 +27,7 @@ QA_PRESTRIPPED="
 /usr/share/hplip/scan/plugins/bb_soapht.so
 /usr/share/hplip/scan/plugins/bb_soap.so
 /usr/share/hplip/fax/plugins/fax_marvell.so
+/usr/share/hplip/prnt/plugins/hbpl1.so
 /usr/share/hplip/prnt/plugins/lj.so"
 
 # License does not allow us to redistribute the "source" package

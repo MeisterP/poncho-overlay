@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-inherit eutils multilib unpacker
+inherit eutils multilib toolchain-funcs unpacker
 
 DESCRIPTION="Proprietary plugins and firmware for HPLIP"
 HOMEPAGE="http://hplipopensource.com/hplip-web/index.html"
