@@ -4,13 +4,13 @@
 
 EAPI="4"
 
-EGIT_REPO_URI="git://github.com/sorin-ionescu/prezto.git"
+EGIT_REPO_URI="git://github.com/sorin-ionescu/${PN}.git"
 EGIT_HAS_SUBMODULES="yes"
-EGIT_COMMIT="2250f93fa3d9deaddbf4b8c09401496a087d8436"
+#EGIT_COMMIT="2250f93fa3d9deaddbf4b8c09401496a087d8436"
 
 inherit git-2
 
-DESCRIPTION="Directory of help-files (for run-help) for your current zsh"
+DESCRIPTION="The community-driven framework for configuring Zsh"
 HOMEPAGE="https://github.com/sorin-ionescu/oh-my-zsh"
 
 LICENSE="MIT"
@@ -24,7 +24,7 @@ RDEPEND="app-shells/zsh"
 ZSH_DEST="${EPREFIX%/}/usr/share/zsh/site-contrib/${PN}"
 
 src_prepare() {
-	sed -i -e 's!$HOME/.oh-my-zsh!'"${ZSH_DEST}"'!' \
+	sed -i -e 's!$HOME/.prezto!'"${ZSH_DEST}"'!' \
 	"${S}/runcoms/zshenv" || die "sed failed"
 
 	for gitfile in $(find "${S}" -name ".git*");
