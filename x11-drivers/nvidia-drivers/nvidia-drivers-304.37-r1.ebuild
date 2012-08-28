@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header:
+# $Header: /var/cvsroot/gentoo-x86/x11-drivers/nvidia-drivers/nvidia-drivers-304.37-r1.ebuild,v 1.3 2012/08/22 04:50:23 cardoe Exp $
 
 EAPI=4
 
@@ -14,10 +14,10 @@ AMD64_FBSD_NV_PACKAGE="NVIDIA-FreeBSD-x86_64-${PV}"
 
 DESCRIPTION="NVIDIA X11 driver and GLX libraries"
 HOMEPAGE="http://www.nvidia.com/"
-SRC_URI="x86? ( ftp://download.nvidia.com/XFree86/Linux-x86/${PV}/${X86_NV_PACKAGE}.run )
-	 amd64? ( ftp://download.nvidia.com/XFree86/Linux-x86_64/${PV}/${AMD64_NV_PACKAGE}.run )
-	 amd64-fbsd? ( ftp://download.nvidia.com/XFree86/FreeBSD-x86_64/${PV}/${AMD64_FBSD_NV_PACKAGE}.tar.gz )
-	 x86-fbsd? ( ftp://download.nvidia.com/XFree86/FreeBSD-x86/${PV}/${X86_FBSD_NV_PACKAGE}.tar.gz )"
+SRC_URI="x86? ( http://us.download.nvidia.com/XFree86/Linux-x86/${PV}/${X86_NV_PACKAGE}.run )
+	 amd64? ( http://us.download.nvidia.com/XFree86/Linux-x86_64/${PV}/${AMD64_NV_PACKAGE}.run )
+	 amd64-fbsd? ( http://us.download.nvidia.com/XFree86/FreeBSD-x86_64/${PV}/${AMD64_FBSD_NV_PACKAGE}.tar.gz )
+	 x86-fbsd? ( http://us.download.nvidia.com/XFree86/FreeBSD-x86/${PV}/${X86_FBSD_NV_PACKAGE}.tar.gz )"
 
 LICENSE="NVIDIA"
 SLOT="0"
@@ -47,7 +47,7 @@ RDEPEND="${COMMON}
 		x11-libs/gtk+:2
 		x11-libs/libX11
 		x11-libs/libXext
-		x11-libs/pango
+		x11-libs/pango[X]
 	)
 	X? ( x11-libs/libXvMC )"
 PDEPEND="X? ( >=x11-libs/libvdpau-0.3-r1 )"
@@ -140,7 +140,7 @@ src_prepare() {
 		convert_to_m "${NV_SRC}"/Makefile.kbuild
 	fi
 	cat <<- EOF > "${S}"/nvidia.icd
-		/usr/$(get_libdir)/libcuda.so
+		/usr/$(get_libdir)/libnvidia-opencl.so
 	EOF
 
 	# Allow user patches so they can support RC kernels and whatever else
@@ -273,6 +273,7 @@ src_install() {
 	if use kernel_linux; then
 		insinto /etc/OpenCL/vendors
 		doins nvidia.icd
+		donvidia ${NV_OBJ}/libnvidia-opencl.so ${NV_SOVER}
 	fi
 
 	# Documentation
