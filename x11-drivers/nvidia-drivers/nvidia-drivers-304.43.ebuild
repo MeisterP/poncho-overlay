@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-drivers/nvidia-drivers/nvidia-drivers-304.37-r1.ebuild,v 1.3 2012/08/22 04:50:23 cardoe Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-drivers/nvidia-drivers/nvidia-drivers-304.43.ebuild,v 1.3 2012/08/29 03:50:01 cardoe Exp $
 
 EAPI=4
 
@@ -22,7 +22,7 @@ SRC_URI="x86? ( http://us.download.nvidia.com/XFree86/Linux-x86/${PV}/${X86_NV_P
 LICENSE="NVIDIA"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86 ~amd64-fbsd ~x86-fbsd"
-IUSE="acpi multilib kernel_FreeBSD kernel_linux +tools +X"
+IUSE="acpi multilib kernel_FreeBSD kernel_linux pax_kernel +tools +X"
 RESTRICT="strip"
 EMULTILIB_PKG="true"
 
@@ -30,7 +30,7 @@ COMMON="app-admin/eselect-opencl
 	kernel_linux? ( >=sys-libs/glibc-2.6.1 )
 	multilib? ( app-emulation/emul-linux-x86-xlibs )
 	X? (
-		<x11-base/xorg-server-1.12.99
+		<x11-base/xorg-server-1.13.99
 		>=app-admin/eselect-opengl-1.0.9
 	)"
 DEPEND="${COMMON}
@@ -54,7 +54,7 @@ PDEPEND="X? ( >=x11-libs/libvdpau-0.3-r1 )"
 
 REQUIRED_USE="tools? ( X )"
 
-QA_PREBUILT=""
+QA_PREBUILT="opt/* usr/lib*"
 
 S=${WORKDIR}/
 
@@ -139,6 +139,15 @@ src_prepare() {
 		# If greater than 2.6.5 use M= instead of SUBDIR=
 		convert_to_m "${NV_SRC}"/Makefile.kbuild
 	fi
+
+	if use pax_kernel; then
+		ewarn "Using PAX patches is not supported. You will be asked to"
+		ewarn "use a standard kernel should you have issues. Should you"
+		ewarn "need support with these patches, contact the PaX team."
+	    epatch "${FILESDIR}"/nvidia-drivers-pax-const.patch
+	    epatch "${FILESDIR}"/nvidia-drivers-pax-usercopy.patch
+	fi
+
 	cat <<- EOF > "${S}"/nvidia.icd
 		/usr/$(get_libdir)/libnvidia-opencl.so
 	EOF
@@ -185,9 +194,6 @@ donvidia() {
 
 	# Get just the library name
 	libname=$(basename $1)
-
-	# Add it to QA_PREBUILT
-	QA_PREBUILT+=" ${MY_DEST}/${libname}.${MY_SOVER}"
 
 	# Install the library with the correct SOVER
 	${action} ${MY_LIB}.${MY_SOVER} || \
