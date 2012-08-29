@@ -24,7 +24,7 @@ RDEPEND="app-shells/zsh"
 ZSH_DEST="${EPREFIX%/}/usr/share/zsh/site-contrib/${PN}"
 
 src_prepare() {
-	sed -i -e 's!$HOME/.prezto!'"${ZSH_DEST}"'!' \
+	sed -i -e 's!$HOME/.oh-my-zsh!'"${ZSH_DEST}"'!' \
 	"${S}/runcoms/zshenv" || die "sed failed"
 
 	for gitfile in $(find "${S}" -name ".git*");
