@@ -11,7 +11,7 @@ EGIT_HAS_SUBMODULES="yes"
 inherit git-2
 
 DESCRIPTION="The community-driven framework for configuring Zsh"
-HOMEPAGE="https://github.com/sorin-ionescu/oh-my-zsh"
+HOMEPAGE="http://github.com/sorin-ionescu/prezto"
 
 LICENSE="MIT"
 SLOT="0"
