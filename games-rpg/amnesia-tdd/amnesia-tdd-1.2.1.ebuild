@@ -7,12 +7,12 @@ EAPI=4
 inherit check-reqs eutils games unpacker
 
 MY_PN="${PN//-/_}"
-MY_REV="-2"
+MY_REV="-3"
 MY_ARCH="${ARCH/amd64/x86_64}"
 
 DESCRIPTION="A first person survival horror game about immersion, discovery and living through a nightmare."
 HOMEPAGE="http://www.amnesiagame.com/"
-SRC_URI="${MY_PN}_${PV}${MY_REV}.sh"
+SRC_URI="${MY_PN}-${PV}${MY_REV}.sh"
 
 RESTRICT="fetch strip"
 LICENSE="Frictional_Games-EULA"
