@@ -6,7 +6,7 @@ EAPI=2
 
 VIRTUALX_REQUIRED=always
 VIRTUALX_COMMAND=./configure
-USE_RUBY=ruby19
+USE_RUBY="ruby18 ruby19"
 
 inherit ruby-ng virtualx
 
