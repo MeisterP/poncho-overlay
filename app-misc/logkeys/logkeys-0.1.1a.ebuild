@@ -29,3 +29,8 @@ src_compile() {
 	emake || die
 }
 
+src_install() {
+	default
+	insinto /usr/share/${PN}/
+	doins "${FILESDIR}"/*.map
+}
