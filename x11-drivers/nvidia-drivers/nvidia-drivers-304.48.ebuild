@@ -324,8 +324,8 @@ src_install() {
 	if use tools ; then
 		newicon ${NV_OBJ}/nvidia-settings.png nvidia-drivers-settings.png
 		domenu "${FILESDIR}"/nvidia-drivers-settings.desktop
-		insinto /etc/xdg/autostart
-		doins "${FILESDIR}"/nvidia-autostart.desktop
+		insinto /etc/X11/xinit/xinitrc.d
+		doins "${FILESDIR}"/95-nvidia-settings
 	fi
 
 	#doenvd "${FILESDIR}"/50nvidia-prelink-blacklist
