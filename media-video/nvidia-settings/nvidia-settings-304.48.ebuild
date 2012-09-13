@@ -26,7 +26,7 @@ COMMON_DEPEND="x11-libs/libX11
 	x11-libs/libXrandr
 	dev-libs/glib:2"
 
-RDEPEND="=x11-drivers/nvidia-drivers-3*
+RDEPEND="x11-drivers/nvidia-drivers[tools]
 	${COMMON_DEPEND}"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
@@ -50,8 +50,9 @@ src_install() {
 	insinto /usr/include/NVCtrl
 	doins src/libXNVCtrl/*.h
 
-	doicon doc/${PN}.png
-	make_desktop_entry ${PN} "NVIDIA X Server Settings" ${PN} Settings
+	# Installed through nvidia-drivers
+	rm -rf "${D}"/usr/share/man
+	rm -f "${D}"/usr/bin/nvidia-settings
 
 	dodoc doc/*.txt
 
@@ -60,4 +61,11 @@ src_install() {
 		dodoc samples/*.c
 		dodoc samples/README
 	fi
+}
+
+pkg_postinst() {
+	ewarn
+	ewarn "This ebuild only installs the headers of nvidia-settings,"
+	ewarn "the binary itself is provided by nvidia-drivers[tools]."
+	ewarn
 }
