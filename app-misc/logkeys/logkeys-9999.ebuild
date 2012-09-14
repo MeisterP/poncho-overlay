@@ -23,6 +23,12 @@ IUSE=""
 DEPEND=""
 RDEPEND="${DEPEND}"
 
+pkg_pretend() {
+	if [ "${DO_NOT_USE_KEYLOGGERS_HARMFULLY}" != "1" ]; then
+		die "Don't use keyloggers"
+	fi
+}
+
 src_install() {
 	default
 	insinto /usr/share/${PN}/
