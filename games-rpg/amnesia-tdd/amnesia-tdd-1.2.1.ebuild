@@ -247,9 +247,9 @@ fi
 
 if [[ -w "\${HOME}/.frictionalgames/Amnesia/Main/main_settings.cfg" ]]
 then
-	exec ./Amnesia.bin \${params:-"\${@}"}
+	exec /opt/amnesia-tdd/Amnesia.bin \${params:-"\${@}"}
 else
-	exec ./Launcher.bin "\${@}"
+	exec /opt/amnesia-tdd/Launcher.bin "\${@}"
 fi
 EOF
 
