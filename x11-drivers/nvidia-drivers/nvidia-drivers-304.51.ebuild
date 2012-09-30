@@ -322,7 +322,8 @@ src_install() {
 
 	# Desktop entries for nvidia-settings
 	if use tools ; then
-		newicon ${NV_OBJ}/nvidia-settings.png nvidia-drivers-settings.png
+		# There is no icon in the FreeBSD tarball.
+		use kernel_FreeBSD || newicon ${NV_OBJ}/nvidia-settings.png nvidia-drivers-settings.png
 		domenu "${FILESDIR}"/nvidia-drivers-settings.desktop
 		exeinto /etc/X11/xinit/xinitrc.d
 		doexe "${FILESDIR}"/95-nvidia-settings
