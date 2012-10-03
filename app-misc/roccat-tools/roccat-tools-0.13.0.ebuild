@@ -28,7 +28,7 @@ RDEPEND="
 	x11-libs/gtk+:2
 	x11-libs/libnotify
 	media-libs/libcanberra
-	virtual/libusb:0
+	virtual/libusb:1
 	<dev-libs/libunique-3
 	dev-libs/dbus-glib
 	sys-fs/udev[gudev]
