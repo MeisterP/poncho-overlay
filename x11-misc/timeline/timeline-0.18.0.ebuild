@@ -38,10 +38,9 @@ src_prepare(){
 }
 
 src_install() {
-	newbin timeline.py timeline
-
 	insinto $(python_get_sitedir)
 	doins -r timelinelib
+	doins timeline.py
 
 	insinto /usr/share/${PN}/icons
 	doins icons/*.png
@@ -59,6 +58,7 @@ src_install() {
 
 	dodoc AUTHORS CHANGES HACKING README
 
+	make_wrapper ${PN} "python timeline.py" $(python_get_sitedir)
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 }
 
