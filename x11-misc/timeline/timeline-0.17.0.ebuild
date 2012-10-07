@@ -38,11 +38,9 @@ src_prepare(){
 }
 
 src_install() {
-	exeinto $(python_get_sitedir)
-	doexe timeline.py
-
 	insinto $(python_get_sitedir)
 	doins -r timelinelib
+	doins timeline.py
 
 	insinto /usr/share/${PN}/icons
 	doins icons/*.png
