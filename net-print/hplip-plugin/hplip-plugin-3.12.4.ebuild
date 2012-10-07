@@ -14,9 +14,9 @@ LICENSE="hplip-plugin"
 SLOT="0"
 IUSE=""
 
+DEPEND="virtual/pkgconfig"
 RDEPEND="~net-print/hplip-${PV}
 	sys-fs/udev"
-DEPEND=""
 
 HPLIP_HOME=/usr/share/hplip
 
