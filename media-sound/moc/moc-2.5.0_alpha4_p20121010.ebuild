@@ -7,7 +7,8 @@ inherit autotools eutils
 
 DESCRIPTION="Music On Console - ncurses interface for playing audio files"
 HOMEPAGE="http://moc.daper.net"
-SRC_URI="http://dev.gentoo.org/~radhermit/distfiles/${P}.tar.xz"
+#SRC_URI="http://dev.gentoo.org/~radhermit/distfiles/${P}.tar.xz"
+SRC_URI="http://poncho.spahan.ch/public/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -40,7 +41,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-libresid-builder.so_not_la.patch #416619
 	eautoreconf
 }
 
