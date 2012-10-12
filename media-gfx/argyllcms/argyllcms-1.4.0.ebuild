@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit base
+inherit base toolchain-funcs
 
 MY_P="Argyll_V${PV}"
 DESCRIPTION="Open source, ICC compatible color management system"
@@ -29,7 +29,8 @@ RDEPEND="media-libs/tiff
 	x11-libs/libXScrnSaver"
 DEPEND="${RDEPEND}
 	app-arch/unzip
-	dev-util/ftjam"
+	dev-util/ftjam
+	virtual/pkgconfig"
 
 S="${WORKDIR}/${MY_P}"
 
@@ -70,7 +71,9 @@ src_install() {
 	insinto /usr/share/${PN}/ref
 	doins   ref/*
 
-	insinto /etc/udev/rules.d
+	local udevdir=/lib/udev
+	has_version sys-fs/udev && udevdir="$($(tc-getPKG_CONFIG) --variable=udevdir udev)"
+	insinto "${udevdir}"/rules.d
 	doins libusb/55-Argyll.rules
 }
 
