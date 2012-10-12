@@ -5,7 +5,7 @@
 EAPI="4"
 PYTHON_DEPEND="2"
 
-inherit eutils python games
+inherit eutils python games gnome2-utils
 
 MY_PN="PlayOnLinux"
 
@@ -50,9 +50,17 @@ pkg_setup() {
 }
 
 src_prepare() {
-	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i lib/variables playonlinux || die
+	# see https://github.com/PlayOnLinux/POL-POM-4/commit/87d0850a26cad8089386bf7d5e47fb32454810eb
+	epatch ${FILESDIR}/fix_integer_expression_expected.patch
+
+	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i playonlinux || die
 	python_convert_shebangs -r 2 .
-	rm etc/PlayOnLinux.desktop || die "removing PlayOnLinux.desktop failed"
+
+	# remove playonmac
+	rm etc/{playonmac.icns,terminal.applescript} || die
+
+	# remove desktop integration
+	rm etc/{PlayOnLinux.desktop,PlayOnLinux.directory,playonlinux-Programmes.menu} || die
 }
 
 src_install() {
@@ -63,8 +71,6 @@ src_install() {
 	# bash/ install
 	exeinto "${GAMES_DATADIR}/${PN}/bash"
 	doexe bash/*
-	#exeinto "${GAMES_DATADIR}/${PN}/bash/terminals"
-	#doexe bash/terminals/*
 	exeinto "${GAMES_DATADIR}/${PN}/bash/expert"
 	doexe bash/expert/*
 
@@ -79,32 +85,39 @@ src_install() {
 	exeinto "${GAMES_DATADIR}/${PN}"
 	doexe ${PN}{,-pkg,-bash,-shell,-url_handler}
 
-	# making a script to run playonlinux from ${GAMES_BINDIR}
-	echo "#!/bin/bash" > ${PN}_launcher
-	echo "cd \"${GAMES_DATADIR}/${PN}\" && ./${PN} \$*" >> ${PN}_launcher
-	newgamesbin playonlinux_launcher playonlinux
-
-	# making a script to run playonlinux-cmd from ${GAMES_BINDIR}
-	echo "#!/bin/bash" > ${PN}_cmd_launcher
-	echo "cd \"${GAMES_DATADIR}/${PN}\" && ./${PN}-cmd \$*" >> ${PN}_cmd_launcher
-	newgamesbin playonlinux_cmd_launcher playonlinux-cmd
+	# icons
+	doicon -s 128 etc/${PN}.png
+	for size in 16 22 32; do
+		newicon -s $size etc/${PN}$size.png ${PN}.png
+	done
 
 	dodoc CHANGELOG
 
-	doicon etc/${PN}.png
-	make_desktop_entry ${PN} Playonlinux ${PN} Game
+	games_make_wrapper ${PN} "./${PN}" "${GAMES_DATADIR}/${PN}"
+	make_desktop_entry ${PN} ${MY_PN} ${PN} Game
+
 	prepgamesdirs
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
 }
 
 pkg_postinst() {
 	games_pkg_postinst
 	python_mod_optimize "${GAMES_DATADIR}/${PN}"
+	gnome2_icon_cache_update
+}
+
+pkg_prerm() {
+	if [[ -z ${REPLACING_VERSIONS} ]]; then
+		elog "Installed softwares and games with playonlinux have not been removed."
+		elog "To remove them, you can re-install playonlinux and remove them using it"
+		elog "or do it manually by removing .PlayOnLinux/ in your home directory."
+	fi
 }
 
 pkg_postrm() {
 	python_mod_cleanup "${GAMES_DATADIR}/${PN}"
-
-	elog "Installed softwares and games with playonlinux have not been removed."
-	elog "To remove them, you can re-install playonlinux and remove them using it"
-	elog "or do it manually by removing .PlayOnLinux/ in your home directory."
+	gnome2_icon_cache_update
 }

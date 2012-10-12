@@ -1,0 +1,34 @@
+From 87d0850a26cad8089386bf7d5e47fb32454810eb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Quentin=20Pa=CC=82ris?= <git@qparis.fr>
+Date: Sat, 22 Sep 2012 20:11:14 +0200
+Subject: [PATCH] Pango's bug
+
+---
+ bash/startup_after_server |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/bash/startup_after_server b/bash/startup_after_server
+index fa436e3..0867e33 100644
+--- a/bash/startup_after_server
++++ b/bash/startup_after_server
+@@ -35,11 +35,13 @@ if [ ! "$(POL_Config_Read FIRST_USE)" = "TRUE" ]; then
+ 	bash "$PLAYONLINUX/bash/first_use"
+ elif [ "$POL_OS" = "Mac" -a ! -e "/Applications/Utilities/XQuartz.app" -a "$OSX_VERSION" != "11" ]; then
+ 	bash "$PLAYONLINUX/bash/first_use"
+-elif [ "$OSX_VERSION" = "11" -a "$OSX_SUB_VERSION" -gt "4" ] || [ "$OSX_VERSION" = "12" -a "$OSX_SUB_VERSION" -gt "1" ]; then
+-	# XQuartz 2.7.4 is needed here... See http://bugs.winehq.org/show_bug.cgi?id=31751
+-	XVERSION="$(cat "/Applications/Utilities/XQuartz.app/Contents/Info.plist" | grep -A1 "<key>CFBundleShortVersionString</key>" | tail -n1 | cut -d '>' -f2 | cut -d '<' -f1)"
+-	if VersionLower "$XVERSION" "2.7.4"; then
++elif [ "$POL_OS" = "Mac" ]; then
++	if [ "$OSX_VERSION" = "11" -a "$OSX_SUB_VERSION" -gt "4" ] || [ "$OSX_VERSION" = "12" -a "$OSX_SUB_VERSION" -gt "1" ]; then
++		# XQuartz 2.7.4 is needed here... See http://bugs.winehq.org/show_bug.cgi?id=31751
++		XVERSION="$(cat "/Applications/Utilities/XQuartz.app/Contents/Info.plist" | grep -A1 "<key>CFBundleShortVersionString</key>" | tail -n1 | cut -d '>' -f2 | cut -d '<' -f1)"
++		if VersionLower "$XVERSION" "2.7.4"; then
+ 			bash "$PLAYONLINUX/bash/first_use"
++		fi
+ 	fi
+ fi 
+ 
+-- 
+1.7.10
+
