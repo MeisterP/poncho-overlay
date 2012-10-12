@@ -40,7 +40,7 @@ src_install() {
 
 	newicon exe_icon.bmp ${PN}.bmp
 
-	games_make_wrapper "${PN}" "./bin/${PN}" "${GAMEDIR}" "${GAMEDIR}/lib"
+	games_make_wrapper ${PN} "./bin/${PN}" "${GAMEDIR}" "${GAMEDIR}/lib"
 	make_desktop_entry ${PN} "${PN}: Faster than Light" "/usr/share/pixmaps/${PN}.bmp"
 
 	prepgamesdirs
