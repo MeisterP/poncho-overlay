@@ -37,10 +37,6 @@ src_unpack() {
 	unpack_makeself "hplip-${PV}-plugin.run" || die 'unpack failed'
 }
 
-src_prepare() {
-	sed -i -e 's/SYSFS/ATTR/g' *.rules || die
-}
-
 src_install() {
 	local hplip_arch=$(use amd64 && echo 'x86_64' || echo 'x86_32')
 
@@ -63,16 +59,14 @@ src_install() {
 		exeinto "${HPLIP_HOME}"/${plugin_type}/plugins
 		newexe ${plugin} ${plugin/-${hplip_arch}} || die "failed to install ${plugin}"
 	done
-}
 
-pkg_postinst() {
-	echo "# hplip.state - HPLIP runtime persistent variables." > /var/lib/hp/hplip.state
-	echo "" >> /var/lib/hp/hplip.state
-	echo "[plugin]" >> /var/lib/hp/hplip.state
-	echo "installed=1" >> /var/lib/hp/hplip.state
-	echo "eula=1" >> /var/lib/hp/hplip.state
-}
+	cat <<- EOF > "${WORKDIR}/hplip.state"
+		[plugin]
+		installed = 1
+		eula = 1
+		version = ${PV}
+	EOF
 
-pkg_postrm() {
-	sed -ri 's/(installed|eula)=1/\1=0/' /var/lib/hp/hplip.state
+	insinto /var/lib/hp
+	doins hplip.state
 }
