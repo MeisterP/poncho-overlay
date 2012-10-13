@@ -1,0 +1,72 @@
+From 0af3d7dcfec7a209e89c44c70bd119c3c5b90c64 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Sun, 14 Oct 2012 11:48:48 +0200
+Subject: [PATCH 3/3] Use gnome-terminal
+
+---
+ bash/expert/PolShell | 1 -
+ lib/playonlinux.lib  | 4 ++--
+ lib/variables        | 3 ++-
+ python/mainwindow.py | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/bash/expert/PolShell b/bash/expert/PolShell
+index d2afad0..37777f7 100755
+--- a/bash/expert/PolShell
++++ b/bash/expert/PolShell
+@@ -20,5 +20,4 @@
+ [ "$PLAYONLINUX" = "" ] && exit 0
+ source "$PLAYONLINUX/lib/sources"
+ 
+-[ "$DEBIAN_PACKAGE" = "FALSE" ] && TITLEADD="-T $APPLICATION_TITLE"
+ "$POL_TERM" $TITLEADD -e "$PLAYONLINUX/bash/polshell"
+diff --git a/lib/playonlinux.lib b/lib/playonlinux.lib
+index f6e319f..c563b84 100755
+--- a/lib/playonlinux.lib
++++ b/lib/playonlinux.lib
+@@ -224,7 +224,7 @@ EOF
+ 	fi
+ 	echo bash --rcfile "$POL_USER_ROOT/tmp/env_bash" > "$POL_USER_ROOT/tmp/env_bash2"
+ 	chmod +x "$POL_USER_ROOT/tmp/env_bash2"
+-	xterm -e "$POL_USER_ROOT/tmp/env_bash2" -T "$APPLICATION_TITLE"
++	$POL_TERM -e "$POL_USER_ROOT/tmp/env_bash2" $TITLEADD
+ }
+ 
+ 
+@@ -836,4 +836,4 @@ POL_Config_CheckGL()
+ {
+ 	bash "$PLAYONLINUX/bash/check_gl" "x86"
+ 	bash "$PLAYONLINUX/bash/check_gl" "amd64"	
+-}
+\ No newline at end of file
++}
+diff --git a/lib/variables b/lib/variables
+index 83c96d0..9405f4a 100755
+--- a/lib/variables
++++ b/lib/variables
+@@ -32,7 +32,8 @@ alias find="find -H"
+ if [ "$DEBIAN_PACKAGE" = "TRUE" ]; then
+ 	export POL_TERM="x-terminal-emulator"
+ else
+-	export POL_TERM="xterm"
++	export POL_TERM="gnome-terminal"
++	export TITLEADD="-t $APPLICATION_TITLE"
+ fi
+ 
+ ### Desktop
+diff --git a/python/mainwindow.py b/python/mainwindow.py
+index 7fa5db5..d73c59f 100755
+--- a/python/mainwindow.py
++++ b/python/mainwindow.py
+@@ -1193,7 +1193,7 @@ class PlayOnLinuxApp(wx.App):
+         self.singleCheckFatal("gpg", package="GnuPG")
+ 
+         if(os.environ["DEBIAN_PACKAGE"] == "FALSE"):
+-            self.singleCheck("xterm")
++            self.singleCheck("gnome-terminal")
+         self.singleCheck("gettext.sh", package="gettext")  # gettext-base on Debian
+         self.singleCheck("icotool", package="icoutils")
+         self.singleCheck("wrestool", package="icoutils")
+-- 
+1.7.12
+

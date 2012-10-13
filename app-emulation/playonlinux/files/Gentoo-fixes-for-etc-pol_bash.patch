@@ -1,0 +1,47 @@
+From 7e56a95e39c751fd6bed379f2ff73a044b55e9b4 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Sun, 14 Oct 2012 10:37:06 +0200
+Subject: [PATCH 2/3] Gentoo fixes for etc/pol_bash
+
+---
+ etc/pol_bash | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/etc/pol_bash b/etc/pol_bash
+index 7911f05..bd891e4 100644
+--- a/etc/pol_bash
++++ b/etc/pol_bash
+@@ -29,7 +29,15 @@ export HISTCONTROL=ignoreboth
+ shopt -s checkwinsize
+ 
+ # make less more friendly for non-text input files, see lesspipe(1)
+-[ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
++less_pipe_cmd=$(lesspipe 2> /dev/null)
++if [ "$less_pipe_cmd" == export* ]; then
++    eval "$(lesspipe)"
++else
++    if [ -x /usr/bin/lesspipe ]; then
++        export LESSOPEN='| lesspipe %s'
++    fi
++fi
++unset less_pipe_cmd
+ 
+ # set variable identifying the chroot you work in (used in the prompt below)
+ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+@@ -73,7 +81,9 @@ fi
+ # enable programmable completion features (you don't need to enable
+ # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+ # sources /etc/bash.bashrc).
+-if [ -f /etc/bash_completion ]; then
+-    . /etc/bash_completion
+-fi
+-
++for bashcomp in /etc/{bash_completion,profile.d/bash-completion.sh}; do
++    if [ -r "$bashcomp" ]; then
++        . "$bashcomp"
++    fi
++done
++unset bashcomp
+-- 
+1.7.12
+
