@@ -4,7 +4,7 @@
 
 EAPI=2
 
-inherit cmake-utils gnome2-utils
+inherit cmake-utils gnome2-utils user
 
 DESCRIPTION="Utility for advanced configuration of Roccat devices"
 
