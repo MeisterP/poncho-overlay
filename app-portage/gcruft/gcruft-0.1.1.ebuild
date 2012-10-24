@@ -23,18 +23,20 @@ src_prepare() {
 	else
 		local multilib="no";
 	fi
-	echo -e "
-our \$DISTDIR = '${PORTAGE_ACTUAL_DISTDIR}';
-our \$CHOST = '${CHOST}';
-our \$PKGDIR = '${PKGDIR}';
-our \$PORTAGE_TMPDIR = '${PORTAGE_TMPDIR}';
-our \$PORTDIR = '${PORTDIR}';
-our @PORTDIR_OVERLAY = ('$(env -i portageq portdir_overlay 2>/dev/null|sed -e "s/ /', '/g")');
-our \$installedbase = '$(portageq vdb_path)';
-our \$multilib = '$multilib';
-our \$libmap = '$(get_libdir)';
-our \$man_ext = '$(ecompress --suffix)';
-" > config.pm.new
+
+	cat <<- EOF > "config.pm.new"
+		our \$DISTDIR = '${PORTAGE_ACTUAL_DISTDIR}';
+		our \$CHOST = '${CHOST}';
+		our \$PKGDIR = '${PKGDIR}';
+		our \$PORTAGE_TMPDIR = '${PORTAGE_TMPDIR}';
+		our \$PORTDIR = '${PORTDIR}';
+		our @PORTDIR_OVERLAY = ('$(env -i portageq portdir_overlay 2>/dev/null|sed -e "s/ /', '/g")');
+		our \$installedbase = '$(portageq vdb_path)';
+		our \$multilib = '$multilib';
+		our \$libmap = '$(get_libdir)';
+		our \$man_ext = '$(ecompress --suffix)';
+	EOF
+
 	sed -e '1,/^# == PORTAGE VARIABLES BEGIN ==/ w config.pm.start' "${S}"/config.pm >/dev/null
 	sed -e '/^# == PORTAGE VARIABLES END ==/,$ w config.pm.end' "${S}"/config.pm >/dev/null
 	cat config.pm.{start,new,end} > "${S}"/config.pm
@@ -43,12 +45,15 @@ our \$man_ext = '$(ecompress --suffix)';
 
 src_install() {
 	local cfdir='/etc/gcruft'
+
 	dodir /usr/share/gcruft
 	mv "${S}"/share/{exceptions,functions.pl} "${D}"/usr/share/gcruft || die "couldn't move directories"
+
 	dobin "${S}"/gcruft.pl
-	dodoc "${S}"/README
-	dodoc "${S}"/README.html
+
+	dodoc "${S}"/README{,.html}
 	dodoc "${S}"/exception.example.pl
+
 	insinto $cfdir
 	doins "${S}"/config.pm
 	dodir $cfdir/exceptions
