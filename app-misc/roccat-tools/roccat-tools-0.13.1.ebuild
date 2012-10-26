@@ -19,6 +19,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_kone
 	input_devices_koneplus
 	input_devices_kovaplus
+	input_devices_lua
 	input_devices_pyra
 	input_devices_savu
 "
