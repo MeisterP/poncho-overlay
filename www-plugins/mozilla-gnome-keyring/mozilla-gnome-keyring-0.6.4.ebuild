@@ -48,7 +48,9 @@ src_compile() {
 			-lxpcomglue_s -lxul -lxpcom -lmozalloc -lmozsqlite3 -lplds4 -lplc4 \
 			-lnspr4 -lpthread -ldl"
 
-		[[ "${moz_pkg}" == "thunderbird" ]] && XUL_LDFLAGS="${XUL_LDFLAGS} -lldap60 -lprldap60"
+		if [[ "${moz_pkg}" == "thunderbird" ]]; then
+			has_version mail-client/thunderbird[ldap] && XUL_LDFLAGS="${XUL_LDFLAGS} -lldap60 -lprldap60"
+		fi
 
 		emake VERSION="${PV}" \
 			XUL_CFLAGS="${XUL_CFLAGS}" \
