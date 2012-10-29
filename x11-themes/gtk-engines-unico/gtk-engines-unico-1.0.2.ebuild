@@ -4,6 +4,8 @@
 
 EAPI=4
 
+inherit autotools eutils
+
 MY_PN=${PN/gtk-engines-}
 MY_P=${MY_PN}-${PV}
 
@@ -23,6 +25,11 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 S=${WORKDIR}/${MY_P}
+
+src_prepare() {
+	epatch "${FILESDIR}/139_135.diff"
+	eautoreconf
+}
 
 pkg_setup() {
 	DOCS="AUTHORS NEWS" # ChangeLog and README are empty.
