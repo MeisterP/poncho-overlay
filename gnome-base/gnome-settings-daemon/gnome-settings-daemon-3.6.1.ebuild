@@ -116,6 +116,10 @@ src_prepare() {
 	# Make colord and wacom optional; requires eautoreconf
 	epatch "${FILESDIR}/${PN}-3.5.91-optional-color-wacom.patch"
 
+	# xsettings patches
+	epatch "${FILESDIR}/${PN}-3.6.1-add-watchdog.patch"
+	epatch "${FILESDIR}/${PN}-3.6.1-optimize xsettings.patch"
+
 	[[ ${PV} != 9999 ]] && eautoreconf
 
 	gnome2_src_prepare
