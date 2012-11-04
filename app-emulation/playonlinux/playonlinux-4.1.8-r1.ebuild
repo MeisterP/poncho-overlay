@@ -111,15 +111,13 @@ pkg_postinst() {
 	gnome2_icon_cache_update
 }
 
-pkg_prerm() {
-	if [[ -z ${REPLACING_VERSIONS} ]]; then
+pkg_postrm() {
+	python_mod_cleanup "${GAMES_DATADIR}/${PN}"
+	gnome2_icon_cache_update
+
+	if [[ -z ${REPLACED_BY_VERSION} ]]; then
 		elog "Installed softwares and games with playonlinux have not been removed."
 		elog "To remove them, you can re-install playonlinux and remove them using it"
 		elog "or do it manually by removing .PlayOnLinux/ in your home directory."
 	fi
-}
-
-pkg_postrm() {
-	python_mod_cleanup "${GAMES_DATADIR}/${PN}"
-	gnome2_icon_cache_update
 }
