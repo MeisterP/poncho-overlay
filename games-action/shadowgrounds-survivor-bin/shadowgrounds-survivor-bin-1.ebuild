@@ -50,7 +50,7 @@ src_install() {
 		exeinto ${d}
 		newexe ${bb} ${bb} || die
 		games_make_wrapper ${bb} "./${bb}" "${d}" || die
-		make_desktop_entry ${bb} "Shadowgrounds Survivor ${b}" "Shadowgrounds Survivor"
+		make_desktop_entry ${bb} "Shadowgrounds Survivor ${b}" "Survivor"
 	done
 
 	exeinto ${d}/lib32
