@@ -50,7 +50,7 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	# DEFAULT_PLUGINS from configure.ac
-	local myplugins="bookmarks,drawspaces,wordcompletion,taglist"
+	myplugins="bookmarks,drawspaces,wordcompletion,taglist"
 
 	# python plugins with no extra dependencies beyond what USE=python brings
 	use python && myplugins="${myplugins},bracketcompletion,codecomment,colorpicker,commander,dashboard,joinlines,multiedit,textsize,sessionsaver,smartspaces,synctex"
