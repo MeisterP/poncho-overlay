@@ -14,10 +14,11 @@ HOMEPAGE="http://meldmerge.org/"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-linux ~x86-linux"
-IUSE="gnome"
+IUSE="+highlight gnome"
 
 RDEPEND=">=dev-python/pygtk-2.14:2
 	>=dev-python/pygobject-2.8:2
+	highlight? ( dev-python/pygtksourceview )
 	gnome? ( >=dev-python/gconf-python-2.22:2 )"
 DEPEND="${RDEPEND}
 	dev-util/gtk-doc-am
