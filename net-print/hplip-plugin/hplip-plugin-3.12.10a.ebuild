@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
-inherit eutils multilib toolchain-funcs unpacker
+inherit eutils multilib toolchain-funcs udev unpacker
 
 DESCRIPTION="Proprietary plugins and firmware for HPLIP"
 HOMEPAGE="http://hplipopensource.com/hplip-web/index.html"
@@ -14,7 +14,7 @@ LICENSE="hplip-plugin"
 SLOT="0"
 IUSE=""
 
-DEPEND="virtual/pkgconfig"
+DEPEND=""
 RDEPEND="~net-print/hplip-${PV}
 	sys-fs/udev"
 
@@ -33,21 +33,19 @@ QA_PRESTRIPPED="
 # License does not allow us to redistribute the "source" package
 RESTRICT="mirror"
 
+S=${WORKDIR}
+
 src_unpack() {
-	unpack_makeself "hplip-${PV}-plugin.run" || die 'unpack failed'
+	unpack_makeself "hplip-${PV}-plugin.run"
 }
 
 src_install() {
 	local hplip_arch=$(use amd64 && echo 'x86_64' || echo 'x86_32')
 
-	local udevdir=/lib/udev
-	has_version sys-fs/udev && udevdir="$($(tc-getPKG_CONFIG) --variable=udevdir udev)"
-
-	insinto "${udevdir}"/rules.d
-	doins *.rules || die
+	udev_dorules *.rules
 
 	insinto "${HPLIP_HOME}"/data/firmware
-	doins *.fw.gz || die
+	doins *.fw.gz
 
 	for plugin in *-${hplip_arch}.so; do
 		local plugin_type=prnt
@@ -57,7 +55,7 @@ src_install() {
 		esac
 
 		exeinto "${HPLIP_HOME}"/${plugin_type}/plugins
-		newexe ${plugin} ${plugin/-${hplip_arch}} || die "failed to install ${plugin}"
+		newexe ${plugin} ${plugin/-${hplip_arch}}
 	done
 
 	cat <<- EOF > "${WORKDIR}/hplip.state"
