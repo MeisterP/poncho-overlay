@@ -5,7 +5,7 @@
 EAPI=4
 
 inherit eutils flag-o-matic linux-info linux-mod multilib nvidia-driver \
-	portability toolchain-funcs unpacker user versionator
+	portability toolchain-funcs unpacker user udev
 
 X86_NV_PACKAGE="NVIDIA-Linux-x86-${PV}"
 AMD64_NV_PACKAGE="NVIDIA-Linux-x86_64-${PV}"
@@ -34,7 +34,6 @@ COMMON="app-admin/eselect-opencl
 DEPEND="${COMMON}
 	kernel_linux? (
 		virtual/linux-sources
-		virtual/pkgconfig
 	)"
 RDEPEND="${COMMON}
 	acpi? ( sys-power/acpid )
@@ -47,8 +46,7 @@ RDEPEND="${COMMON}
 		x11-libs/libXext
 		x11-libs/pango[X]
 	)
-	X? ( x11-libs/libXvMC )"
-PDEPEND="X? ( >=x11-libs/libvdpau-0.3-r1 )"
+	X? ( >=x11-libs/libvdpau-0.3-r1 )"
 
 REQUIRED_USE="tools? ( X )"
 
@@ -228,15 +226,11 @@ src_install() {
 		insinto /etc/modprobe.d
 		newins "${WORKDIR}"/nvidia nvidia.conf || die
 
-		local udevdir=/lib/udev
-		has_version sys-fs/udev && udevdir="$($(tc-getPKG_CONFIG) --variable=udevdir udev)"
-
 		# Ensures that our device nodes are created when not using X
-		exeinto "${udevdir}"
+		exeinto "$(udev_get_udevdir)"
 		doexe "${FILESDIR}"/nvidia-udev.sh
+		udev_newrules "${FILESDIR}"/nvidia.udev-rule 99-nvidia.rules
 
-		insinto "${udevdir}"/rules.d
-		newins "${FILESDIR}"/nvidia.udev-rule 99-nvidia.rules
 	elif use kernel_FreeBSD; then
 		if use x86-fbsd; then
 			insinto /boot/modules
@@ -250,9 +244,10 @@ src_install() {
 	# NVIDIA kernel <-> userspace driver config lib
 	donvidia ${NV_OBJ}/libnvidia-cfg.so ${NV_SOVER}
 
+	# NVIDIA video encode/decode <-> CUDA
 	if use kernel_linux; then
-		# NVIDIA video decode <-> CUDA
 		donvidia ${NV_OBJ}/libnvcuvid.so ${NV_SOVER}
+		donvidia ${NV_OBJ}/libnvidia-encode.so ${NV_SOVER}
 	fi
 
 	if use X; then
@@ -263,21 +258,12 @@ src_install() {
 		# Xorg GLX driver
 		donvidia ${NV_X11}/libglx.so ${NV_SOVER} \
 			/usr/$(get_libdir)/opengl/nvidia/extensions
-
-		# XvMC driver
-		#dolib.a ${NV_X11}/libXvMCNVIDIA.a || \
-		#	die "failed to install libXvMCNVIDIA.so"
-		#donvidia ${NV_X11}/libXvMCNVIDIA.so ${NV_SOVER}
-		#dosym libXvMCNVIDIA.so.${NV_SOVER} \
-		#	/usr/$(get_libdir)/libXvMCNVIDIA_dynamic.so.1 || \
-		#	die "failed to create libXvMCNVIDIA_dynamic.so symlink"
 	fi
 
 	# OpenCL ICD for NVIDIA
 	if use kernel_linux; then
 		insinto /etc/OpenCL/vendors
-		doins nvidia.icd
-		donvidia ${NV_OBJ}/libnvidia-opencl.so ${NV_SOVER}
+		doins ${NV_OBJ}/nvidia.icd
 	fi
 
 	# Documentation
@@ -359,9 +345,9 @@ src_install-libs() {
 		donvidia ${libdir}/libGL.so ${NV_SOVER} ${GL_ROOT}
 		donvidia ${libdir}/libnvidia-glcore.so ${NV_SOVER}
 		if use kernel_FreeBSD; then
-			donvidia ${libdir}/libnvidia-tls.so ${NV_SOVER} ${GL_ROOT}
+			donvidia ${libdir}/libnvidia-tls.so ${NV_SOVER}
 		else
-			donvidia ${libdir}/tls/libnvidia-tls.so ${NV_SOVER} ${GL_ROOT}
+			donvidia ${libdir}/tls/libnvidia-tls.so ${NV_SOVER}
 		fi
 
 		# VDPAU
@@ -378,6 +364,7 @@ src_install-libs() {
 		donvidia ${libdir}/libcuda.so ${NV_SOVER}
 		donvidia ${libdir}/libnvidia-compiler.so ${NV_SOVER}
 		donvidia ${libdir}/libOpenCL.so 1.0.0 ${CL_ROOT}
+		donvidia ${libdir}/libnvidia-opencl.so ${NV_SOVER}
 	fi
 }
 
@@ -419,7 +406,7 @@ pkg_postinst() {
 	elog
 	if ! use X; then
 		elog "You have elected to not install the X.org driver. Along with"
-		elog "this the OpenGL libraries, XvMC, and VDPAU libraries were not"
+		elog "this the OpenGL libraries and VDPAU libraries were not"
 		elog "installed. Additionally, once the driver is loaded your card"
 		elog "and fan will run at max speed which may not be desirable."
 		elog "Use the 'nvidia-smi' init script to have your card and fan"
