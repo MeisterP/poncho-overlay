@@ -2,7 +2,7 @@
 <!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
 <repositories xmlns="" version="1.0">
    <repo quality="experimental" status="unofficial">
-      <name>poncho-overlay</name>
+      <name>poncho</name>
       <description>Overlay for packages not in the main tree</description>
       <homepage>https://github.com/MeisterP/poncho-overlay</homepage>
       <owner type="person">
