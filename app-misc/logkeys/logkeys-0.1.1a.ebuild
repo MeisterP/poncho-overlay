@@ -24,12 +24,6 @@ pkg_pretend() {
 	fi
 }
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-	mv *-${PN}-* "${S}"
-}
-
 src_compile() {
 	tc-export CC
 	emake || die

@@ -29,6 +29,10 @@ pkg_pretend() {
 	fi
 }
 
+src_prepare() {
+	eautoreconf
+}
+
 src_install() {
 	default
 	insinto /usr/share/${PN}/
