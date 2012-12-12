@@ -52,9 +52,11 @@ pkg_postinst() {
 	ewarn "    dev-lang/R"
 	ewarn "    dev-python/gtkspell-python"
 	ewarn "    dev-vcs/bzr"
+	ewarn "    gnome-extra/zeitgeist"
 	ewarn "    media-gfx/graphviz"
 	ewarn "    media-gfx/imagemagick"
 	ewarn "    media-gfx/scrot"
+	ewarn "    media-sound/lilypond"
 	ewarn "    sci-visualization/gnuplot"
 	ewarn "    virtual/latex-base app-text/dvipng"
 }
