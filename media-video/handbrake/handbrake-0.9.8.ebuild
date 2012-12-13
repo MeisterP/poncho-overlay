@@ -83,6 +83,32 @@ src_prepare() {
 		cp "${DISTDIR}/${x}" "${S}/download/${x/-${PN}}" \
 		|| die "copying ${x} failed"
 	done
+
+	# This hack is necessary to get libass to compile.
+	# The fribidi that libass is trying to build can't find glib.h
+	# unless I add those directories to the build path.  This is
+	# fixed in Gentoo's version of fribidi but is broken with the
+	# snapshot of libass that Handbrake took before this release.
+	#   mkdir "${S}/build"
+	#   cp "${FILESDIR}/GNUmakefile.custom.defs" "${S}/build"
+
+	# this hack didn't work either...
+	#   append-flags $($(tc-getPKG_CONFIG) --cflags fribidi)
+
+	# try creating an inline GNUmakefile.custom.defs based
+	# on the one under ${S}/contrib/libass/module.defs
+	CURRENT_FRIBIDI_CFLAGS=$($(tc-getPKG_CONFIG) --cflags fribidi)
+	FRIBIDI_FIX_PATH="${S}/build/GNUmakefile.custom.defs"
+	mkdir "${S}/build"
+	touch "${FRIBIDI_FIX_PATH}"
+	echo 'LIBASS.CONFIGURE.extra = \' >> "${FRIBIDI_FIX_PATH}"
+	echo '--disable-png --disable-enca \' >> "${FRIBIDI_FIX_PATH}"
+	echo 'FREETYPE_LIBS="-L$(call fn.ABSOLUTE,$(CONTRIB.build/))lib -lfreetype" \' >> "${FRIBIDI_FIX_PATH}"
+	echo 'FREETYPE_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include/freetype2" \' >> "${FRIBIDI_FIX_PATH}"
+	echo 'FONTCONFIG_LIBS="-L$(call fn.ABSOLUTE,$(CONTRIB.build/))lib -lfontconfig" \' >> "${FRIBIDI_FIX_PATH}"
+	echo 'FONTCONFIG_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include" \' >> "${FRIBIDI_FIX_PATH}"
+	echo 'FRIBIDI_LIBS="-L$(call fn.ABSOLUTE,$(CONTRIB.build/))lib -lfribidi" \' >> "${FRIBIDI_FIX_PATH}"
+	echo 'FRIBIDI_CFLAGS="-I$(call fn.ABSOLUTE,$(CONTRIB.build/))include '"${CURRENT_FRIBIDI_CFLAGS}" '"' >> "${FRIBIDI_FIX_PATH}"
 }
 
 src_unpack() {
