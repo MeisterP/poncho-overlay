@@ -1,9 +1,13 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
-EAPI=2
 
-inherit python gnome2-utils toolchain-funcs python
+EAPI="2"
+
+AUTOMAKE_VERSION="1.11"
+PYTHON_DEPEND="2"
+
+inherit python gnome2-utils toolchain-funcs
 MY_P="HandBrake-${PV}"
 
 DESCRIPTION="Open-source DVD to Video converter"
@@ -37,40 +41,36 @@ SRC_URI="mirror://sourceforge/${PN}/${PV}/${MY_P}.tar.bz2
 #	${SRC_CONTRIB}zlib-1.2.3.tar.gz -> zlib-1.2.3-${PN}.tar.gz
 #	${SRC_CONTRIB}bzip2-1.0.6.tar.gz -> bzip2-1.0.6-${PN}.tar.gz
 #	${SRC_CONTRIB}pthreads-w32-cvs20100909.tar.bz2 -> pthreads-w32-cvs20100909-${PN}.tar.bz2
-
 unset SRC_CONTRIB
 
 LICENSE="GPL-2 GPL-3 BSD MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="gtk gstreamer ffmpeg2"
+IUSE="css gtk gstreamer ffmpeg"
 
 # fribidi is necessary to compile libass
 # Don't need this dependency, net-libs/webkit-gtk,
 # since I'm passing --disable-gtk-update-checks to configure.
-RDEPEND="sys-libs/zlib
-	app-arch/bzip2
+RDEPEND="app-arch/bzip2
 	dev-libs/fribidi
-	dev-libs/glib:2
-	gtk? (
-		>=dev-libs/dbus-glib-0.98
-		x11-libs/gtk+:2
-		>=sys-fs/udev-171[gudev]
-		x11-libs/libnotify )
+	sys-libs/zlib
+	css? ( media-libs/libdvdcss )
+	gtk? (	x11-libs/gtk+:2
+			dev-libs/glib
+			dev-libs/dbus-glib
+			x11-libs/libnotify
+			virtual/udev[gudev] )
 	gstreamer? (
-		media-libs/gstreamer
-		media-libs/gst-plugins-base )"
+		media-libs/gstreamer:0.10
+		media-libs/gst-plugins-base:0.10 )"
 
 DEPEND="${RDEPEND}
-	=dev-lang/python-2*
 	sys-devel/automake:1.11
 	virtual/pkgconfig
+	dev-lang/yasm
 	gtk? ( dev-util/intltool )"
 
 S="${WORKDIR}/HandBrake-${PV}"
-
-# WANT_AUTOMAKE doesn't work here
-AUTOMAKE_VERSION=1.11
 
 pkg_setup() {
 	python_set_active_version 2
@@ -115,45 +115,39 @@ src_unpack() {
 	unpack ${MY_P}.tar.bz2
 }
 
-src_configure()
-{
+src_configure() {
 	# python configure script doesn't accept all econf flags
 	local myconf=""
 
-	use gstreamer || myconf="${myconf} --disable-gst"
-	use ffmpeg2 && myconf="${myconf} --enable-ff-mpeg2"
+	! use gtk && myconf="${myconf} --disable-gtk"
+	! use gstreamer && myconf="${myconf} --disable-gst"
+	use ffmpeg && myconf="${myconf} --enable-ff-mpeg2"
 
 	./configure --force --prefix=/usr \
-		$(use_enable gtk) \
 		--disable-gtk-update-checks \
 		${myconf} || die "configure failed"
 }
 
-src_compile()
-{
+src_compile() {
 	WANT_AUTOMAKE="${AUTOMAKE_VERSION}" emake -C build || \
 		die "failed compiling ${PN}"
 }
 
-src_install()
-{
+src_install() {
 	emake -C build DESTDIR="${D}" install || die "failed installing ${PN}"
 	emake -C build doc || die "emake doc failed"
 	dodoc AUTHORS CREDITS NEWS THANKS || die "dodoc 1 failed"
 	dodoc build/doc/articles/txt/* || die "dodoc 2 failed"
 }
 
-pkg_preinst()
-{
+pkg_preinst() {
 	gnome2_icon_savelist
 }
 
-pkg_postinst()
-{
+pkg_postinst() {
 	gnome2_icon_cache_update
 }
 
-pkg_postrm()
-{
+pkg_postrm() {
 	gnome2_icon_cache_update
 }
