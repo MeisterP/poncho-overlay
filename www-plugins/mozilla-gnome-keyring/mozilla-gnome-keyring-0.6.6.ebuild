@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils multilib mozextension
+inherit multilib mozextension
 
 DESCRIPTION="A Firefox and Thunderbird extension that enables Gnome Keyring integration"
 HOMEPAGE="http://github.com/infinity0/mozilla-gnome-keyring"
@@ -30,9 +30,6 @@ src_unpack() {
 }
 
 src_prepare() {
-	# https://github.com/infinity0/mozilla-gnome-keyring/pull/28
-	epatch "${FILESDIR}/Use_nullptr_instead_of_nsnull.patch"
-
 	for moz_pkg in ${moz_pkg_enable}; do
 		einfo "Copying source to ${P}-${moz_pkg}"
 		cp -r "${S}" "${WORKDIR}/${P}-${moz_pkg}" || die
