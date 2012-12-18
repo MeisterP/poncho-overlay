@@ -12,10 +12,11 @@ HOMEPAGE="http://www.tigerstylegames.com/wakingmars/"
 SLOT="0"
 LICENSE="EULA"
 KEYWORDS="-* ~amd64 ~x86"
-RESTRICT="fetch"
+RESTRICT="mirror"
 IUSE="multilib"
 
-SRC_URI="WakingMars-${PV}-Linux.tar.gz"
+SRC_URI="WakingMars-${PV}-Linux.tar.gz\
+	https://dl.dropbox.com/s/6p1dvlpqiyccenf/oal14.tar.gz?dl=1 -> oal14.tar.gz"
 
 RDEPEND="
 	app-arch/bzip2
@@ -59,7 +60,7 @@ S="${WORKDIR}/WakingMars-${PV}-Linux/${MY_PN}"
 REQUIRED_USE="amd64? ( multilib )"
 pkg_nofetch() {
 	ewarn
-	ewarn "Place ${A} to ${DISTDIR}"
+	ewarn "Place WakingMars-${PV}-Linux.tar.gz to ${DISTDIR}"
 	ewarn
 }
 
@@ -71,7 +72,11 @@ src_install() {
 	doexe "${MY_PN}"
 	doicon "${MY_PN}.png"
 	rm "${MY_PN}" "${MY_PN}.png"
+	rm lib/libopenal.*
 	doins -r GameData lib
+
+	insinto "${dir}/lib"
+	doins ${WORKDIR}/libopenal.*
 
 	games_make_wrapper "${PN}" "./${MY_PN}" "${dir}" "${dir}/lib"
 	make_desktop_entry "${PN}" "Waking Mars" "${MY_PN}"
