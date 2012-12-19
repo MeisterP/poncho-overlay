@@ -45,6 +45,7 @@ RDEPEND="${COMMON}
 		x11-libs/libX11
 		x11-libs/libXext
 		x11-libs/pango[X]
+		|| ( x11-libs/pangox-compat <x11-libs/pango-1.31[X] )
 	)
 	X? ( >=x11-libs/libvdpau-0.3-r1 )"
 
@@ -143,10 +144,6 @@ src_prepare() {
 	    epatch "${FILESDIR}"/nvidia-drivers-pax-const.patch
 	    epatch "${FILESDIR}"/nvidia-drivers-pax-usercopy.patch
 	fi
-
-	cat <<- EOF > "${S}"/nvidia.icd
-		/usr/$(get_libdir)/libnvidia-opencl.so
-	EOF
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
