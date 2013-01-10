@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI="5"
 
-inherit eutils multilib toolchain-funcs udev unpacker
+inherit eutils multilib udev unpacker
 
 DESCRIPTION="Proprietary plugins and firmware for HPLIP"
 HOMEPAGE="http://hplipopensource.com/hplip-web/index.html"
@@ -12,28 +12,27 @@ SRC_URI="http://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hp
 
 LICENSE="hplip-plugin"
 SLOT="0"
+KEYWORDS="-* ~amd64 ~x86"
 IUSE=""
 
-DEPEND=""
 RDEPEND="~net-print/hplip-${PV}
-	sys-fs/udev"
+	virtual/udev !<sys-fs/udev-114"
+DEPEND=""
+
+S=${WORKDIR}
 
 HPLIP_HOME=/usr/share/hplip
 
 # Binary prebuilt package
-KEYWORDS="-* ~amd64 ~x86"
 QA_PRESTRIPPED="
 /usr/share/hplip/scan/plugins/bb_marvell.so
 /usr/share/hplip/scan/plugins/bb_soapht.so
 /usr/share/hplip/scan/plugins/bb_soap.so
 /usr/share/hplip/fax/plugins/fax_marvell.so
-/usr/share/hplip/prnt/plugins/hbpl1.so
 /usr/share/hplip/prnt/plugins/lj.so"
 
 # License does not allow us to redistribute the "source" package
 RESTRICT="mirror"
-
-S=${WORKDIR}
 
 src_unpack() {
 	unpack_makeself "hplip-${PV}-plugin.run"
