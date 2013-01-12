@@ -1,0 +1,58 @@
+From de4d7c9ec39888dc44283d7ef13b71b3d362cdd0 Mon Sep 17 00:00:00 2001
+From: Leo von Klenze <devel@leo.von-klenze.de>
+Date: Fri, 11 Jan 2013 23:11:08 +0100
+Subject: [PATCH] Make compatible with xulrunner 18
+
+---
+ GnomeKeyring.cpp |   10 +++++++---
+ Makefile         |    2 +-
+ xpcom_abi.cpp    |    1 +
+ 3 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/GnomeKeyring.cpp b/GnomeKeyring.cpp
+index ec25513..a88ddff 100644
+--- a/GnomeKeyring.cpp
++++ b/GnomeKeyring.cpp
+@@ -666,9 +666,13 @@ NS_IMETHODIMP GnomeKeyring::ModifyLogin(nsILoginInfo *oldLogin,
+    * just remove the old login and add the new one */
+   nsCOMPtr<nsILoginInfo> newLogin( do_QueryInterface(modLogin, &interfaceok) );
+   if (interfaceok == NS_OK) {
+-    nsresult rv = RemoveLogin(oldLogin);
+-    rv |= AddLogin(newLogin);
+-    return rv;
++    nsresult rvremovelogin = RemoveLogin(oldLogin);
++    nsresult rvaddlogin = AddLogin(newLogin);
++    if(NS_FAILED(rvremovelogin)) {
++        return rvremovelogin;
++    } else {
++        return rvaddlogin;
++    }
+   }
+ 
+   /* Otherwise, it has to be an nsIPropertyBag.
+diff --git a/Makefile b/Makefile
+index da156dd..40b2bf1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -24,7 +24,7 @@ endif
+ 
+ GNOME_CFLAGS     := `pkg-config --cflags gnome-keyring-1`
+ GNOME_LDFLAGS    := `pkg-config --libs gnome-keyring-1`
+-CXXFLAGS         += -Wall -fno-rtti -fno-exceptions -fPIC -std=gnu++0x
++CXXFLAGS         += -Wall -fno-rtti -fno-exceptions -fPIC -std=gnu++0x -D__STDC_LIMIT_MACROS
+ LDFLAGS          +=
+ 
+ # work around mozilla bug #763327
+diff --git a/xpcom_abi.cpp b/xpcom_abi.cpp
+index 19ebb32..c666bd3 100644
+--- a/xpcom_abi.cpp
++++ b/xpcom_abi.cpp
+@@ -1,4 +1,5 @@
+ #include <stdio.h>
++#include <stdint.h>
+ 
+ #include "nsIXULRuntime.h"
+ #include "nsServiceManagerUtils.h"
+-- 
+1.7.10
+
