@@ -1,15 +1,3 @@
-From 0af3d7dcfec7a209e89c44c70bd119c3c5b90c64 Mon Sep 17 00:00:00 2001
-From: Poncho <poncho@spahan.ch>
-Date: Sun, 14 Oct 2012 11:48:48 +0200
-Subject: [PATCH 3/3] Use gnome-terminal
-
----
- bash/expert/PolShell | 1 -
- lib/playonlinux.lib  | 4 ++--
- lib/variables        | 3 ++-
- python/mainwindow.py | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
 diff --git a/bash/expert/PolShell b/bash/expert/PolShell
 index d2afad0..37777f7 100755
 --- a/bash/expert/PolShell
@@ -21,7 +9,7 @@ index d2afad0..37777f7 100755
 -[ "$DEBIAN_PACKAGE" = "FALSE" ] && TITLEADD="-T $APPLICATION_TITLE"
  "$POL_TERM" $TITLEADD -e "$PLAYONLINUX/bash/polshell"
 diff --git a/lib/playonlinux.lib b/lib/playonlinux.lib
-index f6e319f..c563b84 100755
+index a451f54..68caaa7 100755
 --- a/lib/playonlinux.lib
 +++ b/lib/playonlinux.lib
 @@ -224,7 +224,7 @@ EOF
@@ -33,15 +21,15 @@ index f6e319f..c563b84 100755
  }
  
  
-@@ -836,4 +836,4 @@ POL_Config_CheckGL()
- {
- 	bash "$PLAYONLINUX/bash/check_gl" "x86"
- 	bash "$PLAYONLINUX/bash/check_gl" "amd64"	
+@@ -876,4 +876,4 @@ POL_Sudo()
+ 	else
+ 		POL_Debug_Fatal "Sudo is not allowed on unsigned scripts!"
+ 	fi
 -}
 \ No newline at end of file
 +}
 diff --git a/lib/variables b/lib/variables
-index 83c96d0..9405f4a 100755
+index 9dbd491..a3728a0 100755
 --- a/lib/variables
 +++ b/lib/variables
 @@ -32,7 +32,8 @@ alias find="find -H"
@@ -67,6 +55,3 @@ index 7fa5db5..d73c59f 100755
          self.singleCheck("gettext.sh", package="gettext")  # gettext-base on Debian
          self.singleCheck("icotool", package="icoutils")
          self.singleCheck("wrestool", package="icoutils")
--- 
-1.7.12
-

@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/playonlinux/playonlinux-4.1.1.ebuild,v 1.1 2012/06/16 19:12:24 pacho Exp $
+# $Header: $
 
 EAPI="4"
 PYTHON_DEPEND="2"
@@ -16,7 +16,7 @@ SRC_URI="http://www.playonlinux.com/script_files/${MY_PN}/${PV}/${MY_PN}_${PV}.t
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="winbind"
+IUSE="gnome winbind"
 
 DEPEND=""
 RDEPEND="app-emulation/wine
@@ -28,7 +28,8 @@ RDEPEND="app-emulation/wine
 	|| ( media-gfx/imagemagick media-gfx/graphicsmagick[imagemagick] )
 	net-misc/wget
 	x11-apps/mesa-progs
-	x11-terms/xterm
+	gnome? ( x11-terms/gnome-terminal )
+	!gnome? ( x11-terms/xterm )
 	media-gfx/icoutils
 	net-analyzer/netcat
 	winbind? ( net-fs/samba[winbind] ) "
@@ -50,8 +51,9 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# see https://github.com/PlayOnLinux/POL-POM-4/commit/87d0850a26cad8089386bf7d5e47fb32454810eb
-	epatch ${FILESDIR}/fix_integer_expression_expected.patch
+	epatch "${FILESDIR}/Gentoo-fixes-for-etc-pol_bash.patch"
+	# http://www.playonlinux.com/en/issue-1687.html
+	#use gnome && epatch "${FILESDIR}/Add-gnome-terminal-support.patch"
 
 	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i playonlinux || die
 	python_convert_shebangs -r 2 .
@@ -109,15 +111,13 @@ pkg_postinst() {
 	gnome2_icon_cache_update
 }
 
-pkg_prerm() {
-	if [[ -z ${REPLACING_VERSIONS} ]]; then
+pkg_postrm() {
+	python_mod_cleanup "${GAMES_DATADIR}/${PN}"
+	gnome2_icon_cache_update
+
+	if [[ -z ${REPLACED_BY_VERSION} ]]; then
 		elog "Installed softwares and games with playonlinux have not been removed."
 		elog "To remove them, you can re-install playonlinux and remove them using it"
 		elog "or do it manually by removing .PlayOnLinux/ in your home directory."
 	fi
-}
-
-pkg_postrm() {
-	python_mod_cleanup "${GAMES_DATADIR}/${PN}"
-	gnome2_icon_cache_update
 }
