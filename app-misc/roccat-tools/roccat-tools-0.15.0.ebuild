@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 
-inherit cmake-utils gnome2-utils user
+inherit cmake-utils gnome2-utils udev
 
 DESCRIPTION="Utility for advanced configuration of Roccat devices"
 
@@ -18,12 +18,16 @@ IUSE_INPUT_DEVICES="
 	input_devices_isku
 	input_devices_kone
 	input_devices_koneplus
+	input_devices_konepure
+	input_devices_konextd
 	input_devices_kovaplus
 	input_devices_lua
 	input_devices_pyra
 	input_devices_savu
 "
 IUSE="${IUSE_INPUT_DEVICES}"
+
+REQUIRED_USE="input_devices_konextd? ( input_devices_koneplus )"
 
 RDEPEND="
 	x11-libs/gtk+:2
@@ -32,13 +36,15 @@ RDEPEND="
 	virtual/libusb:1
 	<dev-libs/libunique-3
 	dev-libs/dbus-glib
-	sys-fs/udev[gudev]
+	virtual/udev[gudev]
 "
 
 DEPEND="${RDEPEND}"
 
 src_configure() {
-	mycmakeargs=( -DDEVICES=${INPUT_DEVICES// /;} )
+	local UDEVDIR="$(udev_get_udevdir)"/rules.d
+	mycmakeargs=( -DDEVICES=${INPUT_DEVICES// /;} \
+	-DUDEVDIR="${UDEVDIR/"//"//}" )
 	cmake-utils_src_configure
 }
 
