@@ -30,7 +30,8 @@ RDEPEND="media-sound/cdparanoia
 	dev-python/gst-python
 	dev-python/python-musicbrainz
 	dev-python/pygobject
-	dev-python/pygtk"
+	dev-python/pygtk
+	dev-python/pyxdg"
 DEPEND="${RDEPEND}"
 
 src_prepare() {
