@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-inherit eutils multilib mozextension
+inherit multilib mozextension
 
 DESCRIPTION="A Firefox and Thunderbird extension that enables Gnome Keyring integration"
 HOMEPAGE="http://github.com/infinity0/mozilla-gnome-keyring"
@@ -30,7 +30,6 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/xulrunner-18.patch
 	for moz_pkg in ${moz_pkg_enable}; do
 		einfo "Copying source to ${P}-${moz_pkg}"
 		cp -r "${S}" "${WORKDIR}/${P}-${moz_pkg}" || die
