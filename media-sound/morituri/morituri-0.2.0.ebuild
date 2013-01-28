@@ -15,13 +15,14 @@ SRC_URI="http://thomas.apestaart.org/download/morituri/${P}.tar.bz2"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="alac cdio +flac wav wavpack"
+IUSE="alac cdio +cddb +flac wav wavpack"
 
 RDEPEND="media-sound/cdparanoia
 	app-cdr/cdrdao
 	media-libs/gstreamer
 	alac? ( media-plugins/gst-plugins-ffmpeg )
 	cdio? ( dev-python/pycdio )
+	cddb? ( dev-python/cddb-py )
 	flac? ( media-plugins/gst-plugins-flac )
 	wav? ( media-libs/gst-plugins-good )
 	wavpack? ( media-plugins/gst-plugins-wavpack )
