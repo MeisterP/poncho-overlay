@@ -33,6 +33,8 @@ RDEPEND="${DEPEND}
 
 src_prepare(){
 	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
+
+	# see https://bugs.gentoo.org/show_bug.cgi?id=454640
 	mv timeline.py ${PN} || die "rename timeline.py failed"
 
 	escons mo
