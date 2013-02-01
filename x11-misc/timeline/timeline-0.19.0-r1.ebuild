@@ -20,7 +20,7 @@ IUSE="calendar doc svg"
 LANGS="ca de es fr gl he it lt pl pt pt_BR ru sv tr vi zh_CN"
 
 for lang in ${LANGS} ; do
-	IUSE="${IUSE} linguas_${lang}"
+	IUSE+=" linguas_${lang}"
 done
 
 DEPEND=">=dev-python/wxpython-2.8.9.2
