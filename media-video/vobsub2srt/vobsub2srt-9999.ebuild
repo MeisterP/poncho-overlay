@@ -18,15 +18,15 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 RDEPEND=">=app-text/tesseract-2.04-r1
-    >=virtual/ffmpeg-0.6.90"
+	>=virtual/ffmpeg-0.6.90"
 DEPEND="${RDEPEND}"
 src_configure() {
-    econf
+	econf
 }
 src_compile() {
-    emake || die
+	emake
 }
 
 src_install() {
-    emake DESTDIR="${D}" install || die
+	emake DESTDIR="${D}" install
 }

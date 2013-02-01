@@ -76,7 +76,7 @@ src_install() {
 	doins -r GameData lib
 
 	insinto "${dir}/lib"
-	doins ${WORKDIR}/libopenal.*
+	doins "${WORKDIR}"/libopenal.*
 
 	games_make_wrapper "${PN}" "./${MY_PN}" "${dir}" "${dir}/lib"
 	make_desktop_entry "${PN}" "Waking Mars" "${MY_PN}"
