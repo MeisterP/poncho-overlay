@@ -33,16 +33,15 @@ RDEPEND="${DEPEND}
 
 src_prepare(){
 	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
+}
 
-	# see https://bugs.gentoo.org/show_bug.cgi?id=454640
-	mv timeline.py ${PN} || die "rename timeline.py failed"
-
+src_compile() {
 	escons mo
 }
 
 src_install() {
 	python_domodule timelinelib
-	python_doscript ${PN}
+	python_newscript timeline.py ${PN}
 
 	insinto /usr/share/${PN}/icons
 	doins icons/*.png
@@ -57,6 +56,7 @@ src_install() {
 	for size in 16 32 48; do
 		newicon -s $size icons/$size.png ${PN}.png
 	done
+
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
 	dodoc AUTHORS CHANGES HACKING README
