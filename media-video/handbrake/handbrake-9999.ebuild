@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 
 AUTOMAKE_VERSION="1.11"
 PYTHON_DEPEND="2"
@@ -16,14 +16,14 @@ SRC_CONTRIB="http://download.handbrake.fr/handbrake/contrib/"
 SRC_URI="${SRC_CONTRIB}a52dec-0.7.4.tar.gz -> a52dec-0.7.4-${PN}.tar.gz
 	${SRC_CONTRIB}faac-1.28.tar.gz -> faac-1.28-${PN}.tar.gz
 	${SRC_CONTRIB}lame-3.98.tar.gz -> lame-3.98-${PN}.tar.gz
-	${SRC_CONTRIB}libav-v0.8-2551-gc83f44d.tar.bz2 -> libav-v0.8-2551-gc83f44d-${PN}.tar.bz2
+	${SRC_CONTRIB}libav-v9.1.tar.bz2 -> libav-v9.1-${PN}.tar.bz2
 	${SRC_CONTRIB}libbluray-0.2.3.tar.bz2 -> libbluray-0.2.3-${PN}.tar.bz2
 	${SRC_CONTRIB}libdvdnav-svn1168.tar.gz -> libdvdnav-svn1168-${PN}.tar.gz
 	${SRC_CONTRIB}libdvdread-svn1168.tar.gz -> libdvdread-svn1168-${PN}.tar.gz
 	${SRC_CONTRIB}libmkv-0.6.5-0-g82075ae.tar.gz -> libmkv-0.6.5-0-g82075ae-${PN}.tar.gz
 	${SRC_CONTRIB}mp4v2-trunk-r355.tar.bz2 -> mp4v2-trunk-r355-${PN}.tar.bz2
 	${SRC_CONTRIB}mpeg2dec-0.5.1.tar.gz -> mpeg2dec-0.5.1-${PN}.tar.gz
-	${SRC_CONTRIB}x264-r2216-198a7ea.tar.gz -> x264-r2216-198a7ea-${PN}.tar.gz"
+	${SRC_CONTRIB}x264-r2245-bc13772.tar.gz -> x264-r2245-bc13772-${PN}.tar.gz"
 unset SRC_CONTRIB
 
 LICENSE="GPL-2 GPL-3 BSD MIT"
@@ -87,15 +87,14 @@ src_configure() {
 }
 
 src_compile() {
-	WANT_AUTOMAKE="${AUTOMAKE_VERSION}" emake -C build || \
-		die "failed compiling ${PN}"
+	WANT_AUTOMAKE="${AUTOMAKE_VERSION}" emake -C build
 }
 
 src_install() {
-	emake -C build DESTDIR="${D}" install || die "failed installing ${PN}"
-	emake -C build doc || die "emake doc failed"
-	dodoc AUTHORS CREDITS NEWS THANKS || die "dodoc 1 failed"
-	dodoc build/doc/articles/txt/* || die "dodoc 2 failed"
+	emake -C build DESTDIR="${D}" install
+	emake -C build doc
+	dodoc AUTHORS CREDITS NEWS THANKS
+	dodoc build/doc/articles/txt/*
 }
 
 pkg_preinst() {
