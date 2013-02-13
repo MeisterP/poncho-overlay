@@ -1,131 +1,128 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
-inherit eutils games
+EAPI=5
+inherit eutils unpacker gnome2-utils games
 
 MY_PN="Trine 2"
-
 DESCRIPTION="A sidescrolling game of action, puzzles and platforming"
 HOMEPAGE="http://www.trine2.com/"
 SRC_URI="${PN}_linux_installer.run"
-LICENSE=""
 
+LICENSE="all-rights-reserved"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
+IUSE="+launcher system-libs"
+RESTRICT="fetch bindist"
 
-IUSE="+bundled-libs"
-RESTRICT="fetch strip"
+QA_PREBUILT="${GAMES_PREFIX_OPT}/${PN}/${PN}*
+	${GAMES_PREFIX_OPT}/${PN}/lib/*"
 
-DEPEND="app-arch/tar"
-
-RDEPEND="amd64? (
-	  app-emulation/emul-linux-x86-baselibs
-	  app-emulation/emul-linux-x86-opengl
-	  app-emulation/emul-linux-x86-sdl
-	  app-emulation/emul-linux-x86-soundlibs
-	  app-emulation/emul-linux-x86-xlibs
-	  app-emulation/emul-linux-x86-gtklibs )
-
+# TODO: system-libs: no libsdl-1.3, no physx
+RDEPEND="
+	amd64? (
+		app-emulation/emul-linux-x86-baselibs
+		app-emulation/emul-linux-x86-opengl
+		app-emulation/emul-linux-x86-sdl
+		app-emulation/emul-linux-x86-soundlibs
+		app-emulation/emul-linux-x86-xlibs
+		launcher? ( app-emulation/emul-linux-x86-gtklibs )
+		system-libs? ( media-gfx/nvidia-cg-toolkit[multilib] )
+	)
 	x86? (
-	  dev-libs/glib
-	  media-libs/freetype
-	  media-libs/libogg
-	  media-libs/libvorbis
-	  media-libs/openal
-	  sys-libs/zlib
-	  virtual/glu
-	  virtual/opengl
-	  !bundled-libs? (
-	    media-gfx/libphysx
-	    >=media-libs/libsdl-1.3
-	    media-gfx/nvidia-cg-toolkit )
-	  dev-libs/atk
-	  dev-libs/glib
-	  media-libs/fontconfig
-	  sys-libs/glibc
-	  x11-libs/gdk-pixbuf
-	  x11-libs/gtk+
-	  x11-libs/libSM
-	  x11-libs/libX11
-	  x11-libs/libXinerama
-	  x11-libs/libXxf86vm
-	  x11-libs/pango )"
+		dev-libs/glib:2
+		media-libs/freetype
+		media-libs/libogg
+		media-libs/libvorbis
+		media-libs/openal
+		sys-libs/zlib
+		virtual/glu
+		virtual/opengl
+		launcher? (
+			media-libs/fontconfig
+			media-libs/libpng:0
+			x11-libs/gtk+:2
+			x11-libs/libSM
+			x11-libs/libX11
+			x11-libs/libXinerama
+			x11-libs/libXxf86vm
+		)
+		system-libs? ( media-gfx/nvidia-cg-toolkit )
+	)"
 
-S="${WORKDIR}"
-GAMEDIR="${GAMES_PREFIX_OPT}/${PN}"
+S=${WORKDIR}
 
-# Downloaded file is a self-extracting archive. After this line starts the data we need:
-DATA_MARKER="THIS_IS_THE_LAST_SCRIPT_LINE_ARCHIVE_DATA_FOLLOWS"
-
-pkg_nofetch() {
-	einfo ""
-	einfo "Please download \"${SRC_URI}\" from:"
-	einfo "  ${HOMEPAGE}"
-	einfo "and move/link it to \"${DISTDIR}\""
-	einfo ""
+pkg_pretend() {
+	if has splitdebug ${FEATURES}; then
+		eerror "FEATURES=splitdebug is broken for this package, disable it locally"
+		die "FEATURES=splitdebug is broken for this package, disable it locally"
+	fi
 }
 
-src_setup() {
-	if ( use "amd64" && ! use "bundled-libs" )
-	then
-	  einfo ""
-	  einfo "You are using an amd64 system and selected"
-	  einfo "to not install the bundled-libs."
-	  einfo ""
-	  einfo "Actualy there isn't any \"emul-linux\" package providing"
-	  einfo "needed x86 libs, so we'll keep bundled ones."
-	  einfo ""
-	fi
+pkg_nofetch() {
+	einfo
+	einfo "Please buy & download \"${SRC_URI}\" from:"
+	einfo "  ${HOMEPAGE}"
+	einfo "and move/link it to \"${DISTDIR}\""
+	einfo
 }
 
 src_unpack() {
-	local archive="${DISTDIR}/${A}"
-	local data_marker_line="$(grep --binary-file=text -h -n -m 1 -F -e "${DATA_MARKER}" "${archive}" | cut -d':' -f1)"
-
-	if [[ "${?}" == "0" && "${data_marker_line}" =~ ^[0-9]+$ ]]
-	then
-	  echo ">>> Unpacking ${A} to ${PWD}"
-	  ( tail --lines=+$(( ${data_marker_line} + 1 )) "${archive}" | tar xz ) || die "unpacking \"${archive}\" failed"
-	else
-	  die "unpacking \"${archive}\" failed"
-	fi
+	local offset="$(( $(grep -a -h -n -m 1 -F -e THIS_IS_THE_LAST_SCRIPT_LINE_ARCHIVE_DATA_FOLLOWS "${DISTDIR}"/${A} | cut -d':' -f1) + 1 ))"
+	unpack_makeself ${A} "${offset}" "tail"
 }
 
 src_install() {
-	# Install data files:
-	insinto "${GAMEDIR}" || die "insinto \"${GAMEDIR}\" failed"
-	doins -r data* || die "doins \"data\" failed"
+	local dir=${GAMES_PREFIX_OPT}/${PN}
 
-	# Install executables and libraries:
-	exeinto "${GAMEDIR}" || die "exeinto \"${GAMEDIR}\" failed"
-	newexe "bin/trine2_linux_32bit" "${PN}" || die "newexe \"${PN}\" failed"
-	newexe "bin/trine2_linux_launcher_32bit" "${PN}-launcher" || die "newexe \"${PN}-launcher\" failed"
+	insinto "${dir}"
+	doins -r data*
 
-	exeinto "${GAMEDIR}/lib" || die "exeinto \"${GAMEDIR}/lib\" failed"
-	( use "amd64" || use "bundled-libs" ) && ( find lib*/lib* -type f -iname '*.so*' -exec doexe '{}' \+ || die "doins bundled libs failed" )
+	exeinto "${dir}"
+	newexe "bin/trine2_linux_32bit" ${PN}
 
-	# Make game wrapper:
-	games_make_wrapper "${PN}" "./${PN} &> /dev/null" "${GAMEDIR}" "$( ( use "amd64" || use "bundled-libs" ) && echo "${GAMEDIR}/lib" )" || die "games_make_wrapper \"${PN}\" failed"
-	games_make_wrapper "${PN}-launcher" "./${PN}-launcher &> /dev/null" "${GAMEDIR}" "$( ( use "amd64" || use "bundled-libs" ) && echo "${GAMEDIR}/lib" )" || die "games_make_wrapper \"${PN}-launcher\" failed"
+	exeinto "${dir}/lib"
+	use system-libs && { find lib/lib32 -type f -name "libCg*.so*" -delete || die ;}
+	doexe lib/lib32/*
 
-	# Install icon and desktop files:
-	doicon "${PN}.png" || die "doicon \"${PN}.png\" failed"
-	make_desktop_entry "${PN}" "${MY_PN}" "/usr/share/pixmaps/${PN}.png" || die "make_desktop_entry failed"
+	games_make_wrapper ${PN} "./${PN}" "${dir}" "${dir}/lib"
+	doicon -s 64 ${PN}.png
+	make_desktop_entry ${PN} "${MY_PN}"
 
-	# Install docs:
-	dodoc "KNOWN_LINUX_ISSUES" || die "dodoc failed"
+	if use launcher ; then
+		exeinto "${dir}"
+		newexe bin/trine2_linux_launcher_32bit ${PN}-launcher
 
-	# Setting permissions
+		games_make_wrapper ${PN}-launcher "./${PN}-launcher" "${dir}" "${dir}/lib"
+		make_desktop_entry ${PN}-launcher "${MY_PN} (launcher)"
+
+		# launcher binary has hardcoded the script path
+		dodir "${dir}"/bin
+		dosym "${GAMES_BINDIR}"/trine2 "${dir}"/bin/trine2_bin_starter.sh
+	fi
+
+	dodoc KNOWN_LINUX_ISSUES README
+
 	prepgamesdirs
 }
 
+pkg_preinst() {
+	games_pkg_preinst
+	gnome2_icon_savelist
+}
+
 pkg_postinst() {
-	echo ""
 	games_pkg_postinst
 
-	einfo "${MY_PN} savegames and configurations are stored in:"
-	einfo "   \${HOME}/.frozenbyte/${MY_PN//\ /}"
-	echo ""
+	einfo
+	elog "${MY_PN} savegames and configurations are stored in:"
+	elog "   \${HOME}/.frozenbyte/${MY_PN//\ /}"
+	einfo
+
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
 }
