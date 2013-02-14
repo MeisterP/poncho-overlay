@@ -21,7 +21,7 @@ DEPEND="gnome-base/gnome-keyring
 RDEPEND="${DEPEND}"
 
 use firefox && moz_pkg_enable="firefox"
-use thunderbird && moz_pkg_enable="${moz_pkg_enable} thunderbird"
+use thunderbird && moz_pkg_enable+=" thunderbird"
 
 src_unpack() {
 	git-2_src_unpack
@@ -43,13 +43,14 @@ src_compile() {
 
 		#pkg-config file for Firefox/Thunderbird is missing, so we are forced to use hardcodes
 		XUL_CFLAGS="-I${MOZILLA_FIVE_HOME/$(get_libdir)/include} -I/usr/include/nspr"
-		XPCOM_ABI_FLAGS="-Wl,-rpath=${MOZILLA_FIVE_HOME}"
 		XUL_LDFLAGS="-L${MOZILLA_FIVE_HOME} -L${MOZILLA_FIVE_HOME}/sdk/lib \
 			-lxpcomglue_s -lxul -lxpcom -lmozalloc -lmozsqlite3 -lplds4 -lplc4 \
 			-lnspr4 -lpthread -ldl"
+		XPCOM_ABI_FLAGS="-Wl,-rpath=${MOZILLA_FIVE_HOME} \
+			-Wl,-whole-archive -lmozglue -Wl,-no-whole-archive"
 
 		if [[ "${moz_pkg}" == "thunderbird" ]]; then
-			has_version mail-client/thunderbird[ldap] && XUL_LDFLAGS="${XUL_LDFLAGS} -lldap60 -lprldap60"
+			has_version mail-client/thunderbird[ldap] && XUL_LDFLAGS+=" -lldap60 -lprldap60"
 		fi
 
 		emake \
