@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -31,7 +31,7 @@ RDEPEND="app-emulation/wine
 	gnome? ( x11-terms/gnome-terminal )
 	!gnome? ( x11-terms/xterm )
 	media-gfx/icoutils
-	net-analyzer/netcat
+	|| ( net-analyzer/netcat net-analyzer/netcat6 )
 	winbind? ( net-fs/samba[winbind] ) "
 
 S=${WORKDIR}/${PN}
@@ -52,8 +52,6 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/Gentoo-fixes-for-etc-pol_bash.patch"
-	# http://www.playonlinux.com/en/issue-1687.html
-	#use gnome && epatch "${FILESDIR}/Add-gnome-terminal-support.patch"
 
 	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i playonlinux || die
 	python_convert_shebangs -r 2 .
@@ -111,13 +109,15 @@ pkg_postinst() {
 	gnome2_icon_cache_update
 }
 
-pkg_postrm() {
-	python_mod_cleanup "${GAMES_DATADIR}/${PN}"
-	gnome2_icon_cache_update
-
-	if [[ -z ${REPLACED_BY_VERSION} ]]; then
+pkg_prerm() {
+	if [[ -z ${REPLACING_VERSIONS} ]]; then
 		elog "Installed softwares and games with playonlinux have not been removed."
 		elog "To remove them, you can re-install playonlinux and remove them using it"
 		elog "or do it manually by removing .PlayOnLinux/ in your home directory."
 	fi
+}
+
+pkg_postrm() {
+	python_mod_cleanup "${GAMES_DATADIR}/${PN}"
+	gnome2_icon_cache_update
 }
