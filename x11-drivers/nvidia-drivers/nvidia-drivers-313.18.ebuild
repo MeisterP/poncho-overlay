@@ -147,6 +147,7 @@ src_prepare() {
 
 	epatch "${FILESDIR}"/${PN}-313.18-builddir-config.patch
 	epatch "${FILESDIR}"/${PN}-313.18-linux-3.7+.patch #447566
+	epatch "${FILESDIR}"/${PN}-313.18-linux-3.8+.patch
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
