@@ -65,6 +65,7 @@ src_prepare() {
 	use pax_kernel && epatch "${FILESDIR}/hardened.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-apic.patch"
 	kernel_is ge 3 7 0 && epatch "${FILESDIR}/${PV_MAJOR}-putname.patch"
+	kernel_is ge 3 8 0 && epatch "${FILESDIR}/${PV_MAJOR}-devinit.patch"
 }
 
 src_install() {
