@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit eutils flag-o-matic linux-info linux-mod multilib nvidia-driver \
 	portability toolchain-funcs unpacker user udev
@@ -19,7 +19,7 @@ SRC_URI="x86? ( ftp://download.nvidia.com/XFree86/Linux-x86/${PV}/${X86_NV_PACKA
 
 LICENSE="NVIDIA"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="-* ~amd64 ~x86"
 IUSE="acpi multilib kernel_FreeBSD kernel_linux pax_kernel +tools +X"
 RESTRICT="strip"
 EMULTILIB_PKG="true"
@@ -28,7 +28,7 @@ COMMON="app-admin/eselect-opencl
 	kernel_linux? ( >=sys-libs/glibc-2.6.1 )
 	multilib? ( app-emulation/emul-linux-x86-xlibs )
 	X? (
-		<x11-base/xorg-server-1.13.99
+		<x11-base/xorg-server-1.14.99
 		>=app-admin/eselect-opengl-1.0.9
 	)"
 DEPEND="${COMMON}
@@ -144,6 +144,9 @@ src_prepare() {
 	    epatch "${FILESDIR}"/nvidia-drivers-pax-const.patch
 	    epatch "${FILESDIR}"/nvidia-drivers-pax-usercopy.patch
 	fi
+
+	epatch "${FILESDIR}"/${PN}-313.18-builddir-config.patch
+	epatch "${FILESDIR}"/${PN}-313.18-linux-3.7+.patch #447566
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
