@@ -43,15 +43,16 @@ index 9dbd491..a3728a0 100755
  
  ### Desktop
 diff --git a/python/mainwindow.py b/python/mainwindow.py
-index 7fa5db5..d73c59f 100755
+index 7fa5db5..b3dbaa4 100755
 --- a/python/mainwindow.py
 +++ b/python/mainwindow.py
-@@ -1193,7 +1193,7 @@ class PlayOnLinuxApp(wx.App):
+@@ -1193,7 +1193,8 @@ class PlayOnLinuxApp(wx.App):
          self.singleCheckFatal("gpg", package="GnuPG")
  
          if(os.environ["DEBIAN_PACKAGE"] == "FALSE"):
 -            self.singleCheck("xterm")
 +            self.singleCheck("gnome-terminal")
++            self.singleCheck("fail") # on test must fail see POL issue-1687
          self.singleCheck("gettext.sh", package="gettext")  # gettext-base on Debian
          self.singleCheck("icotool", package="icoutils")
          self.singleCheck("wrestool", package="icoutils")

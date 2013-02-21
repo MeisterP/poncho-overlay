@@ -52,6 +52,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/Gentoo-fixes-for-etc-pol_bash.patch"
+	use gnome && epatch "${FILESDIR}/Add-gnome-terminal-support.patch"
 
 	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i playonlinux || die
 	python_convert_shebangs -r 2 .
