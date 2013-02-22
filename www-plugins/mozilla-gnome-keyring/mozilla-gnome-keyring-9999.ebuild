@@ -46,8 +46,7 @@ src_compile() {
 		XUL_LDFLAGS="-L${MOZILLA_FIVE_HOME} -L${MOZILLA_FIVE_HOME}/sdk/lib \
 			-lxpcomglue_s -lxul -lxpcom -lmozalloc -lmozsqlite3 -lplds4 -lplc4 \
 			-lnspr4 -lpthread -ldl"
-		XPCOM_ABI_FLAGS="-Wl,-rpath=${MOZILLA_FIVE_HOME} \
-			-Wl,-whole-archive -lmozglue -Wl,-no-whole-archive"
+		XPCOM_ABI_FLAGS="-Wl,-rpath=${MOZILLA_FIVE_HOME}"
 
 		if [[ "${moz_pkg}" == "thunderbird" ]]; then
 			has_version mail-client/thunderbird[ldap] && XUL_LDFLAGS+=" -lldap60 -lprldap60"
