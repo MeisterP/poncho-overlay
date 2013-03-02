@@ -1,6 +1,7 @@
-diff --unified -uNrp kernel/conftest.sh kernel-fix/conftest.sh
---- kernel/conftest.sh	2013-02-19 18:59:06.234248544 +0100
-+++ kernel-fix/conftest.sh	2013-02-19 19:00:31.045370094 +0100
+http://bugs.gentoo.org/447566
+
+--- a/kernel/conftest.sh
++++ b/kernel/conftest.sh
 @@ -160,6 +160,7 @@ build_cflags() {
  
      if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" ]; then
@@ -9,3 +10,4 @@ diff --unified -uNrp kernel/conftest.sh kernel-fix/conftest.sh
          CFLAGS="$CFLAGS -I$OUTPUT/arch/x86/include/generated"
          CFLAGS="$CFLAGS -I$OUTPUT/arch/x86/include/generated/uapi"
      elif [ "$ARCH" = "arm" ]; then
+-- 
