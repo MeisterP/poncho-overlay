@@ -63,13 +63,15 @@ pkg_pretend() {
 		die "Unexpected \${DEFAULT_ABI} = ${DEFAULT_ABI}"
 	fi
 
-	if use kernel_linux && kernel_is ge 3 7 ; then
-		ewarn "Gentoo supports kernel's which are supported by NVIDIA"
+	if use kernel_linux && kernel_is ge 3 9 ; then
+		ewarn "Gentoo supports kernels which are supported by NVIDIA"
 		ewarn "which are limited to the following kernels:"
-		ewarn "<sys-kernel/gentoo-sources-3.7"
-		ewarn "<sys-kernel/vanilla-sources-3.7"
+		ewarn "<sys-kernel/gentoo-sources-3.9"
+		ewarn "<sys-kernel/vanilla-sources-3.9"
 		ewarn ""
-		ewarn "You are on your own"
+		ewarn "You are free to utilize epatch_user to provide whatever"
+		ewarn "support you feel is appropriate, but will not receive"
+		ewarn "support as a result of those changes."
 	fi
 
 	# Since Nvidia ships 3 different series of drivers, we need to give the user
@@ -153,9 +155,6 @@ src_prepare() {
 	    epatch "${FILESDIR}"/nvidia-drivers-pax-const.patch
 	    epatch "${FILESDIR}"/nvidia-drivers-pax-usercopy.patch
 	fi
-
-	epatch "${FILESDIR}"/${PN}-313.18-builddir-config.patch
-	epatch "${FILESDIR}"/${PN}-313.18-linux-3.{7,8}+.patch #447566
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
