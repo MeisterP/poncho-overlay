@@ -17,11 +17,11 @@ HOMEPAGE="http://www.nvidia.com/"
 SRC_URI="x86? ( ftp://download.nvidia.com/XFree86/Linux-x86/${PV}/${X86_NV_PACKAGE}.run )
 	 amd64? ( ftp://download.nvidia.com/XFree86/Linux-x86_64/${PV}/${AMD64_NV_PACKAGE}.run )"
 
-LICENSE="NVIDIA"
+LICENSE="GPL-2 NVIDIA"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE="acpi multilib kernel_FreeBSD kernel_linux pax_kernel +tools +X"
-RESTRICT="strip"
+RESTRICT="bindist mirror strip"
 EMULTILIB_PKG="true"
 
 COMMON="app-admin/eselect-opencl
@@ -45,7 +45,6 @@ RDEPEND="${COMMON}
 		x11-libs/libX11
 		x11-libs/libXext
 		x11-libs/pango[X]
-		|| ( x11-libs/pangox-compat <x11-libs/pango-1.31[X] )
 	)
 	X? ( >=x11-libs/libvdpau-0.3-r1 )"
 
