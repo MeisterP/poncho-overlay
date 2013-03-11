@@ -14,7 +14,7 @@ SRC_URI="http://download.deluge-torrent.org/source/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="geoip gtk libnotify setproctitle webinterface"
+IUSE="geoip gtk libnotify setproctitle sound webinterface"
 
 DEPEND=">=net-libs/rb_libtorrent-0.14.9[python]
 	dev-python/setuptools
@@ -28,11 +28,11 @@ RDEPEND="${DEPEND}
 	>=dev-python/twisted-web-8.1
 	geoip? ( dev-libs/geoip )
 	gtk? (
-		dev-python/pygame
 		dev-python/pygobject:2
 		>=dev-python/pygtk-2.12
 		gnome-base/librsvg
 		libnotify? ( dev-python/notify-python )
+		sound? ( dev-python/pygame )
 	)
 	setproctitle? ( dev-python/setproctitle )
 	webinterface? ( dev-python/mako )"
