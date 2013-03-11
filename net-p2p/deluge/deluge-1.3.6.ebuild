@@ -5,7 +5,7 @@
 EAPI="3"
 PYTHON_DEPEND="2:2.5"
 
-inherit distutils eutils flag-o-matic python
+inherit distutils eutils python
 
 DESCRIPTION="BitTorrent client with a client/server model."
 HOMEPAGE="http://deluge-torrent.org/"
@@ -38,7 +38,6 @@ RDEPEND="${DEPEND}
 	webinterface? ( dev-python/mako )"
 
 pkg_setup() {
-	append-ldflags $(no-as-needed)
 	python_set_active_version 2
 	python_pkg_setup
 }
