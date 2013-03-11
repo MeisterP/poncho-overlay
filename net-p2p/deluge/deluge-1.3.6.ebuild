@@ -54,6 +54,7 @@ src_install() {
 	distutils_src_install
 	newinitd "${FILESDIR}"/deluged.init deluged
 	newconfd "${FILESDIR}"/deluged.conf deluged
+	use gtk || rm -f "${ED}"/usr/bin/deluge-gtk
 }
 
 pkg_postinst() {
