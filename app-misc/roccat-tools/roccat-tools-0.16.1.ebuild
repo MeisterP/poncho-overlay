@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit cmake-utils gnome2-utils udev
+inherit cmake-utils gnome2-utils udev user
 
 DESCRIPTION="Utility for advanced configuration of Roccat devices"
 
@@ -16,8 +16,10 @@ KEYWORDS="~amd64 ~x86"
 IUSE_INPUT_DEVICES="
 	input_devices_arvo
 	input_devices_isku
+	input_devices_iskufx
 	input_devices_kone
 	input_devices_koneplus
+	input_devices_konepure
 	input_devices_konextd
 	input_devices_kovaplus
 	input_devices_lua
@@ -39,6 +41,12 @@ RDEPEND="
 "
 
 DEPEND="${RDEPEND}"
+
+src_prepare() {
+	# only notification daemon, move it to autostart...
+	sed -i 's|share/applications|/etc/xdg/autostart|g' roccatgui/CMakeLists.txt || \
+	die "sed failed"
+}
 
 src_configure() {
 	local UDEVDIR="$(udev_get_udevdir)"/rules.d
