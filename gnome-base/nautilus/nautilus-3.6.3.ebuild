@@ -1,15 +1,12 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
 
 inherit eutils gnome2 virtualx
-if [[ ${PV} = 9999 ]]; then
-	inherit gnome2-live
-fi
 
 DESCRIPTION="A file manager for the GNOME desktop"
 HOMEPAGE="http://live.gnome.org/Nautilus"
@@ -17,36 +14,33 @@ HOMEPAGE="http://live.gnome.org/Nautilus"
 LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
 # profiling?
-IUSE="exif gnome +introspection packagekit +previewer sendto tracker xmp"
-if [[ ${PV} = 9999 ]]; then
-	IUSE="${IUSE} doc"
-	KEYWORDS=""
-else
-	KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-interix ~amd64-linux ~x86-linux"
-fi
+IUSE="debug exif gnome +introspection packagekit +previewer sendto tracker xmp"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux"
 
 # FIXME: tests fails under Xvfb, but pass when building manually
 # "FAIL: check failed in nautilus-file.c, line 8307"
 RESTRICT="test"
 
+# FIXME: selinux support is automagic
 # Require {glib,gdbus-codegen}-2.30.0 due to GDBus API changes between 2.29.92
 # and 2.30.0
-COMMON_DEPEND=">=dev-libs/glib-2.33.13:2
+COMMON_DEPEND="
+	>=dev-libs/glib-2.33.13:2
 	>=x11-libs/pango-1.28.3
 	>=x11-libs/gtk+-3.5.12:3[introspection?]
 	>=dev-libs/libxml2-2.7.8:2
-	>=gnome-base/gnome-desktop-3.0.0:3
+	>=gnome-base/gnome-desktop-3:3=
 
 	gnome-base/dconf
 	gnome-base/gsettings-desktop-schemas
-	>=x11-libs/libnotify-0.7
+	>=x11-libs/libnotify-0.7:=
 	x11-libs/libX11
 	x11-libs/libXext
 	x11-libs/libXrender
 
 	exif? ( >=media-libs/libexif-0.6.20 )
 	introspection? ( >=dev-libs/gobject-introspection-0.6.4 )
-	tracker? ( >=app-misc/tracker-0.14 )
+	tracker? ( >=app-misc/tracker-0.14:= )
 	xmp? ( >=media-libs/exempi-2.1.0 )"
 DEPEND="${COMMON_DEPEND}
 	>=dev-lang/perl-5
@@ -71,37 +65,37 @@ PDEPEND="gnome? (
 	>=gnome-base/gvfs-1.14[gtk]"
 # Need gvfs[gtk] for recent:/// support
 
-if [[ ${PV} = 9999 ]]; then
-	DEPEND="${DEPEND}
-		doc? ( >=dev-util/gtk-doc-1.4 )"
-fi
-
 src_prepare() {
-	G2CONF="${G2CONF}
-		--disable-profiling
-		--disable-update-mimedb
-		$(use_enable exif libexif)
-		$(use_enable introspection)
-		$(use_enable packagekit)
-		$(use_enable sendto nst-extension)
-		$(use_enable tracker)
-		$(use_enable xmp)"
-	DOCS="AUTHORS ChangeLog* HACKING MAINTAINERS NEWS README THANKS"
-
 	# Restore the nautilus-2.x Delete shortcut (Ctrl+Delete will still work);
 	# bug #393663
 	epatch "${FILESDIR}/${PN}-3.5.91-delete.patch"
+
+	# http://pkgs.fedoraproject.org/cgit/nautilus.git/tree/nautilus-3.6.3-search-provider-crash.patch?h=f18
 	epatch "${FILESDIR}/${PN}-3.6.3-search-provider-crash.patch"
 
 	# Restore open with for folders
 	# http://git.gnome.org/browse/nautilus/commit/?id=7b9212cef4858f2a3f9158679c128be4bed65732
 	epatch -R "${FILESDIR}/${PN}-3.6-open_with_for_folders.patch"
 
-	# Remove crazy CFLAGS
-	sed 's:-DG.*DISABLE_DEPRECATED::g' -i configure.in configure \
-		|| die "sed 1 failed"
-
+	# Remove -D*DEPRECATED flags. Don't leave this for eclass! (bug #448822)
+	sed -e 's/DISABLE_DEPRECATED_CFLAGS=.*/DISABLE_DEPRECATED_CFLAGS=/' \
+		-i configure || die "sed failed"
 	gnome2_src_prepare
+}
+
+src_configure() {
+	DOCS="AUTHORS ChangeLog* HACKING MAINTAINERS NEWS README THANKS"
+	G2CONF="${G2CONF}
+		--disable-profiling
+		--disable-update-mimedb
+		$(use_enable debug)
+		$(use_enable exif libexif)
+		$(use_enable introspection)
+		$(use_enable packagekit)
+		$(use_enable sendto nst-extension)
+		$(use_enable tracker)
+		$(use_enable xmp)"
+	gnome2_src_configure
 }
 
 src_test() {
