@@ -1,0 +1,52 @@
+--- RockboxUtility-v1.3.1/rbutil/rbutilqt/encttscfggui.cpp
++++ RockboxUtility-v1.3.1/rbutil/rbutilqt/encttscfggui.cpp
+@@ -105,7 +105,9 @@
+         case EncTtsSetting::eDOUBLE:
+         {
+             QDoubleSpinBox *spinBox = new QDoubleSpinBox(this);
++            #ifndef QT_NO_ACCESSIBILITY
+             spinBox->setAccessibleName(setting->name());
++            #endif
+             spinBox->setMinimum(setting->min().toDouble());
+             spinBox->setMaximum(setting->max().toDouble());
+             spinBox->setSingleStep(0.01);
+@@ -117,7 +119,9 @@
+         case EncTtsSetting::eINT:
+         {
+             QSpinBox *spinBox = new QSpinBox(this);
++            #ifndef QT_NO_ACCESSIBILITY
+             spinBox->setAccessibleName(setting->name());
++            #endif
+             spinBox->setMinimum(setting->min().toInt());
+             spinBox->setMaximum(setting->max().toInt());
+             spinBox->setValue(setting->current().toInt());
+@@ -128,7 +132,9 @@
+         case EncTtsSetting::eSTRING:
+         {
+             QLineEdit *lineEdit = new QLineEdit(this);
++            #ifndef QT_NO_ACCESSIBILITY
+             lineEdit->setAccessibleName(setting->name());
++            #endif
+             lineEdit->setText(setting->current().toString());
+             connect(lineEdit,SIGNAL(textChanged(QString)),this,SLOT(updateSetting()));
+             value = lineEdit;
+@@ -142,7 +148,9 @@
+         case EncTtsSetting::eSTRINGLIST:
+         {
+             QComboBox *comboBox = new QComboBox(this);
++            #ifndef QT_NO_ACCESSIBILITY
+             comboBox->setAccessibleName(setting->name());
++            #endif
+             comboBox->addItems(setting->list());
+             int index = comboBox->findText(setting->current().toString());
+             comboBox->setCurrentIndex(index);
+@@ -153,7 +161,9 @@
+         case EncTtsSetting::eBOOL:
+         {
+             QCheckBox *checkbox = new QCheckBox(this);
++            #ifndef QT_NO_ACCESSIBILITY
+             checkbox->setAccessibleName(setting->name());
++            #endif
+             checkbox->setCheckState(setting->current().toBool() == true ? Qt::Checked : Qt::Unchecked);
+             connect(checkbox,SIGNAL(stateChanged(int)),this,SLOT(updateSetting()));
+             value = checkbox;
