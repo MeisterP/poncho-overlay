@@ -9,7 +9,7 @@ index d2afad0..37777f7 100755
 -[ "$DEBIAN_PACKAGE" = "FALSE" ] && TITLEADD="-T $APPLICATION_TITLE"
  "$POL_TERM" $TITLEADD -e "$PLAYONLINUX/bash/polshell"
 diff --git a/lib/playonlinux.lib b/lib/playonlinux.lib
-index a451f54..68caaa7 100755
+index b74a5dd..7470841 100755
 --- a/lib/playonlinux.lib
 +++ b/lib/playonlinux.lib
 @@ -224,7 +224,7 @@ EOF
@@ -21,7 +21,7 @@ index a451f54..68caaa7 100755
  }
  
  
-@@ -876,4 +876,4 @@ POL_Sudo()
+@@ -881,4 +881,4 @@ POL_Sudo()
  	else
  		POL_Debug_Fatal "Sudo is not allowed on unsigned scripts!"
  	fi
@@ -43,10 +43,10 @@ index 9dbd491..a3728a0 100755
  
  ### Desktop
 diff --git a/python/mainwindow.py b/python/mainwindow.py
-index 7fa5db5..d73c59f 100755
+index aad9278..7526995 100755
 --- a/python/mainwindow.py
 +++ b/python/mainwindow.py
-@@ -1193,7 +1193,7 @@ class PlayOnLinuxApp(wx.App):
+@@ -1208,7 +1208,7 @@ class PlayOnLinuxApp(wx.App):
          self.singleCheckFatal("gpg", package="GnuPG")
  
          if(os.environ["DEBIAN_PACKAGE"] == "FALSE"):
