@@ -15,8 +15,8 @@ EGIT_BOOTSTRAP="autogen.sh"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
-lame libnotify libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile vorbis wavpack"
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome jack lame
+	libnotify libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile vorbis wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
@@ -98,7 +98,6 @@ src_configure() {
 		$(use_enable flac flacng) \
 		$(use_enable fluidsynth amidiplug-flsyn) \
 		$(use_enable flac filewriter_flac) \
-		$(use_enable ipv6) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \
 		$(use_enable lame filewriter_mp3) \
