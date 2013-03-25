@@ -3,14 +3,13 @@
 # $Header: $
 
 EAPI=4
-inherit eutils git-2
+inherit eutils git-2 autotools
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
 EGIT_REPO_URI="http://github.com/audacious-media-player/audacious.git"
-EGIT_BOOTSTRAP="autogen.sh"
 
 LICENSE="BSD-2"
 SLOT="0"
@@ -31,6 +30,10 @@ DEPEND="${RDEPEND}
 	nls? ( dev-util/intltool )"
 
 PDEPEND=">=media-plugins/audacious-plugins-9999"
+
+src_prepare() {
+	AT_M4DIR="m4" eautoreconf
+}
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,

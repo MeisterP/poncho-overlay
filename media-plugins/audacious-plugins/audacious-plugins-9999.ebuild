@@ -3,14 +3,13 @@
 # $Header: $
 
 EAPI=4
-inherit eutils git-2
+inherit eutils git-2 autotools
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
 EGIT_REPO_URI="http://github.com/audacious-media-player/audacious-plugins.git"
-EGIT_BOOTSTRAP="autogen.sh"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -79,6 +78,8 @@ src_prepare() {
 			--c-namespace Mpris \
 			--generate-c-code object-player mpris2-player.xml && \
 		cd "${S}"
+
+	AT_M4DIR="m4" eautoreconf
 }
 
 src_configure() {
