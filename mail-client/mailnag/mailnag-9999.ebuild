@@ -1,9 +1,12 @@
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=5
 
-inherit git-2 python
+PYTHON_COMPAT=( python{2_5,2_6,2_7} )
+
+inherit git-2 distutils-r1
 
 DESCRIPTION="Mail nagger for gnome-shell (port of popper for unity)"
 HOMEPAGE="http://launchpad.net/mailnag"
@@ -11,26 +14,20 @@ SRC_URI=""
 
 EGIT_REPO_URI="http://github.com/pulb/mailnag.git"
 
-LICENSE=""
+LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 IUSE=""
 
-DEPEND="dev-python/pygobject:3
-		dev-python/gnome-keyring-python"
-RDEPEND="${DEPEND}"
+DEPEND="sys-devel/gettext"
+RDEPEND="${DEPEND}
+		dev-python/dbus-python
+		dev-python/httplib2
+		dev-python/pygobject:3
+		dev-python/pyxdg
+		dev-python/gnome-keyring-python
+		gnome-base/libgnome-keyring[introspection]
+		media-libs/gstreamer[introspection]
+		x11-libs/libnotify[introspection]"
 
-src_prepare() {
-	cd "${S}"
-	"${S}/gen_locales"
-
-	sed -i -e 's|LIB_DIR=./Mailnag|LIB_DIR=/usr/share/mailnag/Mailnag|' "${PN}"*
-}
-
-src_install() {
-	dodir "/usr/share/${PN}"
-	cp -r "${S}"/* "${D}/usr/share/${PN}/"
-
-	dosym "/usr/share/${PN}/${PN}" "/usr/bin/${PN}"
-	dosym "/usr/share/${PN}/${PN}_config" "/usr/bin/${PN}_config"
-}
+DOCS=( README.md NEWS )
