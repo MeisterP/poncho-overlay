@@ -55,7 +55,7 @@ COMMON_DEPEND="
 	kerberos? ( virtual/krb5 )
 	networkmanager? (
 		>=gnome-extra/nm-applet-0.9.7.995
-		>=net-misc/networkmanager-0.9.8[modemmanager] )
+		>=net-misc/networkmanager-0.9.8 )
 	socialweb? ( net-libs/libsocialweb )
 	systemd? ( >=sys-apps/systemd-31 )
 	v4l? (
