@@ -251,6 +251,8 @@ src_compile() {
 }
 
 src_install() {
+	pkgconfigdir=/usr/$(get_libdir)/pkgconfig
+
 	# install libs
 	if use addns ; then
 		einfo "install addns library"
@@ -259,14 +261,20 @@ src_install() {
 	if use netapi ; then
 		einfo "install netapi library"
 		emake installlibnetapi DESTDIR="${D}"
+		insinto $pkgconfigdir
+		doins pkgconfig/netapi.pc
 	fi
 	if use smbclient ; then
 		einfo "install smbclient library"
 		emake installlibsmbclient DESTDIR="${D}"
+		insinto $pkgconfigdir
+		doins pkgconfig/smbclient.pc
 	fi
 	if use smbsharemodes ; then
 		einfo "install smbsharemodes library"
 		emake installlibsmbsharemodes DESTDIR="${D}"
+		insinto $pkgconfigdir
+		doins pkgconfig/smbsharemodes.pc
 	fi
 
 	# install modules
@@ -296,6 +304,8 @@ src_install() {
 		dosym libnss_wins.so /usr/$(get_libdir)/libnss_wins.so.2
 		dolib.so ../nsswitch/libnss_winbind.so
 		dosym libnss_winbind.so /usr/$(get_libdir)/libnss_winbind.so.2
+		insinto $pkgconfigdir
+		doins pkgconfig/wbclient.pc
 		einfo "install libwbclient related manpages"
 		doman ../docs/manpages/idmap_rid.8
 		doman ../docs/manpages/idmap_hash.8
