@@ -13,11 +13,9 @@ HOMEPAGE="http://www.gnome.org/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos +networkmanager +socialweb systemd v4l"
+IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos +socialweb systemd v4l"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
-# XXX: NetworkManager-0.9 support is automagic, make hard-dep once it's released
-#
 # gnome-session-2.91.6-r1 is needed so that 10-user-dirs-update is run at login
 # g-s-d[policykit] needed for bug #403527
 COMMON_DEPEND="
@@ -42,6 +40,9 @@ COMMON_DEPEND="
 	>=sys-power/upower-0.9.1
 	>=x11-libs/libnotify-0.7.3
 
+	>=gnome-extra/nm-applet-0.9.7.995
+	>=net-misc/networkmanager-0.9.8
+
 	x11-apps/xmodmap
 	x11-libs/libX11
 	x11-libs/libXxf86misc
@@ -53,9 +54,6 @@ COMMON_DEPEND="
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.5.90 )
 	i18n? ( >=app-i18n/ibus-1.4.99 )
 	kerberos? ( virtual/krb5 )
-	networkmanager? (
-		>=gnome-extra/nm-applet-0.9.7.995
-		>=net-misc/networkmanager-0.9.8 )
 	socialweb? ( net-libs/libsocialweb )
 	systemd? ( >=sys-apps/systemd-31 )
 	v4l? (
@@ -108,9 +106,10 @@ DEPEND="${COMMON_DEPEND}
 
 src_prepare() {
 	# Make some panels optional; requires eautoreconf
-	epatch "${FILESDIR}/${PN}-3.8.0-optional.patch"
+	# https://bugzilla.gnome.org/697478
+	epatch "${FILESDIR}/${PN}-3.8.0-optional-r1.patch"
 
-	# https://bugzilla.gnome.org/show_bug.cgi?id=686840
+	# https://bugzilla.gnome.org/686840
 	epatch "${FILESDIR}/${PN}-3.7.4-optional-kerberos.patch"
 
 	# Fix some absolute paths to be appropriate for Gentoo
@@ -141,7 +140,7 @@ src_configure() {
 		$(use_enable systemd)
 		$(use_with v4l cheese)
 		$(use_enable input_devices_wacom wacom)"
-	# XXX: $(use_with kerberos) # for 3.7.x
+	# FIXME: add $(use_with kerberos) support?
 	if ! use kerberos; then
 		G2CONF+=" KRB5_CONFIG=$(type -P true)"
 	fi
