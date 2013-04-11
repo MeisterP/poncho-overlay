@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,23 +17,25 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="calendar doc svg"
 
-LANGS="ca de es fr gl he it lt pl pt ru sv tr vi pt_BR"
+LANGS="ca de es fr gl he it lt pl pt pt_BR ru sv tr vi zh_CN"
 
 for lang in ${LANGS} ; do
-	IUSE="${IUSE} linguas_${lang}"
+	IUSE+=" linguas_${lang}"
 done
 
-DEPEND=">=dev-python/wxpython-2.8.9.2
+DEPEND="dev-python/wxpython:2.8
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
-	calendar? ( >=dev-python/icalendar-2.1 )
-	doc? ( >=dev-python/markdown-2.0.3 )
-	svg? ( >=dev-python/pysvg-0.2.1 )"
+	calendar? ( dev-python/icalendar )
+	doc? ( dev-python/markdown )
+	svg? ( dev-python/pysvg )"
 
 src_prepare(){
 	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
+}
 
+src_compile() {
 	escons mo
 }
 
@@ -45,10 +47,6 @@ src_install() {
 	insinto /usr/share/${PN}/icons
 	doins icons/*.png
 
-	for size in 16 32 48; do
-		newicon -s $size icons/$size.png ${PN}.png
-	done
-
 	for ling in "${LINGUAS}";do
 		if [[ -d po/"${ling}" ]] && [[ ! -z ${ling} ]]; then
 			insinto /usr/share/locale/"${ling}"/LC_MESSAGES
@@ -56,10 +54,14 @@ src_install() {
 		fi
 	done
 
-	dodoc AUTHORS CHANGES HACKING README
+	for size in 16 32 48; do
+		newicon -s $size icons/$size.png ${PN}.png
+	done
 
 	make_wrapper ${PN} "python timeline.py" $(python_get_sitedir)
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
+
+	dodoc AUTHORS CHANGES HACKING README
 }
 
 pkg_preinst() {

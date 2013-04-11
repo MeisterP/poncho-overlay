@@ -23,13 +23,13 @@ for lang in ${LANGS} ; do
 	IUSE+=" linguas_${lang}"
 done
 
-DEPEND=">=dev-python/wxpython-2.8.9.2
+DEPEND="dev-python/wxpython:2.8[${PYTHON_USEDEP}]
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
-	calendar? ( >=dev-python/icalendar-2.1 )
-	doc? ( >=dev-python/markdown-2.0.3 )
-	svg? ( >=dev-python/pysvg-0.2.1 )"
+	calendar? ( dev-python/icalendar[${PYTHON_USEDEP}] )
+	doc? ( dev-python/markdown[${PYTHON_USEDEP}] )
+	svg? ( dev-python/pysvg )"
 
 src_prepare(){
 	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
