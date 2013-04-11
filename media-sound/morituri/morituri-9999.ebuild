@@ -28,11 +28,11 @@ RDEPEND="media-sound/cdparanoia
 	flac? ( media-plugins/gst-plugins-flac )
 	wav? ( media-libs/gst-plugins-good )
 	wavpack? ( media-plugins/gst-plugins-wavpack )
-	dev-python/gst-python
-	dev-python/python-musicbrainz
-	dev-python/pygobject
-	dev-python/pygtk
-	dev-python/pyxdg"
+	dev-python/gst-python[${PYTHON_USEDEP}]
+	dev-python/python-musicbrainz[${PYTHON_USEDEP}]
+	dev-python/pygobject[${PYTHON_USEDEP}]
+	dev-python/pygtk[${PYTHON_USEDEP}]
+	dev-python/pyxdg[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}"
 
 src_prepare() {
