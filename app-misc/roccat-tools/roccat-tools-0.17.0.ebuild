@@ -35,7 +35,6 @@ RDEPEND="
 	x11-libs/libnotify
 	media-libs/libcanberra
 	virtual/libusb:1
-	<dev-libs/libunique-3
 	dev-libs/dbus-glib
 	virtual/udev[gudev]
 "
@@ -44,7 +43,7 @@ DEPEND="${RDEPEND}"
 
 src_prepare() {
 	# only notification daemon, move it to autostart...
-	sed -i 's|share/applications|/etc/xdg/autostart|g' roccatgui/CMakeLists.txt || \
+	sed -i 's|share/applications|/etc/xdg/autostart|g' roccateventhandler/CMakeLists.txt || \
 	die "sed failed"
 }
 
