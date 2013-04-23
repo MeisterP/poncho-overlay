@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=4
-inherit eutils git-2 autotools
+inherit git-2 autotools
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
@@ -67,10 +67,6 @@ mp3_warning() {
 }
 
 src_prepare() {
-
-	# see http://redmine.audacious-media-player.org/issues/206
-	use gnome && epatch "${FILESDIR}/notifyactionsupport.patch"
-
 	has_version "<dev-libs/glib-2.32" && \
 		cd "${S}"/src/mpris2 && \
 		gdbus-codegen --interface-prefix org.mpris. \

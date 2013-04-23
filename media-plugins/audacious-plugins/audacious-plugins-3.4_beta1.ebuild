@@ -3,6 +3,7 @@
 # $Header: $
 
 EAPI=4
+inherit eutils
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
@@ -13,14 +14,14 @@ SRC_URI="http://distfiles.audacious-media-player.org/${MY_P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome ipv6 jack
-lame libnotify libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile vorbis wavpack"
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome jack lame libnotify
+	libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile soxr vorbis wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	~media-sound/audacious-3.4_alpha1
+	~media-sound/audacious-3.4_beta1
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	( || ( >=dev-libs/glib-2.32.2 dev-util/gdbus-codegen ) )
@@ -46,8 +47,9 @@ RDEPEND="app-arch/unzip
 	pulseaudio? ( >=media-sound/pulseaudio-0.9.3 )
 	scrobbler? ( net-misc/curl )
 	sdl? ( media-libs/libsdl[audio] )
-	sid? ( >=media-libs/libsidplay-2.1.1-r2 )
+	sid? ( media-libs/libsidplayfp )
 	sndfile? ( >=media-libs/libsndfile-1.0.17-r1 )
+	soxr? ( media-libs/soxr )
 	vorbis? ( >=media-libs/libvorbis-1.2.0
 		  >=media-libs/libogg-1.1.3 )
 	wavpack? ( >=media-sound/wavpack-4.50.1-r1 )"
@@ -65,6 +67,10 @@ mp3_warning() {
 }
 
 src_prepare() {
+
+	# see http://redmine.audacious-media-player.org/issues/206
+	use gnome && epatch "${FILESDIR}/notifyactionsupport.patch"
+
 	has_version "<dev-libs/glib-2.32" && \
 		cd "${S}"/src/mpris2 && \
 		gdbus-codegen --interface-prefix org.mpris. \
@@ -92,7 +98,6 @@ src_configure() {
 		$(use_enable flac flacng) \
 		$(use_enable fluidsynth amidiplug-flsyn) \
 		$(use_enable flac filewriter_flac) \
-		$(use_enable ipv6) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \
 		$(use_enable lame filewriter_mp3) \
@@ -104,10 +109,11 @@ src_configure() {
 		$(use_enable midi amidiplug) \
 		$(use_enable nls) \
 		$(use_enable pulseaudio pulse) \
-		$(use_enable scrobbler) \
+		$(use_enable scrobbler scrobbler2) \
 		$(use_enable sdl sdlout) \
 		$(use_enable sid) \
 		$(use_enable sndfile) \
+		$(use_enable soxr) \
 		$(use_enable vorbis) \
 		$(use_enable wavpack)
 }
