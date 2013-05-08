@@ -23,7 +23,7 @@ COMMONDEPEND="
 	app-cdr/dvd+rw-tools
 	dev-cpp/gtkmm:2.4
 	dev-cpp/libxmlpp:2.6
-	>=dev-libs/boost-1.51
+	dev-libs/boost
 	media-libs/libdvdread
 	media-sound/twolame
 	media-video/dvdauthor
@@ -45,8 +45,6 @@ RESTRICT=test
 PATCHES=(
 	"${FILESDIR}/${PN}-1.0.1-cflags.patch"
 	"${FILESDIR}/${PN}-1.2.0-cdrtools.patch"
-	"${FILESDIR}/${PN}-1.2.1-glib.patch"
-	"${FILESDIR}/${PN}-boost-1.51.0-fix.patch"
 )
 
 src_configure() {
