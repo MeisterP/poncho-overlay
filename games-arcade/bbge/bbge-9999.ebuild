@@ -6,7 +6,7 @@ EAPI="2"
 EHG_REPO_URI="http://hg.icculus.org/icculus/aquaria"
 EHG_PROJECT="aquaria"
 
-inherit flag-o-matic games cmake-utils mercurial
+inherit flag-o-matic games cmake-utils mercurial eutils
 
 DESCRIPTION="The Bit-Blot Game Engine, used by Aquaria"
 HOMEPAGE="http://www.bit-blot.com/"
@@ -31,6 +31,8 @@ DEPEND="${RDEPEND}"
 S="${WORKDIR}/aquaria"
 
 src_prepare() {
+	epatch "${FILESDIR}"/Joystick.patch
+
 	# Remove bundled stuff to ensure it's not used.
 	rm -r BBGE/{GL,glext} || die
 
