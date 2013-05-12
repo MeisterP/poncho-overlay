@@ -2,12 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=5
 
-PYTHON_USE_WITH="sqlite"
-PYTHON_DEPEND="2:2.5"
+PYTHON_COMPAT=( python{2_6,2_7} )
+PYTHON_REQ_USE="sqlite"
+DISTUTILS_SINGLE_IMPL=1
 
-inherit distutils eutils fdo-mime virtualx
+inherit distutils-r1 gnome2-utils fdo-mime virtualx
 
 DESCRIPTION="A desktop wiki"
 HOMEPAGE="http://zim-wiki.org/"
@@ -18,36 +19,36 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="test"
 
-RDEPEND="|| ( >=dev-lang/python-2.6 dev-python/simplejson )
-	dev-python/pygtk"
+RDEPEND="dev-python/pygtk[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
 	x11-misc/xdg-utils
-	test? ( dev-vcs/bzr )"
+	test? (
+		dev-vcs/bzr
+		dev-vcs/git
+		dev-vcs/mercurial )"
 
-pkg_setup() {
-	python_set_active_version 2
-	python_pkg_setup
-}
+PATCHES=( "${FILESDIR}"/${P}-remove-ubuntu-theme.patch )
 
-src_prepare() {
+python_prepare() {
 	sed -i -e "s/'USER'/'LOGNAME'/g" zim/__init__.py zim/fs.py || die
+	distutils-r1_python_prepare
 }
 
-src_test() {
-	VIRTUALX_COMMAND="$(PYTHON)" virtualmake test.py || die
+python_test() {
+	VIRTUALX_COMMAND="${PYTHON}" virtualmake test.py
 }
 
-src_install () {
-	doicon data/${PN}.png || die "doicon failed"
-	distutils_src_install --skip-xdg-cmd
+python_install() {
+	distutils-r1_python_install --skip-xdg-cmd
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
 }
 
 pkg_postinst() {
-	distutils_pkg_postinst
 	fdo-mime_desktop_database_update
-	xdg-icon-resource install --context mimetypes --size 64 \
-		"${ROOT}/usr/share/pixmaps/zim.png" \
-		application-x-zim-notebook || die "xdg-icon-resource install failed"
+	gnome2_icon_cache_update
 	if ! has_version ${CATEGORY}/${PN}; then
 		einfo "Please emerge these packages for additional functionality"
 		einfo "    dev-lang/R"
@@ -64,8 +65,6 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	distutils_pkg_postrm
 	fdo-mime_desktop_database_update
-	xdg-icon-resource uninstall --context mimetypes --size 64 \
-		application-x-zim-notebook || die "xdg-icon-resource uninstall failed"
+	gnome2_icon_cache_update
 }
