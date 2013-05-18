@@ -19,9 +19,9 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="test"
 
-RDEPEND="dev-python/pygtk[${PYTHON_USEDEP}]"
+RDEPEND="dev-python/pygtk[${PYTHON_USEDEP}]
+	x11-misc/xdg-utils"
 DEPEND="${RDEPEND}
-	x11-misc/xdg-utils
 	test? (
 		dev-vcs/bzr
 		dev-vcs/git
@@ -35,7 +35,7 @@ python_prepare() {
 }
 
 python_test() {
-	VIRTUALX_COMMAND="${PYTHON}" virtualmake test.py
+	VIRTUALX_COMMAND="${PYTHON}" virtualmake test.py || die
 }
 
 python_install() {
