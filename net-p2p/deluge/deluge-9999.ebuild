@@ -5,7 +5,7 @@
 EAPI="3"
 PYTHON_DEPEND="2:2.5"
 
-inherit distutils git-2
+inherit distutils eutils python git-2
 
 EGIT_REPO_URI="git://deluge-torrent.org/${PN}.git
 	http://git.deluge-torrent.org/${PN}/"
@@ -17,10 +17,11 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="geoip gtk libnotify setproctitle webinterface"
+IUSE="geoip gtk libnotify setproctitle sound webinterface"
 
 DEPEND=">=net-libs/rb_libtorrent-0.14.9[python]
-	dev-python/setuptools"
+	dev-python/setuptools
+	dev-util/intltool"
 RDEPEND="${DEPEND}
 	dev-python/chardet
 	dev-python/pyopenssl
@@ -30,7 +31,7 @@ RDEPEND="${DEPEND}
 	>=dev-python/twisted-web-8.1
 	geoip? ( dev-libs/geoip )
 	gtk? (
-		dev-python/pygame
+		sound? ( dev-python/pygame )
 		dev-python/pygobject:2
 		>=dev-python/pygtk-2.12
 		gnome-base/librsvg
@@ -47,7 +48,7 @@ pkg_setup() {
 src_prepare() {
 	distutils_src_prepare
 	python_convert_shebangs -r 2 .
-	epatch "${FILESDIR}/${PN}-1.3.5-disable_libtorrent_internal_copy.patch"
+	epatch "${FILESDIR}/fix-seeing-double-torrents.patch"
 }
 
 src_install() {
