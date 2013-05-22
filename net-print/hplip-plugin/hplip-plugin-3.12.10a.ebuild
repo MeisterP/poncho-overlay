@@ -38,6 +38,10 @@ src_unpack() {
 	unpack_makeself "hplip-${PV}-plugin.run"
 }
 
+src_prepare() {
+	sed -i -e 's/SYSFS/ATTR/g' *.rules || die
+}
+
 src_install() {
 	local hplip_arch=$(use amd64 && echo 'x86_64' || echo 'x86_32')
 
