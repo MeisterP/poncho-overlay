@@ -17,7 +17,7 @@ IUSE="bundled-libs"
 RESTRICT="fetch bindist splitdebug"
 
 RDEPEND="
-	media-libs/libpng:1.5
+	=media-libs/libpng-1.5*
 	sys-devel/gcc[cxx]
 	virtual/opengl
 	!bundled-libs? (
