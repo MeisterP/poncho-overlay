@@ -35,6 +35,7 @@ src_install() {
 	for kmap in $KMAP; do
 		doins "${DISTDIR}/${kmap}.map"
 	done
+	doins "${FILESDIR}"/de-ch.map
 
 	newinitd "${FILESDIR}/${PN}-init.d" ${PN}
 	newconfd "${FILESDIR}/${PN}-conf.d" ${PN}
