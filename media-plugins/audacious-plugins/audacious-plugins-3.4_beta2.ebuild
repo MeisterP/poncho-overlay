@@ -15,13 +15,14 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome jack lame libnotify
-	libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile libsoxr vorbis wavpack"
+	libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile
+	libsoxr vorbis spectrum wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	~media-sound/audacious-3.4_beta1
+	~media-sound/audacious-3.4_beta2
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	( || ( >=dev-libs/glib-2.32.2 dev-util/gdbus-codegen ) )
@@ -115,5 +116,6 @@ src_configure() {
 		$(use_enable sndfile) \
 		$(use_enable libsoxr soxr) \
 		$(use_enable vorbis) \
+		$(use_enable spectrum glspectrum) \
 		$(use_enable wavpack)
 }

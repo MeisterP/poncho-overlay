@@ -29,7 +29,7 @@ DEPEND="${RDEPEND}
 	chardet? ( >=app-i18n/libguess-1.1 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND=">=media-plugins/audacious-plugins-3.4_beta1"
+PDEPEND=">=media-plugins/audacious-plugins-3.4_beta2"
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,

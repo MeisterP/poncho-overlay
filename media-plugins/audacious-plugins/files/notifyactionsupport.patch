@@ -1,106 +1,299 @@
 diff --git a/src/notify/event.c b/src/notify/event.c
-index 021e5d1..12ed0d6 100644
+index 8768640..12ed0d6 100644
 --- a/src/notify/event.c
 +++ b/src/notify/event.c
-@@ -21,9 +21,11 @@
+@@ -2,7 +2,7 @@
+  * event.c
+  *
+  * Copyright (C) 2010 Maximilian Bogner <max@mbogner.de>
+- * Copyright (C) 2011-2013 John Lindgren and Jean-Alexandre Anglès d'Auriac
++ * Copyright (C) 2011 John Lindgren <john.lindgren@tds.net>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -18,8 +18,6 @@
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-#include "event.h"
+-
  #include <audacious/drct.h>
  #include <audacious/i18n.h>
  #include <audacious/playlist.h>
-+#include <audacious/misc.h>
+@@ -27,53 +25,49 @@
  #include <libaudcore/hook.h>
  #include <libaudgui/libaudgui-gtk.h>
  
 +#include "config.h"
- #include "event.h"
++#include "event.h"
  #include "osd.h"
  
-@@ -37,6 +39,11 @@ static void clear (void)
+ static char * last_title = NULL, * last_message = NULL; /* pooled */
+-static GdkPixbuf * last_pixbuf = NULL;
+ 
+-static void clear_cache (void)
++static void clear (void)
+ {
+     str_unref (last_title);
+     last_title = NULL;
+     str_unref (last_message);
      last_message = NULL;
+-
+-    if (last_pixbuf)
+-    {
+-        g_object_unref (last_pixbuf);
+-        last_pixbuf = NULL;
+-    }
  }
  
+-static bool_t get_album_art (void)
 +static void update_button (void * unused, void * useless)
-+{
-+    osd_refresh ();
-+}
-+
- static void reshow (void)
  {
-     if (! last_title || ! last_message)
-@@ -46,7 +53,7 @@ static void reshow (void)
-     if (pb)
-         audgui_pixbuf_scale_within (& pb, 96);
+-    if (last_pixbuf)
+-        return FALSE;
+-
+-    last_pixbuf = audgui_pixbuf_request_current ();
+-    if (! last_pixbuf)
+-        return FALSE;
+-
+-    audgui_pixbuf_scale_within (& last_pixbuf, 96);
+-    return TRUE;
++    osd_refresh ();
+ }
  
--    osd_show (last_title, last_message, "audio-x-generic", pb);
+-static void show_stopped (void)
++static void reshow (void)
+ {
+-    osd_show (_("Stopped"), _("Audacious is not playing."), "audacious", NULL);
+-}
++    if (! last_title || ! last_message)
++        return;
+ 
+-static void show_playing (void)
+-{
+-    if (last_title && last_message)
+-        osd_show (last_title, last_message, "audio-x-generic", last_pixbuf);
++    GdkPixbuf * pb = audgui_pixbuf_request_current ();
++    if (pb)
++        audgui_pixbuf_scale_within (& pb, 96);
++
 +    osd_show (last_title, last_message, pb);
++
++    if (pb)
++        g_object_unref (pb);
+ }
  
-     if (pb)
-         g_object_unref (pb);
-@@ -57,7 +64,7 @@ static void update (void * unused, void * explicit)
+-static void playback_update (void)
++static void update (void * unused, void * explicit)
+ {
      if (! aud_drct_get_playing () || ! aud_drct_get_ready ())
-     {
-         if (GPOINTER_TO_INT (explicit))
--            osd_show (_("Stopped"), _("Audacious is not playing."), NULL, NULL);
++    {
++        if (GPOINTER_TO_INT (explicit))
 +            osd_show (_("Stopped"), _("Audacious is not playing."), NULL);
- 
++
          return;
-     }
-@@ -107,6 +114,10 @@ void event_init (void)
-     hook_associate ("playback ready", (HookFunction) update, GINT_TO_POINTER (FALSE));
-     hook_associate ("playlist update", (HookFunction) update, GINT_TO_POINTER (FALSE));
-     hook_associate ("current art ready", (HookFunction) reshow, NULL);
++    }
+ 
+     int list = aud_playlist_get_playing ();
+     int entry = aud_playlist_get_position (list);
+@@ -98,7 +92,7 @@ static void playback_update (void)
+     str_unref (album);
+ 
+     /* pointer comparison works for pooled strings */
+-    if (title == last_title && message == last_message)
++    if (! GPOINTER_TO_INT (explicit) && title == last_title && message == last_message)
+     {
+         str_unref (title);
+         str_unref (message);
+@@ -110,68 +104,35 @@ static void playback_update (void)
+     str_unref (last_message);
+     last_message = message;
+ 
+-    get_album_art ();
+-    show_playing ();
+-}
+-
+-static void art_ready (void)
+-{
+-    if (aud_drct_get_playing () && get_album_art ())
+-        show_playing ();
+-}
+-
+-static void playback_paused (void)
+-{
+-    if (aud_get_bool ("notify", "resident"))
+-        show_playing ();
+-}
+-
+-static void playback_stopped (void)
+-{
+-    clear_cache ();
+-
+-    if (aud_get_bool ("notify", "resident"))
+-        show_stopped ();
+-}
+-
+-static void force_show (void)
+-{
+-    if (aud_drct_get_playing ())
+-        show_playing ();
+-    else
+-        show_stopped ();
++    reshow ();
+ }
+ 
+ void event_init (void)
+ {
+-    if (aud_drct_get_playing ())
+-        playback_update ();
+-    else
+-        playback_stopped ();
+-
+-    hook_associate ("playback begin", (HookFunction) clear_cache, NULL);
+-    hook_associate ("playback ready", (HookFunction) playback_update, NULL);
+-    hook_associate ("playlist update", (HookFunction) playback_update, NULL);
+-    hook_associate ("current art ready", (HookFunction) art_ready, NULL);
+-    hook_associate ("playback pause", (HookFunction) playback_paused, NULL);
+-    hook_associate ("playback unpause", (HookFunction) playback_paused, NULL);
+-    hook_associate ("playback stop", (HookFunction) playback_stopped, NULL);
+-
+-    hook_associate ("aosd toggle", (HookFunction) force_show, NULL);
++    update (NULL, GINT_TO_POINTER (FALSE));
++    hook_associate ("aosd toggle", (HookFunction) update, GINT_TO_POINTER (TRUE));
++    hook_associate ("playback ready", (HookFunction) update, GINT_TO_POINTER (FALSE));
++    hook_associate ("playlist update", (HookFunction) update, GINT_TO_POINTER (FALSE));
++    hook_associate ("current art ready", (HookFunction) reshow, NULL);
 +    hook_associate ("playback pause", (HookFunction) update_button, NULL);
 +    hook_associate ("playback unpause", (HookFunction) update_button, NULL);
 +    hook_associate ("playback begin", (HookFunction) update_button, NULL);
 +    hook_associate ("playback stop", (HookFunction) update_button, NULL);
-     hook_associate ("playback begin", (HookFunction) clear, NULL);
-     hook_associate ("playback stop", (HookFunction) clear, NULL);
++    hook_associate ("playback begin", (HookFunction) clear, NULL);
++    hook_associate ("playback stop", (HookFunction) clear, NULL);
  }
-@@ -117,6 +128,10 @@ void event_uninit (void)
-     hook_dissociate ("playback ready", (HookFunction) update);
-     hook_dissociate ("playlist update", (HookFunction) update);
-     hook_dissociate ("current art ready", (HookFunction) reshow);
+ 
+ void event_uninit (void)
+ {
+-    hook_dissociate ("playback begin", (HookFunction) clear_cache);
+-    hook_dissociate ("playback ready", (HookFunction) playback_update);
+-    hook_dissociate ("playlist update", (HookFunction) playback_update);
+-    hook_dissociate ("current art ready", (HookFunction) art_ready);
+-    hook_dissociate ("playback pause", (HookFunction) playback_paused);
+-    hook_dissociate ("playback unpause", (HookFunction) playback_paused);
+-    hook_dissociate ("playback stop", (HookFunction) playback_stopped);
+-
+-    hook_dissociate ("aosd toggle", (HookFunction) force_show);
+-
+-    clear_cache ();
+-    osd_hide ();
++    hook_dissociate ("aosd toggle", (HookFunction) update);
++    hook_dissociate ("playback ready", (HookFunction) update);
++    hook_dissociate ("playlist update", (HookFunction) update);
++    hook_dissociate ("current art ready", (HookFunction) reshow);
 +    hook_dissociate ("playback pause", (HookFunction) update_button);
 +    hook_dissociate ("playback unpause", (HookFunction) update_button);
 +    hook_dissociate ("playback begin", (HookFunction) update_button);
 +    hook_dissociate ("playback stop", (HookFunction) update_button);
-     hook_dissociate ("playback begin", (HookFunction) clear);
-     hook_dissociate ("playback stop", (HookFunction) clear);
-     clear ();
++    hook_dissociate ("playback begin", (HookFunction) clear);
++    hook_dissociate ("playback stop", (HookFunction) clear);
++    clear ();
+ }
 diff --git a/src/notify/notify.c b/src/notify/notify.c
-index cac2201..f012cfe 100644
+index 242b3f1..f012cfe 100644
 --- a/src/notify/notify.c
 +++ b/src/notify/notify.c
-@@ -23,7 +23,10 @@
+@@ -2,7 +2,6 @@
+  * notify.c
+  *
+  * Copyright (C) 2010 Maximilian Bogner <max@mbogner.de>
+- * Copyright (C) 2013 John Lindgren and Jean-Alexandre Anglès d'Auriac
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -18,21 +17,27 @@
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
++#include <glib.h>
+ #include <gtk/gtk.h>
+ 
+-#include <libnotify/notify.h>
+-
  #include <audacious/i18n.h>
  #include <audacious/plugin.h>
- #include <audacious/debug.h>
-+#include <audacious/preferences.h>
-+#include <audacious/misc.h>
++#include <audacious/debug.h>
+ #include <audacious/preferences.h>
+ #include <audacious/misc.h>
  
 +#include "config.h"
  #include "event.h"
- #include "osd.h"
++#include "osd.h"
++
++gboolean plugin_init (void);
++void plugin_cleanup (void);
  
-@@ -46,12 +49,31 @@ static const char plugin_about[] =
-     "You should have received a copy of the GNU General Public License "
-     "along with this program.  If not, see <http://www.gnu.org/licenses/>.");
+ static const char plugin_about[] =
+- N_("Desktop Notifications Plugin for Audacious\n"
++ N_("Based on libnotify-aosd by Maximilian Bogner:\n"
++    "http://www.mbogner.de/projects/libnotify-aosd/\n\n"
+     "Copyright (C) 2010 Maximilian Bogner\n"
+-    "Copyright (C) 2011-2013 John Lindgren and Jean-Alexandre Anglès d'Auriac\n\n"
++    "Copyright (C) 2011 John Lindgren\n\n"
+     "This plugin is free software: you can redistribute it and/or modify "
+     "it under the terms of the GNU General Public License as published by "
+     "the Free Software Foundation, either version 3 of the License, or "
+@@ -46,53 +51,56 @@ static const char plugin_about[] =
  
-+static const char * const notify_defaults[] = {
-+ "actions", "TRUE",
+ static const char * const notify_defaults[] = {
+  "actions", "TRUE",
+- "resident", "FALSE",
+- NULL
+-};
+-
+-static bool_t plugin_init (void)
+-{
+-    aud_config_set_defaults ("notify", notify_defaults);
+-
+-    if (! notify_init ("Audacious"))
+-        return FALSE;
 + NULL};
-+
-+
+ 
+-    event_init();
+-    return TRUE;
+-}
+-
+-static void plugin_cleanup (void)
+-{
+-    event_uninit ();
+-    notify_uninit ();
+-}
+ 
+-static void plugin_reinit (void)
+-{
+-    event_uninit ();
+-    event_init ();
+-}
+-
+-static const PreferencesWidget prefs_widgets[] = {
+- {WIDGET_CHK_BTN, N_("Show playback controls"),
+-  .cfg_type = VALUE_BOOLEAN, .csect = "notify", .cname = "actions",
+-  .callback = plugin_reinit},
+- {WIDGET_CHK_BTN, N_("Always show notification"),
+-  .cfg_type = VALUE_BOOLEAN, .csect = "notify", .cname = "resident",
+-  .callback = plugin_reinit}
 +static const PreferencesWidget notify_widgets[] = {
 + {WIDGET_CHK_BTN, N_("Activate controls inside of the notification"),
 + .cfg_type = VALUE_BOOLEAN, .csect = "notify", .cname = "actions"},
-+};
-+
+ };
+ 
+-static const PluginPreferences plugin_prefs = {
+- .widgets = prefs_widgets,
+- .n_widgets = G_N_ELEMENTS (prefs_widgets)
 +static const PluginPreferences notify_prefs = {
 + .widgets = notify_widgets,
 + .n_widgets = G_N_ELEMENTS (notify_widgets),
 + .apply = toggleaction
-+};
-+
+ };
+ 
 +
 +
  AUD_GENERAL_PLUGIN
@@ -108,53 +301,78 @@ index cac2201..f012cfe 100644
      .name = N_("Desktop Notifications"),
      .domain = PACKAGE,
      .about_text = plugin_about,
+-    .prefs = & plugin_prefs,
      .init = plugin_init,
 +    .prefs = & notify_prefs,
      .cleanup = plugin_cleanup
  )
- 
-@@ -60,6 +82,7 @@ short plugin_active = 0;
- gboolean plugin_init (void)
- {
-     AUDDBG("started!\n");
++
++short plugin_active = 0;
++
++gboolean plugin_init (void)
++{
++    AUDDBG("started!\n");
 +    aud_config_set_defaults ("notify", notify_defaults);
-     if(!osd_init()) {
-         AUDDBG("osd_init failed!\n");
-         return FALSE;
-@@ -67,6 +90,7 @@ gboolean plugin_init (void)
-     event_init();
- 
-     plugin_active = 1;
++    if(!osd_init()) {
++        AUDDBG("osd_init failed!\n");
++        return FALSE;
++    }
++    event_init();
++
++    plugin_active = 1;
 +    AUDDBG("Osd plugin initted\n");
-     return TRUE;
- }
- 
++    return TRUE;
++}
++
++
++void plugin_cleanup() {
++    if(plugin_active) {
++        AUDDBG("started!\n");
++        event_uninit();
++        osd_uninit();
++        plugin_active = 0;
++        AUDDBG("done!\n");
++    }
++}
 diff --git a/src/notify/osd.c b/src/notify/osd.c
-index 0dbf1c6..29b56bf 100644
+index ca7448f..29b56bf 100644
 --- a/src/notify/osd.c
 +++ b/src/notify/osd.c
-@@ -17,55 +17,209 @@
+@@ -2,7 +2,6 @@
+  * osd.c
+  *
+  * Copyright (C) 2010 Maximilian Bogner <max@mbogner.de>
+- * Copyright (C) 2013 John Lindgren and Jean-Alexandre Anglès d'Auriac
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -18,93 +17,209 @@
   * along with this program; if not, see <http://www.gnu.org/licenses/>.
   */
  
+-#include "osd.h"
+-
+-#include <libnotify/notify.h>
+-
 +#include <libaudcore/core.h>
 +#include <libaudcore/hook.h>
 +#include <audacious/debug.h>
-+#include <audacious/i18n.h>
-+#include <audacious/drct.h>
-+#include <audacious/misc.h>
+ #include <audacious/i18n.h>
+ #include <audacious/drct.h>
+ #include <audacious/misc.h>
 +#include <libnotify/notify.h>
- #include "osd.h"
++#include "osd.h"
  
- static NotifyNotification * notification = NULL;
+-static void show_cb (void)
++static NotifyNotification * notification = NULL;
 +static gboolean actions_available = FALSE;
 +static gboolean resident_notification = FALSE;
 +
 +
- 
- bool_t osd_init()
++
++bool_t osd_init()
  {
--    return notify_init ("Audacious");
+-    aud_interface_show (TRUE);
 +    if (notify_is_initted())
 +    {
 +        AUDDBG("Notify is already initted, that shouldn't happen\n");
@@ -196,49 +414,58 @@ index 0dbf1c6..29b56bf 100644
 +        return FALSE;
  }
  
- void osd_uninit (void)
+-static void osd_setup (NotifyNotification *notification)
++void osd_uninit (void)
  {
-     if (notification)
-     {
+-    bool_t resident = aud_get_bool ("notify", "resident");
++    if (notification)
++    {
 +        GError *error = NULL;
 +        if (notify_notification_close (notification, &error) == FALSE)
 +            AUDDBG("%s!\n", error->message);
 +        if(error)
 +            g_error_free(error);
-         g_object_unref (notification);
-         notification = NULL;
-     }
++        g_object_unref (notification);
++        notification = NULL;
++    }
  
-     notify_uninit();
+-    notify_notification_set_hint (notification, "desktop-entry",
+-     g_variant_new_string ("audacious"));
++    notify_uninit();
 +    AUDDBG("Notify uninitted\n");
- }
++}
  
--static void osd_closed_handler (void)
-+
+-    notify_notification_set_hint (notification, "action-icons", g_variant_new_boolean (TRUE));
+-    notify_notification_set_hint (notification, "resident", g_variant_new_boolean (resident));
+-    notify_notification_set_hint (notification, "transient", g_variant_new_boolean (! resident));
+ 
+-    notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
+-    notify_notification_set_timeout (notification, resident ?
+-     NOTIFY_EXPIRES_NEVER : NOTIFY_EXPIRES_DEFAULT);
 +void goprevious (NotifyNotification *notification,
 +            const char *action,
 +            gpointer user_data)
- {
--    if (notification)
--    {
--        g_object_unref (notification);
--        notification = NULL;
--    }
++{
 +    aud_drct_pl_prev();
  }
  
--void osd_show (const char * title, const char * _message, const char * icon,
-- GdkPixbuf * pixbuf)
+-void osd_setup_buttons (NotifyNotification *notification)
 +void gonext (NotifyNotification *notification,
 +        const char *action,
 +        gpointer user_data)
  {
--    char * message = g_markup_escape_text (_message, -1);
+-    notify_notification_clear_actions (notification);
+-
+-    if (! aud_get_bool ("notify", "actions"))
+-        return;
+-
+-    notify_notification_add_action (notification, "default", _("Show"),
+-     NOTIFY_ACTION_CALLBACK (show_cb), NULL, NULL);
 +    aud_drct_pl_next();
 +}
  
--    if (pixbuf)
--        icon = NULL;
+-    bool_t playing = aud_drct_get_playing ();
+-    bool_t paused = aud_drct_get_paused ();
 +void show_audacious (NotifyNotification *notification,
 +        const char *action,
 +        gpointer user_data)
@@ -246,8 +473,9 @@ index 0dbf1c6..29b56bf 100644
 +    aud_interface_show(TRUE);
 +}
  
--    if (notification)
--        notify_notification_update (notification, title, message, icon);
+-    if (playing && ! paused)
+-        notify_notification_add_action (notification, "media-playback-pause",
+-         _("Pause"), NOTIFY_ACTION_CALLBACK (aud_drct_pause), NULL, NULL);
 +void playpause (NotifyNotification *notification,
 +           const char *action,
 +           gpointer user_data)
@@ -255,9 +483,14 @@ index 0dbf1c6..29b56bf 100644
 +    if(aud_drct_get_playing())
 +    {aud_drct_pause();}
      else
+-        notify_notification_add_action (notification, "media-playback-start",
+-         _("Play"), NOTIFY_ACTION_CALLBACK (aud_drct_play), NULL, NULL);
 +    {aud_drct_play();}
 +}
-+
+ 
+-    if (playing)
+-        notify_notification_add_action (notification, "media-skip-forward",
+-         _("Next"), NOTIFY_ACTION_CALLBACK (aud_drct_pl_next), NULL, NULL);
 +void osd_update_button(void){
 +    if(actions_available){
 +        gboolean paused = TRUE;
@@ -293,38 +526,50 @@ index 0dbf1c6..29b56bf 100644
 +                    NULL,
 +                    NULL);
 +    }
-+}
-+
+ }
+ 
+-static NotifyNotification * notification = NULL;
 +void osd_refresh(void){
 +    osd_update_button();
 +    if(resident_notification)
-     {
--        notification = notify_notification_new (title, message, icon);
--        g_signal_connect (notification, "closed", (GCallback) osd_closed_handler, NULL);
++    {
 +        GError *error = NULL;
 +        if(!notify_notification_show(notification, &error))
 +            AUDDBG("Error “%s” when trying to send notification\n", error->message);
 +        if(error)
 +            g_error_free(error);
-     }
++    }
 +}
-+
+ 
+-void osd_show (const char * title, const char * _message, const char * icon,
+- GdkPixbuf * pixbuf)
 +void osd_show (const gchar * title, const gchar * _message, GdkPixbuf *cover)
-+{
+ {
+-    char * message = g_markup_escape_text (_message, -1);
 +    gchar * message = g_markup_escape_text (_message, -1);
 +    GError *error = NULL;
  
 -    if (pixbuf)
--        notify_notification_set_icon_from_pixbuf (notification, pixbuf);
+-        icon = NULL;
 +    if(cover)
 +        notify_notification_set_image_from_pixbuf(notification, cover);
  
--    notify_notification_show (notification, NULL);
+-    if (notification)
+-        notify_notification_update (notification, title, message, icon);
+-    else
+-    {
+-        notification = notify_notification_new (title, message, icon);
+-        osd_setup (notification);
+-    }
 +    osd_update_button();
-+
+ 
+-    if (pixbuf)
+-        notify_notification_set_image_from_pixbuf (notification, pixbuf);
 +    if(!notify_notification_update(notification, title, message, "audacious"))
 +         AUDDBG("Could not update osd!\n");
-+
+ 
+-    osd_setup_buttons (notification);
+-    notify_notification_show (notification, NULL);
 +    if(!notify_notification_show(notification, &error))
 +        AUDDBG("Error “%s” when trying to send notification\n", error->message);
 +    if(error)
@@ -332,11 +577,18 @@ index 0dbf1c6..29b56bf 100644
  
      g_free (message);
  }
-+
+ 
+-void osd_hide (void)
+-{
+-    if (! notification)
+-        return;
 +void toggleaction(){
 +    GList *server_caps;
 +    server_caps = notify_get_server_caps ();
-+
+ 
+-    notify_notification_close (notification, NULL);
+-    g_object_unref (notification);
+-    notification = NULL;
 +    if (g_list_find_custom (server_caps, "actions", (GCompareFunc)g_strcmp0) && aud_get_bool ("notify", "actions"))
 +    {
 +        actions_available = TRUE;
@@ -361,21 +613,21 @@ index 0dbf1c6..29b56bf 100644
 +        notify_notification_set_hint (notification, "transient", g_variant_new_boolean (TRUE));
 +        notify_notification_close (notification, NULL);
 +    }
-+}
+ }
 diff --git a/src/notify/osd.h b/src/notify/osd.h
-index dd7b82b..edf42c7 100644
+index 604ebfe..edf42c7 100644
 --- a/src/notify/osd.h
 +++ b/src/notify/osd.h
-@@ -17,9 +17,8 @@
+@@ -17,7 +17,8 @@
   * along with this program; if not, see <http://www.gnu.org/licenses/>.
   */
  
--#include <libaudcore/core.h>
--#include <libnotify/notify.h>
+-#include <gdk-pixbuf/gdk-pixbuf.h>
 -
- bool_t osd_init (void);
- void osd_uninit (void);
 -void osd_show (const char * title, const char * message, const char * icon, GdkPixbuf * pixbuf);
+-void osd_hide (void);
++bool_t osd_init (void);
++void osd_uninit (void);
 +void osd_show (const gchar *title, const gchar *message, GdkPixbuf *pixbuf);
 +void osd_refresh (void);
 +void toggleaction (void);
