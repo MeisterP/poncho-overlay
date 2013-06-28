@@ -1,0 +1,30 @@
+From 70a38bdb5bbba905a8c1916206828fad9affb979 Mon Sep 17 00:00:00 2001
+From: Sebastian Wick <wick.sebastian@gmail.com>
+Date: Fri, 28 Jun 2013 18:50:16 +0200
+Subject: [PATCH] implement readonly attribute boolean isLoggedIn
+
+---
+ GnomeKeyring.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/GnomeKeyring.cpp b/GnomeKeyring.cpp
+index a88ddff..65204fb 100644
+--- a/GnomeKeyring.cpp
++++ b/GnomeKeyring.cpp
+@@ -873,6 +873,13 @@ NS_IMETHODIMP GnomeKeyring::GetUiBusy(bool *aUiBusy)
+   return NS_OK;
+ }
+ 
++/* readonly attribute boolean isLoggedIn; */
++NS_IMETHODIMP GnomeKeyring::GetIsLoggedIn(bool *aIsLoggedIn)
++{
++  *aIsLoggedIn = FALSE;
++  return NS_OK;
++}
++
+ 
+ 
+ /* End of implementation class template. */
+-- 
+1.8.1.6
+
