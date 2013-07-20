@@ -1,0 +1,18 @@
+diff --unified -uNrp morituri-0.2.1/bin/rip.in morituri-0.2.1-fix/bin/rip.in
+--- morituri-0.2.1/bin/rip.in	2013-02-03 20:57:32.000000000 +0100
++++ morituri-0.2.1-fix/bin/rip.in	2013-07-20 10:39:48.825939898 +0200
+@@ -1,4 +1,4 @@
+-#!@PYTHON@
++#!/usr/bin/env python
+ # -*- Mode: Python -*-
+ # vi:si:et:sw=4:sts=4:ts=4
+ 
+diff --unified -uNrp morituri-0.2.1/etc/bash_completion.d/bash-compgen.in morituri-0.2.1-fix/etc/bash_completion.d/bash-compgen.in
+--- morituri-0.2.1/etc/bash_completion.d/bash-compgen.in	2013-02-03 20:57:32.000000000 +0100
++++ morituri-0.2.1-fix/etc/bash_completion.d/bash-compgen.in	2013-07-20 10:40:19.349776585 +0200
+@@ -1,4 +1,4 @@
+-#!@PYTHON@
++#!/usr/bin/env python
+ # -*- Mode: Python -*-
+ # vi:si:et:sw=4:sts=4:ts=4
+ 

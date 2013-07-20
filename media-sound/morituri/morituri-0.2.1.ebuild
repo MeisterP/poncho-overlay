@@ -6,7 +6,7 @@ EAPI="5"
 
 PYTHON_COMPAT="python2_7"
 
-inherit bash-completion-r1 python-single-r1
+inherit eutils bash-completion-r1 python-single-r1
 
 DESCRIPTION="CD ripper aiming for accuracy over speed."
 HOMEPAGE="http://thomas.apestaart.org/morituri/trac/wiki"
@@ -32,6 +32,10 @@ RDEPEND="media-sound/cdparanoia
 	dev-python/pygtk[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}"
+
+src_prepare() {
+	epatch "${FILESDIR}"/shebang-fix.patch
+}
 
 src_configure() {
 	# disable doc building
