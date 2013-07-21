@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-inherit eutils multilib versionator
+inherit eutils gnome2-utils multilib versionator
 
 MAJOR_PV="$(get_version_component_range 1-3)"
 FULL_PV="${MAJOR_PV}-$(get_version_component_range 4)"
@@ -50,4 +50,16 @@ src_install() {
 
 	make_wrapper ${PN} ./${PN} ${NXROOT}/bin ${NXROOT}/lib /usr/bin
 	make_desktop_entry ${PN} "NX Player" ${PN}-icon
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
 }
