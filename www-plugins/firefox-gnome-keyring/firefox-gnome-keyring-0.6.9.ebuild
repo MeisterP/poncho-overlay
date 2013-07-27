@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit eutils multilib mozextension
+inherit multilib mozextension
 
 DESCRIPTION="A Firefox extension that enables Gnome Keyring integration"
 HOMEPAGE="http://github.com/infinity0/mozilla-gnome-keyring"
@@ -24,10 +24,6 @@ RDEPEND="${DEPEND}"
 src_unpack() {
 	default
 	mv infinity0-mozilla-gnome-keyring-[0-9a-f]*[0-9a-f]/ "${S}" || die
-}
-
-src_prepare() {
-	epatch "${FILESDIR}"/70a38bdb5bbba905a8c1916206828fad9affb979.patch
 }
 
 src_compile() {
