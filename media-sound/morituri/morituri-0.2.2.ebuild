@@ -31,13 +31,17 @@ RDEPEND="media-sound/cdparanoia
 	dev-python/pygobject[${PYTHON_USEDEP}]
 	dev-python/pygtk[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]"
-DEPEND="${RDEPEND}"
+DEPEND="dev-vcs/git
+	${RDEPEND}"
 
 src_prepare() {
 	epatch "${FILESDIR}"/shebang-fix.patch
 }
 
 src_configure() {
+	# https://github.com/thomasvs/morituri/issues/40
+	export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+
 	# disable doc building
 	local ac_cv_prog_EPYDOC=""
 
