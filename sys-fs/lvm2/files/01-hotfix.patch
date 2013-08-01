@@ -1,0 +1,59 @@
+From ecc9f74988f7e18a24741e3bf55753383cc904b6 Mon Sep 17 00:00:00 2001
+From: Peter Rajnoha <prajnoha@redhat.com>
+Date: Fri, 26 Jul 2013 10:47:28 +0000
+Subject: filters: fix segfault on incorrect global_filter
+
+When using a global_filter and if this filter is incorrectly
+specified, we ended up with a segfault:
+
+  raw/~ $ pvs
+    Invalid filter pattern "r|/dev/sda".
+  Segmentation fault (core dumped)
+
+In the example above a closing '|' character is missing at the end
+of the regex. The segfault itself was caused by trying to destroy
+the same filter twice in _init_filters fn within the error path
+(the "bad" goto target):
+
+bad:
+        if (f3)
+                f3->destroy(f3);
+        if (f4)
+                f4->destroy(f4);
+
+Where f3 is the composite filter (sysfs + regex + type + md + mpath filter)
+and f4 is the persistent filter which encompasses this composite filter
+within persistent filter's 'real' field in 'struct pfilter'.
+
+So in the end, we need to destroy the persistent filter only as
+this will also destroy any 'real' filter attached to it.
+---
+diff --git a/lib/commands/toolcontext.c b/lib/commands/toolcontext.c
+index b284ce5..48fc489 100644
+--- a/lib/commands/toolcontext.c
++++ b/lib/commands/toolcontext.c
+@@ -940,8 +940,7 @@ static int _init_filters(struct cmd_context *cmd, unsigned load_persistent_cache
+ 
+ 	if (!(f4 = persistent_filter_create(cmd->dev_types, f3, dev_cache))) {
+ 		log_verbose("Failed to create persistent device filter.");
+-		f3->destroy(f3);
+-		return_0;
++		goto bad;
+ 	}
+ 
+ 	/* Should we ever dump persistent filter state? */
+@@ -977,10 +976,10 @@ static int _init_filters(struct cmd_context *cmd, unsigned load_persistent_cache
+ 
+ 	return 1;
+ bad:
+-	if (f3)
+-		f3->destroy(f3);
+ 	if (f4)
+ 		f4->destroy(f4);
++	else if (f3)
++		f3->destroy(f3);
+ 	if (toplevel_components[0])
+ 		toplevel_components[0]->destroy(toplevel_components[0]);
+ 	return 0;
+--
+cgit v0.9.1
