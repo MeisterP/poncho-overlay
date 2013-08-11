@@ -2,11 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-PYTHON_DEPEND="2:2.5"
+PYTHON_COMPAT=( python{2_5,2_6,2_7} )
 
-inherit python eutils scons-utils gnome2-utils
+inherit eutils gnome2-utils python-single-r1 scons-utils
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -23,12 +23,12 @@ for lang in ${LANGS} ; do
 	IUSE+=" linguas_${lang}"
 done
 
-DEPEND="dev-python/wxpython:2.8
+DEPEND="dev-python/wxpython:2.8[${PYTHON_USEDEP}]
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
-	calendar? ( dev-python/icalendar )
-	doc? ( dev-python/markdown )
+	calendar? ( dev-python/icalendar[${PYTHON_USEDEP}] )
+	doc? ( dev-python/markdown[${PYTHON_USEDEP}] )
 	svg? ( dev-python/pysvg )"
 
 src_prepare(){
@@ -40,9 +40,8 @@ src_compile() {
 }
 
 src_install() {
-	insinto $(python_get_sitedir)
-	doins -r timelinelib
-	doins timeline.py
+	python_domodule timelinelib
+	python_newscript timeline.py ${PN}
 
 	insinto /usr/share/${PN}/icons
 	doins icons/*.png
@@ -58,10 +57,9 @@ src_install() {
 		newicon -s $size icons/$size.png ${PN}.png
 	done
 
-	make_wrapper ${PN} "python timeline.py" $(python_get_sitedir)
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
-	dodoc AUTHORS CHANGES HACKING README
+	dodoc AUTHORS CHANGES README
 }
 
 pkg_preinst() {
