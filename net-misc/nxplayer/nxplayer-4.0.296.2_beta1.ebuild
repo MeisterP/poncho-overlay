@@ -5,13 +5,12 @@
 EAPI=5
 inherit eutils gnome2-utils multilib versionator
 
-MAJOR_PV="$(get_version_component_range 1-3)"
-FULL_PV="${MAJOR_PV}_$(get_version_component_range 4)"
+MY_PV="$(replace_version_separator 3 '_')"
 
 DESCRIPTION="New NX client interface"
 HOMEPAGE="http://www.nomachine.com/"
-SRC_URI="amd64? ( http://64.34.173.142/download/4.0/Linux/nomachine_${FULL_PV}_beta1_x86_64.tar.gz )
-	x86? ( http://64.34.173.142/download/4.0/Linux/nomachine_${FULL_PV}_beta1_i686.tar.gz )"
+SRC_URI="amd64? ( http://64.34.173.142/download/4.0/Linux/nomachine_${MY_PV}_x86_64.tar.gz )
+	x86? ( http://64.34.173.142/download/4.0/Linux/nomachine_${MY_PV}_i686.tar.gz )"
 
 LICENSE="nomachine"
 SLOT="0"
