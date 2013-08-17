@@ -1,0 +1,3 @@
+To allow users to use all features add them to the 'roccat' group
+To allow udev to detect your device without reboot, run
+# udevadm control --reload-rules && udevadm trigger --subsystem-match=usb
