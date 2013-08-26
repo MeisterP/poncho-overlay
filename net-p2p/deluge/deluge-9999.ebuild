@@ -5,7 +5,7 @@
 EAPI="3"
 PYTHON_DEPEND="2:2.5"
 
-inherit distutils eutils python git-2
+inherit distutils eutils python systemd git-2
 
 EGIT_REPO_URI="git://deluge-torrent.org/${PN}.git
 	http://git.deluge-torrent.org/${PN}/"
@@ -55,6 +55,8 @@ src_install() {
 	distutils_src_install
 	newinitd "${FILESDIR}"/deluged.init deluged
 	newconfd "${FILESDIR}"/deluged.conf deluged
+	systemd_dounit "${FILESDIR}"/deluged.service
+	systemd_dounit "${FILESDIR}"/deluge-web.service
 }
 
 pkg_postinst() {
