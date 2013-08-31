@@ -20,6 +20,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_roccat_kone
 	input_devices_roccat_koneplus
 	input_devices_roccat_konepure
+	input_devices_roccat_konepureoptical
 	input_devices_roccat_konextd
 	input_devices_roccat_kovaplus
 	input_devices_roccat_lua
@@ -40,12 +41,6 @@ RDEPEND="
 "
 
 DEPEND="${RDEPEND}"
-
-src_prepare() {
-	# only notification daemon, move it to autostart...
-	sed -i 's|share/applications|/etc/xdg/autostart|g' roccateventhandler/CMakeLists.txt || \
-	die "sed failed"
-}
 
 src_configure() {
 	local UDEVDIR="$(udev_get_udevdir)"/rules.d
