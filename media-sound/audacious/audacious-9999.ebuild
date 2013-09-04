@@ -29,7 +29,7 @@ DEPEND="${RDEPEND}
 	chardet? ( >=app-i18n/libguess-1.1 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND=">=media-plugins/audacious-plugins-9999"
+PDEPEND="~media-plugins/audacious-plugins-9999"
 
 src_prepare() {
 	AT_M4DIR="m4" eautoreconf

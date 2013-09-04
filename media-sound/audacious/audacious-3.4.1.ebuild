@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 inherit eutils
 
 MY_P="${P/_/-}"
@@ -29,7 +29,7 @@ DEPEND="${RDEPEND}
 	chardet? ( >=app-i18n/libguess-1.1 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND=">=media-plugins/audacious-plugins-3.4"
+PDEPEND="~media-plugins/audacious-plugins-3.4.1"
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,

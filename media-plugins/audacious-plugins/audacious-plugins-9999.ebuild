@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
-inherit git-2 autotools
+EAPI=5
+inherit eutils
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
@@ -22,7 +22,7 @@ RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	>=media-sound/audacious-9999
+	~media-sound/audacious-9999
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	( || ( >=dev-libs/glib-2.32.2 dev-util/gdbus-codegen ) )
