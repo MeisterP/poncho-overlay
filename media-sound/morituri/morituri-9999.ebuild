@@ -36,6 +36,10 @@ RDEPEND="media-sound/cdparanoia
 DEPEND="${RDEPEND}"
 
 src_prepare() {
+	sed -i "67{/unset\ PYTHON/d;}" \
+        m4/as-python.m4 || die "sed PATH_PYTHON failed"
+	sed -i "s|^completiondir =.*|completiondir = $(get_bashcompdir)|" \
+        etc/bash_completion.d/Makefile.am || die "sed completiondir failed"
 	eautoreconf
 }
 
@@ -47,15 +51,4 @@ src_configure() {
 	local ac_cv_prog_PYCHECKER=""
 
 	default
-}
-
-src_install() {
-	default
-
-	python_doscript bin/rip
-
-	rm -rf "${D}/etc" || die
-	dobashcomp etc/bash_completion.d/rip
-
-	dodoc AUTHORS HACKING NEWS README RELEASE TODO
 }
