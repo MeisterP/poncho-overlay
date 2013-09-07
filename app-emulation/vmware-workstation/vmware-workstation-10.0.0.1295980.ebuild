@@ -33,7 +33,6 @@ RESTRICT="mirror strip"
 RDEPEND="dev-cpp/cairomm
 	dev-cpp/glibmm:2
 	dev-cpp/gtkmm:2.4
-	dev-cpp/libgnomecanvasmm
 	dev-cpp/pangomm
 	dev-libs/atk
 	dev-libs/glib:2
@@ -50,7 +49,6 @@ RDEPEND="dev-cpp/cairomm
 	gnome-base/orbit
 	media-libs/fontconfig
 	media-libs/freetype
-	media-libs/libart_lgpl
 	=media-libs/libpng-1.2*
 	media-libs/libpng
 	net-misc/curl
@@ -83,7 +81,7 @@ RDEPEND="dev-cpp/cairomm
 	x11-libs/startup-notification
 	x11-themes/hicolor-icon-theme
 	!app-emulation/vmware-player"
-PDEPEND="~app-emulation/vmware-modules-271.${PV_MINOR}
+PDEPEND="~app-emulation/vmware-modules-272.${PV_MINOR}
 	vmware-tools? ( app-emulation/vmware-tools )"
 
 S=${WORKDIR}
