@@ -5,7 +5,7 @@
 EAPI=5
 
 PYTHON_COMPAT=( python{2_5,2_6,2_7} )
-inherit python-single-r1 versionator
+inherit python-single-r1 versionator eutils
 
 DESCRIPTION="Display covers on folders in nautilus"
 HOMEPAGE="http://projects.flogisoft.com/cover-thumbnailer/"
@@ -28,10 +28,14 @@ DEPEND="sys-devel/gettext
 	>=gnome-base/nautilus-3.0"
 
 RDEPEND="${DEPEND}
-	dev-python/imaging[${PYTHON_USEDEP}]
+	virtual/python-imaging[${PYTHON_USEDEP}]
 	dev-python/pygtk[${PYTHON_USEDEP}]"
 
 S="${S%-${PV}}_${PV}_src"
+
+src_prepare() {
+	epatch "${FILESDIR}/pillow.patch"
+}
 
 src_install() {
 	python_newscript ${PN}.py ${PN}
