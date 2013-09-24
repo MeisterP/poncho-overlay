@@ -17,7 +17,7 @@ KEYWORDS="~x86 ~amd64"
 IUSE=""
 
 DEPEND="gnome-base/gnome-keyring
-	mail-client/thunderbird[-minimal]
+	>=mail-client/thunderbird-22.0[-minimal]
 	!www-plugins/mozilla-gnome-keyring"
 RDEPEND="${DEPEND}"
 
@@ -32,7 +32,7 @@ src_compile() {
 	#pkg-config file for Firefox/Thunderbird is missing, so we are forced to use hardcodes
 	XUL_CFLAGS="-I${MOZILLA_FIVE_HOME/$(get_libdir)/include} -I/usr/include/nspr"
 	XUL_LDFLAGS="-L${MOZILLA_FIVE_HOME} -L${MOZILLA_FIVE_HOME}/sdk/lib \
-		-lxpcomglue_s -lxul -lxpcom -lmozalloc -lmozsqlite3 -lplds4 -lplc4 \
+		-lxpcomglue_s -lxul -lmozalloc -lmozsqlite3 -lplds4 -lplc4 \
 		-lnspr4 -lpthread -ldl"
 	XPCOM_ABI_FLAGS="-Wl,-rpath=${MOZILLA_FIVE_HOME}"
 
