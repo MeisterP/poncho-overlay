@@ -59,7 +59,7 @@ src_install() {
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
-	dodoc AUTHORS CHANGES HACKING README
+	dodoc AUTHORS README
 }
 
 pkg_preinst() {
