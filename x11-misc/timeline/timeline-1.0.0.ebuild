@@ -27,6 +27,7 @@ DEPEND="dev-python/wxpython:2.8[${PYTHON_USEDEP}]
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
+	dev-python/pytz[${PYTHON_USEDEP}]
 	calendar? ( dev-python/icalendar[${PYTHON_USEDEP}] )
 	doc? ( dev-python/markdown[${PYTHON_USEDEP}] )
 	svg? ( dev-python/pysvg )"
