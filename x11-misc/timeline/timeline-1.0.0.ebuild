@@ -33,7 +33,7 @@ RDEPEND="${DEPEND}
 	svg? ( dev-python/pysvg )"
 
 src_prepare(){
-	sed -i "s|\(_ROOT = \).*|\1\"/usr/share/${PN}\"|" timelinelib/config/paths.py || die "sed failed"
+	epatch "${FILESDIR}/timeline-0.20.0-paths.patch"
 }
 
 src_compile() {

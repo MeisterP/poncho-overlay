@@ -1,0 +1,12 @@
+--- timelinelib/config/paths.py~	2013-03-30 08:27:24.000000000 -0500
++++ timelinelib/config/paths.py	2013-05-15 07:42:30.718226513 -0500
+@@ -19,7 +19,7 @@
+ import os.path
+ 
+ 
+-_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
++_ROOT = "/usr/share/timeline/"
+ ICONS_DIR = os.path.join(_ROOT, "icons")
+-LOCALE_DIR = os.path.join(_ROOT, "po")
++LOCALE_DIR = "/usr/share/locale/"
+ HELP_RESOURCES_DIR = os.path.join(_ROOT, "help_resources")
