@@ -1,0 +1,32 @@
+--- a/timelinelib/export/svg.py
++++ b/timelinelib/export/svg.py
+@@ -17,6 +17,7 @@
+ 
+ 
+ from types import UnicodeType
++from xml.sax.saxutils import escape as xmlescape
+ 
+ from pysvg.structure import *
+ from pysvg.core import *
+@@ -343,7 +344,7 @@
+         return indicator
+ 
+     def _svg_clipped_text(self, myString, rectTuple, myStyle):
+-        myString = self._encode_unicode_text(myString)
++        myString = self._encode_text(myString)
+         # Put text,clipping into a SVG group
+         group=g()
+         rx, ry, width, height = rectTuple
+@@ -377,8 +378,11 @@
+         return group
+ 
+     def _text(self, the_text, x, y):
+-        encoded_text = self._encode_unicode_text(the_text)
++        encoded_text = self._encode_text(the_text)
+         return text(encoded_text, x, y)
++
++    def _encode_text(self, text):
++        return self._encode_unicode_text(xmlescape(text))
+ 
+     def _encode_unicode_text(self, text):
+         if type(text) is UnicodeType:

@@ -34,6 +34,7 @@ RDEPEND="${DEPEND}
 
 src_prepare(){
 	epatch "${FILESDIR}/timeline-0.20.0-paths.patch"
+	epatch "${FILESDIR}/Xml-escape-text-in-svg-files.patch"
 }
 
 src_compile() {
