@@ -24,12 +24,15 @@ RDEPEND="x11-libs/libXft
 	x11-libs/libXdmcp
 	x11-libs/libXau"
 
+QA_PREBUILT="opt/NX/bin/*
+	opt/NX/lib*/*"
+
 S=${WORKDIR}/NX
 
 src_unpack() {
 	default
-	mv "${WORKDIR}"/NX/etc/NX/server/packages/nx{client,player}.tar.gz "${WORKDIR}"
-	cd "${WORKDIR}" && unpack ./nx{client,player}.tar.gz
+	mv "${WORKDIR}"/NX/etc/NX/server/packages/nx{client,player}.tar.gz "${WORKDIR}" || die
+	cd "${WORKDIR}" && unpack ./nx{client,player}.tar.gz || die
 }
 
 src_install() {
