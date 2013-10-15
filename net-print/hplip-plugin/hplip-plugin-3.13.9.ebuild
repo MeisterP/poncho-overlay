@@ -4,11 +4,12 @@
 
 EAPI="5"
 
-inherit eutils multilib udev unpacker
+inherit eutils multilib unpacker
 
 DESCRIPTION="Proprietary plugins and firmware for HPLIP"
 HOMEPAGE="http://hplipopensource.com/hplip-web/index.html"
-SRC_URI="http://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hplip-${PV}-plugin.run"
+SRC_URI="http://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hplip-${PV}-plugin.run
+	http://hplipopensource.com/hplip-web/plugin/hplip-${PV}-plugin.run"
 
 LICENSE="hplip-plugin"
 SLOT="0"
@@ -38,14 +39,13 @@ src_unpack() {
 	unpack_makeself "hplip-${PV}-plugin.run"
 }
 
-src_prepare() {
-	sed -i -e 's/SYSFS/ATTR/g' *.rules || die
-}
-
 src_install() {
+	# Note: to check the install, perform: hp-diagnose_plugin
+
 	local hplip_arch=$(use amd64 && echo 'x86_64' || echo 'x86_32')
 
-	udev_dorules *.rules
+	insinto "${HPLIP_HOME}"
+	doins plugin.spec
 
 	insinto "${HPLIP_HOME}"/data/firmware
 	doins *.fw.gz
