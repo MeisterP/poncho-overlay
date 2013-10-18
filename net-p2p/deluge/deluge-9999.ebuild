@@ -6,7 +6,7 @@ EAPI=5
 PYTHON_COMPAT=( python{2_6,2_7} )
 DISTUTILS_SINGLE_IMPL=1
 
-inherit readme.gentoo distutils-r1 systemd git-2
+inherit readme.gentoo distutils-r1 systemd git-r3
 
 EGIT_REPO_URI="git://deluge-torrent.org/${PN}.git
 	http://git.deluge-torrent.org/${PN}/"
@@ -53,6 +53,10 @@ DOC_CONTENTS="If it doesn't work after upgrading, please remove the
 python_prepare() {
 	distutils-r1_python_prepare
 	python_fix_shebang .
+}
+
+distutils-r1_python_compile() {
+	esetup.py build
 }
 
 python_install() {
