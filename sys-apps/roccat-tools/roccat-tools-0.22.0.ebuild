@@ -26,6 +26,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_roccat_lua
 	input_devices_roccat_pyra
 	input_devices_roccat_savu
+	input_devices_roccat_ryos
 "
 IUSE="${IUSE_INPUT_DEVICES}"
 
