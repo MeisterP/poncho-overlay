@@ -13,6 +13,7 @@ HOMEPAGE="http://launchpad.net/mailnag"
 SRC_URI=""
 
 EGIT_REPO_URI="http://github.com/pulb/mailnag.git"
+EGIT_BRANCH="mailnag-next"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -31,7 +32,3 @@ RDEPEND="${DEPEND}
 		x11-libs/libnotify[introspection]"
 
 DOCS=( README.md NEWS )
-
-src_prepare() {
-	sed -i -e 's|./mailnag|mailnag|' ${S}/mailnag_config
-}
