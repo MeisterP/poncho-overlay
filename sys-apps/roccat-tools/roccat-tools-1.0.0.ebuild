@@ -53,6 +53,11 @@ src_configure() {
 src_install() {
 	cmake-utils_src_install
 	readme.gentoo_src_install
+
+	local stat_dir=/var/lib/roccat
+	keepdir $stat_dir
+	fowners root:roccat $stat_dir
+	fperms 2770 $stat_dir
 }
 pkg_preinst() {
 	gnome2_icon_savelist
