@@ -64,6 +64,7 @@ src_prepare() {
 	use pax_kernel && epatch "${FILESDIR}/hardened.patch"
 	kernel_is ge 3 10 0 && epatch "${FILESDIR}/${PV_MAJOR}-vmblock.3.10.patch"
 	kernel_is ge 3 11 0 && epatch "${FILESDIR}/${PV_MAJOR}-vmblock.3.11.patch"
+	kernel_is ge 3 12 0 && epatch "${FILESDIR}/${PV_MAJOR}-vmblock.3.12.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
