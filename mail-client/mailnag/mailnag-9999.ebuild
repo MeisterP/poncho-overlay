@@ -20,15 +20,16 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND="sys-devel/gettext"
+DEPEND="${PYTHON_DEPS}
+	sys-devel/gettext"
 RDEPEND="${DEPEND}
-		dev-python/dbus-python[${PYTHON_USEDEP}]
-		dev-python/httplib2[${PYTHON_USEDEP}]
-		dev-python/pygobject:3[${PYTHON_USEDEP}]
-		dev-python/pyxdg[${PYTHON_USEDEP}]
-		dev-python/gnome-keyring-python
-		gnome-base/libgnome-keyring[introspection]
-		media-libs/gstreamer[introspection]
-		x11-libs/libnotify[introspection]"
+	dev-python/dbus-python[${PYTHON_USEDEP}]
+	dev-python/httplib2[${PYTHON_USEDEP}]
+	dev-python/pygobject:3[${PYTHON_USEDEP}]
+	dev-python/pyxdg[${PYTHON_USEDEP}]
+	dev-python/gnome-keyring-python
+	gnome-base/libgnome-keyring[introspection]
+	media-libs/gstreamer[introspection]
+	x11-libs/libnotify[introspection]"
 
 DOCS=( README.md NEWS )

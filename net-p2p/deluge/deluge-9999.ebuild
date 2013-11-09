@@ -20,7 +20,8 @@ SLOT="0"
 KEYWORDS=""
 IUSE="geoip gtk libnotify setproctitle sound webinterface"
 
-DEPEND=">=net-libs/rb_libtorrent-0.14.9[python]
+DEPEND="${PYTHON_DEPS}
+	>=net-libs/rb_libtorrent-0.14.9[python]
 	dev-python/setuptools[${PYTHON_USEDEP}]
 	dev-util/intltool"
 RDEPEND="${DEPEND}

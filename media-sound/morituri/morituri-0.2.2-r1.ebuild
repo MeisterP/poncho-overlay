@@ -17,7 +17,10 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="alac cdio +cddb +flac wav wavpack"
 
-RDEPEND="media-sound/cdparanoia
+DEPEND="${PYTHON_DEPS}
+	dev-vcs/git"
+RDEPEND="${DEPEND}
+	media-sound/cdparanoia
 	app-cdr/cdrdao
 	media-libs/gstreamer
 	alac? ( media-plugins/gst-plugins-ffmpeg )
@@ -31,8 +34,6 @@ RDEPEND="media-sound/cdparanoia
 	dev-python/pygobject[${PYTHON_USEDEP}]
 	dev-python/pygtk[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]"
-DEPEND="dev-vcs/git
-	${RDEPEND}"
 
 src_prepare() {
 	sed -i "67{/unset\ PYTHON/d;}" \

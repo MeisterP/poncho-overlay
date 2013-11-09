@@ -23,7 +23,8 @@ for lang in ${LANGS} ; do
 	IUSE+=" linguas_${lang}"
 done
 
-DEPEND="dev-python/wxpython:2.8[${PYTHON_USEDEP}]
+DEPEND="${PYTHON_DEPS}
+	dev-python/wxpython:2.8[${PYTHON_USEDEP}]
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
@@ -34,7 +35,6 @@ RDEPEND="${DEPEND}
 
 src_prepare(){
 	epatch "${FILESDIR}/timeline-0.20.0-paths.patch"
-	epatch "${FILESDIR}/Xml-escape-text-in-svg-files.patch"
 }
 
 src_compile() {
@@ -61,7 +61,7 @@ src_install() {
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
-	dodoc AUTHORS README
+	dodoc AUTHORS CHANGES README
 }
 
 pkg_preinst() {

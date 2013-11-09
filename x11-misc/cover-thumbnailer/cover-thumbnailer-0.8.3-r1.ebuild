@@ -24,7 +24,8 @@ for X in ${LANGS} ; do
 	IUSE+=" linguas_${X}"
 done
 
-DEPEND="sys-devel/gettext
+DEPEND="${PYTHON_DEPS}
+	sys-devel/gettext
 	>=gnome-base/nautilus-3.0"
 
 RDEPEND="${DEPEND}

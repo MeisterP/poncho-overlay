@@ -17,6 +17,8 @@ KEYWORDS="~amd64 ~x86"
 SLOT="0"
 IUSE=""
 
-RDEPEND="sys-apps/lm_sensors"
+DEPEND="${PYTHON_DEPS}"
+RDEPEND="${DEPEND}
+	sys-apps/lm_sensors"
 
 S="${WORKDIR}"/PySensors-${PV}
