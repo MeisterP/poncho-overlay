@@ -7,7 +7,7 @@ inherit multilib vcs-snapshot
 
 DESCRIPTION="Stand-alone and portable version of Gentoo's functions.sh"
 HOMEPAGE="https://github.com/marcusatbang/efunctions"
-GIT_COMMIT=3f802df99c42f9ee3f3cf974c1e9e07de4bc6219
+GIT_COMMIT=31892b3ef711c7ba8fe8b233156cc35a265e1044
 SRC_URI="${HOMEPAGE}/archive/${GIT_COMMIT}.zip -> ${P}.zip"
 
 # FIXME(marineam): The origional functions.sh claims 2-clause BSD but
