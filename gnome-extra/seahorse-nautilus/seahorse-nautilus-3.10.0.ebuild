@@ -6,7 +6,7 @@ EAPI="5"
 GCONF_DEBUG="no" # --disable-debug disables all assertions
 GNOME2_LA_PUNT="yes"
 
-inherit eutils gnome2
+inherit gnome2
 
 DESCRIPTION="Nautilus extension for encrypting and decrypting files with GnuPG"
 HOMEPAGE="http://www.gnome.org/projects/seahorse/"
@@ -41,7 +41,10 @@ src_prepare() {
 	# Do not let configure mangle CFLAGS
 	sed -e '/^[ \t]*CFLAGS="$CFLAGS \(-g\|-O0\)/d' -i configure.ac configure ||
 		die "sed failed"
-	epatch "${FILESDIR}/c41f07cf5785b2d755b85f20bf0546c6ce2ebb02.patch"
+
+	# https://bugzilla.gnome.org/show_bug.cgi?id=719763
+	sed -i 's/pixmaps\/seahorse-plugins\/48x48/pixmaps\/cryptui\/48x48/' \
+		tool/seahorse-notification.c || die "sed icon location failed"
 
 	gnome2_src_prepare
 }
