@@ -36,6 +36,7 @@ S="${S%-${PV}}_${PV}_src"
 
 src_prepare() {
 	epatch "${FILESDIR}/pillow.patch"
+	echo "UriSchemes=file;" >> freedesktop/cover.thumbnailer || die
 }
 
 src_install() {
