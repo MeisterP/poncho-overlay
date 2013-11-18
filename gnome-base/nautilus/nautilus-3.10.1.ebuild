@@ -28,7 +28,7 @@ RESTRICT="test"
 COMMON_DEPEND="
 	>=dev-libs/glib-2.35.3:2
 	>=x11-libs/pango-1.28.3
-	>=x11-libs/gtk+-3.7.7:3[introspection?]
+	>=x11-libs/gtk+-3.9.11:3[introspection?]
 	>=dev-libs/libxml2-2.7.8:2
 	>=gnome-base/gnome-desktop-3:3=
 
@@ -95,7 +95,7 @@ src_prepare() {
 }
 
 src_configure() {
-	DOCS="AUTHORS ChangeLog* HACKING MAINTAINERS NEWS README THANKS"
+	DOCS="AUTHORS HACKING MAINTAINERS NEWS README THANKS"
 	gnome2_src_configure \
 		--disable-profiling \
 		--disable-update-mimedb \
