@@ -8,7 +8,7 @@ inherit multilib vcs-snapshot
 DESCRIPTION="Stand-alone and portable version of Gentoo's functions.sh"
 HOMEPAGE="https://github.com/marcusatbang/efunctions"
 GIT_COMMIT=31892b3ef711c7ba8fe8b233156cc35a265e1044
-SRC_URI="${HOMEPAGE}/archive/${GIT_COMMIT}.zip -> ${P}.zip"
+SRC_URI="${HOMEPAGE}/tarball/${GIT_COMMIT} -> ${P}.tar.gz"
 
 # FIXME(marineam): The origional functions.sh claims 2-clause BSD but
 # efunctions has no license declared. Assume it is unchanged until I
@@ -19,11 +19,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND=""
-RDEPEND="!sys-apps/openrc
-	!<sys-apps/baselayout-2.0
-	!coreos-base/efunctions
-	"
-S=${WORKDIR}/${PN}-${GIT_COMMIT}
+RDEPEND="!sys-apps/openrc"
 
 src_install() {
 	local dst_dir=/usr/$(get_libdir)/${PN}
