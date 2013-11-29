@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-inherit eutils
+inherit eutils git-2 autotools
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
@@ -14,7 +14,7 @@ EGIT_REPO_URI="http://github.com/audacious-media-player/audacious-plugins.git"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome jack lame libnotify
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac gnome jack lame libnotify
 	libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile
 	libsoxr vorbis spectrum wavpack"
 
@@ -36,7 +36,7 @@ RDEPEND="app-arch/unzip
 	ffmpeg? ( >=virtual/ffmpeg-0.7.3 )
 	flac? ( >=media-libs/libvorbis-1.0
 		>=media-libs/flac-1.2.1-r1 )
-	fluidsynth? ( media-sound/fluidsynth )
+	midi? ( media-sound/fluidsynth )
 	jack? ( >=media-libs/bio2jack-0.4
 		media-sound/jack-audio-connection-kit )
 	lame? ( media-sound/lame )
@@ -89,13 +89,11 @@ src_configure() {
 		$(use_enable adplug) \
 		$(use_enable aac) \
 		$(use_enable alsa) \
-		$(use_enable alsa amidiplug-alsa) \
 		$(use_enable bs2b) \
 		$(use_enable cdda cdaudio) \
 		$(use_enable cue) \
 		$(use_enable ffmpeg ffaudio) \
 		$(use_enable flac flacng) \
-		$(use_enable fluidsynth amidiplug-flsyn) \
 		$(use_enable flac filewriter_flac) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \
