@@ -6,7 +6,7 @@ EAPI=5
 
 inherit eutils gnome2-utils games
 
-MY_PN="${PN}-${PV#*_}-linux"
+MY_PN="${PN}-${PV#*_}c-linux"
 
 DESCRIPTION="Build and Manage a Maximum Security Prison"
 HOMEPAGE="http://www.introversion.co.uk/prisonarchitect/"
@@ -41,7 +41,7 @@ pkg_nofetch() {
 src_compile() {
 	# an icon... desperately...
 	unrar e -inul main.dat data/people.png || die "unrar main.dat failed"
-	convert -crop 64x64+1024+706 people.png ${PN}.png || die "convert people.png failed"
+	convert -crop 64x64+1024+704 people.png ${PN}.png || die "convert people.png failed"
 }
 
 src_install() {
