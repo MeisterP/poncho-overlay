@@ -24,7 +24,7 @@ COMMON_DEPEND="
 	gnome-base/gnome-keyring
 	>=gnome-base/nautilus-3
 	x11-libs/gtk+:3
-	x11-libs/libcryptui
+	>=x11-libs/libcryptui-3.9.90
 	>=x11-libs/libnotify-0.3:=
 	|| (
 		=app-crypt/gnupg-1.4*
