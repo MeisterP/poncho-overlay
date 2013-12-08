@@ -52,6 +52,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/Gentoo-fixes-for-etc-pol_bash.patch"
+	epatch "${FILESDIR}/remove_binary_plugin.diff"
 	use gnome && epatch "${FILESDIR}/Add-gnome-terminal-support.patch"
 
 	sed -e 's/PYTHON="python"/PYTHON="python2"/' -i playonlinux || die
@@ -92,9 +93,11 @@ src_install() {
 		newicon -s $size etc/${PN}$size.png ${PN}.png
 	done
 
+	doman "${FILESDIR}"/playonlinux{,-pkg}.1
 	dodoc CHANGELOG
 
 	games_make_wrapper ${PN} "./${PN}" "${GAMES_DATADIR}/${PN}"
+	games_make_wrapper ${PN}-pkg "./${PN}-pkg" "${GAMES_DATADIR}/${PN}"
 	make_desktop_entry ${PN} ${MY_PN} ${PN} Game
 
 	prepgamesdirs
