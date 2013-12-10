@@ -17,12 +17,12 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="alac cdio +cddb +flac wav wavpack"
 
-DEPEND="${PYTHON_DEPS}
-	dev-vcs/git"
+DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
 	media-sound/cdparanoia
 	app-cdr/cdrdao
 	media-libs/gstreamer
+	media-libs/gst-plugins-base
 	alac? ( media-plugins/gst-plugins-ffmpeg )
 	cdio? ( dev-python/pycdio )
 	cddb? ( dev-python/cddb-py )
@@ -35,23 +35,20 @@ RDEPEND="${DEPEND}
 	dev-python/pygtk[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]"
 
+DOCS=( AUTHORS ChangeLog HACKING NEWS README TODO )
+
 src_prepare() {
-	sed -i "67{/unset\ PYTHON/d;}" \
-        m4/as-python.m4 || die "sed PATH_PYTHON failed"
+	# fix python shebang
+	# see https://bugs.gentoo.org/show_bug.cgi?id=472530#c0
+	sed -i '\|unset PYTHON|d' \
+        m4/as-python.m4 || die
+
+	# fix completion location
 	sed -i "s|^completiondir =.*|completiondir = $(get_bashcompdir)|" \
-        etc/bash_completion.d/Makefile.am || die "sed completiondir failed"
-	eautoreconf
-}
+        etc/bash_completion.d/Makefile.am || die
 
-src_configure() {
 	# https://github.com/thomasvs/morituri/issues/40
-	export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+	epatch ${FILESDIR}/df0daefa27f6911167c73424ccac1c3d9480abf2.patch
 
-	# disable doc building
-	local ac_cv_prog_EPYDOC=""
-
-	# disable test
-	local ac_cv_prog_PYCHECKER=""
-
-	default
+	eautoreconf
 }

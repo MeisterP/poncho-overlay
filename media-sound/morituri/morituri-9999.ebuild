@@ -6,7 +6,7 @@ EAPI="5"
 
 PYTHON_COMPAT="python2_7"
 
-inherit autotools bash-completion-r1 git-2 python-single-r1
+inherit autotools bash-completion-r1 python-single-r1 git-2
 
 DESCRIPTION="CD ripper aiming for accuracy over speed."
 HOMEPAGE="http://thomas.apestaart.org/morituri/trac/wiki"
@@ -17,13 +17,19 @@ EGIT_HAS_SUBMODULES=1
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="alac cdio +cddb +flac wav wavpack"
+IUSE="alac cdio +cddb doc +flac test wav wavpack"
 
-DEPEND="${PYTHON_DEPS}"
-RDEPEND="${DEPEND}
+DEPEND="${PYTHON_DEPS}
+	doc? ( dev-python/epydoc[${PYTHON_USEDEP}]
+		dev-python/twisted-conch[${PYTHON_USEDEP}] )
+	test? ( dev-python/pychecker
+		dev-python/twisted-core[${PYTHON_USEDEP}] )"
+
+RDEPEND="${PYTHON_DEPS}
 	media-sound/cdparanoia
 	app-cdr/cdrdao
 	media-libs/gstreamer
+	media-libs/gst-plugins-base
 	alac? ( media-plugins/gst-plugins-ffmpeg )
 	cdio? ( dev-python/pycdio )
 	cddb? ( dev-python/cddb-py )
@@ -36,20 +42,27 @@ RDEPEND="${DEPEND}
 	dev-python/pygtk[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]"
 
+DOCS=( AUTHORS ChangeLog HACKING NEWS README.md TODO )
+
 src_prepare() {
-	sed -i "67{/unset\ PYTHON/d;}" \
-        m4/as-python.m4 || die "sed PATH_PYTHON failed"
+	# fix python shebang
+	# see https://bugs.gentoo.org/show_bug.cgi?id=472530#c0
+	sed -i '\|unset PYTHON|d' \
+        m4/as-python.m4 || die
+
+	# fix completion location
 	sed -i "s|^completiondir =.*|completiondir = $(get_bashcompdir)|" \
-        etc/bash_completion.d/Makefile.am || die "sed completiondir failed"
+        etc/bash_completion.d/Makefile.am || die
+
+	# disable failing test
+	epatch "${FILESDIR}"/disable-test.patch
+
+	# TODO: make doc and test not automagic
+
 	eautoreconf
 }
 
-src_configure() {
-	# disable doc building
-	local ac_cv_prog_EPYDOC=""
-
-	# disable test
-	local ac_cv_prog_PYCHECKER=""
-
+src_install() {
 	default
+	use doc && dohtml -r doc/reference/*
 }

@@ -1,0 +1,53 @@
+diff --git a/morituri/test/test_common_directory.py b/morituri/test/test_common_directory.py
+index c7b2766..9143094 100644
+--- a/morituri/test/test_common_directory.py
++++ b/morituri/test/test_common_directory.py
+@@ -8,6 +8,8 @@ from morituri.test import common
+ 
+ class DirectoryTestCase(common.TestCase):
+ 
++    skip = "fails inside portage"
++
+     def testAll(self):
+         d = directory.Directory()
+ 
+diff --git a/morituri/test/test_common_encode.py b/morituri/test/test_common_encode.py
+index 4a74759..c6ffb48 100644
+--- a/morituri/test/test_common_encode.py
++++ b/morituri/test/test_common_encode.py
+@@ -48,6 +48,8 @@ class PathTestCase(common.TestCase):
+ 
+ class UnicodePathTestCase(PathTestCase, common.UnicodeTestMixin):
+ 
++    skip = "fails inside portage"
++
+     def testUnicodePath(self):
+         # this test makes sure we can checksum a unicode path
+         self._testSuffix(u'.morituri.test_encode.B\xeate Noire')
+@@ -55,6 +57,8 @@ class UnicodePathTestCase(PathTestCase, common.UnicodeTestMixin):
+ 
+ class NormalPathTestCase(PathTestCase):
+ 
++    skip = "fails inside portage"
++
+     def testSingleQuote(self):
+         self._testSuffix(u".morituri.test_encode.Guns 'N Roses")
+ 
+@@ -76,6 +80,8 @@ class TagReadTestCase(common.TestCase):
+ 
+ class TagWriteTestCase(common.TestCase):
+ 
++    skip = "fails inside portage"
++
+     def testWrite(self):
+         fd, inpath = tempfile.mkstemp(suffix=u'.morituri.tagwrite.flac')
+ 
+@@ -113,6 +119,8 @@ class TagWriteTestCase(common.TestCase):
+ 
+ class SafeRetagTestCase(common.TestCase):
+ 
++    skip = "fails inside portage"
++
+     def setUp(self):
+         self._fd, self._path = tempfile.mkstemp(suffix=u'.morituri.retag.flac')
+ 
