@@ -61,6 +61,7 @@ src_unpack() {
 src_prepare() {
 	epatch "${FILESDIR}/271-makefile-kernel-dir.patch"
 	epatch "${FILESDIR}/271-makefile-include.patch"
+	epatch "${FILESDIR}/271-userns.patch"
 	use pax_kernel && epatch "${FILESDIR}/hardened.patch"
 	kernel_is ge 3 10 0 && epatch "${FILESDIR}/${PV_MAJOR}-vmblock.3.10.patch"
 	kernel_is ge 3 11 0 && epatch "${FILESDIR}/${PV_MAJOR}-vmblock.3.11.patch"
