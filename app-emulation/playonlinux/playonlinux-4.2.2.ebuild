@@ -94,7 +94,7 @@ src_install() {
 	done
 
 	doman "${FILESDIR}"/playonlinux{,-pkg}.1
-	dodoc CHANGELOG
+	dodoc CHANGELOG.md
 
 	games_make_wrapper ${PN} "./${PN}" "${GAMES_DATADIR}/${PN}"
 	games_make_wrapper ${PN}-pkg "./${PN}-pkg" "${GAMES_DATADIR}/${PN}"
