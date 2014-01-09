@@ -13,7 +13,7 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="GPL-2-with-linking-exception"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~ppc-macos"
-IUSE="examples ssh test trace"
+IUSE="examples ssh test threads trace"
 
 RDEPEND="sys-libs/zlib
 	net-libs/http-parser
@@ -37,6 +37,7 @@ src_configure() {
 		$(cmake-utils_use_build test CLAR)
 		$(cmake-utils_use_enable trace TRACE)
 		$(cmake-utils_use_use ssh SSH)
+		$(cmake-utils_use threads THREADSAFE)
 	)
 	cmake-utils_src_configure
 }
