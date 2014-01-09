@@ -35,6 +35,7 @@ RDEPEND="${DEPEND}
 
 src_prepare(){
 	epatch "${FILESDIR}/timeline-0.20.0-paths.patch"
+	cp -f "${FILESDIR}"/icons/*.png icons/
 }
 
 src_compile() {
@@ -61,7 +62,7 @@ src_install() {
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
-	dodoc AUTHORS CHANGES README
+	dodoc AUTHORS README
 }
 
 pkg_preinst() {
