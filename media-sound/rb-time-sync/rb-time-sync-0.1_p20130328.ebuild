@@ -9,7 +9,7 @@ GIT_COMMIT=65cd406
 DESCRIPTION="time-sync is a utility to sync the time with a Rockbox target"
 HOMEPAGE="http://www.rockbox.org/wiki/IpodTimeSync"
 SRC_URI="http://git.rockbox.org/?p=rockbox.git;a=snapshot;h=${GIT_COMMIT};sf=tgz
-		-> ${PV}.tar.gz"
+		-> ${P}.tar.gz"
 RESTRICT="mirror"
 
 LICENSE="GPL-2+"
