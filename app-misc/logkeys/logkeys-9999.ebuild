@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit autotools eutils git-2
+inherit autotools eutils git-2 systemd
 
 DESCRIPTION="A GNU/Linux keylogger that works!"
 HOMEPAGE="http://code.google.com/p/logkeys/"
@@ -39,6 +39,9 @@ src_install() {
 
 	newinitd "${FILESDIR}/${PN}-init.d" ${PN}
 	newconfd "${FILESDIR}/${PN}-conf.d" ${PN}
+
+	systemd_dounit "${FILESDIR}/logkeys.service"
+	systemd_install_serviced "${FILESDIR}/logkeys.service.conf"
 
 	if ! use suid; then
 		rm -f "${D}"/etc/logkeys-{kill,start}.sh || die
