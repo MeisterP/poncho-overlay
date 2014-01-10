@@ -1,4 +1,0 @@
-[Thumbnailer Entry]
-TryExec=audiothumbnailer
-Exec=audiothumbnailer  -s %s -i %i -o %o
-MimeType=audio/mpeg;audio/x-vorbis+ogg;
