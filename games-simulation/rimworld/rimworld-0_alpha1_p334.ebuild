@@ -6,7 +6,7 @@ EAPI=5
 
 inherit eutils gnome2-utils games
 
-MY_PV=${PV#*beta}
+MY_PV=${PV#*_p}
 MY_PN="RimWorld${MY_PV}Linux"
 MY_SRC="RimWorldAlpha1Linux"
 
