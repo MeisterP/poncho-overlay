@@ -50,6 +50,8 @@ src_install() {
 	exeinto "${dir}"
 	doexe ${MY_PN}
 
+	dodoc Version.txt
+
 	newicon -s 128 "${FILESDIR}/Door-Kickers.png" ${PN}.png
 	games_make_wrapper ${PN} "./${MY_PN}" "${dir}"
 
