@@ -17,7 +17,7 @@ KEYWORDS="~x86 ~amd64"
 IUSE=""
 
 DEPEND="gnome-base/gnome-keyring
-	>=www-client/firefox-22.0[-minimal]
+	>=www-client/firefox-27.0[-minimal]
 	!www-plugins/mozilla-gnome-keyring"
 RDEPEND="${DEPEND}"
 
@@ -28,6 +28,7 @@ src_unpack() {
 
 src_prepare() {
 	epatch "${FILESDIR}/hide-warnings.patch"
+	epatch "${FILESDIR}/firefox27.patch"
 }
 
 src_compile() {
