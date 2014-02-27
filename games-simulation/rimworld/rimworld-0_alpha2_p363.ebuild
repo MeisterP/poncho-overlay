@@ -8,7 +8,7 @@ inherit eutils gnome2-utils games
 
 MY_PV=${PV#*_p}
 MY_PN="RimWorld${MY_PV}Linux"
-MY_SRC="RimWorldAlpha1Linux"
+MY_SRC="RimWorldAlpha2Linux"
 
 DESCRIPTION="A sci fi colony sim driven by an intelligent AI storyteller"
 HOMEPAGE="http://rimworldgame.com/"
@@ -31,7 +31,7 @@ RDEPEND="virtual/opengl
 
 QA_PREBUILT="${GAMES_PREFIX_OPT}/${PN}/*"
 
-S="${WORKDIR}/${MY_SRC}"
+S="${WORKDIR}/${MY_PN}"
 
 pkg_nofetch() {
 	einfo "Please buy & download ${SRC_URI} from:"
