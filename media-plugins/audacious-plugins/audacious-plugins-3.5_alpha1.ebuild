@@ -3,18 +3,18 @@
 # $Header: $
 
 EAPI=5
-inherit eutils git-2 autotools
+inherit eutils
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
-EGIT_REPO_URI="http://github.com/audacious-media-player/audacious-plugins.git"
+SRC_URI="http://distfiles.audacious-media-player.org/${MY_P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS=""
-IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac gnome jack lame libnotify
+KEYWORDS="~amd64 ~x86"
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome jack lame libnotify
 	libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile
 	libsoxr vorbis spectrum wavpack"
 
@@ -22,7 +22,7 @@ RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	~media-sound/audacious-9999
+	~media-sound/audacious-3.5_alpha1
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	( || ( >=dev-libs/glib-2.32.2 dev-util/gdbus-codegen ) )
@@ -36,7 +36,7 @@ RDEPEND="app-arch/unzip
 	ffmpeg? ( >=virtual/ffmpeg-0.7.3 )
 	flac? ( >=media-libs/libvorbis-1.0
 		>=media-libs/flac-1.2.1-r1 )
-	midi? ( media-sound/fluidsynth )
+	fluidsynth? ( media-sound/fluidsynth )
 	jack? ( >=media-libs/bio2jack-0.4
 		media-sound/jack-audio-connection-kit )
 	lame? ( media-sound/lame )
@@ -68,6 +68,10 @@ mp3_warning() {
 }
 
 src_prepare() {
+
+	# see http://redmine.audacious-media-player.org/issues/206
+	use gnome && epatch "${FILESDIR}/notificationsupport-3.5.patch"
+
 	has_version "<dev-libs/glib-2.32" && \
 		cd "${S}"/src/mpris2 && \
 		gdbus-codegen --interface-prefix org.mpris. \
@@ -76,8 +80,6 @@ src_prepare() {
 			--c-namespace Mpris \
 			--generate-c-code object-player mpris2-player.xml && \
 		cd "${S}"
-
-	AT_M4DIR="m4" eautoreconf
 }
 
 src_configure() {
@@ -94,6 +96,7 @@ src_configure() {
 		$(use_enable cue) \
 		$(use_enable ffmpeg ffaudio) \
 		$(use_enable flac flacng) \
+		$(use_enable fluidsynth amidiplug) \
 		$(use_enable flac filewriter_flac) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \

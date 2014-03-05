@@ -70,7 +70,7 @@ mp3_warning() {
 src_prepare() {
 
 	# see http://redmine.audacious-media-player.org/issues/206
-	use gnome && epatch "${FILESDIR}/notifyactionsupport.patch"
+	use gnome && epatch "${FILESDIR}/notificationsupport.patch"
 
 	has_version "<dev-libs/glib-2.32" && \
 		cd "${S}"/src/mpris2 && \

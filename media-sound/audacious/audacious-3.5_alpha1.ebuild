@@ -2,38 +2,34 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
-inherit eutils git-2 autotools
+EAPI=5
+inherit eutils
 
 MY_P="${P/_/-}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
-EGIT_REPO_URI="http://github.com/audacious-media-player/audacious.git"
+SRC_URI="http://distfiles.audacious-media-player.org/${MY_P}.tar.bz2"
 
 LICENSE="BSD-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 
 IUSE="chardet nls"
 
-RDEPEND=">=dev-libs/dbus-glib-0.60
-	>=dev-libs/glib-2.30
+RDEPEND=">=dev-libs/glib-2.30
 	dev-libs/libxml2
+	dev-util/gdbus-codegen
 	>=x11-libs/cairo-1.2.6
 	>=x11-libs/pango-1.8.0
 	x11-libs/gtk+:3"
 
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
-	chardet? ( >=app-i18n/libguess-1.1 )
+	chardet? ( >=app-i18n/libguess-1.2 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND="~media-plugins/audacious-plugins-9999"
-
-src_prepare() {
-	AT_M4DIR="m4" eautoreconf
-}
+PDEPEND="~media-plugins/audacious-plugins-3.5_alpha1"
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,
@@ -43,6 +39,7 @@ src_configure() {
 	# Bugs #197894, #199069, #207330, #208606
 	econf \
 		--enable-dbus \
+		--disable-valgrind
 		$(use_enable chardet) \
 		$(use_enable nls)
 }
