@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,7 +16,7 @@ SLOT="0"
 
 # profiling?
 IUSE="debug exif gnome +introspection packagekit +previewer sendto tracker xmp"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux"
+KEYWORDS="amd64 x86"
 
 # FIXME: tests fails under Xvfb, but pass when building manually
 # "FAIL: check failed in nautilus-file.c, line 8307"
@@ -95,7 +95,7 @@ src_prepare() {
 }
 
 src_configure() {
-	DOCS="AUTHORS HACKING MAINTAINERS NEWS README THANKS"
+	DOCS="AUTHORS HACKING MAINTAINERS NEWS README* THANKS"
 	gnome2_src_configure \
 		--disable-profiling \
 		--disable-update-mimedb \
