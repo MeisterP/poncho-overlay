@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,7 @@ LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-IUSE="chardet nls"
+IUSE="nls"
 
 RDEPEND=">=dev-libs/glib-2.30
 	dev-libs/libxml2
@@ -26,10 +26,9 @@ RDEPEND=">=dev-libs/glib-2.30
 
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
-	chardet? ( >=app-i18n/libguess-1.2 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND="~media-plugins/audacious-plugins-3.5_alpha1"
+PDEPEND="~media-plugins/audacious-plugins-3.5_beta1"
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,
@@ -39,8 +38,8 @@ src_configure() {
 	# Bugs #197894, #199069, #207330, #208606
 	econf \
 		--enable-dbus \
-		--disable-valgrind
-		$(use_enable chardet) \
+		--disable-valgrind \
+		--disable-chardet \
 		$(use_enable nls)
 }
 
