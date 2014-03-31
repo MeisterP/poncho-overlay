@@ -28,7 +28,7 @@ src_unpack() {
 
 src_prepare() {
 	epatch "${FILESDIR}/hide-warnings.patch"
-	epatch "${FILESDIR}/firefox27.patch"
+	epatch "${FILESDIR}/eof.patch"
 }
 
 src_compile() {

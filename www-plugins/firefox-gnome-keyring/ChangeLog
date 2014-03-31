@@ -1,0 +1,6 @@
+*firefox-gnome-keyring-0.6.10 (31 Mar 2014)
+
+  31 Mar 2014; Poncho <poncho@spahan.ch> +files/eof.patch,
+  +firefox-gnome-keyring-0.6.10.ebuild, +metadata.xml, -files/firefox27.patch,
+  -firefox-gnome-keyring-0.6.9-r1.ebuild:
+  www-plugins/firefox-gnome-keyring: version bump
