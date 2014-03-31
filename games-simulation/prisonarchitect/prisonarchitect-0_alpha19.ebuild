@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=5
 
 inherit eutils gnome2-utils games
 
-MY_PN="${PN}-${PV#*_}b-linux"
+MY_PN="${PN}-${PV#*_}-linux"
 
 DESCRIPTION="Build and Manage a Maximum Security Prison"
 HOMEPAGE="http://www.introversion.co.uk/prisonarchitect/"
@@ -21,7 +21,7 @@ RESTRICT="fetch bindist splitdebug"
 DEPEND="app-arch/unrar
 	media-gfx/imagemagick"
 
-RDEPEND="media-libs/libsdl
+RDEPEND="media-libs/libsdl2
 	virtual/opengl
 	virtual/glu
 	sys-libs/glibc
