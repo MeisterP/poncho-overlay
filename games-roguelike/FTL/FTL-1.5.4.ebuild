@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/games-roguelike/FTL/FTL-1.03.3.ebuild,v 1.4 2013/11/22 15:19:10 hasufell Exp $
+# $Header: $
 
 EAPI=5
 
@@ -8,11 +8,11 @@ inherit eutils games
 
 DESCRIPTION="Faster Than Light: A spaceship simulation real-time roguelike-like game"
 HOMEPAGE="http://www.ftlgame.com/"
-SRC_URI="FTL.Linux.${PV}.tar.gz"
+SRC_URI="FTL.${PV}.tar.gz"
 
 LICENSE="all-rights-reserved Boost-1.0 free-noncomm MIT bundled-libs? ( FTL LGPL-2.1 ZLIB libpng )"
 SLOT="0"
-KEYWORDS="-* amd64 x86"
+KEYWORDS="-* ~amd64 ~x86"
 IUSE="bundled-libs"
 RESTRICT="fetch bindist splitdebug"
 
