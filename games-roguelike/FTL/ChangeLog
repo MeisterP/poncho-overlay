@@ -1,0 +1,53 @@
+# ChangeLog for games-roguelike/FTL
+# Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/games-roguelike/FTL/ChangeLog,v 1.14 2013/11/22 15:19:10 hasufell Exp $
+
+  22 Nov 2013; Julian Ospald <hasufell@gentoo.org> -FTL-1.03.1.ebuild,
+  FTL-1.03.3.ebuild:
+  stable wrt #486238
+
+  04 Sep 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild,
+  FTL-1.03.3.ebuild:
+  remove unneeded libpng dep wrt #482574
+
+  16 May 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.3.ebuild:
+  update libpng dep to slot 1.5
+
+  14 May 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild:
+  amd64 stable wrt #457128
+
+*FTL-1.03.3 (14 May 2013)
+
+  14 May 2013; Julian Ospald <hasufell@gentoo.org> +FTL-1.03.3.ebuild:
+  version bump
+
+  14 May 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild:
+  add splitdebug restrict
+
+  13 May 2013; Patrick Lauer <patrick@gentoo.org> FTL-1.03.1.ebuild:
+  Remove invalid splitdebug restrict
+
+  09 May 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild,
+  metadata.xml:
+  convert system-libs useflag to bundled-libs and restrict splitdebug
+
+  11 Apr 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild:
+  update libpng dep
+
+  25 Feb 2013; Agostino Sarubbo <ago@gentoo.org> FTL-1.03.1.ebuild:
+  Stable for x86, wrt bug #457128
+
+  03 Jan 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild:
+  small license fix
+
+  01 Jan 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild:
+  fix license
+
+  01 Jan 2013; Julian Ospald <hasufell@gentoo.org> FTL-1.03.1.ebuild:
+  add bindist to RESTRICT
+
+*FTL-1.03.1 (01 Jan 2013)
+
+  01 Jan 2013; Julian Ospald <hasufell@gentoo.org> +FTL-1.03.1.ebuild,
+  +metadata.xml:
+  initial import
