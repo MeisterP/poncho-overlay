@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,8 +9,8 @@ MY_PV="$(replace_version_separator 3 '_')"
 
 DESCRIPTION="New NX client interface"
 HOMEPAGE="http://www.nomachine.com/"
-SRC_URI="amd64? ( http://64.34.173.142/download/4.0/Linux/nomachine_${MY_PV}_x86_64.tar.gz )
-	x86? ( http://64.34.173.142/download/4.0/Linux/nomachine_${MY_PV}_i686.tar.gz )"
+SRC_URI="amd64? ( http://web12.nomachine.com/download/4.2/Linux/nomachine_${MY_PV}_x86_64.tar.gz )
+	x86? ( http://web12.nomachine.com/download/4.2/Linux/nomachine_${MY_PV}_i686.tar.gz )"
 
 LICENSE="nomachine"
 SLOT="0"
