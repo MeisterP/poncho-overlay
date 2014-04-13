@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-inherit multilib mozextension git-2
+inherit multilib mozextension git-r3
 
 DESCRIPTION="A Firefox extension that enables Gnome Keyring integration"
 HOMEPAGE="http://github.com/infinity0/mozilla-gnome-keyring"
@@ -16,7 +16,7 @@ KEYWORDS=""
 IUSE=""
 
 DEPEND="gnome-base/gnome-keyring
-	>=www-client/firefox-22.0[-minimal]
+	>=www-client/firefox-24.0[-minimal]
 	!www-plugins/mozilla-gnome-keyring"
 RDEPEND="${DEPEND}"
 

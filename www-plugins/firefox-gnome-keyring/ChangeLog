@@ -1,3 +1,12 @@
+*firefox-gnome-keyring-0.6.10-r1 (13 Apr 2014)
+
+  13 Apr 2014; Poncho <poncho@spahan.ch> +files/fix-build-with-bash.patch,
+  +firefox-gnome-keyring-0.6.10-r1.ebuild, -files/eof.patch,
+  -firefox-gnome-keyring-0.6.10.ebuild, -firefox-gnome-keyring-0.6.9.ebuild,
+  firefox-gnome-keyring-9999.ebuild:
+  www-plugins/firefox-gnome-keyring: version bump  Fix build with bash as
+  standard scripting shell
+
 *firefox-gnome-keyring-0.6.10 (31 Mar 2014)
 
   31 Mar 2014; Poncho <poncho@spahan.ch> +files/eof.patch,
