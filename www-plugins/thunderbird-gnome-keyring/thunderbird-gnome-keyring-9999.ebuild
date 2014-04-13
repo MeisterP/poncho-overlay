@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-inherit multilib mozextension git-2
+inherit multilib mozextension git-r3
 
 DESCRIPTION="A Thunderbird extension that enables Gnome Keyring integration"
 HOMEPAGE="http://github.com/infinity0/mozilla-gnome-keyring"
@@ -16,7 +16,7 @@ KEYWORDS=""
 IUSE=""
 
 DEPEND="gnome-base/gnome-keyring
-	mail-client/thunderbird[-minimal]
+	>=mail-client/thunderbird-24.0[-minimal]
 	!www-plugins/mozilla-gnome-keyring"
 RDEPEND="${DEPEND}"
 
@@ -26,7 +26,7 @@ src_compile() {
 	#pkg-config file for Firefox/Thunderbird is missing, so we are forced to use hardcodes
 	XUL_CFLAGS="-I${MOZILLA_FIVE_HOME/$(get_libdir)/include} -I/usr/include/nspr"
 	XUL_LDFLAGS="-L${MOZILLA_FIVE_HOME} -L${MOZILLA_FIVE_HOME}/sdk/lib \
-		-lxpcomglue_s -lxul -lxpcom -lmozalloc -lmozsqlite3 -lplds4 -lplc4 \
+		-lxpcomglue_s -lxul -lmozalloc -lmozsqlite3 -lplds4 -lplc4 \
 		-lnspr4 -lpthread -ldl"
 	XPCOM_ABI_FLAGS="-Wl,-rpath=${MOZILLA_FIVE_HOME}"
 
@@ -39,14 +39,6 @@ src_compile() {
 }
 
 src_install() {
-	#mozversion_extension_location() {
-	#	if has_version >=mail-client/thunderbird-21.0; then
-	#		return 1
-	#	else
-	#		return 0
-	#	fi
-	#}
-
 	MOZILLA_FIVE_HOME="/usr/$(get_libdir)/thunderbird"
 	xpi_install "${WORKDIR}/${P}/xpi"
 

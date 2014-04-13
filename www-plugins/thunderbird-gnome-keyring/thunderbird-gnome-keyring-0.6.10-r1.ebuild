@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-inherit multilib mozextension
+inherit multilib mozextension vcs-snapshot
 
 DESCRIPTION="A Thunderbird extension that enables Gnome Keyring integration"
 HOMEPAGE="http://github.com/infinity0/mozilla-gnome-keyring"
@@ -17,13 +17,13 @@ KEYWORDS="~x86 ~amd64"
 IUSE=""
 
 DEPEND="gnome-base/gnome-keyring
-	>=mail-client/thunderbird-22.0[-minimal]
+	>=mail-client/thunderbird-24.0[-minimal]
 	!www-plugins/mozilla-gnome-keyring"
 RDEPEND="${DEPEND}"
 
-src_unpack() {
-	default
-	mv infinity0-mozilla-gnome-keyring-[0-9a-f]*[0-9a-f]/ "${S}" || die
+src_prepare() {
+	#epatch "${FILESDIR}/hide-warnings.patch"
+	epatch "${FILESDIR}/fix-build-with-bash.patch"
 }
 
 src_compile() {
@@ -45,14 +45,6 @@ src_compile() {
 }
 
 src_install() {
-	#mozversion_extension_location() {
-	#	if has_version >=mail-client/thunderbird-21.0; then
-	#		return 1
-	#	else
-	#		return 0
-	#	fi
-	#}
-
 	MOZILLA_FIVE_HOME="/usr/$(get_libdir)/thunderbird"
 	xpi_install "${WORKDIR}/${P}/xpi"
 
