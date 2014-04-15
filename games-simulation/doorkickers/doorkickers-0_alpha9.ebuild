@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ DESCRIPTION="A Real-Time Tactics game that puts you in charge of a SWAT team"
 HOMEPAGE="http://inthekillhouse.com/doorkickers//"
 SRC_URI="${MY_PN}Alpha.tar.gz"
 
-LICENSE="Unknown"
+LICENSE="all-rights-reserved"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE=""
