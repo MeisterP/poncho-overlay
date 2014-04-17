@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PrefsData>
+  <volumeGame>0.8</volumeGame>
+  <volumeMusic>0.4</volumeMusic>
+  <adaptiveTrainingEnabled>True</adaptiveTrainingEnabled>
+  <runInBackground>False</runInBackground>
+  <customCursorEnabled>True</customCursorEnabled>
+  <qualityIndex>0</qualityIndex>
+  <devMode>False</devMode>
+  <langName>en_default</langName>
+  <preferredNames>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </preferredNames>
+</PrefsData>

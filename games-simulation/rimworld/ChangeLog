@@ -1,0 +1,5 @@
+*rimworld-0_alpha3_p409 (17 Apr 2014)
+
+  17 Apr 2014; Poncho <poncho@spahan.ch> +files/Prefs.xml, +metadata.xml,
+  +rimworld-0_alpha3_p409.ebuild, -rimworld-0_alpha2_p363.ebuild:
+  games-simulation/rimworld: version bump

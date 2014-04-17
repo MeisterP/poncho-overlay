@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,13 +8,13 @@ inherit eutils gnome2-utils games
 
 MY_PV=${PV#*_p}
 MY_PN="RimWorld${MY_PV}Linux"
-MY_SRC="RimWorldAlpha2Linux"
+MY_SRC="RimWorldAlpha3cLinux"
 
 DESCRIPTION="A sci fi colony sim driven by an intelligent AI storyteller"
 HOMEPAGE="http://rimworldgame.com/"
 SRC_URI="${MY_SRC}.zip"
 
-LICENSE="Unknown"
+LICENSE="all-rights-reserved"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE=""
@@ -42,6 +42,7 @@ pkg_nofetch() {
 
 src_install() {
 	local dir=${GAMES_PREFIX_OPT}/${PN}
+	local datadir=${GAMES_STATEDIR}/${PN}
 
 	# TODO: unbundle mono and unity
 	insinto "${dir}"
@@ -57,10 +58,21 @@ src_install() {
 		games_make_wrapper ${PN} "env LC_ALL=C ./${MY_PN}.x86_64" "${dir}"
 	fi
 
+	# keep saves and configs
+	# see http://ludeon.com/forums/index.php?topic=2935.0
+	keepdir ${datadir}/{Config,Saves}
+	insinto ${datadir}
+	doins "${FILESDIR}"/Prefs.xml
+
+	dosym ${datadir}/Config $dir
+	dosym ${datadir}/Saves $dir
+	dosym ${datadir}/Prefs.xml $dir
+
 	newicon -s 256 "${FILESDIR}/rimworld___icon_by_blagoicons-d6xgbs5.png" ${PN}.png
 	make_desktop_entry ${PN} "RimWorld"
 
 	prepgamesdirs
+	fperms -R g+w ${datadir}
 }
 
 pkg_preinst() {
