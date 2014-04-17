@@ -46,11 +46,12 @@ src_install() {
 
 	insinto "${dir}"
 	doins -r data
+	doins -r data_modtemplate
 
 	exeinto "${dir}"
 	doexe ${MY_PN}
 
-	dodoc Version.txt
+	dodoc Version.txt Readme.txt
 
 	newicon -s 128 "${FILESDIR}/Door-Kickers.png" ${PN}.png
 	games_make_wrapper ${PN} "./${MY_PN}" "${dir}"
