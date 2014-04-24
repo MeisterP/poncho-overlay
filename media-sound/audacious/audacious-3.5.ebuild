@@ -28,7 +28,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( dev-util/intltool )"
 
-PDEPEND="~media-plugins/audacious-plugins-3.5_beta1"
+PDEPEND="~media-plugins/audacious-plugins-3.5"
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,
