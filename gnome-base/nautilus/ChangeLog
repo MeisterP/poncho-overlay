@@ -1,0 +1,5 @@
+*nautilus-3.12.0 (24 Apr 2014)
+
+  24 Apr 2014; Poncho <poncho@spahan.ch> +metadata.xml, +nautilus-3.12.0.ebuild,
+  -nautilus-3.10.1.ebuild:
+  gnome-base/nautilus: sync with gnome overlay

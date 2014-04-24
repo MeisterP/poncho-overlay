@@ -16,7 +16,7 @@ SLOT="0"
 
 # profiling?
 IUSE="debug exif gnome +introspection packagekit +previewer sendto tracker xmp"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 
 # FIXME: tests fails under Xvfb, but pass when building manually
 # "FAIL: check failed in nautilus-file.c, line 8307"
@@ -28,7 +28,7 @@ RESTRICT="test"
 COMMON_DEPEND="
 	>=dev-libs/glib-2.35.3:2
 	>=x11-libs/pango-1.28.3
-	>=x11-libs/gtk+-3.9.11:3[introspection?]
+	>=x11-libs/gtk+-3.11.6:3[introspection?]
 	>=dev-libs/libxml2-2.7.8:2
 	>=gnome-base/gnome-desktop-3:3=
 
