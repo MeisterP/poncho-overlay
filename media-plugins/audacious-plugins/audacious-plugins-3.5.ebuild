@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,7 +22,7 @@ RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	~media-sound/audacious-3.4.3
+	~media-sound/audacious-3.5
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	( || ( >=dev-libs/glib-2.32.2 dev-util/gdbus-codegen ) )
@@ -70,7 +70,7 @@ mp3_warning() {
 src_prepare() {
 
 	# see http://redmine.audacious-media-player.org/issues/206
-	use gnome && epatch "${FILESDIR}/notificationsupport.patch"
+	use gnome && epatch "${FILESDIR}/notificationsupport-3.5.patch"
 
 	has_version "<dev-libs/glib-2.32" && \
 		cd "${S}"/src/mpris2 && \
@@ -91,13 +91,12 @@ src_configure() {
 		$(use_enable adplug) \
 		$(use_enable aac) \
 		$(use_enable alsa) \
-		$(use_enable alsa amidiplug-alsa) \
 		$(use_enable bs2b) \
 		$(use_enable cdda cdaudio) \
 		$(use_enable cue) \
 		$(use_enable ffmpeg ffaudio) \
 		$(use_enable flac flacng) \
-		$(use_enable fluidsynth amidiplug-flsyn) \
+		$(use_enable fluidsynth amidiplug) \
 		$(use_enable flac filewriter_flac) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \
