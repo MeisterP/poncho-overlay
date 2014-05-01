@@ -8,7 +8,7 @@ inherit eutils gnome2-utils games
 
 MY_PV=${PV#*_p}
 MY_PN="RimWorld${MY_PV}Linux"
-MY_SRC="RimWorldAlpha3cLinux"
+MY_SRC="RimWorldAlpha3fLinux"
 
 DESCRIPTION="A sci fi colony sim driven by an intelligent AI storyteller"
 HOMEPAGE="http://rimworldgame.com/"
