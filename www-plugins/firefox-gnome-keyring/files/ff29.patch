@@ -1,0 +1,26 @@
+diff --git a/GnomeKeyring.cpp b/GnomeKeyring.cpp
+index 92711c8..f4da391 100644
+--- a/GnomeKeyring.cpp
++++ b/GnomeKeyring.cpp
+@@ -488,10 +488,10 @@ foundToLoginInfo(GnomeKeyringFound* found)
+   return loginInfo;
+ }
+ 
+-PRUnichar *
++char16_t *
+ foundToHost(GnomeKeyringFound* found)
+ {
+-  PRUnichar *host = NULL;
++  char16_t *host = NULL;
+ 
+   GnomeKeyringAttribute *attrArray =
+     (GnomeKeyringAttribute *)found->attributes->data;
+@@ -782,7 +782,7 @@ NS_IMETHODIMP GnomeKeyring::SearchLogins(PRUint32 *count,
+ }
+ 
+ NS_IMETHODIMP GnomeKeyring::GetAllDisabledHosts(PRUint32 *aCount,
+-                                                PRUnichar ***aHostnames)
++                                                char16_t ***aHostnames)
+ {
+   AutoFoundList foundList;
+   GnomeKeyringResult result = findHostItemsAll(&foundList);

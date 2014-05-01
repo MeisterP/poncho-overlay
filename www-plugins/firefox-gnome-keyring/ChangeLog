@@ -1,3 +1,9 @@
+*firefox-gnome-keyring-0.6.10-r2 (01 May 2014)
+
+  01 May 2014; Poncho <poncho@spahan.ch> +files/ff29.patch,
+  +firefox-gnome-keyring-0.6.10-r2.ebuild:
+  www-plugins/firefox-gnome-keyring: fix build with firefox 29
+
 *firefox-gnome-keyring-0.6.10-r1 (13 Apr 2014)
 
   13 Apr 2014; Poncho <poncho@spahan.ch> +files/fix-build-with-bash.patch,
