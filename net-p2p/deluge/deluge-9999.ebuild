@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,6 +8,7 @@ DISTUTILS_SINGLE_IMPL=1
 
 inherit readme.gentoo distutils-r1 systemd git-r3
 
+EGIT_BRANCH="develop"
 EGIT_REPO_URI="git://deluge-torrent.org/${PN}.git
 	http://git.deluge-torrent.org/${PN}/"
 
@@ -40,8 +41,6 @@ RDEPEND="${DEPEND}
 	)
 	setproctitle? ( dev-python/setproctitle[${PYTHON_USEDEP}] )
 	webinterface? ( dev-python/mako[${PYTHON_USEDEP}] )"
-
-PATCHES=( "${FILESDIR}/fix-seeing-double-torrents.patch" )
 
 DOC_CONTENTS="If it doesn't work after upgrading, please remove the
 	'~/.config/deluge' directory and try again, but make a backup
