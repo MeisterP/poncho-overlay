@@ -2,6 +2,9 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/media-plugins/audacious-plugins/ChangeLog,v 1.274 2014/01/28 14:10:03 ago Exp $
 
+  16 May 2014; Poncho <poncho@spahan.ch> audacious-plugins-3.5.ebuild:
+  media-plugins/audacious-plugins: depend on media-libs/libsdl[sound]
+
 *audacious-plugins-3.5 (24 Apr 2014)
 
   24 Apr 2014; Poncho <poncho@spahan.ch> +audacious-plugins-3.5.ebuild,

@@ -47,7 +47,7 @@ RDEPEND="app-arch/unzip
 	mp3? ( >=media-sound/mpg123-1.12.1 )
 	pulseaudio? ( >=media-sound/pulseaudio-0.9.3 )
 	scrobbler? ( net-misc/curl )
-	sdl? ( media-libs/libsdl[audio] )
+	sdl? ( media-libs/libsdl[sound] )
 	sid? ( media-libs/libsidplayfp )
 	sndfile? ( >=media-libs/libsndfile-1.0.17-r1 )
 	libsoxr? ( media-libs/soxr )
