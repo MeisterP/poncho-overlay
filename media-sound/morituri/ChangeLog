@@ -1,0 +1,7 @@
+*morituri-0.2.2-r2 (18 May 2014)
+
+  18 May 2014; Poncho <poncho@spahan.ch>
+  +files/209b7d6621eb652a230f0ba5c4c359a4c2a39ed2.patch, +metadata.xml,
+  +morituri-0.2.2-r2.ebuild, morituri-0.2.2-r1.ebuild:
+  media-sound/morituri: fix PATH_PYTHON and QA  see
+  https://github.com/thomasvs/morituri/pull/78

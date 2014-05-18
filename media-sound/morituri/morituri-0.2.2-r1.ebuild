@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -48,7 +48,7 @@ src_prepare() {
         etc/bash_completion.d/Makefile.am || die
 
 	# https://github.com/thomasvs/morituri/issues/40
-	epatch ${FILESDIR}/df0daefa27f6911167c73424ccac1c3d9480abf2.patch
+	epatch "${FILESDIR}"/df0daefa27f6911167c73424ccac1c3d9480abf2.patch
 
 	eautoreconf
 }
