@@ -21,11 +21,6 @@ DEPEND="gnome-base/gnome-keyring
 	!www-plugins/mozilla-gnome-keyring"
 RDEPEND="${DEPEND}"
 
-src_prepare() {
-	#epatch "${FILESDIR}/hide-warnings.patch"
-	epatch "${FILESDIR}/fix-build-with-bash.patch"
-}
-
 src_compile() {
 	MOZILLA_FIVE_HOME="/usr/$(get_libdir)/thunderbird"
 
