@@ -2,6 +2,14 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-modules/ChangeLog,v 1.114 2013/12/27 16:34:13 dilfridge Exp $
 
+  22 May 2014; Poncho <poncho@spahan.ch> +files/279-3.11.0.patch,
+  +files/279-3.12.0.patch, +files/279-3.14.0.patch,
+  +files/279-inline-correctly.patch, -files/279-linux-3.14.patch,
+  -files/279-vmblock-3.11.patch, -files/279-vmblock-3.12.patch,
+  -files/279-vmnet-3.13.patch, vmware-modules-279.2.ebuild:
+  app-emulation/vmware-modules: fix vmblock  see https://github.com/gmt/gmt-
+  vmware-overlal
+
 *vmware-modules-279.2 (24 Apr 2014)
 
   24 Apr 2014; Poncho <poncho@spahan.ch> +vmware-modules-279.2.ebuild,
