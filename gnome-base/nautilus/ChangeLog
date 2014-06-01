@@ -1,3 +1,9 @@
+*nautilus-3.12.2 (01 Jun 2014)
+
+  01 Jun 2014; Poncho <poncho@spahan.ch> +nautilus-3.12.2.ebuild,
+  -nautilus-3.12.0.ebuild:
+  gnome-base/nautilus: version bump
+
 *nautilus-3.12.0 (24 Apr 2014)
 
   24 Apr 2014; Poncho <poncho@spahan.ch> +metadata.xml, +nautilus-3.12.0.ebuild,
