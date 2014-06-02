@@ -32,3 +32,9 @@ RDEPEND="${DEPEND}
 	x11-libs/libnotify[introspection]"
 
 DOCS=( README.md NEWS )
+
+python_install() {
+	distutils-r1_python_install
+	doman data/mailnag-config.1
+	doman data/mailnagd.1
+}
