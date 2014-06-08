@@ -1,3 +1,9 @@
+*rimworld-0_alpha4_p466 (08 Jun 2014)
+
+  08 Jun 2014; Poncho <poncho@spahan.ch> +rimworld-0_alpha4_p466.ebuild,
+  -files/Prefs.xml, -rimworld-0_alpha3_p413.ebuild:
+  games-simulation/rimworld: version bump
+
 *rimworld-0_alpha3_p413 (01 May 2014)
 
   01 May 2014; Poncho <poncho@spahan.ch> +rimworld-0_alpha3_p413.ebuild,

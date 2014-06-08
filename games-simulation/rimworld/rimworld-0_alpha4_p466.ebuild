@@ -8,7 +8,7 @@ inherit eutils gnome2-utils games
 
 MY_PV=${PV#*_p}
 MY_PN="RimWorld${MY_PV}Linux"
-MY_SRC="RimWorldAlpha3fLinux"
+MY_SRC="RimWorldAlpha4fLinux"
 
 DESCRIPTION="A sci fi colony sim driven by an intelligent AI storyteller"
 HOMEPAGE="http://rimworldgame.com/"
@@ -31,7 +31,7 @@ RDEPEND="virtual/opengl
 
 QA_PREBUILT="${GAMES_PREFIX_OPT}/${PN}/*"
 
-S="${WORKDIR}/${MY_PN}"
+S="${WORKDIR}/${MY_SRC}"
 
 pkg_nofetch() {
 	einfo "Please buy & download ${SRC_URI} from:"
@@ -42,12 +42,12 @@ pkg_nofetch() {
 
 src_install() {
 	local dir=${GAMES_PREFIX_OPT}/${PN}
-	local datadir=${GAMES_STATEDIR}/${PN}
 
 	# TODO: unbundle mono and unity
 	insinto "${dir}"
 	doins -r ${MY_PN}_Data
 	doins -r Mods
+	doins Version.txt
 
 	exeinto "${dir}"
 	if use x86; then
@@ -58,21 +58,13 @@ src_install() {
 		games_make_wrapper ${PN} "env LC_ALL=C ./${MY_PN}.x86_64" "${dir}"
 	fi
 
-	# keep saves and configs
-	# see http://ludeon.com/forums/index.php?topic=2935.0
-	keepdir ${datadir}/{Config,Saves}
-	insinto ${datadir}
-	doins "${FILESDIR}"/Prefs.xml
-
-	dosym ${datadir}/Config $dir
-	dosym ${datadir}/Saves $dir
-	dosym ${datadir}/Prefs.xml $dir
-
 	newicon -s 256 "${FILESDIR}/rimworld___icon_by_blagoicons-d6xgbs5.png" ${PN}.png
 	make_desktop_entry ${PN} "RimWorld"
 
+	dodoc -r Source
+	dodoc Readme_{Modmaking,SaveFiles,Translations}.txt
+
 	prepgamesdirs
-	fperms -R g+w ${datadir}
 }
 
 pkg_preinst() {
