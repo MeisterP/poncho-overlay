@@ -1,3 +1,9 @@
+*nxplayer-4.2.25.1 (20 Jun 2014)
+
+  20 Jun 2014; Poncho <poncho@spahan.ch> +nxplayer-4.2.25.1.ebuild,
+  -nxplayer-4.1.29.5.ebuild:
+  net-misc/nxplayer: version bump
+
 *nxplayer-4.2.18.4 (08 Apr 2014)
 
   08 Apr 2014; Poncho <poncho@spahan.ch> +metadata.xml,
