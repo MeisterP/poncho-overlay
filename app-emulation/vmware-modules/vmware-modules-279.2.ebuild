@@ -105,6 +105,7 @@ src_prepare() {
 	# 3.12.x and 3.13.x patches
 	kernel_is ge 3 12 0 && epatch "${FILESDIR}/${PV_MAJOR}-3.12.0.patch"
 	kernel_is ge 3 14 0 && epatch "${FILESDIR}/${PV_MAJOR}-3.14.0.patch"
+	kernel_is ge 3 15 0 && epatch "${FILESDIR}/${PV_MAJOR}-kernel-3.15.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
