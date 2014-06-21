@@ -10,7 +10,7 @@ MY_PN="DoorKickers"
 
 DESCRIPTION="A Real-Time Tactics game that puts you in charge of a SWAT team"
 HOMEPAGE="http://inthekillhouse.com/doorkickers//"
-SRC_URI="${MY_PN}Alpha.tar.gz"
+SRC_URI="${MY_PN}.tar.gz"
 
 LICENSE="all-rights-reserved"
 SLOT="0"
@@ -46,7 +46,7 @@ src_install() {
 
 	insinto "${dir}"
 	doins -r data
-	doins -r data_modtemplate
+	doins -r mods
 
 	exeinto "${dir}"
 	doexe ${MY_PN}
