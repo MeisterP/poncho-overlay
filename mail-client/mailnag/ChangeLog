@@ -1,3 +1,9 @@
+*mailnag-1.0.0 (29 Jun 2014)
+
+  29 Jun 2014; Poncho <poncho@spahan.ch> +mailnag-1.0.0.ebuild,
+  -mailnag-0.5.2-r1.ebuild:
+  mail-client/mailnag: version bump
+
   21 Jun 2014; Poncho <poncho@spahan.ch> mailnag-9999.ebuild:
   mail-client/mailnag: update
 

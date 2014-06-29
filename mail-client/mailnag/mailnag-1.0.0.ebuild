@@ -1,16 +1,16 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7} )
+PYTHON_COMPAT=( python2_7 )
 
-inherit distutils-r1
+inherit gnome2-utils distutils-r1
 
 DESCRIPTION="Mail nagger for gnome-shell (port of popper for unity)"
 HOMEPAGE="http://launchpad.net/mailnag"
-SRC_URI="https://github.com/pulb/${PN}/archive/${PV}.tar.gz"
+SRC_URI="https://github.com/pulb/${PN}/archive/v${PV}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -27,10 +27,25 @@ RDEPEND="${DEPEND}
 	dev-python/gnome-keyring-python
 	gnome-base/libgnome-keyring[introspection]
 	media-libs/gstreamer[introspection]
+	x11-libs/gdk-pixbuf[introspection]
 	x11-libs/libnotify[introspection]"
 
 DOCS=( README.md NEWS )
 
-src_prepare() {
-	sed -i -e 's|./mailnag|mailnag|' ${S}/mailnag_config
+python_install() {
+	distutils-r1_python_install
+	doman data/mailnag-config.1
+	doman data/mailnagd.1
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
 }
