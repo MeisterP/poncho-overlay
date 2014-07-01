@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}"
 S=${WORKDIR}/RockboxUtility-v${PV}/${PN}/${PN}qt
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-accessibility.patch
+	epatch "${FILESDIR}"/${PN}-1.3.1-accessibility.patch
 }
 
 src_configure() {
