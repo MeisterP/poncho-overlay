@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-GIT_COMMIT=65cd406
+GIT_COMMIT=9574b30
 
 DESCRIPTION="time-sync is a utility to sync the time with a Rockbox target"
 HOMEPAGE="http://www.rockbox.org/wiki/IpodTimeSync"
@@ -20,7 +20,7 @@ IUSE=""
 DEPEND="sys-apps/sg3_utils"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}/rockbox-${GIT_COMMIT}"
+S="${WORKDIR}/rockbox-${GIT_COMMIT}/utils/time-sync"
 
 src_install() {
 	dobin time-sync
