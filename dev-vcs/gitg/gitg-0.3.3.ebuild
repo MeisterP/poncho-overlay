@@ -28,7 +28,7 @@ RDEPEND="
 	>=dev-libs/glib-2.38:2
 	>=dev-libs/gobject-introspection-0.10.1
 	dev-libs/libgit2[threads]
-	>=dev-libs/libgit2-glib-0.0.10
+	>=dev-libs/libgit2-glib-0.0.18
 	>=dev-libs/libpeas-1.5.0[gtk]
 	>=gnome-base/gsettings-desktop-schemas-0.1.1
 	>=net-libs/webkit-gtk-2.2:3[introspection]
