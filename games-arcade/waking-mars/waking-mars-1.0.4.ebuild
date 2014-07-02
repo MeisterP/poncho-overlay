@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@ DESCRIPTION="Bring a sleeping planet back to life"
 HOMEPAGE="http://www.tigerstylegames.com/wakingmars/"
 
 SLOT="0"
-LICENSE="EULA"
+LICENSE="all-rights-reserved"
 KEYWORDS="-* ~amd64 ~x86"
 RESTRICT="mirror"
 IUSE="multilib"

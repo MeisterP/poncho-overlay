@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@ DESCRIPTION="Platform game where you manipulate flow of time"
 HOMEPAGE="http://braid-game.com"
 SRC_URI="${PN}-linux-build${PV/1.0./}.run.bin"
 
-LICENSE="Arphic CCPL-Attribution-ShareAlike-NonCommercial-1.0 MIT"
+LICENSE="Arphic CC-BY-NC-ND-1.0 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 

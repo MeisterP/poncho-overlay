@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,7 @@ DESCRIPTION="Play as a single-celled organism absorbing others"
 HOMEPAGE="http://www.hemispheregames.com/osmos/"
 SRC_URI="${MY_P}.tar.gz"
 
-LICENSE="OSMOS"
+LICENSE="all-rights-reserved"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE=""

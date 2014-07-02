@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,7 +16,7 @@ SRC_URI="amd64? ( andyetitmoves-${PV}${MY_REV}_x86_64.tar.gz )"
 	 #x86? ( andyetitmoves-${PV}${MY_REV}_i386.tar.gz )"
 
 RESTRICT="fetch"
-LICENSE=""
+LICENSE="all-rights-reserved"
 
 SLOT="0"
 KEYWORDS="~amd64" #~x86
