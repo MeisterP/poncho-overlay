@@ -21,15 +21,15 @@ DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
 	media-sound/cdparanoia
 	app-cdr/cdrdao
-	media-libs/gstreamer
-	media-libs/gst-plugins-base
-	alac? ( media-plugins/gst-plugins-ffmpeg )
+	media-libs/gstreamer:0.10
+	media-libs/gst-plugins-base:0.10
+	alac? ( media-plugins/gst-plugins-ffmpeg:0.10 )
 	cdio? ( dev-python/pycdio )
 	cddb? ( dev-python/cddb-py )
-	flac? ( media-plugins/gst-plugins-flac )
-	wav? ( media-libs/gst-plugins-good )
-	wavpack? ( media-plugins/gst-plugins-wavpack )
-	dev-python/gst-python[${PYTHON_USEDEP}]
+	flac? ( media-plugins/gst-plugins-flac:0.10 )
+	wav? ( media-libs/gst-plugins-good:0.10 )
+	wavpack? ( media-plugins/gst-plugins-wavpack:0.10 )
+	dev-python/gst-python:0.10[${PYTHON_USEDEP}]
 	dev-python/python-musicbrainz[${PYTHON_USEDEP}]
 	dev-python/pygobject[${PYTHON_USEDEP}]
 	dev-python/pygtk[${PYTHON_USEDEP}]
