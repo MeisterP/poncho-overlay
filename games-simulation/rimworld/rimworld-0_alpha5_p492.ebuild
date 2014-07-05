@@ -8,7 +8,7 @@ inherit eutils gnome2-utils games
 
 MY_PV=${PV#*_p}
 MY_PN="RimWorld${MY_PV}Linux"
-MY_SRC="RimWorldAlpha4fLinux"
+MY_SRC="RimWorldAlpha${PV:7:1}Linux"
 
 DESCRIPTION="A sci fi colony sim driven by an intelligent AI storyteller"
 HOMEPAGE="http://rimworldgame.com/"
@@ -31,7 +31,7 @@ RDEPEND="virtual/opengl
 
 QA_PREBUILT="${GAMES_PREFIX_OPT}/${PN}/*"
 
-S="${WORKDIR}/${MY_SRC}"
+S="${WORKDIR}/${MY_PN}"
 
 pkg_nofetch() {
 	einfo "Please buy & download ${SRC_URI} from:"
@@ -43,20 +43,22 @@ pkg_nofetch() {
 src_install() {
 	local dir=${GAMES_PREFIX_OPT}/${PN}
 
+	exeinto "${dir}"
+	if use x86; then
+		doexe ${MY_PN}.x86
+		games_make_wrapper ${PN} "env LC_ALL=C ./${MY_PN}.x86" "${dir}"
+		rm -r ${MY_PN}_Data/{Mono,Plugins}/x86_64 || die "failed to remove 64bit files"
+	else
+		doexe ${MY_PN}.x86_64
+		games_make_wrapper ${PN} "env LC_ALL=C ./${MY_PN}.x86_64" "${dir}"
+		rm -r ${MY_PN}_Data/{Mono,Plugins}/x86 || die "failed to remove 32bit files"
+	fi
+
 	# TODO: unbundle mono and unity
 	insinto "${dir}"
 	doins -r ${MY_PN}_Data
 	doins -r Mods
 	doins Version.txt
-
-	exeinto "${dir}"
-	if use x86; then
-		doexe ${MY_PN}.x86
-		games_make_wrapper ${PN} "env LC_ALL=C ./${MY_PN}.x86" "${dir}"
-	else
-		doexe ${MY_PN}.x86_64
-		games_make_wrapper ${PN} "env LC_ALL=C ./${MY_PN}.x86_64" "${dir}"
-	fi
 
 	newicon -s 256 "${FILESDIR}/rimworld___icon_by_blagoicons-d6xgbs5.png" ${PN}.png
 	make_desktop_entry ${PN} "RimWorld"
