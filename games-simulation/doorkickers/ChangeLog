@@ -1,3 +1,8 @@
+*doorkickers-0_beta1-r1 (07 Jul 2014)
+
+  07 Jul 2014; Poncho <poncho@spahan.ch> +doorkickers-0_beta1-r1.ebuild:
+  games-simulation/doorkickers: add multilib support
+
 *doorkickers-0_beta1 (21 Jun 2014)
 
   21 Jun 2014; Poncho <poncho@spahan.ch> +doorkickers-0_beta1.ebuild,
