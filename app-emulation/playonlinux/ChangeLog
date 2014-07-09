@@ -1,0 +1,4 @@
+*playonlinux-4.2.2-r1 (09 Jul 2014)
+
+  09 Jul 2014; Poncho <poncho@spahan.ch> +playonlinux-4.2.2-r1.ebuild:
+  app-emulation/playonlinux: use python-single-r1.eclass
