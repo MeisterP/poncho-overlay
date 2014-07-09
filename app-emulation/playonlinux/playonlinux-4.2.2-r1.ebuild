@@ -70,9 +70,9 @@ src_install() {
 
 	# bash/ install
 	exeinto "${GAMES_DATADIR}/${PN}/bash"
-	find "${S}/bash" -type f -exec doexe '{}' +
+	find "${S}/bash/" -maxdepth 1 -type f -exec doexe '{}' +
 	exeinto "${GAMES_DATADIR}/${PN}/bash/expert"
-	find "${S}/bash/expert" -type f -exec doexe '{}' +
+	find "${S}/bash/expert/" -maxdepth 1 -type f -exec doexe '{}' +
 
 	# python/ install
 	python_moduleinto "${GAMES_DATADIR}/${PN}"
