@@ -9,8 +9,8 @@ MY_PV="$(replace_version_separator 3 '_')"
 
 DESCRIPTION="New NX client interface"
 HOMEPAGE="http://www.nomachine.com/"
-SRC_URI="amd64? ( http://web12.nomachine.com/download/4.2/Linux/nomachine_${MY_PV}_x86_64.tar.gz )
-	x86? ( http://web12.nomachine.com/download/4.2/Linux/nomachine_${MY_PV}_i686.tar.gz )"
+SRC_URI="amd64? ( http://download.nomachine.com/download/4.2/Linux/nomachine_${MY_PV}_x86_64.tar.gz )
+	x86? ( http://download.nomachine.com/download/4.2/Linux/nomachine_${MY_PV}_i686.tar.gz )"
 
 LICENSE="nomachine"
 SLOT="0"
