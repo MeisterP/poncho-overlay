@@ -1,3 +1,6 @@
+  12 Jul 2014; Poncho <poncho@spahan.ch> deluge-9999.ebuild:
+  net-p2p/deluge: use distutils-r1_python_{prepare,install}_all
+
   11 May 2014; Poncho <poncho@spahan.ch> +metadata.xml,
   -files/fix-seeing-double-torrents.patch, deluge-9999.ebuild:
   net-p2p/deluge: switch to develop branch

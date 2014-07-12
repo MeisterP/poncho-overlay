@@ -50,8 +50,8 @@ DOC_CONTENTS="If it doesn't work after upgrading, please remove the
 	/etc/init.d/deluged start as root.
 	For more information look at http://dev.deluge-torrent.org/wiki/Faq"
 
-python_prepare() {
-	distutils-r1_python_prepare
+python_prepare_all() {
+	distutils-r1_python_prepare_all
 	python_fix_shebang .
 }
 
@@ -59,8 +59,8 @@ distutils-r1_python_compile() {
 	esetup.py build
 }
 
-python_install() {
-	distutils-r1_python_install
+python_install_all() {
+	distutils-r1_python_install_all
 	readme.gentoo_create_doc
 	newinitd "${FILESDIR}"/deluged.init deluged
 	newconfd "${FILESDIR}"/deluged.conf deluged
