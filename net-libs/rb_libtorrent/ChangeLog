@@ -2,6 +2,12 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/net-libs/rb_libtorrent/ChangeLog,v 1.173 2014/05/10 10:16:46 hwoarang Exp $
 
+*rb_libtorrent-0.16.17 (13 Jul 2014)
+
+  13 Jul 2014; Poncho <poncho@spahan.ch> +rb_libtorrent-0.16.17.ebuild,
+  -rb_libtorrent-0.16.16.ebuild, metadata.xml:
+  net-libs/rb_libtorrent: version bump
+
 *rb_libtorrent-0.16.16 (10 May 2014)
 
   10 May 2014; Markos Chandras <hwoarang@gentoo.org>
