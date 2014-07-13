@@ -1,19 +1,19 @@
 diff --git a/bash/expert/PolShell b/bash/expert/PolShell
-index d2afad0..37777f7 100755
+index a03ccf4..685a802 100755
 --- a/bash/expert/PolShell
 +++ b/bash/expert/PolShell
-@@ -20,5 +20,4 @@
- [ "$PLAYONLINUX" = "" ] && exit 0
+@@ -21,5 +21,4 @@
  source "$PLAYONLINUX/lib/sources"
  
+ POL_Internal_SetXQuartzDisplay
 -[ "$DEBIAN_PACKAGE" = "FALSE" ] && TITLEADD="-T $APPLICATION_TITLE"
  "$POL_TERM" $TITLEADD -e "$PLAYONLINUX/bash/polshell"
 diff --git a/lib/playonlinux.lib b/lib/playonlinux.lib
-index 61144e6..dc60b17 100755
+index 02cd095..ff57210 100755
 --- a/lib/playonlinux.lib
 +++ b/lib/playonlinux.lib
-@@ -226,7 +226,7 @@ EOF
- 	fi
+@@ -227,7 +227,7 @@ POL_OpenShell()
+ 	) >  "$POL_USER_ROOT/tmp/env_bash"
  	echo bash --rcfile "$POL_USER_ROOT/tmp/env_bash" > "$POL_USER_ROOT/tmp/env_bash2"
  	chmod +x "$POL_USER_ROOT/tmp/env_bash2"
 -	xterm -e "$POL_USER_ROOT/tmp/env_bash2" -T "$APPLICATION_TITLE"
@@ -21,8 +21,17 @@ index 61144e6..dc60b17 100755
  }
  
  
+@@ -865,7 +865,7 @@ POL_Sudo()
+ 				SUDO_COMMAND="kdesu --"
+ 				unset kdesu
+ 			elif which sudo; then
+-				SUDO_COMMAND="xterm -e sudo"
++				SUDO_COMMAND="$POL_TERM -e sudo"
+ 				unset sudo
+ 			else
+ 				NOSUDO="TRUE"
 diff --git a/lib/variables b/lib/variables
-index 9dbd491..a3728a0 100755
+index 9f651ad..30522d7 100755
 --- a/lib/variables
 +++ b/lib/variables
 @@ -32,7 +32,8 @@ alias find="find -H"
@@ -36,13 +45,13 @@ index 9dbd491..a3728a0 100755
  
  ### Desktop
 diff --git a/python/mainwindow.py b/python/mainwindow.py
-index 53921b0..4922a13 100755
+index e392681..436a7a5 100755
 --- a/python/mainwindow.py
 +++ b/python/mainwindow.py
-@@ -1231,7 +1231,7 @@ class PlayOnLinuxApp(wx.App):
+@@ -1217,7 +1217,7 @@ class PlayOnLinuxApp(wx.App):
          self.singleCheckFatal("gpg", package="GnuPG")
  
-         if(os.environ["DEBIAN_PACKAGE"] == "FALSE"):
+         if(os.environ["DEBIAN_PACKAGE"] == "FALSE" and os.environ["POL_OS"] != "Mac"):
 -            self.singleCheck("xterm")
 +            self.singleCheck("gnome-terminal")
          self.singleCheck("gettext.sh", package="gettext")  # gettext-base on Debian

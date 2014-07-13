@@ -1,3 +1,10 @@
+*playonlinux-4.2.3 (13 Jul 2014)
+
+  13 Jul 2014; Poncho <poncho@spahan.ch> +playonlinux-4.2.3.ebuild,
+  -playonlinux-4.2.2-r1.ebuild, -playonlinux-4.2.2.ebuild,
+  files/Add-gnome-terminal-support.patch:
+  app-emulation/playonlinux: version bump
+
   09 Jul 2014; Poncho <poncho@spahan.ch> playonlinux-4.2.2-r1.ebuild:
   app-emulation/playonlinux: fix find command
 
