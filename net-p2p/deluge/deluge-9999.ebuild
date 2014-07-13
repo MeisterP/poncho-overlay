@@ -6,7 +6,7 @@ EAPI=5
 PYTHON_COMPAT=( python{2_6,2_7} )
 DISTUTILS_SINGLE_IMPL=1
 
-inherit readme.gentoo distutils-r1 systemd git-r3
+inherit git-r3 readme.gentoo systemd distutils-r1
 
 EGIT_BRANCH="develop"
 EGIT_REPO_URI="git://deluge-torrent.org/${PN}.git
@@ -55,8 +55,9 @@ python_prepare_all() {
 	python_fix_shebang .
 }
 
-distutils-r1_python_compile() {
-	esetup.py build
+_distutils-r1_create_setup_cfg() {
+	# plugins fail to install otherwise...
+	einfo "skip distutils-r1_create_setup_cfg"
 }
 
 python_install_all() {
