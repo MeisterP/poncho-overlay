@@ -1,3 +1,8 @@
+*morituri-0.2.3 (16 Jul 2014)
+
+  16 Jul 2014; Poncho <poncho@spahan.ch> +morituri-0.2.3.ebuild:
+  media-sound/morituri: version bump
+
   02 Jul 2014; Poncho <poncho@spahan.ch> -morituri-0.2.2-r1.ebuild,
   morituri-0.2.2-r2.ebuild:
   media-sound/morituri: use slotted gstreamer
