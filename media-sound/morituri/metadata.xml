@@ -5,9 +5,4 @@
   <email>poncho@spahan.ch</email>
   <name>Poncho</name>
 </maintainer>
-<use>
-	<flag name='alac'>Add support for Apple Lossless Audio Codec files</flag>
-	<flag name='cdio'>Support drive identification</flag>
-	<flag name='wav'>Add support for WAVE files</flag>
-</use>
 </pkgmetadata>

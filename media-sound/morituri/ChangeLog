@@ -1,3 +1,7 @@
+  17 Jul 2014; Poncho <poncho@spahan.ch> -morituri-0.2.2-r2.ebuild,
+  metadata.xml, morituri-0.2.3.ebuild:
+  media-sound/morituri: ebuild cleanup
+
 *morituri-0.2.3 (16 Jul 2014)
 
   16 Jul 2014; Poncho <poncho@spahan.ch> +morituri-0.2.3.ebuild:
