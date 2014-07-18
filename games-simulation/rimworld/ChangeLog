@@ -1,3 +1,9 @@
+*rimworld-0_alpha5_p496 (18 Jul 2014)
+
+  18 Jul 2014; Poncho <poncho@spahan.ch> +rimworld-0_alpha5_p496.ebuild,
+  -rimworld-0_alpha5_p492.ebuild:
+  games-simulation/rimworld: version bump
+
 *rimworld-0_alpha5_p492 (05 Jul 2014)
 
   05 Jul 2014; Poncho <poncho@spahan.ch> +rimworld-0_alpha5_p492.ebuild,
