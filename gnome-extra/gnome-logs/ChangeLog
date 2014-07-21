@@ -1,3 +1,9 @@
+*gnome-logs-3.12.2 (21 Jul 2014)
+
+  21 Jul 2014; Poncho <poncho@spahan.ch> +gnome-logs-3.12.2.ebuild,
+  -gnome-logs-3.12.1.ebuild:
+  gnome-extra/gnome-logs: version bump
+
 *gnome-logs-3.12.1 (21 Jul 2014)
 
   21 Jul 2014; Poncho <poncho@spahan.ch> +gnome-logs-3.12.1.ebuild,
