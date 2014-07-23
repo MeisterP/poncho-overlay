@@ -39,6 +39,11 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
+src_prepare() {
+	epatch_user
+	gnome2_src_configure
+}
+
 src_configure() {
 	gnome2_src_configure \
 		$(use_enable bluetooth) \
