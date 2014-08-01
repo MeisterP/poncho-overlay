@@ -5,4 +5,7 @@
     <email>poncho@spahan.ch</email>
     <name>Poncho</name>
   </maintainer>
+  <use>
+    <flag name="chardet">Try to handle non-UTF8 chinese/japanese/korean ID3 tags</flag>
+  </use>
 </pkgmetadata>

@@ -15,20 +15,21 @@ LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-IUSE="nls"
+IUSE="chardet nls"
 
-RDEPEND=">=dev-libs/glib-2.30
+RDEPEND=">=dev-libs/dbus-glib-0.60
+	>=dev-libs/glib-2.28
 	dev-libs/libxml2
-	dev-util/gdbus-codegen
 	>=x11-libs/cairo-1.2.6
 	>=x11-libs/pango-1.8.0
 	x11-libs/gtk+:3"
 
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
+	chardet? ( >=app-i18n/libguess-1.2 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND="~media-plugins/audacious-plugins-3.5"
+PDEPEND="~media-plugins/audacious-plugins-3.5.1"
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,
@@ -38,8 +39,7 @@ src_configure() {
 	# Bugs #197894, #199069, #207330, #208606
 	econf \
 		--enable-dbus \
-		--disable-valgrind \
-		--disable-chardet \
+		$(use_enable chardet) \
 		$(use_enable nls)
 }
 
