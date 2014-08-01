@@ -14,24 +14,23 @@ SRC_URI="http://distfiles.audacious-media-player.org/${MY_P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome jack lame libnotify
-	libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile
-	libsoxr vorbis spectrum wavpack"
+IUSE="aac adplug alsa bs2b cdda cue ffmpeg flac fluidsynth gnome jack
+lame libnotify libsamplerate lirc midi mms mp3 nls pulseaudio scrobbler sdl sid sndfile vorbis wavpack"
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	~media-sound/audacious-3.5
+	~media-sound/audacious-3.5.1
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
-	( || ( >=dev-libs/glib-2.32.2 dev-util/gdbus-codegen ) )
+	( || ( >=dev-libs/glib-2.32.2[utils] dev-util/gdbus-codegen ) )
 	aac? ( >=media-libs/faad2-2.7 )
 	adplug? ( >=dev-cpp/libbinio-1.4 )
 	alsa? ( >=media-libs/alsa-lib-1.0.16 )
 	bs2b? ( media-libs/libbs2b )
 	cdda? ( >=media-libs/libcddb-1.2.1
-		|| ( dev-libs/libcdio-paranoia <dev-libs/libcdio-0.90[-minimal] ) )
+		dev-libs/libcdio-paranoia )
 	cue? ( media-libs/libcue )
 	ffmpeg? ( >=virtual/ffmpeg-0.7.3 )
 	flac? ( >=media-libs/libvorbis-1.0
@@ -48,9 +47,8 @@ RDEPEND="app-arch/unzip
 	pulseaudio? ( >=media-sound/pulseaudio-0.9.3 )
 	scrobbler? ( net-misc/curl )
 	sdl? ( media-libs/libsdl[sound] )
-	sid? ( media-libs/libsidplayfp )
+	sid? ( >=media-libs/libsidplayfp-1.0.0 )
 	sndfile? ( >=media-libs/libsndfile-1.0.17-r1 )
-	libsoxr? ( media-libs/soxr )
 	vorbis? ( >=media-libs/libvorbis-1.2.0
 		  >=media-libs/libogg-1.1.3 )
 	wavpack? ( >=media-sound/wavpack-4.50.1-r1 )"
@@ -85,8 +83,18 @@ src_prepare() {
 src_configure() {
 	mp3_warning
 
+	if use ffmpeg && has_version media-video/ffmpeg ; then
+		ffmpeg="--with-ffmpeg=ffmpeg"
+	elif use ffmpeg && has_version media-video/libav ; then
+		ffmpeg="--with-ffmpeg=libav"
+	else
+		ffmpeg="--with-ffmpeg=none"
+	fi
+
 	econf \
+		${ffmpeg} \
 		--enable-modplug \
+		--disable-soxr \
 		--enable-neon \
 		$(use_enable adplug) \
 		$(use_enable aac) \
@@ -94,7 +102,6 @@ src_configure() {
 		$(use_enable bs2b) \
 		$(use_enable cdda cdaudio) \
 		$(use_enable cue) \
-		$(use_enable ffmpeg ffaudio) \
 		$(use_enable flac flacng) \
 		$(use_enable fluidsynth amidiplug) \
 		$(use_enable flac filewriter_flac) \
@@ -113,8 +120,6 @@ src_configure() {
 		$(use_enable sdl sdlout) \
 		$(use_enable sid) \
 		$(use_enable sndfile) \
-		$(use_enable libsoxr soxr) \
 		$(use_enable vorbis) \
-		$(use_enable spectrum glspectrum) \
 		$(use_enable wavpack)
 }

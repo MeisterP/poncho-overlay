@@ -12,10 +12,8 @@
 		headphone filter</flag>
 	<flag name='cue'>Support CUE sheets using the libcue library</flag>
 	<flag name='fluidsynth'>Support FluidSynth as MIDI synth backend</flag>
-	<flag name='libsoxr'>Enables audio resampling through media-libs/soxr</flag>
 	<flag name='midi'>Build with amidi-plug (MIDI synth) support</flag>
 	<flag name='scrobbler'>Build with scrobbler/LastFM submission support</flag>
 	<flag name='sid'>Build with SID (Commodore 64 Audio) support</flag>
-	<flag name='spectrum'>enable OpenGL Spectrum Analyzer</flag>
 </use>
 </pkgmetadata>
