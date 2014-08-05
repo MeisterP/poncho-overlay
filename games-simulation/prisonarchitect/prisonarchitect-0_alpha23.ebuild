@@ -6,7 +6,7 @@ EAPI=5
 
 inherit eutils gnome2-utils games
 
-MY_PN="${PN}-${PV#*_}-linux"
+MY_PN="${PN}-${PV#*_}d-linux"
 
 DESCRIPTION="Build and Manage a Maximum Security Prison"
 HOMEPAGE="http://www.introversion.co.uk/prisonarchitect/"
