@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-  <herd>desktop-misc</herd>
+  <maintainer>
+    <email>poncho@spahan.ch</email>
+    <name>Poncho</name>
+  </maintainer>
   <longdescription lang="en">
     Zim is a WYSIWYG text editor written in Gtk2-Perl which aims to bring
     the concept of a wiki to your desktop. Every page is saved as a text
