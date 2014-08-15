@@ -1,3 +1,9 @@
+*doorkickers-0_beta3 (15 Aug 2014)
+
+  15 Aug 2014; Poncho <poncho@spahan.ch> +doorkickers-0_beta3.ebuild,
+  -doorkickers-0_beta1-r1.ebuild, -doorkickers-0_beta1.ebuild:
+  games-simulation/doorkickers: version bump
+
 *doorkickers-0_beta1-r1 (07 Jul 2014)
 
   07 Jul 2014; Poncho <poncho@spahan.ch> +doorkickers-0_beta1-r1.ebuild:
