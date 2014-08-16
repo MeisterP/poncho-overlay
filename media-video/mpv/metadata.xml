@@ -2,10 +2,9 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 <maintainer>
-	<email>nikoli@gmx.us</email>
+	<email>poncho@spahan.ch</email>
+	<name>Poncho</name>
 </maintainer>
-<herd>video</herd>
-<herd>proxy-maintainers</herd>
 <use>
 	<flag name="bluray">Enable playback of Blu-ray filesystems</flag>
 	<flag name="bs2b">Enable Bauer stereophonic-to-binaural headphone
@@ -30,7 +29,6 @@
 	<flag name="pvr">Enable Video4Linux2 MPEG PVR</flag>
 	<flag name="quvi">Enable support for streaming sites using
 		<pkg>media-libs/libquvi</pkg></flag>
-	<flag name="radio">Enable V4L2 radio interface and support</flag>
 	<flag name="sdl">Enable video and audio support via
 		<pkg>media-libs/libsdl2</pkg></flag>
 	<flag name="shm">Enable support for shm</flag>
