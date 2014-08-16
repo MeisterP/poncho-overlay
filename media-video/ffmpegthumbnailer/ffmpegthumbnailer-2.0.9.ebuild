@@ -1,17 +1,17 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/ffmpegthumbnailer/ffmpegthumbnailer-2.0.8.ebuild,v 1.9 2013/04/05 20:39:09 ssuominen Exp $
+# $Header: $
 
 EAPI=5
 inherit eutils libtool
 
 DESCRIPTION="Lightweight video thumbnailer that can be used by file managers"
 HOMEPAGE="http://code.google.com/p/ffmpegthumbnailer/"
-SRC_URI="http://${PN}.googlecode.com/files/${P}.tar.gz"
+SRC_URI="https://docs.google.com/uc?export=download&id=0B-HAKhnW2w9WMWVsdmhRdHJsOHM -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 sparc x86 ~x86-fbsd"
+KEYWORDS="~amd64 ~x86"
 IUSE="gnome gtk jpeg png"
 
 COMMON_DEPEND=">=virtual/ffmpeg-0.10.2
@@ -26,7 +26,6 @@ REQUIRED_USE="gnome? ( gtk )"
 DOCS="AUTHORS ChangeLog README"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-memcpy.patch
 	elibtoolize
 }
 
