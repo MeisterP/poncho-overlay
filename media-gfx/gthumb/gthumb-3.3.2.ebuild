@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-gfx/gthumb/gthumb-3.2.8.ebuild,v 1.3 2014/07/23 15:19:01 ago Exp $
+# $Header: $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -13,12 +13,12 @@ HOMEPAGE="https://wiki.gnome.org/Apps/gthumb"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="amd64 ~arm ~ppc ~ppc64 x86 ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~amd64 ~x86"
 IUSE="cdr exif gstreamer http jpeg json libsecret raw slideshow svg tiff test webkit webp"
 
 COMMON_DEPEND="
-	>=dev-libs/glib-2.34.0:2
-	>=x11-libs/gtk+-3.4.0:3
+	>=dev-libs/glib-2.36.0:2
+	>=x11-libs/gtk+-3.10.0:3
 
 	media-libs/libpng:0=
 	sys-libs/zlib
@@ -30,7 +30,7 @@ COMMON_DEPEND="
 	gstreamer? (
 		media-libs/gstreamer:1.0
 		media-libs/gst-plugins-base:1.0 )
-	http? ( >=net-libs/libsoup-gnome-2.36:2.4 )
+	http? ( >=net-libs/libsoup-gnome-2.42:2.4 )
 	jpeg? ( virtual/jpeg:0= )
 	json? ( >=dev-libs/json-glib-0.15.0 )
 	libsecret? ( >=app-crypt/libsecret-0.11 )
@@ -39,7 +39,7 @@ COMMON_DEPEND="
 		>=media-libs/clutter-gtk-1:1.0 )
 	svg? ( >=gnome-base/librsvg-2.34 )
 	tiff? ( media-libs/tiff:= )
-	raw? ( >=media-libs/libopenraw-0.0.8:= )
+	raw? ( >=media-libs/libraw-0.14.0:= )
 	!raw? ( media-gfx/dcraw )
 	webkit? ( >=net-libs/webkit-gtk-1.10.0:3 )
 	webp? ( >=media-libs/libwebp-0.2.0 )
@@ -80,7 +80,7 @@ src_configure() {
 		$(use_enable jpeg) \
 		$(use_enable json libjson-glib) \
 		$(use_enable libsecret) \
-		$(use_enable raw libopenraw) \
+		$(use_enable raw libraw) \
 		$(use_enable slideshow clutter) \
 		$(use_enable svg librsvg) \
 		$(use_enable test test-suite) \
