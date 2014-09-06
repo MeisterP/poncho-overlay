@@ -2,6 +2,9 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/www-client/firefox/ChangeLog,v 1.356 2014/09/05 17:34:52 jer Exp $
 
+  06 Sep 2014; Poncho <poncho@spahan.ch> firefox-32.0.ebuild, metadata.xml:
+  www-client/firefox: depend on stable media-libs/mesa
+
   05 Sep 2014; Jeroen Roovers <jer@gentoo.org> firefox-24.8.0.ebuild:
   Stable for HPPA (bug #522020).
 

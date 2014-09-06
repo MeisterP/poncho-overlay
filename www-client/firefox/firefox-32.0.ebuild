@@ -55,7 +55,7 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 RDEPEND="
 	>=dev-libs/nss-3.16.2
 	>=dev-libs/nspr-4.10.6
-	>=media-libs/mesa-10.2
+	>=media-libs/mesa-10.0
 	>=media-libs/libpng-1.6.10[apng]
 	virtual/libffi
 	gstreamer? ( media-plugins/gst-plugins-meta:1.0[ffmpeg] )
