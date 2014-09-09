@@ -1,3 +1,9 @@
+*playonlinux-4.2.5 (09 Sep 2014)
+
+  09 Sep 2014; Poncho <poncho@spahan.ch> +playonlinux-4.2.5.ebuild,
+  -playonlinux-4.2.4.ebuild:
+  app-emulation/playonlinux: version bump
+
 *playonlinux-4.2.4 (17 Jul 2014)
 
   17 Jul 2014; Poncho <poncho@spahan.ch> +playonlinux-4.2.4.ebuild,

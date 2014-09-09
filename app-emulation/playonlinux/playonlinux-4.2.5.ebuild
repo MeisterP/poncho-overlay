@@ -17,6 +17,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="gnome winbind"
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 DEPEND=""
 RDEPEND="app-emulation/wine
@@ -24,7 +25,7 @@ RDEPEND="app-emulation/wine
 	app-arch/p7zip
 	app-arch/unzip
 	app-crypt/gnupg
-	dev-python/wxpython:2.8[${PYTHON_USEDEP}]
+	dev-python/wxpython[${PYTHON_USEDEP}]
 	|| ( media-gfx/imagemagick media-gfx/graphicsmagick[imagemagick] )
 	net-misc/wget
 	x11-apps/mesa-progs
