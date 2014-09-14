@@ -1,0 +1,43 @@
+From f753e02e5f7d4f9168b7d74f29b776444be45341 Mon Sep 17 00:00:00 2001
+From: Ximin Luo <infinity0@pwned.gg>
+Date: Sun, 14 Sep 2014 01:11:00 +0100
+Subject: [PATCH 2/3] - simplify macro conditional
+
+---
+ GnomeKeyring.cpp | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/GnomeKeyring.cpp b/GnomeKeyring.cpp
+index b1e8b1b..a7c775d 100644
+--- a/GnomeKeyring.cpp
++++ b/GnomeKeyring.cpp
+@@ -634,19 +634,18 @@ NS_IMETHODIMP GnomeKeyring::Terminate(JS::MutableHandleValue _retval)
+ }
+ #endif
+ 
+-#if (HAVE_NSILMS_INITWITHFILE_2 || HAVE_NSILMS_INITWITHFILE_1)
++#if HAVE_NSILMS_INITWITHFILE_1
++NS_IMETHODIMP GnomeKeyring::InitWithFile(nsIFile *aInputFile)
++{
++  return Init();
++}
++#endif
++
+ #if HAVE_NSILMS_INITWITHFILE_2
+ NS_IMETHODIMP GnomeKeyring::InitWithFile(nsIFile *aInputFile,
+                                          nsIFile *aOutputFile)
+-#else
+-NS_IMETHODIMP GnomeKeyring::InitWithFile(nsIFile *aInputFile)
+-#endif
+ {
+-#if HAVE_NSILMS_INITALIZE_MUTABLEHANDLE
+-  return NS_ERROR_NOT_IMPLEMENTED;
+-#else
+   return Init();
+-#endif
+ }
+ #endif
+ 
+-- 
+1.8.5.5
+

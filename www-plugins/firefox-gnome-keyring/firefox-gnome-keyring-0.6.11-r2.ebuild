@@ -17,12 +17,14 @@ KEYWORDS="~x86 ~amd64"
 IUSE=""
 
 DEPEND="gnome-base/gnome-keyring
-	>=www-client/firefox-24.0[-minimal]
+	>=www-client/firefox-31.0[-minimal]
 	!www-plugins/mozilla-gnome-keyring"
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	epatch "${FILESDIR}"/e600ce95b830536bb48770a4448f91b9802ba999.patch
+	epatch "${FILESDIR}/0001-TASK-xulrunner-sdk-v32.0-support.patch"
+	epatch "${FILESDIR}/0002-simplify-macro-conditional.patch"
+#	epatch "${FILESDIR}/0003-remove-support-for-Firefox-Thunderbird-31.-31-are-st.patch"
 	default
 }
 
