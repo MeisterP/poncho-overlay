@@ -1,0 +1,233 @@
+From 89f1ba273b5a9f201181ec626c344b2a11f2fd5e Mon Sep 17 00:00:00 2001
+From: Ximin Luo <infinity0@pwned.gg>
+Date: Sun, 14 Sep 2014 12:50:33 +0100
+Subject: [PATCH 3/3] remove support for Firefox/Thunderbird <<31. 31+ are
+ still supported.
+
+---
+ GnomeKeyring.cpp | 37 +++----------------------------------
+ Makefile         |  2 +-
+ README           | 23 ++---------------------
+ config.sh        | 28 ++--------------------------
+ xpcom_abi.cpp    |  4 ----
+ 5 files changed, 8 insertions(+), 86 deletions(-)
+
+diff --git a/GnomeKeyring.cpp b/GnomeKeyring.cpp
+index a7c775d..9976c3f 100644
+--- a/GnomeKeyring.cpp
++++ b/GnomeKeyring.cpp
+@@ -37,10 +37,6 @@
+  *
+  * ***** END LICENSE BLOCK ***** */
+ 
+-#if HAVE_MOZ_BUG_956507
+-#include "mozilla/Char16.h"
+-#endif
+-
+ #include "GnomeKeyring.h"
+ #include "nsMemory.h"
+ #include "nsILoginInfo.h"
+@@ -57,12 +53,6 @@
+ #include "nsIPrefService.h"
+ #include "nsIPrefBranch.h"
+ 
+-#if HAVE_NSILMS_CHAR16_T
+-typedef char16_t _char16_t;
+-#else
+-typedef PRUnichar _char16_t;
+-#endif
+-
+ #pragma GCC visibility push(default)
+ extern "C" {
+ #include "gnome-keyring.h"
+@@ -494,10 +484,10 @@ foundToLoginInfo(GnomeKeyringFound* found)
+   return loginInfo;
+ }
+ 
+-_char16_t *
++char16_t *
+ foundToHost(GnomeKeyringFound* found)
+ {
+-  _char16_t *host = NULL;
++  char16_t *host = NULL;
+ 
+   GnomeKeyringAttribute *attrArray =
+     (GnomeKeyringAttribute *)found->attributes->data;
+@@ -560,24 +550,6 @@ foundListToArray(T (*aFoundToObject)(GnomeKeyringFound*),
+ // see https://developer.mozilla.org/En/NsILoginManagerStorage
+ // see nsILoginManagerStorage.h
+ 
+-/// The following code works around the problem that newILoginManagerStorage has a new UUID in
+-/// Firefox 4.0, but this component should be compatible with both 3.6 and 4.0.
+-
+-#define LOGIN_MANAGER_STORAGE_3_6_CID {0xe66c97cd, 0x3bcf, 0x4eee, { 0x99, 0x37, 0x38, 0xf6, 0x50, 0x37, 0x2d, 0x77 }}
+-NS_DEFINE_NAMED_CID(LOGIN_MANAGER_STORAGE_3_6_CID);
+-
+-NS_IMPL_ADDREF(GnomeKeyring)
+-NS_IMPL_RELEASE(GnomeKeyring)
+-
+-NS_INTERFACE_MAP_BEGIN(GnomeKeyring)
+-NS_INTERFACE_MAP_ENTRY(nsILoginManagerStorage)
+-  if ( aIID.Equals(kLOGIN_MANAGER_STORAGE_3_6_CID ) )
+-    foundInterface = static_cast<nsILoginManagerStorage*>(this);
+-  else
+-NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsILoginManagerStorage)
+-NS_INTERFACE_MAP_END
+-
+-// End code to deal with 4.0  / 3.6 compatibility
+ #if HAVE_NSILMS_INITALIZE_MUTABLEHANDLE
+ NS_IMETHODIMP GnomeKeyring::Initialize(JS::MutableHandleValue _retval)
+ #else
+@@ -804,7 +776,7 @@ NS_IMETHODIMP GnomeKeyring::SearchLogins(PRUint32 *count,
+ }
+ 
+ NS_IMETHODIMP GnomeKeyring::GetAllDisabledHosts(PRUint32 *aCount,
+-                                                _char16_t ***aHostnames)
++                                                char16_t ***aHostnames)
+ {
+   AutoFoundList foundList;
+   GnomeKeyringResult result = findHostItemsAll(&foundList);
+@@ -903,7 +875,6 @@ NS_IMETHODIMP GnomeKeyring::GetUiBusy(bool *aUiBusy)
+   return NS_OK;
+ }
+ 
+-#if HAVE_NSILMS_GETISLOGGEDIN
+ /**
+  * True when the master password has already been entered.
+  */
+@@ -913,8 +884,6 @@ NS_IMETHODIMP GnomeKeyring::GetIsLoggedIn(bool *aIsLoggedIn)
+   *aIsLoggedIn = TRUE;
+   return NS_OK;
+ }
+-#endif
+-
+ 
+ 
+ /* End of implementation class template. */
+diff --git a/Makefile b/Makefile
+index dcc8984..4f2fa21 100644
+--- a/Makefile
++++ b/Makefile
+@@ -62,7 +62,7 @@ else
+ endif
+ 
+ SHELL_EXPORT := $(foreach v,CXX XUL_CFLAGS XUL_LDFLAGS XPCOM_ABI_FLAGS GNOME_CFLAGS GNOME_LDFLAGS CXXFLAGS LDFLAGS,$(v)="$($(v))")
+-CXX_MACRO_EXPORT := $(foreach v,HAVE_NSILMS_CHAR16_T HAVE_NSILMS_GETISLOGGEDIN HAVE_NSILMS_INITWITHFILE_1 HAVE_NSILMS_INITWITHFILE_2 HAVE_NSILMS_INITALIZE_MUTABLEHANDLE HAVE_NSILMS_TERMINATE_MUTABLEHANDLE HAVE_NSILMS_GETALLENCRYPTEDLOGINS HAVE_MOZ_BUG_956507 HAVE_MOZGLUE,-D$(v)="$($(v))")
++CXX_MACRO_EXPORT := $(foreach v,HAVE_NSILMS_INITWITHFILE_1 HAVE_NSILMS_INITALIZE_MUTABLEHANDLE HAVE_NSILMS_TERMINATE_MUTABLEHANDLE HAVE_NSILMS_GETALLENCRYPTEDLOGINS HAVE_MOZGLUE,-D$(v)="$($(v))")
+ 
+ config.vars: config.sh GnomeKeyring.h xpcom_abi.cpp Makefile
+ 	$(SHELL_EXPORT) sh $^ > $@
+diff --git a/README b/README
+index 471195a..997db70 100644
+--- a/README
++++ b/README
+@@ -99,27 +99,8 @@ Build dependencies:
+ * libgnome-keyring-devel (may be called libgnome-keyring-dev)
+ * xulrunner-devel (may be called xulrunner-dev)
+ 
+-Tested on:
+-- Debian wheezy/sid:
+-  - Iceweasel 7.0.1, 8.0, 9.0.1, 10.0 - by infinity0
+-  - Icedove 9.0.1, 10.0.3 - by infinity0
+-  - Gnome Keyring 2.32, 3.2.2 - by infinity0
+-- Ubuntu 10.04 with Firefox 3.6.7 by <der.claudio@gmail.com>
+-- Ubuntu 10.10 with Firefox 3.6.12 and Thunderbird 3.1.6 (see bugs)
+-- Gentoo Linux with Firefox 3.6.12 and Thunderbird 3.1.6
+-- Arch Linux
+-
+-Known Bugs:
+-
+-- Ubuntu 12.04 needs extra tweaks. See [1] for a version that builds out
+-  of the box and [2] for more detailed instructions.
+-
+-- Ubuntu 8.10 with Thunderbird 3.1.6:
+-    It is necessary to copy libxul.so and libxpcom.so from
+-    /usr/lib/xulrunner-*/ into /usr/lib/thunderbird-*/ folder.
+-    See [3]. I'd be thankful for any hints why this problem exists,
+-    and its status on different distributions.
+-    - There is no problem on gentoo.
++xulrunner must be version 31 or greater. For support for older versions
++of Firefox/Thunderbird, see previous releases of this software.
+ 
+ --
+ 
+diff --git a/config.sh b/config.sh
+index d2c8136..518c8f4 100755
+--- a/config.sh
++++ b/config.sh
+@@ -13,30 +13,12 @@ XUL_VERSION=$(echo '#include "mozilla-config.h"'|
+ XUL_VER_MIN=$(echo $XUL_VERSION | sed -r -e 's/([^.]+\.[^.]+).*/\1/g')
+ XUL_VER_MAX=$(echo $XUL_VERSION | sed -rn -e 's/([^.]+).*/\1.*/gp')
+ 
+-HAVE_NSILMS_CHAR16_T=$({ cat <<EOF; } | $CXX $XUL_CFLAGS $GNOME_CFLAGS $CXXFLAGS -x c++ -w -c -o /dev/null - 2>/dev/null && echo 1 || echo 0
+-#include "$SRC_GNOME_KEYRING_H"
+-NS_IMETHODIMP GnomeKeyring::GetAllDisabledHosts(uint32_t *count, char16_t * **hostnames) { return NS_OK; }
+-EOF
+-)
+-
+-HAVE_NSILMS_GETISLOGGEDIN=$({ cat <<EOF; } | $CXX $XUL_CFLAGS $GNOME_CFLAGS $CXXFLAGS -x c++ -w -c -o /dev/null - 2>/dev/null && echo 1 || echo 0
+-#include "$SRC_GNOME_KEYRING_H"
+-NS_IMETHODIMP GnomeKeyring::GetIsLoggedIn(bool *aIsLoggedIn) { return NS_OK; }
+-EOF
+-)
+-
+ HAVE_NSILMS_INITWITHFILE_1=$({ cat <<EOF; } | $CXX $XUL_CFLAGS $GNOME_CFLAGS $CXXFLAGS -x c++ -w -c -o /dev/null - 2>/dev/null && echo 1 || echo 0
+ #include "$SRC_GNOME_KEYRING_H"
+ NS_IMETHODIMP GnomeKeyring::InitWithFile(nsIFile *aInputFile) { return NS_OK; }
+ EOF
+ )
+ 
+-HAVE_NSILMS_INITWITHFILE_2=$({ cat <<EOF; } | $CXX $XUL_CFLAGS $GNOME_CFLAGS $CXXFLAGS -x c++ -w -c -o /dev/null - 2>/dev/null && echo 1 || echo 0
+-#include "$SRC_GNOME_KEYRING_H"
+-NS_IMETHODIMP GnomeKeyring::InitWithFile(nsIFile *aInputFile, nsIFile *aOutputFile) { return NS_OK; }
+-EOF
+-)
+-
+ HAVE_NSILMS_INITALIZE_MUTABLEHANDLE=$({ cat <<EOF; } | $CXX $XUL_CFLAGS $GNOME_CFLAGS $CXXFLAGS -x c++ -w -c -o /dev/null - 2>/dev/null && echo 1 || echo 0
+ #include "$SRC_GNOME_KEYRING_H"
+ NS_IMETHODIMP GnomeKeyring::Initialize(JS::MutableHandleValue _retval) { return NS_OK; }
+@@ -55,24 +37,18 @@ NS_IMETHODIMP GnomeKeyring::GetAllEncryptedLogins(unsigned int*, nsILoginInfo***
+ EOF
+ )
+ 
+-HAVE_MOZ_BUG_956507=$({ cat <<EOF; } | $CXX $XUL_CFLAGS $GNOME_CFLAGS $CXXFLAGS -x c++ -w -c -o /dev/null - 2>/dev/null && echo 0 || echo 1
+-#include <nspr/prtypes.h>
+-#include "mozilla/Char16.h"
+-EOF
+-)
+-
+ HAVE_MOZGLUE=$($CXX $XUL_CFLAGS $XUL_LDFLAGS $XPCOM_ABI_FLAGS $CXXFLAGS $LDFLAGS -lmozglue -shared -o /dev/null && echo 1 || echo 0)
+ 
+ if [ $HAVE_MOZGLUE = 1 ]; then
+ 	XPCOM_ABI_FLAGS="$XPCOM_ABI_FLAGS -Wl,-whole-archive -lmozglue -Wl,-no-whole-archive"
+ fi
+ DST_XPCOM_ABI="$(dirname $0)/xpcom_abi"
+-$CXX $SRC_XPCOM_ABI_CPP -DHAVE_MOZ_BUG_956507="$HAVE_MOZ_BUG_956507" -o "$DST_XPCOM_ABI" \
++$CXX $SRC_XPCOM_ABI_CPP -o "$DST_XPCOM_ABI" \
+   $XUL_CFLAGS $XUL_LDFLAGS $XPCOM_ABI_FLAGS $CXXFLAGS $LDFLAGS
+ PLATFORM="$("$DST_XPCOM_ABI")"
+ 
+ for var in XUL_VERSION XUL_VER_MIN XUL_VER_MAX PLATFORM \
+-  HAVE_NSILMS_CHAR16_T HAVE_NSILMS_GETISLOGGEDIN HAVE_NSILMS_INITWITHFILE_1 HAVE_NSILMS_INITWITHFILE_2 HAVE_NSILMS_INITALIZE_MUTABLEHANDLE HAVE_NSILMS_TERMINATE_MUTABLEHANDLE HAVE_NSILMS_GETALLENCRYPTEDLOGINS HAVE_MOZ_BUG_956507 HAVE_MOZGLUE; do
++  HAVE_NSILMS_INITWITHFILE_1 HAVE_NSILMS_INITALIZE_MUTABLEHANDLE HAVE_NSILMS_TERMINATE_MUTABLEHANDLE HAVE_NSILMS_GETALLENCRYPTEDLOGINS HAVE_MOZGLUE; do
+ 	eval val=\$$var
+ 	echo export $var=$val
+ done;
+diff --git a/xpcom_abi.cpp b/xpcom_abi.cpp
+index bf8d91b..c6d0202 100644
+--- a/xpcom_abi.cpp
++++ b/xpcom_abi.cpp
+@@ -1,10 +1,6 @@
+ #include <stdio.h>
+ #include <stdint.h>
+ 
+-#if HAVE_MOZ_BUG_956507
+-#include "mozilla/Char16.h"
+-#endif
+-
+ #include "nsIXULRuntime.h"
+ #include "nsServiceManagerUtils.h"
+ #include "nsStringAPI.h"
+-- 
+1.8.5.5
+

@@ -1,3 +1,12 @@
+*thunderbird-gnome-keyring-0.6.11-r1 (14 Sep 2014)
+
+  14 Sep 2014; Poncho <poncho@spahan.ch>
+  +files/0001-TASK-xulrunner-sdk-v32.0-support.patch,
+  +files/0002-simplify-macro-conditional.patch,
+  +files/0003-remove-support-for-Firefox-Thunderbird-31.-31-are-st.patch,
+  +thunderbird-gnome-keyring-0.6.11-r1.ebuild:
+  www-plugins/thunderbird-gnome-keyring: add upstream patches
+
 *thunderbird-gnome-keyring-0.6.11 (22 May 2014)
 
   22 May 2014; Poncho <poncho@spahan.ch>
