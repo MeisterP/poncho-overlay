@@ -1,3 +1,9 @@
+*prisonarchitect-0_alpha25 (27 Sep 2014)
+
+  27 Sep 2014; Poncho <poncho@spahan.ch> +prisonarchitect-0_alpha25.ebuild,
+  -prisonarchitect-0_alpha24.ebuild:
+  games-simulation/prisonarchitect: version bump
+
 *prisonarchitect-0_alpha24 (30 Aug 2014)
 
   30 Aug 2014; Poncho <poncho@spahan.ch> +prisonarchitect-0_alpha24.ebuild,
