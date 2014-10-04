@@ -8,7 +8,7 @@ inherit eutils gnome2-utils games
 
 MY_PV=${PV#*_p}
 MY_PN="RimWorld${MY_PV}Linux"
-MY_SRC="RimWorldAlpha${PV:7:1}Linux"
+MY_SRC="RimWorldAlpha${PV:7:1}cLinux"
 
 DESCRIPTION="A sci fi colony sim driven by an intelligent AI storyteller"
 HOMEPAGE="http://rimworldgame.com/"
@@ -64,7 +64,7 @@ src_install() {
 	make_desktop_entry ${PN} "RimWorld"
 
 	dodoc -r Source
-	dodoc Readme_{Modmaking,SaveFiles,Translations}.txt
+	dodoc Readme_{Modmaking,SaveFiles,Translations}.txt Credits_FreeSounds.txt
 
 	prepgamesdirs
 }
