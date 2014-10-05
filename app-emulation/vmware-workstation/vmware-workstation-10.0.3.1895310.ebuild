@@ -1,8 +1,8 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-workstation/vmware-workstation-10.0.2.1744117.ebuild,v 1.1 2014/04/19 10:13:35 dilfridge Exp $
+# $Header: $
 
-EAPI="4"
+EAPI="5"
 
 inherit eutils versionator fdo-mime systemd gnome2-utils pam vmware-bundle
 
@@ -25,8 +25,9 @@ SRC_URI="
 LICENSE="vmware GPL-2"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
-IUSE="cups doc ovftool server vix vmware-tools"
-RESTRICT="mirror strip"
+IUSE="cups doc ovftool server systemd vix vmware-tools"
+RESTRICT="mirror strip splitdebug"
+QA_PREBUILT="*"
 
 # vmware-workstation should not use virtual/libc as this is a
 # precompiled binary package thats linked to glibc.
@@ -108,19 +109,19 @@ src_unpack() {
 		vmware-usbarbitrator \
 		vmware-vprobe
 	do
-		vmware-bundle_extract-bundle-component "${bundle}" "${component}" "${S}"
+		vmware-bundle_extract-bundle-component "${bundle}" "${component}" "${S}" || die
 	done
 
 	if use server; then
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-workstation-server #"${S}"
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-workstation-server || die
 	fi
 
 	if use vix; then
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-core vmware-vix
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1000andvSphere550 vmware-vix
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-core vmware-vix || die
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1000andvSphere550 vmware-vix || die
 	fi
 	if use ovftool; then
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-ovftool
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-ovftool || die
 	fi
 }
 
@@ -135,21 +136,6 @@ src_prepare() {
 	fi
 
 	find "${S}" -name '*.a' -delete
-
-#	clean_bundled_libs
-}
-
-clean_bundled_libs() {
-	ebegin 'Removing superfluous libraries'
-	cd lib/lib || die
-	ldconfig -p | \
-		sed 's:^\s\+\([^(]*[^( ]\).*=> /.*$:\1:g;t;d' | \
-		fgrep -vx 'libcrypto.so.0.9.8
-libssl.so.0.9.8i
-libgcr.so.0
-libglib-2.0.so.0' |
-		xargs -d'\n' -r rm -rf
-	eend
 }
 
 src_install() {
@@ -205,8 +191,6 @@ src_install() {
 		# install binaries
 		into "${VM_INSTALL_DIR}"/lib/vmware
 		dobin bin/*
-
-		dobin "${FILESDIR}"/configure-hostd.sh
 
 		dobin "${FILESDIR}"/configure-hostd.sh
 
@@ -484,7 +468,11 @@ pkg_postinst() {
 
 pkg_prerm() {
 	einfo "Stopping ${PN} for safe unmerge"
-	/etc/init.d/vmware stop
+	if use systemd; then
+		systemctl stop vmware.target
+	else
+		/etc/init.d/vmware stop
+	fi
 }
 
 pkg_postrm() {
