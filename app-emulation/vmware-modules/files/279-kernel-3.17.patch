@@ -1,0 +1,12 @@
+diff --unified --new-file --recursive --show-c-function work/vmnet-only/netif.c work-fix/vmnet-only/netif.c
+--- work/vmnet-only/netif.c	2014-04-15 02:06:21.000000000 +0200
++++ work-fix/vmnet-only/netif.c	2014-10-05 12:56:36.327689909 +0200
+@@ -149,7 +149,7 @@ VNetNetIf_Create(char *devName,  // IN:
+    memcpy(deviceName, devName, sizeof deviceName);
+    NULL_TERMINATE_STRING(deviceName);
+ 
+-   dev = alloc_netdev(sizeof *netIf, deviceName, VNetNetIfSetup);
++   dev = alloc_netdev(sizeof *netIf, deviceName, NET_NAME_UNKNOWN, VNetNetIfSetup);
+    if (!dev) {
+       retval = -ENOMEM;
+       goto out;
