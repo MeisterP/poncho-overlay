@@ -60,7 +60,7 @@ src_install() {
 	doins -r Mods
 	doins Version.txt
 
-	newicon -s 256 "${FILESDIR}/rimworld___icon_by_blagoicons-d6xgbs5.png" ${PN}.png
+	newicon -s 128 "${MY_PN}_Data/Resources/UnityPlayer.png" ${PN}.png
 	make_desktop_entry ${PN} "RimWorld"
 
 	dodoc -r Source
