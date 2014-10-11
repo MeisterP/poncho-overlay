@@ -1,0 +1,5 @@
+*SunlessSea-0.6.2.1649 (11 Oct 2014)
+
+  11 Oct 2014; Poncho <poncho@spahan.ch> +SunlessSea-0.6.2.1649.ebuild,
+  +metadata.xml:
+  games-roguelike/SunlessSea: new ebuild
