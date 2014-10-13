@@ -1,3 +1,10 @@
+*remmina-1.1.1 (13 Oct 2014)
+
+  13 Oct 2014; Poncho <poncho@spahan.ch> +remmina-1.1.1.ebuild,
+  -files/remmina-1.0.0_p20121004-avahi.patch, -remmina-1.0.0_p20130723.ebuild,
+  metadata.xml:
+  net-misc/remmina: version bump
+
 *remmina-1.0.0_p20130723 (13 Oct 2014)
 
   13 Oct 2014; Poncho <poncho@spahan.ch>

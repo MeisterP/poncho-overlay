@@ -8,7 +8,7 @@ inherit gnome2-utils cmake-utils
 
 if [[ ${PV} != 9999 ]]; then
 	inherit vcs-snapshot
-	COMMIT="b6a55ae6f4633d55f8f03e7ce2eeb5899514a8fc"
+	COMMIT="36039db8aeec720d9d2dff84017777563b4f92d1"
 	SRC_URI="https://github.com/FreeRDP/Remmina/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
 else
