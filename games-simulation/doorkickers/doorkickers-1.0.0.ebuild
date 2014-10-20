@@ -6,11 +6,11 @@ EAPI=5
 
 inherit eutils gnome2-utils games
 
-MY_PN="DoorKickers"
+MY_PN="Door Kickers"
 
 DESCRIPTION="A Real-Time Tactics game that puts you in charge of a SWAT team"
 HOMEPAGE="http://inthekillhouse.com/doorkickers/"
-SRC_URI="${MY_PN}.tar.gz"
+SRC_URI="${MY_PN/\ /}.tar.gz"
 
 LICENSE="all-rights-reserved"
 SLOT="0"
@@ -37,6 +37,8 @@ RDEPEND="sys-libs/glibc
 		)
 	)"
 
+QA_PREBUILT="${GAMES_PREFIX_OPT}/${PN}/linux_libs"
+
 S="${WORKDIR}/${MY_PN}"
 
 pkg_nofetch() {
@@ -52,16 +54,19 @@ src_install() {
 	insinto "${dir}"
 	doins -r data
 	doins -r mods
+	doins -r linux_libs
 
 	exeinto "${dir}"
-	doexe ${MY_PN}
+	doexe ${MY_PN/\ /}
 
 	dodoc Version.txt Readme.txt
 
-	newicon -s 128 "${FILESDIR}/Door-Kickers.png" ${PN}.png
-	games_make_wrapper ${PN} "./${MY_PN}" "${dir}"
+	for size in 32 48 64 128; do
+		newicon -s $size "${FILESDIR}/${MY_PN/\ /}_$size.png" ${PN}.png
+	done
+	games_make_wrapper ${PN} "./${MY_PN/\ /}" "${dir}"
 
-	make_desktop_entry ${PN} "Door Kickers"
+	make_desktop_entry ${PN} "${MY_PN}"
 
 	prepgamesdirs
 }
