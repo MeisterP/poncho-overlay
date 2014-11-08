@@ -4,9 +4,9 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7} )
+PYTHON_COMPAT=( python2_7 )
 
-inherit eutils gnome2-utils python-single-r1 scons-utils
+inherit eutils scons-utils gnome2-utils python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -15,7 +15,7 @@ SRC_URI="mirror://sourceforge/thetimelineproj/${P}.zip"
 LICENSE="GPL-3 CC-BY-SA-3.0"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="calendar doc svg"
+IUSE=""
 
 LANGS="ca de es fr gl he it lt pl pt pt_BR ru sv tr vi zh_CN"
 
@@ -28,14 +28,10 @@ DEPEND="${PYTHON_DEPS}
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
-	dev-python/pytz[${PYTHON_USEDEP}]
-	calendar? ( dev-python/icalendar[${PYTHON_USEDEP}] )
-	doc? ( dev-python/markdown[${PYTHON_USEDEP}] )
-	svg? ( dev-python/pysvg )"
+	dev-python/pytz[${PYTHON_USEDEP}]"
 
 src_prepare(){
 	epatch "${FILESDIR}/timeline-0.20.0-paths.patch"
-	cp -f "${FILESDIR}"/icons/*.png icons/
 }
 
 src_compile() {
@@ -71,6 +67,12 @@ pkg_preinst() {
 
 pkg_postinst() {
 	gnome2_icon_cache_update
+
+	elog "To get additional features, a number of optional runtime"
+	elog "dependencies may be installed:"
+	optfeature "iCalendar files support" dev-python/icalendar
+	optfeature "the builtin documentation" dev-python/markdown
+	optfeature "export to svg support" dev-python/pysvg
 }
 
 pkg_postrm() {
