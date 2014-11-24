@@ -6,7 +6,7 @@ EAPI="5"
 GCONF_DEBUG="yes"
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2
+inherit eutils gnome2
 
 DESCRIPTION="Image viewer and browser for Gnome"
 HOMEPAGE="https://wiki.gnome.org/Apps/gthumb"
@@ -39,7 +39,7 @@ COMMON_DEPEND="
 		>=media-libs/clutter-gtk-1:1.0 )
 	svg? ( >=gnome-base/librsvg-2.34 )
 	tiff? ( media-libs/tiff:= )
-	raw? ( >=media-libs/libraw-0.14.0:= )
+	raw? ( >=media-libs/libraw-0.16.0:= )
 	!raw? ( media-gfx/dcraw )
 	webkit? ( >=net-libs/webkit-gtk-1.10.0:3 )
 	webp? ( >=media-libs/libwebp-0.2.0 )
@@ -60,6 +60,7 @@ DEPEND="${COMMON_DEPEND}
 #	gnome-base/gnome-common
 
 src_prepare() {
+	epatch "${FILESDIR}/libraw.patch"
 	# Remove unwanted CFLAGS added with USE=debug 
 	sed -e 's/CFLAGS="$CFLAGS -g -O0 -DDEBUG"//' \
 		-i configure.ac -i configure || die

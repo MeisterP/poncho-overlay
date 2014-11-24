@@ -2,6 +2,10 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/media-gfx/gthumb/ChangeLog,v 1.179 2014/07/23 15:19:01 ago Exp $
 
+  24 Nov 2014; Poncho <poncho@spahan.ch> +files/libraw.patch,
+  gthumb-3.3.2.ebuild:
+  media-gfx/gthumb: fix build with libraw-0.16.0
+
 *gthumb-3.3.2 (31 Aug 2014)
 
   31 Aug 2014; Poncho <poncho@spahan.ch> +gthumb-3.3.2.ebuild,
