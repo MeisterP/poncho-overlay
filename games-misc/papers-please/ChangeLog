@@ -1,3 +1,8 @@
+  28 Nov 2014; Poncho <poncho@spahan.ch>
+  +files/papers_please___icon_by_chrisjahim-d6to4j4.png, metadata.xml,
+  papers-please-1.1.65.ebuild:
+  games-misc/papers-please: add emul-linux support, add icon
+
 *papers-please-1.1.65 (28 Nov 2014)
 
   28 Nov 2014; Poncho <poncho@spahan.ch> +metadata.xml,
