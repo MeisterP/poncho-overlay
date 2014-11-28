@@ -1,0 +1,5 @@
+*papers-please-1.1.65 (28 Nov 2014)
+
+  28 Nov 2014; Poncho <poncho@spahan.ch> +metadata.xml,
+  +papers-please-1.1.65.ebuild:
+  games-misc/papers-please: import from gx86
