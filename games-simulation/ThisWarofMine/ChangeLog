@@ -1,0 +1,5 @@
+*ThisWarofMine-1.0.0 (29 Nov 2014)
+
+  29 Nov 2014; Poncho <poncho@spahan.ch> +ThisWarofMine-1.0.0.ebuild,
+  +files/this_war_of_mine_by_gaben222222-d86ekxw.png, +metadata.xml:
+  games-simulation/ThisWarofMine: new ebuild
