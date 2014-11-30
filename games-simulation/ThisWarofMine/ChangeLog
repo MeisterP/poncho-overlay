@@ -1,3 +1,6 @@
+  30 Nov 2014; Poncho <poncho@spahan.ch> ThisWarofMine-1.0.0.ebuild:
+  games-simulation/ThisWarofMine: add elog message for media-libs/libtxc_dxtn
+
 *ThisWarofMine-1.0.0 (29 Nov 2014)
 
   29 Nov 2014; Poncho <poncho@spahan.ch> +ThisWarofMine-1.0.0.ebuild,

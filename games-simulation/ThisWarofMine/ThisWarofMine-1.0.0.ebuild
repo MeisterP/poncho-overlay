@@ -73,6 +73,11 @@ pkg_preinst() {
 
 pkg_postinst() {
 	games_pkg_postinst
+
+	elog "If you are using opensource drivers you should consider installing:"
+	elog "    media-libs/libtxc_dxtn"
+	elog "    and set the environment variable force_s3tc_enable=true"
+
 	gnome2_icon_cache_update
 }
 
