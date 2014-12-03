@@ -2,6 +2,13 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-workstation/ChangeLog,v 1.260 2014/04/26 20:37:00 dilfridge Exp $
 
+*vmware-workstation-10.0.4.2249910 (03 Dec 2014)
+
+  03 Dec 2014; Poncho <poncho@spahan.ch>
+  +vmware-workstation-10.0.4.2249910.ebuild,
+  -vmware-workstation-10.0.3.1895310.ebuild:
+  app-emulation/vmware-workstation: version bump
+
 *vmware-workstation-10.0.3.1895310 (05 Oct 2014)
 
   05 Oct 2014; Poncho <poncho@spahan.ch>
