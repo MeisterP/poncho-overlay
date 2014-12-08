@@ -8,13 +8,13 @@ inherit eutils gnome2-utils games
 
 DESCRIPTION="In war, not everyone is a soldier"
 HOMEPAGE="http://www.11bitstudios.com/games/16/this-war-of-mine"
-SRC_URI="${PN}_lin.tar.gz"
+SRC_URI="${PN}_linux_v${PV}.zip"
 
 LICENSE="all-rights-reserved"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-RESTRICT="fetch bindist splitdebug strip"
+RESTRICT="fetch bindist strip"
 
 QA_PREBUILT="${GAMES_PREFIX_OPT#/}/${PN}/*"
 
@@ -46,18 +46,23 @@ pkg_nofetch() {
 	einfo
 }
 
-src_prepare() {
-	rm libOpenAL.so || die
+src_unpack() {
+	default
+	unpack "./Linux/This War of Mine.tar.gz"
 }
 
 src_install() {
 	local dir=${GAMES_PREFIX_OPT}/${PN}
 
 	insinto "${dir}"
-	doins -r *
-	fperms +x "${dir}/This War of Mine"
+	doins -r *.{dat,idx,str}
+
 	dosym /usr/lib32/libopenal.so "${dir}"/libOpenAL.so
 
+	exeinto "${dir}"
+	doexe "This War of Mine"
+
+	dodoc Changelog.txt
 	newicon -s 256 "${FILESDIR}/this_war_of_mine_by_gaben222222-d86ekxw.png" ${PN}.png
 
 	games_make_wrapper ${PN} "\"./This War of Mine\"" "${dir}" "${dir}"
