@@ -1,3 +1,9 @@
+*remmina-1.1.2 (09 Dec 2014)
+
+  09 Dec 2014; Poncho <poncho@spahan.ch> +remmina-1.1.2.ebuild,
+  -remmina-1.1.1.ebuild:
+  net-misc/remmina: version bump, sync with gx86
+
 *remmina-1.1.1 (13 Oct 2014)
 
   13 Oct 2014; Poncho <poncho@spahan.ch> +remmina-1.1.1.ebuild,

@@ -1,15 +1,13 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/remmina/remmina-1.0.0_p20130723.ebuild,v 1.3 2014/08/27 07:59:47 pinkbyte Exp $
+# $Header: $
 
 EAPI="4"
 
 inherit gnome2-utils cmake-utils
 
 if [[ ${PV} != 9999 ]]; then
-	inherit vcs-snapshot
-	COMMIT="36039db8aeec720d9d2dff84017777563b4f92d1"
-	SRC_URI="https://github.com/FreeRDP/Remmina/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
+	SRC_URI="https://github.com/FreeRDP/Remmina/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
 else
 	inherit git-2
@@ -35,7 +33,10 @@ RDEPEND="
 	avahi? ( net-dns/avahi[gtk3] )
 	ayatana? ( dev-libs/libappindicator )
 	crypt? ( dev-libs/libgcrypt:0 )
-	freerdp? ( >=net-misc/freerdp-1.1.0_beta1_p20130710 )
+	freerdp? (
+		>=net-misc/freerdp-1.1.0_beta1_p20130710
+		<net-misc/freerdp-1.2
+	)
 	gnome-keyring? ( gnome-base/libgnome-keyring )
 	ssh? ( net-libs/libssh[sftp] )
 	telepathy? ( net-libs/telepathy-glib )
@@ -52,6 +53,8 @@ RDEPEND+="
 
 DOCS=( README )
 PATCHES=( "${FILESDIR}/remmina-external_tools.patch" )
+
+S="${WORKDIR}/Remmina-${PV}"
 
 src_configure() {
 	local mycmakeargs=(
