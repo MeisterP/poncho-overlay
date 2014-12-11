@@ -1,3 +1,9 @@
+*rimworld-0_alpha8_p652 (11 Dec 2014)
+
+  11 Dec 2014; Poncho <poncho@spahan.ch> +rimworld-0_alpha8_p652.ebuild,
+  -rimworld-0_alpha7_p584.ebuild:
+  games-simulation/rimworld: version bump
+
   11 Oct 2014; Poncho <poncho@spahan.ch>
   -files/rimworld___icon_by_blagoicons-d6xgbs5.png,
   rimworld-0_alpha7_p584.ebuild:
