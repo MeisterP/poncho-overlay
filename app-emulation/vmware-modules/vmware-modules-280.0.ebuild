@@ -16,13 +16,13 @@ SRC_URI=""
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 IUSE="pax_kernel +vmci +vsock"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	|| ( =app-emulation/vmware-player-6.0.${PV_MINOR}*
-	=app-emulation/vmware-workstation-10.0.${PV_MINOR}* )"
+	|| ( =app-emulation/vmware-player-7.0.${PV_MINOR}*
+	=app-emulation/vmware-workstation-11.0.${PV_MINOR}* )"
 
 S=${WORKDIR}
 
@@ -93,20 +93,20 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${PV_MAJOR}-makefile-kernel-dir.patch"
-	epatch "${FILESDIR}/${PV_MAJOR}-makefile-include.patch"
-	epatch "${FILESDIR}/${PV_MAJOR}-netdevice.patch"
+	epatch "${FILESDIR}/279-makefile-kernel-dir.patch"
+	epatch "${FILESDIR}/279-makefile-include.patch"
+	epatch "${FILESDIR}/279-netdevice.patch"
 	use pax_kernel && epatch "${FILESDIR}/279-hardened.patch"
-	epatch "${FILESDIR}/${PV_MAJOR}-apic.patch"
-	epatch "${FILESDIR}/${PV_MAJOR}-inline-correctly.patch"
-	kernel_is ge 3 7 0 && epatch "${FILESDIR}/${PV_MAJOR}-putname.patch"
-	kernel_is ge 3 10 0 && epatch "${FILESDIR}/${PV_MAJOR}-vmblock.patch"
-	kernel_is ge 3 11 0 && epatch "${FILESDIR}/${PV_MAJOR}-3.11.0.patch"
+	epatch "${FILESDIR}/279-apic.patch"
+	epatch "${FILESDIR}/279-inline-correctly.patch"
+	kernel_is ge 3 7 0 && epatch "${FILESDIR}/279-putname.patch"
+	kernel_is ge 3 10 0 && epatch "${FILESDIR}/279-vmblock.patch"
+	kernel_is ge 3 11 0 && epatch "${FILESDIR}/279-3.11.0.patch"
 	# 3.12.x and 3.13.x patches
-	kernel_is ge 3 12 0 && epatch "${FILESDIR}/${PV_MAJOR}-3.12.0.patch"
-	kernel_is ge 3 14 0 && epatch "${FILESDIR}/${PV_MAJOR}-3.14.0.patch"
-	kernel_is ge 3 15 0 && epatch "${FILESDIR}/${PV_MAJOR}-kernel-3.15.patch"
-	kernel_is ge 3 17 0 && epatch "${FILESDIR}/${PV_MAJOR}-kernel-3.17.patch"
+	kernel_is ge 3 12 0 && epatch "${FILESDIR}/279-3.12.0.patch"
+	#kernel_is ge 3 14 0 && epatch "${FILESDIR}/279-3.14.0.patch"
+	kernel_is ge 3 15 0 && epatch "${FILESDIR}/279-kernel-3.15.patch"
+	#kernel_is ge 3 17 0 && epatch "${FILESDIR}/279-kernel-3.17.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
