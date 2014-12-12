@@ -18,13 +18,12 @@ DESCRIPTION="Emulate a complete PC on your PC without the usual performance over
 HOMEPAGE="http://www.vmware.com/products/workstation/"
 BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/${MY_PV}/${PV_BUILD}/linux/core/"
 SRC_URI="
-	x86? ( ${BASE_URI}${MY_P}.i386.bundle.tar )
 	amd64? ( ${BASE_URI}${MY_P}.x86_64.bundle.tar )
 	https://github.com/akhuettel/systemd-vmware/archive/${SYSTEMD_UNITS_TAG}.tar.gz
 	"
 LICENSE="vmware GPL-2"
 SLOT="0"
-KEYWORDS="-* ~amd64 ~x86"
+KEYWORDS="-* ~amd64"
 IUSE="cups doc ovftool server systemd vix vmware-tools"
 RESTRICT="mirror strip splitdebug"
 QA_PREBUILT="*"
@@ -86,7 +85,7 @@ RDEPEND="dev-cpp/cairomm
 	x11-libs/startup-notification
 	x11-themes/hicolor-icon-theme
 	!app-emulation/vmware-player"
-PDEPEND="~app-emulation/vmware-modules-279.${PV_MINOR}
+PDEPEND="~app-emulation/vmware-modules-280.${PV_MINOR}
 	vmware-tools? ( app-emulation/vmware-tools )"
 
 S=${WORKDIR}
@@ -96,9 +95,7 @@ VM_HOSTD_USER="root"
 
 src_unpack() {
 	default
-	local bundle
-	use amd64 && bundle=${MY_P}.x86_64.bundle
-	use x86 && bundle=${MY_P}.i386.bundle
+	local bundle=${MY_P}.x86_64.bundle
 	local component; for component in \
 		vmware-vmx \
 		vmware-player-app \
