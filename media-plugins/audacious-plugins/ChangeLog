@@ -2,6 +2,12 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/media-plugins/audacious-plugins/ChangeLog,v 1.274 2014/01/28 14:10:03 ago Exp $
 
+*audacious-plugins-3.6_alpha1 (12 Dec 2014)
+
+  12 Dec 2014; Poncho <poncho@spahan.ch> +audacious-plugins-3.6_alpha1.ebuild,
+  -audacious-plugins-3.5.2.ebuild, -files/notificationsupport-3.5.patch:
+  media-plugins/audacious-plugins: version bump
+
 *audacious-plugins-3.5.2 (01 Nov 2014)
 
   01 Nov 2014; Poncho <poncho@spahan.ch> +audacious-plugins-3.5.2.ebuild,

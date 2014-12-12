@@ -5,7 +5,7 @@
 EAPI=5
 inherit eutils
 
-MY_P="${P/_/-}"
+MY_P="${P/_/-}-gtk3"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Audacious Player - Your music, your way, no exceptions"
 HOMEPAGE="http://audacious-media-player.org/"
@@ -21,7 +21,7 @@ RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	~media-sound/audacious-3.5.2
+	~media-sound/audacious-3.6_alpha1
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	( || ( >=dev-libs/glib-2.32.2[utils] dev-util/gdbus-codegen ) )
@@ -66,10 +66,6 @@ mp3_warning() {
 }
 
 src_prepare() {
-
-	# see http://redmine.audacious-media-player.org/issues/206
-	use gnome && epatch "${FILESDIR}/notificationsupport-3.5.patch"
-
 	has_version "<dev-libs/glib-2.32" && \
 		cd "${S}"/src/mpris2 && \
 		gdbus-codegen --interface-prefix org.mpris. \
@@ -121,5 +117,7 @@ src_configure() {
 		$(use_enable sid) \
 		$(use_enable sndfile) \
 		$(use_enable vorbis) \
-		$(use_enable wavpack)
+		$(use_enable wavpack) \
+		--enable-gtk \
+		--disable-qt
 }
