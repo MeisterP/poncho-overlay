@@ -2,6 +2,17 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-workstation/ChangeLog,v 1.260 2014/04/26 20:37:00 dilfridge Exp $
 
+  14 Dec 2014; Poncho <poncho@spahan.ch>
+  +files/systemd-vmware-gentoo/vmware-authentication.service,
+  +files/systemd-vmware-gentoo/vmware-usb.service,
+  +files/systemd-vmware-gentoo/vmware-vmci.service,
+  +files/systemd-vmware-gentoo/vmware-vmmon.service,
+  +files/systemd-vmware-gentoo/vmware-vmnet.service,
+  +files/systemd-vmware-gentoo/vmware-vmsock.service,
+  +files/systemd-vmware-gentoo/vmware.target,
+  vmware-workstation-11.0.0.2305329.ebuild:
+  app-emulation/vmware-workstation: fix module path
+
 *vmware-workstation-11.0.0.2305329 (12 Dec 2014)
 
   12 Dec 2014; Poncho <poncho@spahan.ch>

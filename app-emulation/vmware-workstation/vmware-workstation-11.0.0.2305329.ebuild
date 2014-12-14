@@ -12,15 +12,12 @@ PV_MINOR=$(get_version_component_range 3)
 PV_BUILD=$(get_version_component_range 4)
 MY_P="${MY_PN}-${MY_PV}-${PV_BUILD}"
 
-SYSTEMD_UNITS_TAG="gentoo-01"
-
 DESCRIPTION="Emulate a complete PC on your PC without the usual performance overhead of most emulators"
 HOMEPAGE="http://www.vmware.com/products/workstation/"
 BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/${MY_PV}/${PV_BUILD}/linux/core/"
 SRC_URI="
-	amd64? ( ${BASE_URI}${MY_P}.x86_64.bundle.tar )
-	https://github.com/akhuettel/systemd-vmware/archive/${SYSTEMD_UNITS_TAG}.tar.gz
-	"
+	amd64? ( ${BASE_URI}${MY_P}.x86_64.bundle.tar )"
+	#https://github.com/akhuettel/systemd-vmware/archive/${SYSTEMD_UNITS_TAG}.tar.gz
 LICENSE="vmware GPL-2"
 SLOT="0"
 KEYWORDS="-* ~amd64"
@@ -441,7 +438,7 @@ src_install() {
 	fi
 
 	# install systemd unit files
-	systemd_dounit "${WORKDIR}/systemd-vmware-${SYSTEMD_UNITS_TAG}/"*.{service,target}
+	systemd_dounit "${FILESDIR}/systemd-vmware-gentoo/"*.{service,target}
 }
 
 pkg_config() {
