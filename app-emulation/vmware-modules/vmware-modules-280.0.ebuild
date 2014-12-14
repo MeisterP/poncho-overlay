@@ -17,7 +17,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="pax_kernel +vmci +vsock"
+IUSE="pax_kernel"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
@@ -51,16 +51,8 @@ pkg_setup() {
 	if kernel_is ge 2 6 37 && kernel_is lt 2 6 39; then
 		CONFIG_CHECK="${CONFIG_CHECK} BKL"
 	fi
-	if use vmci ; then
-		CONFIG_CHECK="${CONFIG_CHECK} !VMWARE_VMCI"
-	else
-		CONFIG_CHECK="${CONFIG_CHECK} VMWARE_VMCI"
-	fi
-	if use vsock ; then
-		CONFIG_CHECK="${CONFIG_CHECK} !VMWARE_VMCI_VSOCKETS"
-	else
-		CONFIG_CHECK="${CONFIG_CHECK} VMWARE_VMCI_VSOCKETS"
-	fi
+
+	CONFIG_CHECK="${CONFIG_CHECK} VMWARE_VMCI VMWARE_VMCI_VSOCKETS"
 
 	linux-info_pkg_setup
 
@@ -69,9 +61,7 @@ pkg_setup() {
 	VMWARE_GROUP=${VMWARE_GROUP:-vmware}
 
 	VMWARE_MODULE_LIST_ALL="vmblock vmmon vmnet vmci vsock"
-	VMWARE_MODULE_LIST="vmblock vmmon vmnet"
-	use vmci && VMWARE_MODULE_LIST="${VMWARE_MODULE_LIST} vmci"
-	use vsock && VMWARE_MODULE_LIST="${VMWARE_MODULE_LIST} vsock"
+	VMWARE_MODULE_LIST="vmmon vmnet"
 
 	VMWARE_MOD_DIR="${PN}-${PVR}"
 
@@ -93,20 +83,9 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/279-makefile-kernel-dir.patch"
-	epatch "${FILESDIR}/279-makefile-include.patch"
-	epatch "${FILESDIR}/279-netdevice.patch"
-	use pax_kernel && epatch "${FILESDIR}/279-hardened.patch"
-	epatch "${FILESDIR}/279-apic.patch"
-	epatch "${FILESDIR}/279-inline-correctly.patch"
-	kernel_is ge 3 7 0 && epatch "${FILESDIR}/279-putname.patch"
-	kernel_is ge 3 10 0 && epatch "${FILESDIR}/279-vmblock.patch"
-	kernel_is ge 3 11 0 && epatch "${FILESDIR}/279-3.11.0.patch"
-	# 3.12.x and 3.13.x patches
-	kernel_is ge 3 12 0 && epatch "${FILESDIR}/279-3.12.0.patch"
-	#kernel_is ge 3 14 0 && epatch "${FILESDIR}/279-3.14.0.patch"
-	kernel_is ge 3 15 0 && epatch "${FILESDIR}/279-kernel-3.15.patch"
-	#kernel_is ge 3 17 0 && epatch "${FILESDIR}/279-kernel-3.17.patch"
+	epatch "${FILESDIR}/${PV_MAJOR}-makefile-kernel-dir.patch"
+	epatch "${FILESDIR}/${PV_MAJOR}-makefile-include.patch"
+	use pax_kernel && epatch "${FILESDIR}/${PV_MAJOR}-hardened.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
@@ -116,7 +95,6 @@ src_install() {
 	linux-mod_src_install
 	local udevrules="${T}/60-vmware.rules"
 	cat > "${udevrules}" <<-EOF
-		KERNEL=="vmci",  GROUP="vmware", MODE="0660"
 		KERNEL=="vmw_vmci",  GROUP="vmware", MODE="0660"
 		KERNEL=="vmmon", GROUP="vmware", MODE="0660"
 		KERNEL=="vsock", GROUP="vmware", MODE="0660"

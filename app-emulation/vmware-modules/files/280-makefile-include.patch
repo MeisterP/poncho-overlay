@@ -1,16 +1,3 @@
-diff --git a/vmblock-only/Makefile.kernel b/vmblock-only/Makefile.kernel
-index ab7a727..e3ec9d2 100644
---- a/vmblock-only/Makefile.kernel
-+++ b/vmblock-only/Makefile.kernel
-@@ -19,7 +19,7 @@
- 
- INCLUDE += -I$(SRCROOT)/include
- 
--EXTRA_CFLAGS := $(CC_OPTS) $(INCLUDE)
-+EXTRA_CFLAGS := $(CC_OPTS) $(INCLUDE) $(LINUXINCLUDE)
- 
- EXTRA_CFLAGS += $(call vm_check_build, $(AUTOCONF_DIR)/cachecreate.c, -DVMW_KMEMCR_HAS_DTOR, )
- EXTRA_CFLAGS += $(call vm_check_build, $(AUTOCONF_DIR)/cachector.c,   -DVMW_KMEMCR_CTOR_HAS_3_ARGS, )
 diff --git a/vmci-only/Makefile.kernel b/vmci-only/Makefile.kernel
 index ba343ee..861ea83 100644
 --- a/vmci-only/Makefile.kernel
