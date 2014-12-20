@@ -1,3 +1,9 @@
+*rimworld-0_alpha8_p657 (20 Dec 2014)
+
+  20 Dec 2014; Poncho <poncho@spahan.ch> +rimworld-0_alpha8_p657.ebuild,
+  -rimworld-0_alpha8_p652.ebuild:
+  games-simulation/rimworld: version bump
+
 *rimworld-0_alpha8_p652 (11 Dec 2014)
 
   11 Dec 2014; Poncho <poncho@spahan.ch> +rimworld-0_alpha8_p652.ebuild,
