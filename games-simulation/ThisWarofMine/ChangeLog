@@ -1,3 +1,9 @@
+*ThisWarofMine-1.2 (25 Dec 2014)
+
+  25 Dec 2014; Poncho <poncho@spahan.ch> +ThisWarofMine-1.2.ebuild,
+  -ThisWarofMine-1.1.1.ebuild:
+  games-simulation/ThisWarofMine: version bump
+
 *ThisWarofMine-1.1.1 (08 Dec 2014)
 
   08 Dec 2014; Poncho <poncho@spahan.ch> +ThisWarofMine-1.1.1.ebuild,
