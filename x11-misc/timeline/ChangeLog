@@ -1,3 +1,9 @@
+*timeline-1.4.1 (28 Dec 2014)
+
+  28 Dec 2014; Poncho <poncho@spahan.ch> +timeline-1.4.1.ebuild,
+  -timeline-1.4.0.ebuild:
+  x11-misc/timeline: version bump
+
 *timeline-1.4.0 (08 Nov 2014)
 
   08 Nov 2014; Poncho <poncho@spahan.ch> +timeline-1.4.0.ebuild,

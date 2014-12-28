@@ -58,7 +58,7 @@ src_install() {
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
-	dodoc AUTHORS README
+	dodoc AUTHORS README doc/changelog.rst
 }
 
 pkg_preinst() {
