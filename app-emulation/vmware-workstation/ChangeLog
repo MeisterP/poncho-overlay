@@ -2,6 +2,10 @@
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-workstation/ChangeLog,v 1.260 2014/04/26 20:37:00 dilfridge Exp $
 
+  30 Dec 2014; Poncho <poncho@spahan.ch>
+  vmware-workstation-11.0.0.2305329.ebuild:
+  app-emulation/vmware-workstation: fix vmrun
+
   20 Dec 2014; Poncho <poncho@spahan.ch>
   files/systemd-vmware-gentoo/vmware-vmnet.service:
   app-emulation/vmware-workstation: fix vmware-vmnet.service

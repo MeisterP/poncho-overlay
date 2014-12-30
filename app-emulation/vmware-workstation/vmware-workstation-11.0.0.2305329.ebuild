@@ -112,7 +112,7 @@ src_unpack() {
 
 	if use vix; then
 		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-core vmware-vix || die
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1000andvSphere550 vmware-vix || die
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1100andvSphere600 vmware-vix || die
 	fi
 	if use ovftool; then
 		vmware-bundle_extract-bundle-component "${bundle}" vmware-ovftool || die
