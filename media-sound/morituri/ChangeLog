@@ -1,3 +1,6 @@
+  02 Jan 2015; Poncho <poncho@spahan.ch> morituri-0.2.3.ebuild:
+  media-sound/morituri: update DEPEND with PYTHON_USEDEP
+
   17 Jul 2014; Poncho <poncho@spahan.ch> -morituri-0.2.2-r2.ebuild,
   metadata.xml, morituri-0.2.3.ebuild:
   media-sound/morituri: ebuild cleanup

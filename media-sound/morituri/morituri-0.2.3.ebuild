@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,8 +21,8 @@ RESTRICT="test"
 DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
 	app-cdr/cdrdao
-	dev-python/pycdio
-	dev-python/cddb-py
+	dev-python/pycdio[${PYTHON_USEDEP}]
+	dev-python/cddb-py[${PYTHON_USEDEP}]
 	dev-python/gst-python:0.10[${PYTHON_USEDEP}]
 	dev-python/python-musicbrainz[${PYTHON_USEDEP}]
 	dev-python/pygobject[${PYTHON_USEDEP}]
