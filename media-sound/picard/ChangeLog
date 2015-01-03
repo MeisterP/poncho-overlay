@@ -1,0 +1,4 @@
+*picard-1.2 (03 Jan 2015)
+
+  03 Jan 2015; Poncho <poncho@spahan.ch> +picard-1.2.ebuild:
+  media-sound/picard: add old version
