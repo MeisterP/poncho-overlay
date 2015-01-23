@@ -1,3 +1,6 @@
+  23 Jan 2015; Poncho <poncho@spahan.ch> +metadata.xml:
+  media-sound/picard: add metadata.xml
+
 *picard-1.2 (03 Jan 2015)
 
   03 Jan 2015; Poncho <poncho@spahan.ch> +picard-1.2.ebuild:
