@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
 	media-libs/libmodplug
-	~media-sound/audacious-3.6_alpha1
+	~media-sound/audacious-${PV}
 	>=net-libs/neon-0.26.4
 	x11-libs/gtk+:3
 	( || ( >=dev-libs/glib-2.32.2[utils] dev-util/gdbus-codegen ) )
@@ -56,8 +56,6 @@ RDEPEND="app-arch/unzip
 DEPEND="${RDEPEND}
 	nls? ( dev-util/intltool )
 	virtual/pkgconfig"
-
-DOCS="AUTHORS"
 
 mp3_warning() {
 	if ! use mp3 ; then
