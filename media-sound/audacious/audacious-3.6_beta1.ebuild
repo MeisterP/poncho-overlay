@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -29,7 +29,7 @@ DEPEND="${RDEPEND}
 	chardet? ( >=app-i18n/libguess-1.2 )
 	nls? ( dev-util/intltool )"
 
-PDEPEND="~media-plugins/audacious-plugins-3.6_alpha1"
+PDEPEND="~media-plugins/audacious-plugins-${PV}"
 
 src_configure() {
 	# D-Bus is a mandatory dependency, remote control,

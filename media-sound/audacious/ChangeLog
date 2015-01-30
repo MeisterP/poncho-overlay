@@ -1,6 +1,12 @@
 # ChangeLog for media-sound/audacious
-# Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
+# Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/media-sound/audacious/ChangeLog,v 1.296 2014/01/28 14:09:59 ago Exp $
+
+*audacious-3.6_beta1 (30 Jan 2015)
+
+  30 Jan 2015; Poncho <poncho@spahan.ch> +audacious-3.6_beta1.ebuild,
+  -audacious-3.6_alpha1.ebuild:
+  media-sound/audacious: version bump
 
 *audacious-3.6_alpha1 (12 Dec 2014)
 
