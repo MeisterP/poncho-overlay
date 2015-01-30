@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=5
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit eutils scons-utils gnome2-utils python-single-r1
+inherit eutils gnome2-utils python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-LANGS="ca de es fr gl he it lt pl pt pt_BR ru sv tr vi zh_CN"
+LANGS="ca de el es eu fr gl he it lt pl pt pt_BR ru sv tr vi zh_CN"
 
 for lang in ${LANGS} ; do
 	IUSE+=" linguas_${lang}"
@@ -34,10 +34,6 @@ src_prepare(){
 	epatch "${FILESDIR}/timeline-0.20.0-paths.patch"
 }
 
-src_compile() {
-	escons mo
-}
-
 src_install() {
 	python_domodule timelinelib
 	python_newscript timeline.py ${PN}
@@ -46,7 +42,7 @@ src_install() {
 	doins icons/*.png
 
 	for ling in "${LINGUAS}";do
-		if [[ -d po/"${ling}" ]] && [[ ! -z ${ling} ]]; then
+		if [[ ! -z ${ling} ]] && [[ -d po/"${ling}" ]]; then
 			insinto /usr/share/locale/"${ling}"/LC_MESSAGES
 			doins po/"${ling}"/LC_MESSAGES/timeline.mo
 		fi
