@@ -1,3 +1,8 @@
+  31 Jan 2015; Poncho <poncho@spahan.ch>
+  +files/fix_bug_when_setting_metadata.patch, gedit-3.14.2.ebuild:
+  app-editors/gedit: fix restoring of metadate  see
+  https://bugzilla.gnome.org/show_bug.cgi\?id\=741426
+
 *gedit-3.14.2 (31 Jan 2015)
 
   31 Jan 2015; Poncho <poncho@spahan.ch> +gedit-3.14.2.ebuild, +metadata.xml:

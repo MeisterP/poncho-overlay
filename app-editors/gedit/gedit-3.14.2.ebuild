@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-editors/gedit/gedit-3.14.2.ebuild,v 1.2 2015/01/02 22:20:34 mgorny Exp $
+# $Header: $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -72,6 +72,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/fix_bug_when_setting_metadata.patch"
 	vala_src_prepare
 	gnome2_src_prepare
 }
