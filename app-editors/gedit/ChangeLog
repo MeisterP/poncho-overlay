@@ -1,0 +1,4 @@
+*gedit-3.14.2 (31 Jan 2015)
+
+  31 Jan 2015; Poncho <poncho@spahan.ch> +gedit-3.14.2.ebuild, +metadata.xml:
+  app-editors/gedit: import from gx86
