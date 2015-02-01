@@ -1,0 +1,4 @@
+*tracker-1.2.5 (01 Feb 2015)
+
+  01 Feb 2015; Poncho <poncho@spahan.ch> +metadata.xml, +tracker-1.2.5.ebuild:
+  app-misc/tracker: import from gx86
