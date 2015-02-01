@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-misc/tracker/tracker-1.2.5.ebuild,v 1.1 2014/12/23 23:58:12 eva Exp $
+# $Header: $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -141,6 +141,10 @@ src_prepare() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=699413
 	sed -e '\%/steroids/tracker/tracker_sparql_update_async%,+3 d' \
 		-i tests/tracker-steroids/tracker-test.c || die
+	
+	EPATCH_SUFFIX="patch" \
+	EPATCH_FORCE="yes" \
+	epatch "${WORKDIR}"
 
 	eautoreconf # See bug #367975
 	gnome2_src_prepare

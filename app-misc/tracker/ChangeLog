@@ -1,3 +1,14 @@
+  01 Feb 2015; Poncho <poncho@spahan.ch> +files/01-2e2012a79015b0b8434dfed0db696
+  74cc822c08c..b2136aeb85259281fceaf774f26528790a0bc811.patch, +files/02-b2136ae
+  b85259281fceaf774f26528790a0bc811..86ad3b212ed4fa757cef9402b4a2682fd6f5a776.pa
+  tch, +files/03-5812bf08c6d8766809078d7354bd407236474414..f74f640889728aeca86cb
+  81cc90e7cac2066a275.patch, +files/04-f74f640889728aeca86cb81cc90e7cac2066a275.
+  .2f2cad8502b38d9cc0b0d2a53906b4a2e9cdeca2.patch, +files/05-2f2cad8502b38d9cc0b
+  0d2a53906b4a2e9cdeca2..a0d212b790394366b0b85de147c8f57cbbdd29c0.patch, +files/
+  06-a0d212b790394366b0b85de147c8f57cbbdd29c0..f0e29525406f0eaba9b6d592826758ac2
+  53f31ce.patch, metadata.xml, tracker-1.2.5.ebuild:
+  app-misc/tracker: add upstream patches
+
 *tracker-1.2.5 (01 Feb 2015)
 
   01 Feb 2015; Poncho <poncho@spahan.ch> +metadata.xml, +tracker-1.2.5.ebuild:

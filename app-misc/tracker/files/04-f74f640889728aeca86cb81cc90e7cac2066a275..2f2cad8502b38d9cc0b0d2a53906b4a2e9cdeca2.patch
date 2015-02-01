@@ -1,0 +1,23 @@
+From 2f2cad8502b38d9cc0b0d2a53906b4a2e9cdeca2 Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Mon, 29 Dec 2014 09:56:19 +1100
+Subject: libtracker-extract: fix logic in guarantee title from file
+
+https://bugzilla.gnome.org/show_bug.cgi?id=742035
+
+diff --git a/src/libtracker-extract/tracker-guarantee.c b/src/libtracker-extract/tracker-guarantee.c
+index 99354e5..f43a4e6 100644
+--- a/src/libtracker-extract/tracker-guarantee.c
++++ b/src/libtracker-extract/tracker-guarantee.c
+@@ -118,7 +118,7 @@ tracker_guarantee_title_from_file (TrackerSparqlBuilder  *metadata,
+ 
+ 		value = get_title_from_file (uri);
+ 
+-		if (!value && value[0] != '\0') {
++		if (value && value[0] != '\0') {
+ 			tracker_sparql_builder_object_unvalidated (metadata, value);
+ 		} else {
+ 			success = FALSE;
+-- 
+cgit v0.10.1
+

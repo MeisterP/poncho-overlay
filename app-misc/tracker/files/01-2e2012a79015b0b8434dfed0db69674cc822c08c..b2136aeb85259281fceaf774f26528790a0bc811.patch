@@ -1,0 +1,36 @@
+From b2136aeb85259281fceaf774f26528790a0bc811 Mon Sep 17 00:00:00 2001
+From: Martin Kampas <martin.kampas@tieto.com>
+Date: Tue, 7 Oct 2014 12:28:04 +0200
+Subject: miner-fs: Fix tracking file move
+
+Identified by MinerCrawlTest::test_07_move_from_monitored_to_monitored
+(300-miner-basic-ops.py)
+
+In item_move() it fails to get source_iri, does not check it's validity and
+uses it in the DELETE expression of the SPARQL query constructed there.
+
+Broken since d836f00 (libtracker-miner: Store iri transiently as GFile
+qdata) - tracker_file_notifier_get_file_iri() is added 'force' argument
+and (wrapped with lookup_file_urn) passed force=FALSE from item_move().
+This call then fails for regular files because only directories are
+cached once crawling has completed as stated in the comment in
+finish_current_directory() in libtracker-miner/tracker-file-notifier.c.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=678986
+
+diff --git a/src/libtracker-miner/tracker-miner-fs.c b/src/libtracker-miner/tracker-miner-fs.c
+index 4a8167d..62fc521 100644
+--- a/src/libtracker-miner/tracker-miner-fs.c
++++ b/src/libtracker-miner/tracker-miner-fs.c
+@@ -1871,7 +1871,7 @@ item_move (TrackerMinerFS *fs,
+ 	                               NULL, NULL);
+ 
+ 	/* Get 'source' ID */
+-	source_iri = lookup_file_urn (fs, source_file, FALSE);
++	source_iri = lookup_file_urn (fs, source_file, TRUE);
+ 	source_exists = (source_iri != NULL);
+ 
+ 	if (!file_info) {
+-- 
+cgit v0.10.1
+

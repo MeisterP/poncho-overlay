@@ -1,0 +1,56 @@
+From f0e29525406f0eaba9b6d592826758ac253f31ce Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@gnome.org>
+Date: Tue, 13 Jan 2015 14:51:50 +0100
+Subject: libtracker-miner: Restrict the amount of data that is logged for
+ errors
+
+SPARQL update strings can be very long if the entire text of a document
+is being stored. Dumping these huge strings to the log eats up disk
+space and makes them harder to follow.
+
+However, often, the occurence of such an error indicates a broken
+extractor. In those cases, knowing part of the SPARQL can help in
+identifying the file that triggered the error.
+
+Usually the "nie:plainTextContent" property is the last one in the
+string, so we truncate the error messages at the first occurance of
+this property to achieve the best of both worlds.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=735406
+
+diff --git a/src/libtracker-miner/tracker-decorator.c b/src/libtracker-miner/tracker-decorator.c
+index 28cdf4a..73380a5 100644
+--- a/src/libtracker-miner/tracker-decorator.c
++++ b/src/libtracker-miner/tracker-decorator.c
+@@ -19,6 +19,8 @@
+ 
+ #include "config.h"
+ 
++#include <string.h>
++
+ #include "tracker-decorator.h"
+ #include "tracker-decorator-internal.h"
+ #include "tracker-priority-queue.h"
+@@ -335,9 +337,17 @@ decorator_commit_cb (GObject      *object,
+ 			child_error = g_ptr_array_index (errors, i);
+ 
+ 			if (child_error) {
++				gchar *msg, *p;
++
++				msg = g_strdup (g_ptr_array_index (sparql, i));
++				p = strstr (msg, "nie:plainTextContent");
++				if (p != NULL)
++					*p = '\0';
++
+ 				g_warning ("Task %d, error: %s", i, child_error->message);
+-				g_warning ("Sparql update was:\n%s\n",
+-				           (gchar *) g_ptr_array_index (sparql, i));
++				g_warning ("Sparql update was:\n%s\n", msg);
++
++				g_free (msg);
+ 			}
+ 		}
+ 
+-- 
+cgit v0.10.1
+

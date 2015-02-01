@@ -1,0 +1,34 @@
+From 86ad3b212ed4fa757cef9402b4a2682fd6f5a776 Mon Sep 17 00:00:00 2001
+From: Martin Kampas <martin.kampas@tieto.com>
+Date: Mon, 20 Oct 2014 13:55:27 +0200
+Subject: miner-fs: Remove unused argument is_new
+
+https://bugzilla.gnome.org/show_bug.cgi?id=678986
+
+diff --git a/src/libtracker-miner/tracker-miner-fs.c b/src/libtracker-miner/tracker-miner-fs.c
+index 62fc521..ffebae6 100644
+--- a/src/libtracker-miner/tracker-miner-fs.c
++++ b/src/libtracker-miner/tracker-miner-fs.c
+@@ -1486,8 +1486,7 @@ lookup_file_urn (TrackerMinerFS *fs,
+ static gboolean
+ item_add_or_update (TrackerMinerFS *fs,
+                     GFile          *file,
+-                    gint            priority,
+-                    gboolean        is_new)
++                    gint            priority)
+ {
+ 	TrackerMinerFSPrivate *priv;
+ 	TrackerSparqlBuilder *sparql;
+@@ -2566,8 +2565,7 @@ item_queue_handlers_cb (gpointer user_data)
+ 		if (!parent ||
+ 		    tracker_indexing_tree_file_is_root (fs->priv->indexing_tree, file) ||
+ 		    lookup_file_urn (fs, parent, TRUE)) {
+-			keep_processing = item_add_or_update (fs, file, priority,
+-			                                      (queue == QUEUE_CREATED));
++			keep_processing = item_add_or_update (fs, file, priority);
+ 		} else {
+ 			TrackerPriorityQueue *item_queue;
+ 			gchar *uri;
+-- 
+cgit v0.10.1
+
