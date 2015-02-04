@@ -1,0 +1,7 @@
+*gst-plugins-libav-1.4.5 (04 Feb 2015)
+
+  04 Feb 2015; Poncho <poncho@spahan.ch>
+  +files/gst-plugins-libav-1.2.4-ffmpeg2.patch,
+  +files/gst-plugins-libav-1.2.4-fix-memory-leak.patch,
+  +gst-plugins-libav-1.4.5.ebuild, +metadata.xml:
+  media-plugins/gst-plugins-libav: import from gx86
