@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -86,6 +86,8 @@ src_prepare() {
 	epatch "${FILESDIR}/${PV_MAJOR}-makefile-kernel-dir.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-makefile-include.patch"
 	use pax_kernel && epatch "${FILESDIR}/${PV_MAJOR}-hardened.patch"
+
+	epatch "${FILESDIR}/${PV_MAJOR}-kernel-3.19.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
