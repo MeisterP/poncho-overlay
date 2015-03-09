@@ -1,0 +1,6 @@
+*mutter-3.14.3 (09 Mar 2015)
+
+  09 Mar 2015; Poncho <poncho@spahan.ch> +files/mutter-3.14.2-automagic.patch,
+  +files/mutter-3.2.1-ignore-shadow-and-padding.patch, +metadata.xml,
+  +mutter-3.14.3.ebuild:
+  x11-wm/mutter: import from gx86
