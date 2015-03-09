@@ -85,6 +85,8 @@ src_prepare() {
 	# Automagic fixes
 	epatch "${FILESDIR}"/${PN}-3.14.2-automagic.patch
 
+	epatch "${FILESDIR}"/compositor-Add-support-for-GLEXTx11syncobject.patch
+
 	eautoreconf
 	gnome2_src_prepare
 }
