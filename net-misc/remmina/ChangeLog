@@ -1,3 +1,9 @@
+*remmina-1.2.0_rc2 (11 Mar 2015)
+
+  11 Mar 2015; Poncho <poncho@spahan.ch> +remmina-1.2.0_rc2.ebuild:
+  net-misc/remmina: version bump  see
+  https://bugs.gentoo.org/show_bug.cgi\?id\=536538
+
 *remmina-1.1.2 (09 Dec 2014)
 
   09 Dec 2014; Poncho <poncho@spahan.ch> +remmina-1.1.2.ebuild,
