@@ -1,3 +1,6 @@
+  11 Mar 2015; Poncho <poncho@spahan.ch> mutter-3.14.3.ebuild:
+  x11-wm/mutter: remove keywords
+
   09 Mar 2015; Poncho <poncho@spahan.ch>
   +files/compositor-Add-support-for-GLEXTx11syncobject.patch, metadata.xml,
   mutter-3.14.3.ebuild:
