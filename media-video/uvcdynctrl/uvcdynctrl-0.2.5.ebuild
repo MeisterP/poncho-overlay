@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,14 +15,14 @@ SRC_URI="mirror://sourceforge/${MY_PN}/${MY_P}.tar.gz"
 KEYWORDS="~amd64 ~x86"
 SLOT="0"
 LICENSE="GPL-3"
-IUSE="static-libs"
+IUSE=""
 
 DEPEND="dev-libs/libxml2"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}/${MY_P}"
+S="${WORKDIR}/${MY_PN}-${PV}"
 
 src_install() {
 	cmake-utils_src_install
-	use static-libs || rm -fr "${D}"usr/lib*/${MY_PN}.a
+	rm -fr "${D}"usr/lib*/${MY_PN}.a || die
 }

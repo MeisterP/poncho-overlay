@@ -1,0 +1,5 @@
+*uvcdynctrl-0.2.5 (14 Mar 2015)
+
+  14 Mar 2015; Poncho <poncho@spahan.ch> +uvcdynctrl-0.2.5.ebuild,
+  -uvcdynctrl-0.2.4.ebuild:
+  media-video/uvcdynctrl: version bump
