@@ -1,0 +1,6 @@
+*gnome-mpv-0.3 (14 Mar 2015)
+*gnome-mpv-9999 (14 Mar 2015)
+
+  14 Mar 2015; Poncho <poncho@spahan.ch> +gnome-mpv-0.3.ebuild,
+  +gnome-mpv-9999.ebuild, +metadata.xml:
+  media-video/gnome-mpv: new ebuild

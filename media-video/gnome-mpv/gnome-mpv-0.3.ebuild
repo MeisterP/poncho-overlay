@@ -1,0 +1,50 @@
+# Copyright 1999-2015 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI=5
+
+inherit autotools gnome2-utils fdo-mime
+
+if [[ ${PV} == "9999" ]] ; then
+	inherit git-r3
+	EGIT_REPO_URI="https://github.com/gnome-mpv/gnome-mpv.git"
+	SRC_URI=""
+	KEYWORDS=""
+else
+	SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+	KEYWORDS="~amd64 ~x86"
+fi
+
+DESCRIPTION="A simple GTK+ frontend for mpv"
+HOMEPAGE="https://github.com/gnome-mpv/gnome-mpv"
+
+LICENSE="GPL-3"
+SLOT="0"
+IUSE=""
+
+DEPEND="dev-libs/glib:2
+	media-video/mpv[libmpv]
+	x11-libs/gtk+:3"
+RDEPEND="${DEPEND}"
+
+src_prepare() {
+	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
+	sed -i '/^UPDATE_ICON/d' Makefile.am || die
+	sed -i 's/Version=0.1/Version=1.0/g' gnome-mpv.desktop || die
+	eautoreconf
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
+pkg_postinst() {
+	fdo-mime_desktop_database_update
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	fdo-mime_desktop_database_update
+	gnome2_icon_cache_update
+}
