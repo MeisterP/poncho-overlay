@@ -2,6 +2,16 @@
 # Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-modules/ChangeLog,v 1.114 2013/12/27 16:34:13 dilfridge Exp $
 
+*vmware-modules-281.0 (14 Mar 2015)
+
+  14 Mar 2015; Poncho <poncho@spahan.ch> +files/281-hardened.patch,
+  +files/281-kernel-3.19.patch, +files/281-makefile-include.patch,
+  +files/281-makefile-kernel-dir.patch, +vmware-modules-281.0.ebuild,
+  -files/280-hardened.patch, -files/280-kernel-3.19.patch,
+  -files/280-makefile-include.patch, -files/280-makefile-kernel-dir.patch,
+  -vmware-modules-280.0.ebuild:
+  app-emulation/vmware-modules: version bump
+
   09 Feb 2015; Poncho <poncho@spahan.ch> +files/280-kernel-3.19.patch,
   vmware-modules-280.0.ebuild:
   app-emulation/vmware-modules: fix build with kernel 3.19  see

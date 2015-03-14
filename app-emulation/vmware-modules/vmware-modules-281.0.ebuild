@@ -21,8 +21,7 @@ IUSE="pax_kernel"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	|| ( =app-emulation/vmware-player-7.0.${PV_MINOR}*
-	=app-emulation/vmware-workstation-11.0.${PV_MINOR}* )"
+	=app-emulation/vmware-workstation-11.1.${PV_MINOR}*"
 
 S=${WORKDIR}
 
