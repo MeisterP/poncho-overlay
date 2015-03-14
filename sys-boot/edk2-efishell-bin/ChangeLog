@@ -1,3 +1,9 @@
+*edk2-efishell-bin-2014-r1 (14 Mar 2015)
+
+  14 Mar 2015; Poncho <poncho@spahan.ch> +edk2-efishell-bin-2014-r1.ebuild,
+  -edk2-efishell-bin-2014.ebuild:
+  sys-boot/edk2-efishell-bin: version bump
+
 *edk2-efishell-bin-2014 (04 Aug 2014)
 
   04 Aug 2014; Poncho <poncho@spahan.ch> +edk2-efishell-bin-2014.ebuild,
