@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -41,7 +41,7 @@ COMMON_DEPEND="
 	tiff? ( media-libs/tiff:= )
 	raw? ( >=media-libs/libraw-0.16.0:= )
 	!raw? ( media-gfx/dcraw )
-	webkit? ( >=net-libs/webkit-gtk-1.10.0:3 )
+	webkit? ( >=net-libs/webkit-gtk-2.2:4 )
 	webp? ( >=media-libs/libwebp-0.2.0 )
 "
 RDEPEND="${COMMON_DEPEND}
