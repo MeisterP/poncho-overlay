@@ -1,0 +1,4 @@
+*sushi-3.12.0 (14 Mar 2015)
+
+  14 Mar 2015; Poncho <poncho@spahan.ch> +metadata.xml, +sushi-3.12.0.ebuild:
+  gnome-extra/sushi: import from gx86
