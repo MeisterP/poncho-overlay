@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -82,7 +82,7 @@ RDEPEND="dev-cpp/cairomm
 	x11-libs/startup-notification
 	x11-themes/hicolor-icon-theme
 	!app-emulation/vmware-player"
-PDEPEND="~app-emulation/vmware-modules-280.${PV_MINOR}
+PDEPEND="~app-emulation/vmware-modules-281.${PV_MINOR}
 	vmware-tools? ( app-emulation/vmware-tools )"
 
 S=${WORKDIR}
@@ -308,7 +308,7 @@ src_install() {
 		authd.fullpath = "${VM_INSTALL_DIR}/sbin/vmware-authd"
 		gksu.rootMethod = "su"
 		VMCI_CONFED = "yes"
-		VMBLOCK_CONFED = "yes"
+		VMBLOCK_CONFED = "no"
 		VSOCK_CONFED = "yes"
 		NETWORKING = "yes"
 		player.product.version = "${major_minor_revision}"
