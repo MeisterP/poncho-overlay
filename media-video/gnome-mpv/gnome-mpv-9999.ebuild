@@ -31,7 +31,6 @@ RDEPEND="${DEPEND}"
 src_prepare() {
 	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
 	sed -i '/^UPDATE_ICON/d' Makefile.am || die
-	sed -i 's/Version=0.1/Version=1.0/g' gnome-mpv.desktop || die
 	eautoreconf
 }
 
