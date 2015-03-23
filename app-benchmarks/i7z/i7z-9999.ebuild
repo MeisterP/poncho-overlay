@@ -1,15 +1,14 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-inherit eutils flag-o-matic qt4-r2 subversion toolchain-funcs
+inherit eutils flag-o-matic qt4-r2 git-r3 toolchain-funcs
 
 DESCRIPTION="A better i7 (and now i3, i5) reporting tool for Linux"
-HOMEPAGE="http://code.google.com/p/i7z/"
-SRC_URI=""
-ESVN_REPO_URI="http://i7z.googlecode.com/svn/trunk"
+HOMEPAGE="https://github.com/ajaiantilal/i7z"
+EGIT_REPO_URI="https://github.com/ajaiantilal/i7z.git"
 
 LICENSE="GPL-2"
 SLOT="0"
