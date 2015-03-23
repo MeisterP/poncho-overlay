@@ -1,2 +1,0 @@
-  02 Jul 2014; Poncho <poncho@spahan.ch> pidgin-gnome-keyring-1.20.ebuild:
-  x11-plugins/pidgin-gnome-keyring: use virtual/pkgconfig
