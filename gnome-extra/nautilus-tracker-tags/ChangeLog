@@ -1,0 +1,5 @@
+*nautilus-tracker-tags-1.2.6 (20 Apr 2015)
+
+  20 Apr 2015; Poncho <poncho@spahan.ch> +files/0.12.5-Makefile, +metadata.xml,
+  +nautilus-tracker-tags-1.2.6.ebuild:
+  gnome-extra/nautilus-tracker-tags: import from gx86
