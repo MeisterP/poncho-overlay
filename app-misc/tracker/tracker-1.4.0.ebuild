@@ -41,7 +41,7 @@ RDEPEND="
 		>=media-gfx/imagemagick-5.2.1[png,jpeg=]
 		media-gfx/graphicsmagick[imagemagick,png,jpeg=] )
 	>=media-libs/libpng-1.2:0=
-	>=media-libs/libmediaart-0.5:1.0
+	>=media-libs/libmediaart-1.9.0:1.0
 	>=x11-libs/pango-1:=
 	sys-apps/util-linux
 
