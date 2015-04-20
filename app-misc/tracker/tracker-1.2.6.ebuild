@@ -5,7 +5,7 @@
 EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python2_{6,7} )
+PYTHON_COMPAT=( python2_7 )
 VALA_MIN_API_VERSION="0.18"
 
 inherit autotools eutils gnome2 linux-info multilib python-any-r1 vala versionator virtualx
@@ -141,10 +141,6 @@ src_prepare() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=699413
 	sed -e '\%/steroids/tracker/tracker_sparql_update_async%,+3 d' \
 		-i tests/tracker-steroids/tracker-test.c || die
-	
-	EPATCH_SUFFIX="patch" \
-	EPATCH_FORCE="yes" \
-	epatch "${WORKDIR}"
 
 	eautoreconf # See bug #367975
 	gnome2_src_prepare
