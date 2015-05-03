@@ -1,0 +1,12 @@
+diff --unified --new-file --recursive --show-c-function timeline-1.6.0/source/timelinelib/config/paths.py timeline-1.6.0-fix/source/timelinelib/config/paths.py
+--- timeline-1.6.0/source/timelinelib/config/paths.py	2015-04-26 18:18:03.000000000 +0200
++++ timeline-1.6.0-fix/source/timelinelib/config/paths.py	2015-05-03 16:41:35.877794087 +0200
+@@ -19,7 +19,7 @@
+ import os.path
+ 
+ 
+-_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
++_ROOT = "/usr/share/timeline/"
+ ICONS_DIR = os.path.join(_ROOT, "icons")
+ LOCALE_DIR = os.path.join(_ROOT, "translations")
+ HELP_RESOURCES_DIR = os.path.join(_ROOT, "help_resources")

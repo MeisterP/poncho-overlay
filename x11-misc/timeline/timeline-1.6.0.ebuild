@@ -31,20 +31,20 @@ RDEPEND="${DEPEND}
 	dev-python/pytz[${PYTHON_USEDEP}]"
 
 src_prepare(){
-	epatch "${FILESDIR}/timeline-0.20.0-paths.patch"
+	epatch "${FILESDIR}/timeline-1.6.0-path.patch"
 }
 
 src_install() {
-	python_domodule timelinelib
-	python_newscript timeline.py ${PN}
+	python_domodule source/timelinelib
+	python_newscript source/timeline.py ${PN}
 
 	insinto /usr/share/${PN}/icons
 	doins icons/*.png
 
 	for ling in "${LINGUAS}";do
 		if [[ ! -z ${ling} ]] && [[ -d po/"${ling}" ]]; then
-			insinto /usr/share/locale/"${ling}"/LC_MESSAGES
-			doins po/"${ling}"/LC_MESSAGES/timeline.mo
+			insinto /usr/share/${PN}/translations
+			doins translations/"${ling}".po
 		fi
 	done
 
