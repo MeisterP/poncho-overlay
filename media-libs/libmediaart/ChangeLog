@@ -1,5 +1,0 @@
-*libmediaart-1.9.0 (20 Apr 2015)
-
-  20 Apr 2015; Poncho <poncho@spahan.ch> +files/libmediaart-0.7.0-qt5.patch,
-  +libmediaart-1.9.0.ebuild, +metadata.xml:
-  media-libs/libmediaart: import from gx86
