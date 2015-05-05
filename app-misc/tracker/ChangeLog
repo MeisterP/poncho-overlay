@@ -1,3 +1,6 @@
+  05 May 2015; Poncho <poncho@spahan.ch> tracker-1.4.0.ebuild:
+  app-misc/tracker: update media-libs/libmediaart dependency
+
 *tracker-1.4.0 (20 Apr 2015)
 
   20 Apr 2015; Poncho <poncho@spahan.ch> +tracker-1.4.0.ebuild,
