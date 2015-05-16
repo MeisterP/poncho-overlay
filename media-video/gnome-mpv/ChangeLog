@@ -1,3 +1,9 @@
+*gnome-mpv-0.4 (16 May 2015)
+
+  16 May 2015; Poncho <poncho@spahan.ch> +gnome-mpv-0.4.ebuild,
+  -gnome-mpv-0.3.ebuild:
+  media-video/gnome-mpv: version bump
+
   19 Mar 2015; Poncho <poncho@spahan.ch> gnome-mpv-9999.ebuild:
   media-video/gnome-mpv: gnome-mpv.desktop is fixed upstream
 
