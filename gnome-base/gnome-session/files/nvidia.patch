@@ -1,0 +1,13 @@
+diff --git a/gnome-session/main.c b/gnome-session/main.c
+index e68b6f4..a3e0e57 100644
+--- a/gnome-session/main.c
++++ b/gnome-session/main.c
+@@ -349,6 +349,8 @@ main (int argc, char **argv)
+          */
+         gsm_util_setenv ("XDG_MENU_PREFIX", "gnome-");
+ 
++        gsm_util_setenv ("CLUTTER_BACKEND", "x11");
++
+         gsm_util_set_autostart_dirs (override_autostart_dirs);
+         session_name = opt_session_name;
+ 

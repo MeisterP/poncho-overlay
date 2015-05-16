@@ -1,0 +1,7 @@
+*gnome-session-3.16.0 (16 May 2015)
+
+  16 May 2015; Poncho <poncho@spahan.ch> +files/10-user-dirs-update-gnome-r1,
+  +files/15-xdg-data-gnome-r1, +files/90-xcursor-theme-gnome, +files/Gnome,
+  +files/defaults.list-r3, +files/nvidia.patch, +gnome-session-3.16.0.ebuild,
+  +metadata.xml:
+  gnome-base/gnome-session: import from gnome overlay fix nvidia issue
