@@ -1,0 +1,4 @@
+*yelp-3.17.3 (06 Jul 2015)
+
+  06 Jul 2015; Poncho <poncho@spahan.ch> +metadata.xml, +yelp-3.17.3.ebuild:
+  gnome-extra/yelp: version bump  support for net-libs/webkit-gtk:4
