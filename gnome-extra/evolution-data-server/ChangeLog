@@ -1,0 +1,5 @@
+*evolution-data-server-3.17.3 (19 Jul 2015)
+
+  19 Jul 2015; Poncho <poncho@spahan.ch> +evolution-data-server-3.17.3.ebuild,
+  +files/calentry.schema, +metadata.xml:
+  gnome-extra/evolution-data-server: import from gx86, version bump
