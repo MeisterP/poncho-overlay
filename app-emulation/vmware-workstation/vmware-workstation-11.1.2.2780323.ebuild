@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
+EAPI=5
 
 inherit eutils versionator fdo-mime systemd gnome2-utils pam vmware-bundle
 
@@ -22,7 +22,7 @@ LICENSE="vmware GPL-2"
 SLOT="0"
 KEYWORDS="-* ~amd64"
 IUSE="cups doc ovftool server systemd vix vmware-tools"
-RESTRICT="mirror strip splitdebug"
+RESTRICT="mirror strip"
 QA_PREBUILT="*"
 
 # vmware-workstation should not use virtual/libc as this is a
@@ -40,7 +40,7 @@ RDEPEND="dev-cpp/cairomm
 	dev-libs/libgcrypt:0
 	dev-libs/libsigc++
 	dev-libs/libxml2
-	=dev-libs/openssl-0.9.8*
+	dev-libs/openssl:0.9.8
 	dev-libs/xmlrpc-c
 	gnome-base/libgnomecanvas
 	gnome-base/libgtop:2
@@ -49,8 +49,9 @@ RDEPEND="dev-cpp/cairomm
 	media-libs/fontconfig
 	media-libs/freetype
 	media-libs/libart_lgpl
-	=media-libs/libpng-1.2*
+	media-libs/libpng:1.2
 	media-libs/libpng
+	media-libs/tiff:3
 	net-misc/curl
 	cups? ( net-print/cups )
 	sys-devel/gcc
@@ -82,7 +83,7 @@ RDEPEND="dev-cpp/cairomm
 	x11-libs/startup-notification
 	x11-themes/hicolor-icon-theme
 	!app-emulation/vmware-player"
-PDEPEND="~app-emulation/vmware-modules-281.${PV_MINOR}
+PDEPEND="~app-emulation/vmware-modules-304.${PV_MINOR}
 	vmware-tools? ( app-emulation/vmware-tools )"
 
 S=${WORKDIR}
@@ -92,7 +93,8 @@ VM_HOSTD_USER="root"
 
 src_unpack() {
 	default
-	local bundle=${MY_P}.x86_64.bundle
+	local bundle
+	use amd64 && bundle=${MY_P}.x86_64.bundle
 	local component; for component in \
 		vmware-vmx \
 		vmware-player-app \
@@ -103,19 +105,19 @@ src_unpack() {
 		vmware-usbarbitrator \
 		vmware-vprobe
 	do
-		vmware-bundle_extract-bundle-component "${bundle}" "${component}" "${S}" || die
+		vmware-bundle_extract-bundle-component "${bundle}" "${component}" "${S}"
 	done
 
 	if use server; then
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-workstation-server || die
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-workstation-server #"${S}"
 	fi
 
 	if use vix; then
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-core vmware-vix || die
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1100andvSphere600 vmware-vix || die
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-core vmware-vix
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1100andvSphere600 vmware-vix
 	fi
 	if use ovftool; then
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-ovftool || die
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-ovftool
 	fi
 }
 
@@ -136,6 +138,11 @@ src_install() {
 	local major_minor=$(get_version_component_range 1-2 "${PV}")
 	local major_minor_revision=$(get_version_component_range 1-3 "${PV}")
 	local build=$(get_version_component_range 4 "${PV}")
+
+	# revdep-rebuild entry
+	insinto /etc/revdep-rebuild
+	echo "SEARCH_DIRS_MASK=\"${VM_INSTALL_DIR}\"" >> ${T}/10${PN}
+	doins "${T}"/10${PN}
 
 	# install the binaries
 	into "${VM_INSTALL_DIR}"
