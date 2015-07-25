@@ -1,3 +1,20 @@
+diff --git a/vmblock-only/Makefile b/vmblock-only/Makefile
+index 2b81323..746c8b8 100644
+--- a/vmblock-only/Makefile
++++ b/vmblock-only/Makefile
+@@ -49,10 +49,10 @@ VM_UNAME = $(shell uname -r)
+ ifdef LINUXINCLUDE
+ HEADER_DIR = $(LINUXINCLUDE)
+ else
+-HEADER_DIR = /lib/modules/$(VM_UNAME)/build/include
++HEADER_DIR = $(KERNEL_DIR)
+ endif
+ 
+-BUILD_DIR = $(HEADER_DIR)/..
++BUILD_DIR = $(KBUILD_OUTPUT)
+ 
+ DRIVER := vmblock
+ PRODUCT := ws
 diff --git a/vmci-only/Makefile b/vmci-only/Makefile
 index 8e9c5be..6ec828b 100644
 --- a/vmci-only/Makefile
