@@ -1,0 +1,5 @@
+*california-0.4.0 (27 Jul 2015)
+
+  27 Jul 2015; Poncho <poncho@spahan.ch> +california-0.4.0.ebuild,
+  +files/california-0.4-gnome-3.16.patch, +metadata.xml:
+  gnome-extra/california: import from gnome overlay  add evolution patch
