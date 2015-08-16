@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -52,7 +52,7 @@ src_install() {
 		newicon -s $size icons/$size.png ${PN}.png
 	done
 
-	make_desktop_entry ${PN} Timeline ${PN} Graphics
+	make_desktop_entry ${PN} Timeline ${PN} Graphics "StartupWMClass=Python2.7"
 
 	dodoc AUTHORS README doc/changelog.rst
 }
