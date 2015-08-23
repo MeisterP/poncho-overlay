@@ -1,3 +1,9 @@
+*gnome-mpv-0.5 (23 Aug 2015)
+
+  23 Aug 2015; Poncho <poncho@spahan.ch> +gnome-mpv-0.5.ebuild,
+  -gnome-mpv-0.4.ebuild:
+  media-video/gnome-mpv: version bump
+
   22 May 2015; Poncho <poncho@spahan.ch> gnome-mpv-9999.ebuild:
   media-video/gnome-mpv: use gnome2_schemas_update
 
