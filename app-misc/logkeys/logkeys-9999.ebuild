@@ -7,8 +7,8 @@ EAPI=5
 inherit autotools eutils git-r3 systemd
 
 DESCRIPTION="A GNU/Linux keylogger that works!"
-HOMEPAGE="https://github.com/MeisterP/logkeys http://code.google.com/p/logkeys/"
-EGIT_REPO_URI="https://github.com/MeisterP/logkeys.git"
+HOMEPAGE="https://github.com/kernc/logkeys http://code.google.com/p/logkeys/"
+EGIT_REPO_URI="https://github.com/kernc/logkeys.git"
 
 LICENSE="GPL-3"
 SLOT="0"

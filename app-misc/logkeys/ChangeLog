@@ -1,3 +1,6 @@
+  23 Aug 2015; Poncho <poncho@spahan.ch> logkeys-9999.ebuild:
+  app-misc/logkeys: update repo_uri
+
   23 Mar 2015; Poncho <poncho@spahan.ch> +files/de.map, +files/en_GB.map,
   +files/es_AR.map, +files/es_ES.map, +files/fr-dvorak-bepo.map, +files/fr.map,
   +files/fr_CH.map, +files/hu.map, +files/it.map, +files/no.map,
