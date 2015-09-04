@@ -85,6 +85,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${PV_MAJOR}-makefile-kernel-dir.patch"
 	epatch "${FILESDIR}/${PV_MAJOR}-makefile-include.patch"
 	use pax_kernel && epatch "${FILESDIR}/${PV_MAJOR}-hardened.patch"
+	epatch "${FILESDIR}/vmware-modules-linux-4.2.0-rc5+.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
