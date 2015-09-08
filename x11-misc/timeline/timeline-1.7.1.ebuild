@@ -54,7 +54,7 @@ src_install() {
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics "StartupWMClass=Python2.7"
 
-	dodoc AUTHORS README doc/changelog.rst
+	dodoc AUTHORS README
 }
 
 pkg_preinst() {
