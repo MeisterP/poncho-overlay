@@ -1,10 +1,10 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
-inherit eutils versionator fdo-mime systemd gnome2-utils pam vmware-bundle
+inherit eutils versionator readme.gentoo fdo-mime systemd gnome2-utils pam vmware-bundle
 
 MY_PN="VMware-Workstation"
 MY_PV=$(get_version_component_range 1-3)
@@ -23,7 +23,6 @@ SLOT="0"
 KEYWORDS="-* ~amd64"
 IUSE="cups doc ovftool server systemd vix vmware-tools"
 RESTRICT="mirror strip"
-QA_PREBUILT="*"
 
 # vmware-workstation should not use virtual/libc as this is a
 # precompiled binary package thats linked to glibc.
@@ -37,8 +36,8 @@ RDEPEND="dev-cpp/cairomm
 	dev-libs/icu
 	dev-libs/expat
 	dev-libs/libaio
-	dev-libs/libgcrypt:0
-	dev-libs/libsigc++
+	=dev-libs/libgcrypt-1.5*
+	dev-libs/libsigc++:2
 	dev-libs/libxml2
 	dev-libs/openssl:0.9.8
 	dev-libs/xmlrpc-c
@@ -91,6 +90,10 @@ VM_INSTALL_DIR="/opt/vmware"
 VM_DATA_STORE_DIR="/var/lib/vmware/Shared VMs"
 VM_HOSTD_USER="root"
 
+QA_PREBUILT="/opt/*"
+
+QA_WX_LOAD="opt/vmware/lib/vmware/tools-upgraders/vmware-tools-upgrader-32 opt/vmware/lib/vmware/bin/vmware-vmx-stats opt/vmware/lib/vmware/bin/vmware-vmx-debug opt/vmware/lib/vmware/bin/vmware-vmx"
+
 src_unpack() {
 	default
 	local bundle
@@ -132,6 +135,16 @@ src_prepare() {
 	fi
 
 	find "${S}" -name '*.a' -delete
+
+#	clean_bundled_libs
+
+	DOC_CONTENTS="
+/etc/env.d is updated during ${PN} installation. Please run:\n
+env-update && source /etc/profile\n
+Before you can use vmware workstation, you must configure a default network setup.
+You can do this by running 'emerge --config ${PN}'.\n
+To be able to run ${PN} your user must be in the vmware group.
+"
 }
 
 src_install() {
@@ -446,6 +459,7 @@ src_install() {
 
 	# install systemd unit files
 	systemd_dounit "${FILESDIR}/systemd-vmware-gentoo/"*.{service,target}
+	readme.gentoo_create_doc
 }
 
 pkg_config() {
@@ -459,12 +473,7 @@ pkg_preinst() {
 pkg_postinst() {
 	fdo-mime_desktop_database_update
 	gnome2_icon_cache_update
-
-	ewarn "/etc/env.d was updated. Please run:"
-	ewarn "env-update && source /etc/profile"
-	ewarn ""
-	ewarn "Before you can use vmware workstation, you must configure a default network setup."
-	ewarn "You can do this by running 'emerge --config ${PN}'."
+	readme.gentoo_pkg_postinst
 }
 
 pkg_prerm() {

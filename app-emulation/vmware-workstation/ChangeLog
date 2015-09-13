@@ -2,6 +2,13 @@
 # Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-workstation/ChangeLog,v 1.260 2014/04/26 20:37:00 dilfridge Exp $
 
+*vmware-workstation-11.1.2.2780323-r1 (13 Sep 2015)
+
+  13 Sep 2015; Poncho <poncho@spahan.ch>
+  +vmware-workstation-11.1.2.2780323-r1.ebuild,
+  -vmware-workstation-11.1.2.2780323.ebuild:
+  app-emulation/vmware-workstation: sync with gx86
+
   25 Jul 2015; Poncho <poncho@spahan.ch>
   vmware-workstation-11.1.2.2780323.ebuild:
   app-emulation/vmware-workstation: sync with vmware overlay
