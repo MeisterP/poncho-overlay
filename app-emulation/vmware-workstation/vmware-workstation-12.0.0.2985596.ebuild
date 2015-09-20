@@ -15,8 +15,7 @@ MY_P="${MY_PN}-${MY_PV}-${PV_BUILD}"
 DESCRIPTION="Emulate a complete PC on your PC without the usual performance overhead of most emulators"
 HOMEPAGE="http://www.vmware.com/products/workstation/"
 BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/${MY_PV}/${PV_BUILD}/linux/core/"
-SRC_URI="
-	amd64? ( ${BASE_URI}${MY_P}.x86_64.bundle.tar )"
+SRC_URI="amd64? ( ${BASE_URI}${MY_P}.x86_64.bundle.tar )"
 	#https://github.com/akhuettel/systemd-vmware/archive/${SYSTEMD_UNITS_TAG}.tar.gz
 LICENSE="vmware GPL-2"
 SLOT="0"
@@ -82,7 +81,7 @@ RDEPEND="dev-cpp/cairomm
 	x11-libs/startup-notification
 	x11-themes/hicolor-icon-theme
 	!app-emulation/vmware-player"
-PDEPEND="~app-emulation/vmware-modules-304.${PV_MINOR}
+PDEPEND="~app-emulation/vmware-modules-308.${PV_MINOR}
 	vmware-tools? ( app-emulation/vmware-tools )"
 
 S=${WORKDIR}
@@ -117,7 +116,7 @@ src_unpack() {
 
 	if use vix; then
 		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-core vmware-vix
-		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1100andvSphere600 vmware-vix
+		vmware-bundle_extract-bundle-component "${bundle}" vmware-vix-lib-Workstation1200 vmware-vix
 	fi
 	if use ovftool; then
 		vmware-bundle_extract-bundle-component "${bundle}" vmware-ovftool
@@ -135,8 +134,6 @@ src_prepare() {
 	fi
 
 	find "${S}" -name '*.a' -delete
-
-#	clean_bundled_libs
 
 	DOC_CONTENTS="
 /etc/env.d is updated during ${PN} installation. Please run:\n
@@ -182,12 +179,6 @@ src_install() {
 		insinto /etc/cups
 		doins -r etc/cups/*
 	fi
-
-	insinto /etc/xdg
-	doins -r etc/xdg/*
-
-	# install documentation
-	doman man/man1/vmware.1.gz
 
 	if use doc; then
 		dodoc doc/*
