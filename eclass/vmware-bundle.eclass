@@ -38,6 +38,7 @@ vmware-bundle_extract-bundle-component() {
 		while read -r component_offset component_size component_name ; do
 			if [[ ${component_name} == ${component} ]] ; then
 				ebegin "Extracting '${component_name}' component from '$(basename "${bundle}")'"
+				echo "${component_name}" >> "${T}"/skipped_files.txt
 				vmware-bundle_extract-component "${bundle}" "${dest}" $((bundle_dataOffset+component_offset))
 				eend
 			fi
@@ -75,8 +76,12 @@ vmware-bundle_extract-component() {
 				echo -n '.'
 				file_path="${dest}/${file_path}"
 				mkdir -p "$(dirname "${file_path}")" || die
-				tail -c+$((offset+component_dataOffset+file_offset+1)) "${component}" 2> /dev/null |
-					head -c$((file_compressedSize)) | gzip -cd > "${file_path}" || die
+				if [[ ${file_compressedSize} -gt 0 ]] ; then
+					tail -c+$((offset+component_dataOffset+file_offset+1)) "${component}" 2> /dev/null |
+						head -c$((file_compressedSize)) | gzip -cd > "${file_path}" || die
+				else
+					echo "${file_path}" >> "${T}"/skipped_files.txt
+				fi
 			fi
 		done
 	echo
