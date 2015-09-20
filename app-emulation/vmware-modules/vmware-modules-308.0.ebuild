@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -21,7 +21,7 @@ IUSE="pax_kernel"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	=app-emulation/vmware-workstation-11.1.${PV_MINOR}*"
+	=app-emulation/vmware-workstation-12.0.${PV_MINOR}*"
 
 S=${WORKDIR}
 
@@ -82,10 +82,9 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${PV_MAJOR}-makefile-kernel-dir.patch"
-	epatch "${FILESDIR}/${PV_MAJOR}-makefile-include.patch"
-	use pax_kernel && epatch "${FILESDIR}/${PV_MAJOR}-hardened.patch"
-	epatch "${FILESDIR}/vmware-modules-linux-4.2.0-rc5+.patch"
+	epatch "${FILESDIR}/304-makefile-kernel-dir.patch"
+	epatch "${FILESDIR}/304-makefile-include.patch"
+	use pax_kernel && epatch "${FILESDIR}/304-hardened.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user

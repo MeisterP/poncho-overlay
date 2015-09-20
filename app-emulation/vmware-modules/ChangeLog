@@ -2,6 +2,12 @@
 # Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-modules/ChangeLog,v 1.114 2013/12/27 16:34:13 dilfridge Exp $
 
+*vmware-modules-308.0 (20 Sep 2015)
+
+  20 Sep 2015; Poncho <poncho@spahan.ch> +vmware-modules-308.0.ebuild,
+  -files/vmware-modules-linux-4.2.0-rc5+.patch, -vmware-modules-304.2.ebuild:
+  app-emulation/vmware-modules: version bump
+
   04 Sep 2015; Poncho <poncho@spahan.ch>
   +files/vmware-modules-linux-4.2.0-rc5+.patch, vmware-modules-304.2.ebuild:
   app-emulation/vmware-modules: fix build with linux-4.2.0
