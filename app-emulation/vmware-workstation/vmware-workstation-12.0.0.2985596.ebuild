@@ -25,45 +25,39 @@ RESTRICT="mirror strip"
 
 # vmware-workstation should not use virtual/libc as this is a
 # precompiled binary package thats linked to glibc.
-RDEPEND="dev-cpp/cairomm
+RDEPEND="!app-emulation/vmware-player
+	dev-cpp/atkmm
+	dev-cpp/cairomm
 	dev-cpp/glibmm:2
 	dev-cpp/gtkmm:2.4
-	dev-cpp/libgnomecanvasmm
 	dev-cpp/pangomm
 	dev-libs/atk
 	dev-libs/glib:2
-	dev-libs/icu
-	dev-libs/expat
 	dev-libs/libaio
 	=dev-libs/libgcrypt-1.5*
 	dev-libs/libsigc++:2
 	dev-libs/libxml2
 	dev-libs/openssl:0.9.8
-	dev-libs/xmlrpc-c
-	gnome-base/libgnomecanvas
-	gnome-base/libgtop:2
 	gnome-base/librsvg:2
-	gnome-base/orbit
 	media-libs/fontconfig
 	media-libs/freetype
 	media-libs/libart_lgpl
 	media-libs/libpng:1.2
-	media-libs/libpng
+	media-libs/mesa
 	media-libs/tiff:3
 	net-misc/curl
-	cups? ( net-print/cups )
+	sys-apps/dbus
 	sys-devel/gcc
 	sys-fs/fuse
 	sys-libs/glibc
 	sys-libs/zlib
 	x11-libs/cairo
+	x11-libs/gdk-pixbuf
 	x11-libs/gtk+:2
-	x11-libs/libgksu
 	x11-libs/libICE
 	x11-libs/libSM
 	x11-libs/libX11
 	x11-libs/libXau
-	x11-libs/libxcb
 	x11-libs/libXcomposite
 	x11-libs/libXcursor
 	x11-libs/libXdamage
@@ -78,9 +72,10 @@ RDEPEND="dev-cpp/cairomm
 	x11-libs/libXtst
 	x11-libs/pango
 	x11-libs/pangox-compat
+	x11-libs/pixman
 	x11-libs/startup-notification
 	x11-themes/hicolor-icon-theme
-	!app-emulation/vmware-player"
+	cups? ( net-print/cups )"
 PDEPEND="~app-emulation/vmware-modules-308.${PV_MINOR}
 	vmware-tools? ( app-emulation/vmware-tools )"
 

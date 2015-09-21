@@ -2,6 +2,10 @@
 # Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-workstation/ChangeLog,v 1.260 2014/04/26 20:37:00 dilfridge Exp $
 
+  21 Sep 2015; Poncho <poncho@spahan.ch>
+  vmware-workstation-12.0.0.2985596.ebuild:
+  app-emulation/vmware-workstation: sync with https://bugs.gentoo.org/559798
+
 *vmware-workstation-12.0.0.2985596 (20 Sep 2015)
 
   20 Sep 2015; Poncho <poncho@spahan.ch> +files/vmware-12.0.rc,
