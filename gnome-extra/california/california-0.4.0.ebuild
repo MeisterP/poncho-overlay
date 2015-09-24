@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -39,11 +39,19 @@ src_prepare() {
 	epatch "${FILESDIR}/california-0.4-gnome-3.16.patch"
 	vala_src_prepare
 	gnome2_src_prepare
+
+	# add better icons to desktop files
+	sed -i "s/^Icon=.*/Icon=${PN}/" \
+		data/california.desktop.in{,.in} || die
 }
 
 src_install() {
 	# FIXME: report doc install being broken upstream
 	gnome2_src_install
+
+	for size in 16 22 24 32 48 256 512; do
+		newicon -s $size ${FILESDIR}/icons/hicolor_apps_"$size"x"$size"_gnome-calendar.png ${PN}.png
+	done
 
 	rm -rf "${ED}"/usr/doc || die
 }
