@@ -1,0 +1,4 @@
+*bijiben-3.16.2 (27 Sep 2015)
+
+  27 Sep 2015; Poncho <poncho@spahan.ch> +bijiben-3.16.2.ebuild, +metadata.xml:
+  app-misc/bijiben: import from gx86
