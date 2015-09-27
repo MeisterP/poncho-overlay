@@ -1,3 +1,10 @@
+*bijiben-3.16.2-r1 (27 Sep 2015)
+
+  27 Sep 2015; Poncho <poncho@spahan.ch>
+  +bijiben-3.16.2-r1.ebuild,
+  +files/bijiben-3.16.2-zeitgeist-optional.patch, metadata.xml:
+  app-misc/bijiben: fix dependencies
+
 *bijiben-3.16.2 (27 Sep 2015)
 
   27 Sep 2015; Poncho <poncho@spahan.ch> +bijiben-3.16.2.ebuild, +metadata.xml:
