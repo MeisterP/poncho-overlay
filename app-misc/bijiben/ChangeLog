@@ -1,3 +1,9 @@
+*bijiben-3.18.0 (12 Oct 2015)
+
+  12 Oct 2015; Poncho <poncho@spahan.ch> +bijiben-3.18.0.ebuild,
+  -bijiben-3.16.2-r1.ebuild, -bijiben-3.16.2.ebuild:
+  app-misc/bijiben: version bump
+
 *bijiben-3.16.2-r1 (27 Sep 2015)
 
   27 Sep 2015; Poncho <poncho@spahan.ch>

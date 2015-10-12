@@ -35,7 +35,7 @@ DEPEND="${RDEPEND}
 #	app-text/yelp-tools
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-zeitgeist-optional.patch"
+	epatch "${FILESDIR}/${PN}-3.16.2-zeitgeist-optional.patch"
 	eautoreconf
 	gnome2_src_prepare
 }
