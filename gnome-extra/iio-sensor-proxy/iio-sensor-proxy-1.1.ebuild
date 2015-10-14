@@ -4,11 +4,9 @@
 
 EAPI=5
 
-inherit autotools
-
 DESCRIPTION="IIO sensors to D-Bus proxy"
 HOMEPAGE="https://github.com/hadess/iio-sensor-proxy"
-SRC_URI="https://github.com/hadess/iio-sensor-proxy/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://secure.freedesktop.org/~hadess/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -20,9 +18,5 @@ RDEPEND="dev-libs/glib:*
 	virtual/libgudev"
 
 DEPEND="${RDEPEND}
-	dev-util/gtk-doc
+	dev-util/gtk-doc-am
 	virtual/pkgconfig"
-
-src_prepare() {
-	eautoreconf
-}
