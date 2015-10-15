@@ -1,0 +1,14 @@
+*ja2-stracciatella-0.14.01 (11 Jan 2015)
+
+  11 Jan 2015; Poncho <poncho@spahan.ch> +files/ja2.png,
+  +ja2-stracciatella-0.14.01.ebuild, -files/ja2-convert.sh,
+  -files/ja2-stracciatella-0.12.1_p7072-makefile.patch,
+  -ja2-stracciatella-0.12.1_p7072.ebuild, metadata.xml:
+  games-strategy/ja2-stracciatella: version bump
+
+*ja2-stracciatella-0.12.1_p7072 (11 Jan 2015)
+
+  11 Jan 2015; Poncho <poncho@spahan.ch> +files/ja2-convert.sh,
+  +files/ja2-stracciatella-0.12.1_p7072-makefile.patch,
+  +ja2-stracciatella-0.12.1_p7072.ebuild, +metadata.xml:
+  games-strategy/ja2-stracciatella: import from gx86
