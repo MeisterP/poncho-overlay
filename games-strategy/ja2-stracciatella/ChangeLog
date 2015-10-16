@@ -1,3 +1,9 @@
+*ja2-stracciatella-9999 (16 Oct 2015)
+
+  16 Oct 2015; Poncho <poncho@spahan.ch> +ja2-stracciatella-9999.ebuild,
+  -Manifest, -files/ja2.png, -ja2-stracciatella-0.14.01.ebuild:
+  games-strategy/ja2-stracciatella: add live ebuild
+
 *ja2-stracciatella-0.14.01 (11 Jan 2015)
 
   11 Jan 2015; Poncho <poncho@spahan.ch> +files/ja2.png,
