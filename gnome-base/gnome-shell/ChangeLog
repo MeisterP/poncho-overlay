@@ -1,0 +1,19 @@
+*gnome-shell-3.18.1 (24 Oct 2015)
+
+  24 Oct 2015; Poncho <poncho@spahan.ch>
+  +files/0001-windowManager-Fix-fullscreen-animations-on-dualscree.patch,
+  +files/0002-Fix-some-issues-reported-by-Bj-rn-Lie-in-bug-740906.patch,
+  +files/0003-windowManager-fix-fullscreen-clone-being-left-around.patch,
+  +files/0004-Add-RLM-as-appropriate.patch,
+  +files/0005-windowMenu-Ensure-the-source-actor-isn-t-sized-0x0.patch,
+  +files/0006-Fix-text-scaling-factor-under-wayland.patch,
+  +files/0007-Updated-Icelandic-translation.patch,
+  +files/0008-Updated-Hungarian-translation.patch,
+  +files/0009-gdm-don-t-emit-start-session-when-ready-from-idle-fu.patch,
+  +files/0010-animation-Run-every-16ms-not-ever-14ms.patch,
+  +files/0011-animation-do-spinner-animation-with-low-priority.patch,
+  +files/gnome-shell-3.12-bluetooth-flag.patch,
+  +files/gnome-shell-3.14.0-bluetooth-gold.patch,
+  +files/gnome-shell-3.14.0-defaults.patch, +gnome-shell-3.18.1.ebuild,
+  +metadata.xml:
+  gnome-base/gnome-shell: version bump

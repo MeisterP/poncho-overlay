@@ -1,0 +1,34 @@
+From 5583f881df39ee17bf136002e1fab7bb48e69997 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Tue, 20 Oct 2015 16:50:15 -0400
+Subject: [PATCH 09/11] gdm: don't emit start-session-when-ready from idle
+ function
+
+There's no point in delaying the emission.  We should do it
+right away.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=754814
+---
+ js/gdm/loginDialog.js | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/js/gdm/loginDialog.js b/js/gdm/loginDialog.js
+index 0e57536..b400d79 100644
+--- a/js/gdm/loginDialog.js
++++ b/js/gdm/loginDialog.js
+@@ -924,11 +924,7 @@ const LoginDialog = new Lang.Class({
+                            },
+                            onUpdateScope: this,
+                            onComplete: function() {
+-                               let id = Mainloop.idle_add(Lang.bind(this, function() {
+-                                   this._greeter.call_start_session_when_ready_sync(serviceName, true, null);
+-                                   return GLib.SOURCE_REMOVE;
+-                               }));
+-                               GLib.Source.set_name_by_id(id, '[gnome-shell] this._greeter.call_start_session_when_ready_sync');
++                               this._greeter.call_start_session_when_ready_sync(serviceName, true, null);
+                            },
+                            onCompleteScope: this });
+     },
+-- 
+2.4.10
+

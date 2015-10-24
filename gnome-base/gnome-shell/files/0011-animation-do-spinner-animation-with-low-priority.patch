@@ -1,0 +1,33 @@
+From a83f822512aaf4fa8dd6519ada10d7b71241b367 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Tue, 20 Oct 2015 16:52:11 -0400
+Subject: [PATCH 11/11] animation: do spinner animation with low priority
+
+It's very unexpected that a spinner animation would
+preempt idles from running.
+
+This commit runs the spinner animation with a low
+priority to ensure it doesn't take over the main
+loop.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=754814
+---
+ js/ui/animation.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/js/ui/animation.js b/js/ui/animation.js
+index d86fefe..23ec934 100644
+--- a/js/ui/animation.js
++++ b/js/ui/animation.js
+@@ -33,7 +33,7 @@ const Animation = new Lang.Class({
+             if (this._frame == 0)
+                 this._showFrame(0);
+ 
+-            this._timeoutId = Mainloop.timeout_add(this._speed, Lang.bind(this, this._update));
++            this._timeoutId = GLib.timeout_add(GLib.PRIORITY_LOW, this._speed, Lang.bind(this, this._update));
+             GLib.Source.set_name_by_id(this._timeoutId, '[gnome-shell] this._update');
+         }
+ 
+-- 
+2.4.10
+

@@ -1,0 +1,32 @@
+From f64d64035afe425fc11c37973d69d2a6135a96be Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Tue, 20 Oct 2015 16:50:50 -0400
+Subject: [PATCH 10/11] animation: Run every 16ms not ever 14ms
+
+Right now the spinner animation updates every 14ms.
+60 frames per second would be one frame per 16.667ms,
+so we're waking up more frequently than we need to.
+
+This commit changes the wakeup to happen after 16ms.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=754814
+---
+ js/ui/animation.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/js/ui/animation.js b/js/ui/animation.js
+index 08f8f7e..d86fefe 100644
+--- a/js/ui/animation.js
++++ b/js/ui/animation.js
+@@ -7,7 +7,7 @@ const St = imports.gi.St;
+ const Signals = imports.signals;
+ const Atk = imports.gi.Atk;
+ 
+-const ANIMATED_ICON_UPDATE_TIMEOUT = 14;
++const ANIMATED_ICON_UPDATE_TIMEOUT = 16;
+ 
+ const Animation = new Lang.Class({
+     Name: 'Animation',
+-- 
+2.4.10
+

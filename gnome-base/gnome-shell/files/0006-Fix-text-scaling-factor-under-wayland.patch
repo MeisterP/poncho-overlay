@@ -1,0 +1,35 @@
+From 2f82f783f233187ce1792f9a0c2ef69020ebd03e Mon Sep 17 00:00:00 2001
+From: "Owen W. Taylor" <otaylor@fishsoup.net>
+Date: Mon, 12 Oct 2015 13:35:06 -0400
+Subject: [PATCH 06/11] Fix text-scaling-factor under wayland.
+
+The text-scaling-factor GSetting was not being properly propagated
+to clutter and the Pango font map; under X this is done by Clutter,
+which listens to XSETTINGS directly.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=756447
+---
+ src/shell-global.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/shell-global.c b/src/shell-global.c
+index 188e898..3922467 100644
+--- a/src/shell-global.c
++++ b/src/shell-global.c
+@@ -867,7 +867,12 @@ update_scale_factor (GtkSettings *settings,
+     {
+       g_object_set (context, "scale-factor", g_value_get_int (&value), NULL);
+       if (meta_is_wayland_compositor ())
+-        g_object_set (clutter_settings_get_default (), "font-dpi", 96 * 1024 * g_value_get_int (&value), NULL);
++        {
++          int xft_dpi;
++          g_object_get (settings, "gtk-xft-dpi", &xft_dpi, NULL);
++
++          g_object_set (clutter_settings_get_default (), "font-dpi", xft_dpi, NULL);
++        }
+     }
+ 
+   /* Make sure clutter and gdk scaling stays disabled */
+-- 
+2.4.10
+
