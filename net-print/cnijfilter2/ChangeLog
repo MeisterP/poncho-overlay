@@ -1,0 +1,5 @@
+*cnijfilter2-5.00 (30 Oct 2015)
+
+  30 Oct 2015; Poncho <poncho@spahan.ch> +cnijfilter2-5.00.ebuild,
+  +metadata.xml:
+  net-print/cnijfilter2: new ebuild
