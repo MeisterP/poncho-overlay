@@ -28,6 +28,7 @@ DEPEND="${PYTHON_DEPS}
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
+	dev-python/humblewx[${PYTHON_USEDEP}]
 	dev-python/pytz[${PYTHON_USEDEP}]"
 
 src_prepare(){
