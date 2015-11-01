@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit autotools
+inherit eutils autotools
 
 DESCRIPTION="Canon InkJet Printer Driver for Linux (Pixus/Pixma-Series)"
 HOMEPAGE="http://www.canon-europe.com/Support/"
@@ -24,6 +24,7 @@ RDEPEND="${DEPEND}"
 S="${WORKDIR}/${PN}-source-${PV}-1"
 
 src_prepare () {
+	epatch "${FILESDIR}/libexec.patch"
 	for i in cmdtocanonij2 cnijbe2 lgmon3 rastertocanonij tocanonij tocnpwg
 	do
 		pushd $i
@@ -76,43 +77,17 @@ src_compile () {
 }
 
 src_install () {
-	pushd cmdtocanonij2
-	exeinto /usr/libexec/cups/filter
-	doexe filter/cmdtocanonij2
-	emake DESTDIR="${D}" install
-	popd
-
-	pushd cnijbe2
-	exeinto /usr/libexec/cups/backend
-	doexe src/cnijbe2
-	emake DESTDIR="${D}" install
-	popd
-
-	pushd lgmon3
-	emake DESTDIR="${D}" install
-	popd
-
-	pushd rastertocanonij
-	exeinto /usr/libexec/cups/filter
-	doexe src/rastertocanonij
-	emake DESTDIR="${D}" install
-	popd
-
-	pushd tocanonij
-	emake DESTDIR="${D}" install
-	popd
-
-	pushd tocnpwg
-	emake DESTDIR="${D}" install
-	popd
-
-	# all files in /usr/libexec/cups
-	rm -rf "${D}"/usr/lib{,64} || die
+	for i in cmdtocanonij2 cnijbe2 lgmon3 rastertocanonij tocanonij tocnpwg
+	do
+		pushd $i
+		emake DESTDIR="${D}" install
+		popd
+	done
 
 	insinto /usr/share/cups/model
 	doins ppd/*.ppd
 
-	insinto /usr/lib64/bjlib2
+	insinto /usr/lib/bjlib2
 	doins com/ini/cnnet.ini
 
 	dolib com/libs_bin64/libcnbpcnclapicom2.so.5.0.0

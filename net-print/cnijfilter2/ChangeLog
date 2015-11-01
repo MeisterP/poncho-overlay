@@ -1,3 +1,7 @@
+  01 Nov 2015; Poncho <poncho@spahan.ch> +files/libexec.patch,
+  cnijfilter2-5.00.ebuild:
+  net-print/cnijfilter2: patch build system
+
 *cnijfilter2-5.00 (30 Oct 2015)
 
   30 Oct 2015; Poncho <poncho@spahan.ch> +cnijfilter2-5.00.ebuild,
