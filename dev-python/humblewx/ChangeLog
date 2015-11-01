@@ -1,0 +1,4 @@
+*humblewx-0.1.0 (01 Nov 2015)
+
+  01 Nov 2015; Poncho <poncho@spahan.ch> +humblewx-0.1.0.ebuild, +metadata.xml:
+  dev-python/humblewx: new ebuild
