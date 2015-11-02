@@ -25,9 +25,11 @@ S="${WORKDIR}/${PN}-source-${PV}-1"
 
 src_prepare () {
 	epatch "${FILESDIR}/libexec.patch"
+
 	for i in cmdtocanonij2 cnijbe2 lgmon3 rastertocanonij tocanonij tocnpwg
 	do
 		pushd $i
+		mv configure.in configure.ac || die
 		eautoreconf
 		popd
 	done
