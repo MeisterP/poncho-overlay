@@ -1,3 +1,6 @@
+  08 Nov 2015; Poncho <poncho@spahan.ch> morituri-0.2.3.ebuild:
+  media-sound/morituri: fix PYTHON_COMPAT must be an array
+
   02 Jan 2015; Poncho <poncho@spahan.ch> morituri-0.2.3.ebuild:
   media-sound/morituri: update DEPEND with PYTHON_USEDEP
 
