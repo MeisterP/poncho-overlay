@@ -1,8 +1,0 @@
-*gdm-3.18.0 (24 Oct 2015)
-
-  24 Oct 2015; Poncho <poncho@spahan.ch> +files/49-keychain-r1,
-  +files/50-ssh-agent-r1, +files/gdm-2.32.0-xinitrc-ssh-agent.patch,
-  +files/gdm-3.2.1.1-custom-session.patch,
-  +files/gdm-3.8.4-fingerprint-auth.patch, +files/gdm-3.8.4-logo.patch,
-  +files/verification-complete.patch, +gdm-3.18.0.ebuild, +metadata.xml:
-  gnome-base/gdm: version bump
