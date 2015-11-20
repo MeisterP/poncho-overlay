@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -23,9 +23,9 @@ LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-DEPEND="dev-libs/glib:2
+DEPEND=">=dev-libs/glib-2.40:2
 	media-video/mpv[libmpv]
-	x11-libs/gtk+:3"
+	>=x11-libs/gtk+-3.16:3"
 RDEPEND="${DEPEND}"
 
 src_prepare() {
