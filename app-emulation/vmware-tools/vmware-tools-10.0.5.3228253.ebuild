@@ -6,7 +6,7 @@ inherit versionator vmware-bundle
 
 MY_PV="$(replace_version_separator 3 - $PV)"
 #BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/12.0.0/$(get_version_component_range 4)/linux/packages/"
-BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/12.0.1/3160714/linux/packages/"
+BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/12.1.0/3272444/linux/packages/"
 
 DESCRIPTION="VMware Tools for guest operating systems"
 HOMEPAGE="http://www.vmware.com/"
