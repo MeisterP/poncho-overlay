@@ -1,0 +1,4 @@
+*devedeng-4.4.0 (09 Jan 2016)
+
+  09 Jan 2016; Poncho <poncho@spahan.ch> +devedeng-4.4.0.ebuild, +metadata.xml:
+  media-video/devedeng: new ebuild
