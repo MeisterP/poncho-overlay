@@ -1,3 +1,6 @@
+  08 Feb 2016; Poncho <poncho@spahan.ch> ja2-stracciatella-9999.ebuild:
+  games-strategy/ja2-stracciatella: remove games.eclass
+
 *ja2-stracciatella-9999 (16 Oct 2015)
 
   16 Oct 2015; Poncho <poncho@spahan.ch> +ja2-stracciatella-9999.ebuild,

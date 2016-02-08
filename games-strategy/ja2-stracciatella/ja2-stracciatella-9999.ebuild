@@ -1,10 +1,10 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
-inherit games git-r3
+inherit git-r3
 
 DESCRIPTION="A port of Jagged Alliance 2 to SDL"
 HOMEPAGE="https://bitbucket.org/gennady/ja2-stracciatella"
@@ -18,16 +18,19 @@ IUSE="threads zlib"
 RDEPEND="media-libs/libsdl[X,sound,video]
 	zlib? ( sys-libs/zlib )"
 
+GAMES_DATADIR="/usr/share"
+
 src_prepare() {
-	 sed -e "s:/some/place/where/the/data/is:${GAMES_DATADIR}/ja2:" \
+	default
+	sed -e "s:/some/place/where/the/data/is:${GAMES_DATADIR}/ja2:" \
 		-i sgp/SGP.cc || die
 }
 
 src_configure() {
 	cat <<- EOF > Makefile.config
-		BINARY_DIR               := $GAMES_PREFIX/bin
+		BINARY_DIR               := /bin
 		MANPAGE_DIR              := /usr/share/man/man6
-		FULL_PATH_EXTRA_DATA_DIR := $GAMES_DATADIR/ja2/
+		FULL_PATH_EXTRA_DATA_DIR := ${GAMES_DATADIR}/ja2/
 		INSTALLABLE              := yes
 	EOF
 
@@ -47,15 +50,13 @@ src_compile() {
 }
 
 src_install() {
-	dogamesbin ja2
+	dobin ja2
 
-	insinto "$GAMES_DATADIR/ja2/"
+	insinto "${GAMES_DATADIR}/ja2/"
 	doins -r externalized mods
 	keepdir "${GAMES_DATADIR}/ja2/data"
 
 	newman ja2_manpage ja2.6
-
-	prepgamesdirs
 }
 
 pkg_postinst() {
