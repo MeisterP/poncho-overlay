@@ -1,3 +1,9 @@
+*timeline-1.9.0 (09 Feb 2016)
+
+  09 Feb 2016; Poncho <poncho@spahan.ch> +timeline-1.9.0.ebuild,
+  -timeline-1.8.1.ebuild:
+  x11-misc/timeline: version bump
+
 *timeline-1.8.1 (20 Nov 2015)
 
   20 Nov 2015; Poncho <poncho@spahan.ch> +timeline-1.8.1.ebuild,

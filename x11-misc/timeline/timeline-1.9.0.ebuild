@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -24,7 +24,7 @@ for lang in ${LANGS} ; do
 done
 
 DEPEND="${PYTHON_DEPS}
-	dev-python/wxpython:2.8[${PYTHON_USEDEP}]
+	dev-python/wxpython:3.0[${PYTHON_USEDEP}]
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
@@ -53,7 +53,7 @@ src_install() {
 		newicon -s $size icons/$size.png ${PN}.png
 	done
 
-	make_desktop_entry ${PN} Timeline ${PN} Graphics "StartupWMClass=Python2.7"
+	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
 	dodoc AUTHORS README
 }
