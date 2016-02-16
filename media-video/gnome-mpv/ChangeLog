@@ -1,3 +1,9 @@
+*gnome-mpv-0.7 (16 Feb 2016)
+
+  16 Feb 2016; Poncho <poncho@spahan.ch> +gnome-mpv-0.7.ebuild,
+  -gnome-mpv-0.6.ebuild, gnome-mpv-9999.ebuild:
+  media-video/gnome-mpv: version bump
+
 *gnome-mpv-0.6 (20 Nov 2015)
 
   20 Nov 2015; Poncho <poncho@spahan.ch> +gnome-mpv-0.6.ebuild,

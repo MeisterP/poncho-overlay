@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -29,6 +29,8 @@ DEPEND=">=dev-libs/glib-2.40:2
 RDEPEND="${DEPEND}"
 
 src_prepare() {
+	#fix "cannot create regular file ‘m4/intltool.m4’: No such file or directory"
+	mkdir m4 || die
 	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
 	sed -i '/^UPDATE_ICON/d' Makefile.am || die
 	eautoreconf
