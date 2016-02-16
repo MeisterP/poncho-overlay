@@ -7,8 +7,8 @@ EAPI=6
 inherit git-r3
 
 DESCRIPTION="A port of Jagged Alliance 2 to SDL"
-HOMEPAGE="https://bitbucket.org/gennady/ja2-stracciatella"
-EGIT_REPO_URI="https://bitbucket.org/gennady/${PN}.git"
+HOMEPAGE="https://github.com/ja2-stracciatella/ja2-stracciatella"
+EGIT_REPO_URI="https://github.com/ja2-stracciatella/ja2-stracciatella.git"
 
 LICENSE="SFI-SCLA"
 SLOT="0"
