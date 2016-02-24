@@ -15,7 +15,7 @@ HOMEPAGE="http://fixounet.free.fr/avidemux"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
-IUSE="aac aften a52 alsa amr debug dts fontconfig fribidi jack lame libsamplerate cpu_flags_x86_mmx opengl oss pulseaudio qt4 vorbis truetype twolame xv xvid x264 vdpau vpx"
+IUSE="aac aften a52 alsa amr debug dts fontconfig fribidi jack lame libsamplerate cpu_flags_x86_mmx nvenc opengl opus oss pulseaudio qt4 vorbis truetype twolame xv xvid x264 x265 vdpau vpx"
 KEYWORDS="~amd64 ~x86"
 
 MY_PN="${PN/-plugins/}"
@@ -51,11 +51,14 @@ DEPEND="
 		libsamplerate? ( media-libs/libsamplerate:0 )
 	)
 	lame? ( media-sound/lame:0 )
+	nvenc? ( media-video/nvidia_video_sdk:0 )
+	opus? ( media-libs/opus:0 )
 	oss? ( virtual/os-headers:0 )
 	pulseaudio? ( media-sound/pulseaudio:0 )
 	truetype? ( media-libs/freetype:2 )
 	twolame? ( media-sound/twolame:0 )
 	x264? ( media-libs/x264:0= )
+	x265? ( >=media-libs/x265-1.9 )
 	xv? (
 		x11-libs/libX11:0
 		x11-libs/libXext:0
@@ -101,12 +104,15 @@ src_configure() {
 			$(cmake-utils_use fontconfig)
 			$(cmake-utils_use jack)
 			$(cmake-utils_use lame)
+			$(cmake-utils_use nvenc)
+			$(cmake-utils_use opus)
 			$(cmake-utils_use oss)
 			$(cmake-utils_use pulseaudio PULSEAUDIOSIMPLE)
 			$(cmake-utils_use qt4)
 			$(cmake-utils_use truetype FREETYPE2)
 			$(cmake-utils_use twolame)
 			$(cmake-utils_use x264)
+			$(cmake-utils_use x265)
 			$(cmake-utils_use xv XVIDEO)
 			$(cmake-utils_use xvid)
 			$(cmake-utils_use vdpau)
