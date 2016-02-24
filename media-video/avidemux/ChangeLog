@@ -1,0 +1,4 @@
+*avidemux-2.6.8 (24 Feb 2016)
+
+  24 Feb 2016; Poncho <poncho@spahan.ch> +avidemux-2.6.8.ebuild, +metadata.xml:
+  media-video/avidemux: import from gx86
