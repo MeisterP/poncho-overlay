@@ -1,0 +1,5 @@
+*avidemux-core-2.6.8 (24 Feb 2016)
+
+  24 Feb 2016; Poncho <poncho@spahan.ch> +avidemux-core-2.6.8.ebuild,
+  +metadata.xml:
+  media-libs/avidemux-core: import from gx86
