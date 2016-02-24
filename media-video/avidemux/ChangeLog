@@ -1,3 +1,10 @@
+*avidemux-2.6.11 (24 Feb 2016)
+
+  24 Feb 2016; Poncho <poncho@spahan.ch> +avidemux-2.6.11.ebuild,
+  -avidemux-2.6.8.ebuild:
+  media-video/avidemux: version bump  see https://github.com/stefantalpalaru
+  /gentoo-overlay
+
 *avidemux-2.6.8 (24 Feb 2016)
 
   24 Feb 2016; Poncho <poncho@spahan.ch> +avidemux-2.6.8.ebuild, +metadata.xml:
