@@ -1,0 +1,4 @@
+*tracker-1.6.1 (15 Mar 2016)
+
+  15 Mar 2016; Poncho <poncho@spahan.ch> +metadata.xml, +tracker-1.6.1.ebuild:
+  app-misc/tracker: import from gx86
