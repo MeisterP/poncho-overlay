@@ -1,3 +1,9 @@
+*tracker-1.7.5 (15 Mar 2016)
+
+  15 Mar 2016; Poncho <poncho@spahan.ch> +tracker-1.7.5.ebuild,
+  -tracker-1.6.1.ebuild:
+  app-misc/tracker: version bump
+
 *tracker-1.6.1 (15 Mar 2016)
 
   15 Mar 2016; Poncho <poncho@spahan.ch> +metadata.xml, +tracker-1.6.1.ebuild:
