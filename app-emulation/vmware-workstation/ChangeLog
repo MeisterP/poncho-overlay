@@ -1,6 +1,15 @@
 # ChangeLog for app-emulation/vmware-workstation
-# Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
+# Copyright 1999-2016 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-workstation/ChangeLog,v 1.260 2014/04/26 20:37:00 dilfridge Exp $
+
+*vmware-workstation-12.1.0.3272444-r1 (18 Mar 2016)
+
+  18 Mar 2016; Poncho <poncho@spahan.ch> +files/vmware-12.1.rc,
+  +files/vmware-server-12.1.rc, +vmware-workstation-12.1.0.3272444-r1.ebuild,
+  -files/vmware-12.0.rc, -files/vmware-server-12.0.rc,
+  -vmware-workstation-12.1.0.3272444.ebuild, metadata.xml:
+  app-emulation/vmware-workstation: sync with
+  https://gitweb.gentoo.org/proj/vmware.git/
 
   25 Dec 2015; Poncho <poncho@spahan.ch>
   vmware-workstation-12.1.0.3272444.ebuild:
