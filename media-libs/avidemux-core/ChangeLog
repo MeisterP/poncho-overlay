@@ -1,3 +1,9 @@
+*avidemux-core-2.6.12 (18 Mar 2016)
+
+  18 Mar 2016; Poncho <poncho@spahan.ch> +avidemux-core-2.6.12.ebuild,
+  -avidemux-core-2.6.11.ebuild:
+  media-libs/avidemux-core: version bump
+
 *avidemux-core-2.6.11 (24 Feb 2016)
 
   24 Feb 2016; Poncho <poncho@spahan.ch> +avidemux-core-2.6.11.ebuild,
