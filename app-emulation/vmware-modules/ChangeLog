@@ -1,6 +1,16 @@
 # ChangeLog for app-emulation/vmware-modules
-# Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
+# Copyright 1999-2016 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/app-emulation/vmware-modules/ChangeLog,v 1.114 2013/12/27 16:34:13 dilfridge Exp $
+
+*vmware-modules-308.1.0 (18 Mar 2016)
+
+  18 Mar 2016; Poncho <poncho@spahan.ch> +files/308-hardened.patch,
+  +files/308-makefile-include.patch, +files/308-makefile-kernel-dir.patch,
+  +vmware-modules-308.1.0.ebuild, -files/304-hardened.patch,
+  -files/304-makefile-include.patch, -files/304-makefile-kernel-dir.patch,
+  -vmware-modules-308.0.ebuild, metadata.xml:
+  app-emulation/vmware-modules: sync with
+  https://gitweb.gentoo.org/proj/vmware.git/
 
 *vmware-modules-308.0 (24 Dec 2015)
 

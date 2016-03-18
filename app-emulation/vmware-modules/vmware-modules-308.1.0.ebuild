@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -7,7 +7,7 @@ EAPI=5
 inherit eutils flag-o-matic linux-info linux-mod user versionator udev
 
 PV_MAJOR=$(get_major_version)
-PV_MINOR=$(get_version_component_range 2)
+PV_MINOR=$(get_version_component_range 2-3)
 
 DESCRIPTION="VMware kernel modules"
 HOMEPAGE="http://www.vmware.com/"
@@ -21,29 +21,9 @@ IUSE="pax_kernel"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	=app-emulation/vmware-workstation-12.1.${PV_MINOR}*"
+	=app-emulation/vmware-workstation-12.${PV_MINOR}*"
 
 S=${WORKDIR}
-
-# no debug-symbol magic (should really be a linux-mod feature)
-RESTRICT="strip splitdebug"
-
-# override setup_allowed_flags from flag-o-matic
-# to ultra-conservative set.  Interim solution until
-# something can be done for this in linux-mod.eclass.
-# Note that the kernel has it's own flags that should
-# be applied automagically.
-#
-# How is this still not handled correctly in Gentoo?
-# Am I missing something, or is this an insane,
-# crazy bug?
-setup_allowed_flags() {
-	ALLOWED_FLAGS="-pipe"
-	ALLOWED_FLAGS+=" -O -O1 -O2 -Os -mtune*"
-	ALLOWED_FLAGS+=" -W* -w"
-	export ALLOWED_FLAGS
-	return 0
-}
 
 pkg_setup() {
 	CONFIG_CHECK="~HIGH_RES_TIMERS"
@@ -67,7 +47,9 @@ pkg_setup() {
 	BUILD_TARGETS="auto-build KERNEL_DIR=${KERNEL_DIR} KBUILD_OUTPUT=${KV_OUT_DIR}"
 
 	enewgroup "${VMWARE_GROUP}"
-	strip-flags
+
+	filter-flags -mfpmath=sse -mavx -mpclmul -maes
+	append-cflags -mno-sse  # Found a problem similar to bug #492964
 
 	for mod in ${VMWARE_MODULE_LIST}; do
 		MODULE_NAMES="${MODULE_NAMES} ${mod}(misc:${S}/${mod}-only)"
@@ -82,9 +64,9 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/304-makefile-kernel-dir.patch"
-	epatch "${FILESDIR}/304-makefile-include.patch"
-	use pax_kernel && epatch "${FILESDIR}/304-hardened.patch"
+	epatch "${FILESDIR}/${PV_MAJOR}-makefile-kernel-dir.patch"
+	epatch "${FILESDIR}/${PV_MAJOR}-makefile-include.patch"
+	use pax_kernel && epatch "${FILESDIR}/${PV_MAJOR}-hardened.patch"
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
@@ -94,9 +76,9 @@ src_install() {
 	linux-mod_src_install
 	local udevrules="${T}/60-vmware.rules"
 	cat > "${udevrules}" <<-EOF
-		KERNEL=="vmw_vmci",  GROUP="vmware", MODE="0660"
-		KERNEL=="vmmon", GROUP="vmware", MODE="0660"
-		KERNEL=="vsock", GROUP="vmware", MODE="0660"
+		KERNEL=="vmw_vmci",  GROUP="vmware", MODE="660"
+		KERNEL=="vmmon", GROUP="vmware", MODE="660"
+		KERNEL=="vsock", GROUP="vmware", MODE="660"
 	EOF
 	udev_dorules "${udevrules}"
 }
