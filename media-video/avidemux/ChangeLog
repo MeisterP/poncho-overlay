@@ -1,3 +1,9 @@
+*avidemux-2.6.12 (18 Mar 2016)
+
+  18 Mar 2016; Poncho <poncho@spahan.ch> +avidemux-2.6.12.ebuild,
+  -avidemux-2.6.11.ebuild:
+  media-video/avidemux: version bump
+
 *avidemux-2.6.11 (24 Feb 2016)
 
   24 Feb 2016; Poncho <poncho@spahan.ch> +avidemux-2.6.11.ebuild,
