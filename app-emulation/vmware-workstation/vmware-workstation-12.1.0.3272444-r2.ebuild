@@ -12,7 +12,7 @@ PV_MODULES="308.$(get_version_component_range 2-3)"
 PV_BUILD=$(get_version_component_range 4)
 MY_P="${MY_PN}-${MY_PV}-${PV_BUILD}"
 
-#SYSTEMD_UNITS_TAG="gentoo-01"
+#SYSTEMD_UNITS_TAG="gentoo-02"
 
 DESCRIPTION="Emulate a complete PC without the performance overhead of most emulators"
 HOMEPAGE="http://www.vmware.com/products/workstation/"
@@ -178,7 +178,7 @@ RDEPEND="
 "
 PDEPEND="~app-emulation/vmware-modules-${PV_MODULES}
 	vmware-tools? ( app-emulation/vmware-tools )"
-DEPEND="dev-util/bsdiff"
+DEPEND=">=dev-util/patchelf-0.9"
 
 S=${WORKDIR}
 VM_INSTALL_DIR="/opt/vmware"
@@ -234,14 +234,21 @@ clean_bundled_libs() {
 	# in libcds.so to be able to use system libs.
 	pushd >/dev/null .
 	einfo "Patching libcds.so"
-	cd "${S}"/lib/lib/libcds.so
-	cp libcds.so "${T}"/libcds.so
-	# The patch is created with patchelf > 0.8 (so using the live repository) and bsdiff:
-	# The following command should be replaced in the future with:
-	#   patchelf --replace-needed libssl.so.1.0.{1,0} \
-	#            --replace-needed libcrypto.so.1.0.{1,0} \
-	#            libcds.so
-	bspatch "${T}"/libcds.so libcds.so "${FILESDIR}"/${P}-unbundle-libcds.patch
+	cd "${S}"/lib/lib/libcds.so || die
+	patchelf --replace-needed libssl.so.1.0.{1,0} \
+	         --replace-needed libcrypto.so.1.0.{1,0} \
+	         libcds.so || die
+	popd >/dev/null
+
+	# vmware-workstation seems to use a custom version of libgksu2.so, for this reason
+	# we leave the bundled version. The libvmware-gksu.so library declares simply DT_NEEDED
+	# libgksu2.so.0 but it uses at runtime the bundled version, patch the lib to avoid portage
+	# preserve-libs mechanism to be triggered when a system lib is available (but not required)
+	pushd >/dev/null .
+	einfo "Patching libvmware-gksu.so"
+	cd "${S}"/lib/lib/libvmware-gksu.so || die
+	patchelf --set-rpath "\$ORIGIN/../libgksu2.so.0" \
+	         libvmware-gksu.so || die
 	popd >/dev/null
 }
 
@@ -431,9 +438,9 @@ src_install() {
 		PATH='${VM_INSTALL_DIR}/bin'
 		ROOTPATH='${VM_INSTALL_DIR}/bin'
 	EOF
-	doenvd "${envd}"
-
 	use bundled-libs && echo 'VMWARE_USE_SHIPPED_LIBS=1' >> "${envd}"
+
+	doenvd "${envd}"
 
 	# create the configuration
 	dodir /etc/vmware
