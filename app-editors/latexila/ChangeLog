@@ -1,0 +1,4 @@
+*latexila-3.20.0 (25 Mar 2016)
+
+  25 Mar 2016; Poncho <poncho@spahan.ch> +latexila-3.20.0.ebuild, +metadata.xml:
+  app-editors/latexila: version bump
