@@ -1,0 +1,4 @@
+*gitg-3.20.0 (25 Mar 2016)
+
+  25 Mar 2016; Poncho <poncho@spahan.ch> +gitg-3.20.0.ebuild, +metadata.xml:
+  dev-vcs/gitg: version bump
