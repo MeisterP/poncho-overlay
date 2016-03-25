@@ -19,7 +19,7 @@ HOMEPAGE="http://www.vmware.com/products/workstation/"
 BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/${MY_PV}/${PV_BUILD}/linux/core/"
 SRC_URI="amd64? ( ${BASE_URI}${MY_P}.x86_64.bundle.tar )"
 	#https://github.com/akhuettel/systemd-vmware/archive/${SYSTEMD_UNITS_TAG}.tar.gz -> vmware-systemd-${SYSTEMD_UNITS_TAG}.tgz
-LICENSE="vmware GPL-2"
+LICENSE="vmware GPL-2 GPL-3"
 SLOT="0"
 KEYWORDS="-* ~amd64"
 IUSE="bundled-libs cups doc ovftool server systemd vix +vmware-tools"
@@ -105,7 +105,6 @@ BUNDLED_LIB_DEPENDS="
 	media-libs/libpng:1.2
 	net-misc/curl
 	sys-apps/dbus
-	sys-apps/pcsc-lite
 	sys-fs/fuse
 	sys-libs/zlib
 	x11-libs/cairo
