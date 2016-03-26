@@ -25,7 +25,7 @@ IUSE=""
 
 DEPEND=">=dev-libs/glib-2.40:2
 	media-video/mpv[libmpv]
-	>=x11-libs/gtk+-3.16:3"
+	>=x11-libs/gtk+-3.20.0:3"
 RDEPEND="${DEPEND}"
 
 src_prepare() {
