@@ -139,7 +139,6 @@ RDEPEND="
 	dev-libs/libgcrypt:0/20
 	dev-libs/libtasn1:0/6
 	dev-libs/nettle:0/6
-	gnome-base/gconf
 	gnome-base/libgnome-keyring
 	media-gfx/graphite2
 	media-libs/alsa-lib
