@@ -1,3 +1,6 @@
+  02 Apr 2016; Poncho <poncho@spahan.ch> files/california-0.4-gnome-3.16.patch:
+  gnome-extra/california: update patch
+
   24 Sep 2015; Poncho <poncho@spahan.ch>
   +files/icons/hicolor_apps_16x16_gnome-calendar.png,
   +files/icons/hicolor_apps_22x22_gnome-calendar.png,
