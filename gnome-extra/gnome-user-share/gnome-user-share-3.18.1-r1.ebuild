@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -6,7 +6,7 @@ EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2 multilib
+inherit eutils gnome2 multilib
 
 DESCRIPTION="Personal file sharing for the GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gnome-user-share"
@@ -24,7 +24,7 @@ RDEPEND="
 	>=gnome-base/nautilus-2.91.7
 	media-libs/libcanberra[gtk3]
 	>=www-apache/mod_dnssd-0.6
-	>=www-servers/apache-2.2[apache2_modules_dav,apache2_modules_dav_fs,apache2_modules_authn_file,apache2_modules_auth_digest,apache2_modules_authz_groupfile,apache2_mpms_prefork]
+	>=www-servers/apache-2.2[apache2_modules_dav,apache2_modules_dav_fs,apache2_modules_authn_file,apache2_modules_auth_digest,apache2_modules_authz_groupfile]
 	>=x11-libs/libnotify-0.7:=
 "
 DEPEND="${RDEPEND}
@@ -37,7 +37,13 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
+	# Upstream forces to use prefork because of Fedora defaults, but
+	# that is problematic for us (bug #551012)
+	# https://bugzilla.gnome.org/show_bug.cgi?id=750525#c2
+	epatch "${FILESDIR}"/${PN}-3.18.1-no-prefork.patch
+
 	epatch_user
+
 	gnome2_src_prepare
 }
 
