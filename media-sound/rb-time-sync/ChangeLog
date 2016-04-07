@@ -1,5 +1,0 @@
-*rb-time-sync-0.1_p20140701 (01 Jul 2014)
-
-  01 Jul 2014; Poncho <poncho@spahan.ch> +metadata.xml,
-  +rb-time-sync-0.1_p20140701.ebuild, -rb-time-sync-0.1_p20130328.ebuild:
-  media-sound/rb-time-sync: version bump
