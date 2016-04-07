@@ -1,4 +1,0 @@
-*meld-3.15.1 (26 Mar 2016)
-
-  26 Mar 2016; Poncho <poncho@spahan.ch> +meld-3.15.1.ebuild, +metadata.xml:
-  dev-util/meld: version bump
