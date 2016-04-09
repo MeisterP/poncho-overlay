@@ -1,5 +1,5 @@
---- src/Makefile.am.old	2012-08-14 13:34:40.299853824 +0200
-+++ src/Makefile.am	2012-08-14 13:35:08.735498330 +0200
+--- a/src/Makefile.am.old	2012-08-14 13:34:40.299853824 +0200
++++ b/src/Makefile.am	2012-08-14 13:35:08.735498330 +0200
 @@ -1,4 +1,4 @@
 -CXXFLAGS = -Wall -O3 -DSYS_CONF_DIR=\"$(sysconfdir)\"
 +AM_CXXFLAGS = $(CXXFLAGS) -Wall -DSYS_CONF_DIR=\"$(sysconfdir)\"

@@ -1,13 +1,13 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
-EAPI=5
+EAPI=6
 
-inherit autotools eutils git-r3 systemd
+inherit autotools git-r3 systemd
 
 DESCRIPTION="A GNU/Linux keylogger that works!"
-HOMEPAGE="https://github.com/kernc/logkeys http://code.google.com/p/logkeys/"
+HOMEPAGE="https://github.com/kernc/logkeys"
 EGIT_REPO_URI="https://github.com/kernc/logkeys.git"
 
 LICENSE="GPL-3"
@@ -18,8 +18,10 @@ IUSE="suid"
 DEPEND=""
 RDEPEND=""
 
+PATCHES=( "${FILESDIR}/cxxflags.patch" )
+
 src_prepare() {
-	epatch "${FILESDIR}/cxxflags.patch"
+	default
 	eautoreconf
 }
 
@@ -27,7 +29,7 @@ src_install() {
 	default
 
 	insinto /usr/share/${PN}/
-	doins "${FILESDIR}"/*.map
+	doins keymaps/*.map
 
 	newinitd "${FILESDIR}/${PN}-init.d" ${PN}
 	newconfd "${FILESDIR}/${PN}-conf.d" ${PN}
