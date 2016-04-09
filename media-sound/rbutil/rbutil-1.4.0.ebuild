@@ -1,10 +1,10 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
-EAPI=4
+EAPI=6
 
-inherit eutils qt4-r2
+inherit qmake-utils
 
 DESCRIPTION="Rockbox opensource firmware manager for mp3 players"
 HOMEPAGE="http://www.rockbox.org/wiki/RockboxUtility"
@@ -21,11 +21,9 @@ RDEPEND="media-libs/speex
 	virtual/libusb:0"
 DEPEND="${RDEPEND}"
 
-S=${WORKDIR}/RockboxUtility-v${PV}/${PN}/${PN}qt
+PATCHES=( "${FILESDIR}"/${PN}-1.3.1-accessibility.patch )
 
-src_prepare() {
-	epatch "${FILESDIR}"/${PN}-1.3.1-accessibility.patch
-}
+S=${WORKDIR}/RockboxUtility-v${PV}/${PN}/${PN}qt
 
 src_configure() {
 	# generate binary translations

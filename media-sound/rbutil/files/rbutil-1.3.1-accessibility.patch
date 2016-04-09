@@ -1,5 +1,5 @@
---- RockboxUtility-v1.3.1/rbutil/rbutilqt/encttscfggui.cpp
-+++ RockboxUtility-v1.3.1/rbutil/rbutilqt/encttscfggui.cpp
+--- rbutilqt/encttscfggui.cpp
++++ rbutilqt/encttscfggui.cpp
 @@ -105,7 +105,9 @@
          case EncTtsSetting::eDOUBLE:
          {
