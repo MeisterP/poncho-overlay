@@ -1,32 +1,19 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
-EAPI="4"
+EAPI=6
 
-EGIT_REPO_URI="git://github.com/ruediger/VobSub2SRT.git"
+inherit cmake-utils git-r3
 
-inherit git-2
-
-IUSE=""
-
-DESCRIPTION="Converts image subtitles (.sub/.idx) to .srt textual subtitles using tesseract OCR engine"
+DESCRIPTION="Converts VobSub subtitles (.idx/.srt format) into .srt subtitles."
 HOMEPAGE="https://github.com/ruediger/VobSub2SRT"
+EGIT_REPO_URI="git://github.com/ruediger/VobSub2SRT.git"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-RDEPEND=">=app-text/tesseract-2.04-r1
+DEPEND=">=app-text/tesseract-2.04-r1
 	>=virtual/ffmpeg-0.6.90"
-DEPEND="${RDEPEND}"
-src_configure() {
-	econf
-}
-src_compile() {
-	emake
-}
-
-src_install() {
-	emake DESTDIR="${D}" install
-}
+RDEPEND="${DEPEND}"
