@@ -16,7 +16,7 @@ HOMEPAGE="http://fixounet.free.fr/${PN}"
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="debug opengl nls qt4 sdl vaapi vdpau video_cards_fglrx xv"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 
 if [[ ${PV} == *9999* ]] ; then
 	KEYWORDS=""
