@@ -8,13 +8,13 @@ inherit cmake-utils eutils flag-o-matic
 
 SLOT="2.6"
 
-DESCRIPTION="Core libraries for a video editor designed for simple cutting, filtering and encoding tasks"
+DESCRIPTION="Core libraries for avidemux"
 HOMEPAGE="http://fixounet.free.fr/avidemux"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="debug nls sdl system-ffmpeg vaapi vdpau video_cards_fglrx xv"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 
 MY_PN="${PN/-core/}"
 if [[ ${PV} == *9999* ]] ; then
