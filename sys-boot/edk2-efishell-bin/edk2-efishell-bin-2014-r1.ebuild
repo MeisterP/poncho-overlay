@@ -5,9 +5,9 @@
 EAPI=6
 
 DESCRIPTION="EFI-Shell - provides native UDK implemenations of a UEFI Shell 2.0"
-HOMEPAGE="http://www.tianocore.org/"
-SRC_URI="https://github.com/tianocore/udk/releases/download/UDK${PV}/UDK${PV}.MyWorkSpace.zip
-	-> ${P}.zip"
+HOMEPAGE="http://www.tianocore.org/edk2/"
+SRC_URI="https://raw.githubusercontent.com/tianocore/edk2/UDK2014.SP1/EdkShellBinPkg/FullShell/X64/Shell_Full.efi
+	-> ${P}.efi"
 
 LICENSE="intel-ucode"
 SLOT="0"
@@ -17,13 +17,15 @@ IUSE=""
 DEPEND=""
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}/MyWorkSpace"
+S="${WORKDIR}"
+
+src_unpack() {
+	cp "${DISTDIR}"/${P}.efi "${WORKDIR}"/shellx64.efi || die
+}
 
 src_install() {
 	insinto "/usr/share/${PN}"
-	newins ShellBinPkg/UefiShell/X64/Shell.efi shellx64.efi
-
-	dodoc ShellBinPkg/ReadMe.txt
+	doins shellx64.efi
 }
 
 pkg_postinst() {
