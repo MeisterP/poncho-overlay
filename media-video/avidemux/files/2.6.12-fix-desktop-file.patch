@@ -1,0 +1,36 @@
+From 39399e48263b812ad21c1dfe80794c6e041764d3 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Wed, 13 Apr 2016 16:45:57 +0200
+Subject: [PATCH] fix desktop file
+
+---
+ avidemux2.desktop => avidemux2-6.desktop | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+ rename avidemux2.desktop => avidemux2-6.desktop (72%)
+
+diff --git a/avidemux2.desktop b/avidemux2-6.desktop
+similarity index 72%
+rename from avidemux2.desktop
+rename to avidemux2-6.desktop
+index 46cc698..d61011a 100644
+--- a/avidemux2.desktop
++++ b/avidemux2-6.desktop
+@@ -1,11 +1,11 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-Name=avidemux2
++Name=Avidemux
+ GenericName=Video Editor
+ Comment=Multiplatform video editor
+-Exec=avidemux2_gtk
++Exec=avidemux3_qt5
+ MimeType=video/mpeg;video/quicktime;video/x-msvideo;video/x-anim;audio/x-mp3;audio/x-mp2;
+-Icon=avidemux
++Icon=avidemux-2.6
+ Terminal=false
+ Type=Application
+-Categories=Application;AudioVideo
++Categories=AudioVideo;Video;
+-- 
+2.7.3
+

@@ -15,7 +15,7 @@ HOMEPAGE="http://fixounet.free.fr/${PN}"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
-IUSE="debug opengl nls qt4 sdl vaapi vdpau video_cards_fglrx xv"
+IUSE="debug opengl nls qt5 sdl vaapi vdpau video_cards_fglrx xv"
 KEYWORDS="~amd64"
 
 MY_P="${PN}_${PV}"
@@ -24,14 +24,18 @@ SRC_URI="mirror://sourceforge/${PN}/${PN}/${PV}/${MY_P}.tar.gz"
 DEPEND="
 	~media-libs/avidemux-core-${PV}:${SLOT}[nls?,sdl?,vaapi?,vdpau?,video_cards_fglrx?,xv?]
 	opengl? ( virtual/opengl:0 )
-	qt4? ( >=dev-qt/qtgui-4.8.3:4 )
+	qt5? ( dev-qt/qtgui:5
+		dev-qt/qtscript:5 )
 	vaapi? ( x11-libs/libva:0 )
 	video_cards_fglrx? (
 		|| ( >=x11-drivers/ati-drivers-14.12-r3
 			x11-libs/xvba-video:0 )
 		)"
 RDEPEND="$DEPEND"
-PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt4?]"
+PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt5?]"
+
+DOCS=( AUTHORS README )
+PATCHES=( ${FILESDIR}/${PV}-disable-Qt5OpenGL.patch ${FILESDIR}/${PV}-fix-desktop-file.patch )
 
 S="${WORKDIR}/${MY_P}"
 
@@ -39,21 +43,7 @@ src_prepare() {
 	default
 
 	processes="buildCli:avidemux/cli"
-	use qt4 && processes+=" buildQt4:avidemux/qt4"
-
-	# Fix icon name -> avidemux-2.6.png
-	sed -i -e "/^Icon/ s:${PN}:${PN}-2.6:" ${PN}2.desktop || die "Icon name fix failed."
-
-	# The desktop file is broken. It uses avidemux2 instead of avidemux3
-	# so it will actually launch avidemux-2.5 if it is installed.
-	sed -i -e "/^Exec/ s:${PN}2:${PN}3:" ${PN}2.desktop || die "Desktop file fix failed."
-	sed -i -re '/^Exec/ s:(avidemux3_)gtk:\1qt4:' ${PN}2.desktop || die "Desktop file fix failed."
-
-	# Fix QA warnings that complain a trailing ; is missing and Application is deprecated.
-	sed -i -e 's/Application;AudioVideo/AudioVideo;/g' ${PN}2.desktop || die "Desktop file fix failed."
-
-	# Now rename the desktop file to not collide with 2.5.
-	mv ${PN}2.desktop ${PN}-2.6.desktop || die "Collision rename failed."
+	use qt5 && processes+=" buildQt5:avidemux/qt4"
 
 	# Remove "Build Option" dialog because it doesn't reflect what the GUI can or has been built with. (Bug #463628)
 	sed -i -e '/Build Option/d' avidemux/common/ADM_commonUI/myOwnMenu.h || die "Couldn't remove \"Build Option\" dialog."
@@ -62,6 +52,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DAVIDEMUX_SOURCE_DIR='${S}'
+		-DENABLE_QT5="$(usex qt5)"
 		-DGETTEXT="$(usex nls)"
 		-DSDL="$(usex sdl)"
 		-DLIBVA="$(usex vaapi)"
@@ -97,8 +88,6 @@ src_compile() {
 	done
 }
 
-DOCS=( AUTHORS README )
-
 src_install() {
 	for process in ${processes} ; do
 		BUILD_DIR="${S}/${process%%:*}" cmake-utils_src_install
@@ -115,8 +104,8 @@ src_install() {
 	cd "${S}" || die "Can't enter source folder."
 	newicon ${PN}_icon.png ${PN}-2.6.png
 
-	if use qt4 ; then
-		fperms +x /usr/bin/avidemux3_qt4
+	if use qt5 ; then
+		fperms +x /usr/bin/avidemux3_qt5
 		domenu ${PN}-2.6.desktop
 	fi
 }
