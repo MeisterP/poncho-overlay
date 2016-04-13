@@ -2,11 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="5"
+EAPI=6
 
 PLOCALES="ca cs de el es fr it ja pt_BR ru sr sr@latin tr"
 
-inherit cmake-utils eutils flag-o-matic l10n
+inherit cmake-utils flag-o-matic l10n
 
 SLOT="2.6"
 
@@ -18,15 +18,8 @@ LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="debug opengl nls qt4 sdl vaapi vdpau video_cards_fglrx xv"
 KEYWORDS="~amd64"
 
-if [[ ${PV} == *9999* ]] ; then
-	KEYWORDS=""
-	EGIT_REPO_URI="git://gitorious.org/${PN}2-6/${PN}2-6.git https://git.gitorious.org/${PN}2-6/${PN}2-6.git"
-
-	inherit git-2
-else
-	MY_P="${PN}_${PV}"
-	SRC_URI="mirror://sourceforge/${PN}/${PN}/${PV}/${MY_P}.tar.gz"
-fi
+MY_P="${PN}_${PV}"
+SRC_URI="mirror://sourceforge/${PN}/${PN}/${PV}/${MY_P}.tar.gz"
 
 DEPEND="
 	~media-libs/avidemux-core-${PV}:${SLOT}[nls?,sdl?,vaapi?,vdpau?,video_cards_fglrx?,xv?]
@@ -42,11 +35,11 @@ PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt4?]"
 
 S="${WORKDIR}/${MY_P}"
 
-processes="buildCli:avidemux/cli"
-use qt4 && processes+=" buildQt4:avidemux/qt4"
-
 src_prepare() {
-	cmake-utils_src_prepare
+	default
+
+	processes="buildCli:avidemux/cli"
+	use qt4 && processes+=" buildQt4:avidemux/qt4"
 
 	# Fix icon name -> avidemux-2.6.png
 	sed -i -e "/^Icon/ s:${PN}:${PN}-2.6:" ${PN}2.desktop || die "Icon name fix failed."
@@ -67,15 +60,15 @@ src_prepare() {
 }
 
 src_configure() {
-	local mycmakeargs="
+	local mycmakeargs=(
 		-DAVIDEMUX_SOURCE_DIR='${S}'
-		$(cmake-utils_use nls GETTEXT)
-		$(cmake-utils_use sdl)
-		$(cmake-utils_use vaapi LIBVA)
-		$(cmake-utils_use vdpau)
-		$(cmake-utils_use video_cards_fglrx XVBA)
-		$(cmake-utils_use xv XVIDEO)
-	"
+		-DGETTEXT="$(usex nls)"
+		-DSDL="$(usex sdl)"
+		-DLIBVA="$(usex vaapi)"
+		-DVDPAU="$(usex vdpau)"
+		-DXVBA="$(usex video_cards_fglrx)"
+		-DXVIDEO="$(usex xv)"
+	)
 
 	if use debug ; then
 		mycmakeargs+=" -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1"
