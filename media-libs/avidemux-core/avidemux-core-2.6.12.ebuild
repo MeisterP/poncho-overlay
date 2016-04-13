@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="5"
+EAPI=6
 
-inherit cmake-utils eutils flag-o-matic
+inherit cmake-utils flag-o-matic
 
 SLOT="2.6"
 
@@ -17,15 +17,8 @@ IUSE="debug nls sdl system-ffmpeg vaapi vdpau video_cards_fglrx xv"
 KEYWORDS="~amd64"
 
 MY_PN="${PN/-core/}"
-if [[ ${PV} == *9999* ]] ; then
-	KEYWORDS=""
-	EGIT_REPO_URI="git://gitorious.org/${MY_PN}2-6/${MY_PN}2-6.git https://git.gitorious.org/${MY_PN}2-6/${MY_PN}2-6.git"
-
-	inherit git-2
-else
 	MY_P="${MY_PN}_${PV}"
-	SRC_URI="mirror://sourceforge/${MY_PN}/${MY_PN}/${PV}/${MY_P}.tar.gz"
-fi
+SRC_URI="mirror://sourceforge/${MY_PN}/${MY_PN}/${PV}/${MY_P}.tar.gz"
 
 # Trying to use virtual; ffmpeg misses aac,cpudetection USE flags now though, are they needed?
 DEPEND="
@@ -59,13 +52,13 @@ DOCS=( AUTHORS README )
 src_prepare() {
 	mkdir "${BUILD_DIR}" || die "Can't create build folder."
 
-	cmake-utils_src_prepare
+	default
 
 	if use system-ffmpeg ; then
 		# Preparations to support the system ffmpeg. Currently fails because it depends on files the system ffmpeg doesn't install.
 		local error="Failed to remove ffmpeg."
 
-		rm -rf cmake/admFFmpeg* cmake/ffmpeg* avidemux_core/ffmpeg_package buildCore/ffmpeg || die "${error}"
+		rm -r cmake/admFFmpeg* cmake/ffmpeg* avidemux_core/ffmpeg_package || die "${error}"
 		sed -i -e 's/include(admFFmpegUtil)//g' avidemux/commonCmakeApplication.cmake || die "${error}"
 		sed -i -e '/registerFFmpeg/d' avidemux/commonCmakeApplication.cmake || die "${error}"
 		sed -i -e 's/include(admFFmpegBuild)//g' avidemux_core/CMakeLists.txt || die "${error}"
@@ -85,15 +78,15 @@ src_prepare() {
 }
 
 src_configure() {
-	local mycmakeargs="
+	local mycmakeargs=(
 		-DAVIDEMUX_SOURCE_DIR='${S}'
-		$(cmake-utils_use nls GETTEXT)
-		$(cmake-utils_use sdl SDL)
-		$(cmake-utils_use vaapi LIBVA)
-		$(cmake-utils_use vdpau VDPAU)
-		$(cmake-utils_use video_cards_fglrx XVBA)
-		$(cmake-utils_use xv XVIDEO)
-	"
+		-DGETTEXT="$(usex nls)"
+		-DSDL="$(usex sdl)"
+		-DLIBVA="$(usex vaapi)"
+		-DVDPAU="$(usex vdpau)"
+		-DXVBA="$(usex video_cards_fglrx)"
+		-DXVIDEO="$(usex xv)"
+	)
 
 	if use debug ; then
 		mycmakeargs+=" -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1"
