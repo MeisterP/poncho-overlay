@@ -13,7 +13,7 @@ HOMEPAGE="http://fixounet.free.fr/avidemux"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
-IUSE="aac aften a52 alsa amr debug dts fontconfig fribidi jack lame libsamplerate cpu_flags_x86_mmx nvenc opengl opus oss pulseaudio qt4 vorbis truetype twolame xv xvid x264 x265 vdpau vpx"
+IUSE="aac aften a52 alsa amr debug dts fontconfig fribidi jack lame libsamplerate cpu_flags_x86_mmx nvenc opengl opus oss pulseaudio qt5 vorbis truetype twolame xv xvid x264 x265 vdpau vpx"
 KEYWORDS="~amd64"
 
 MY_PN="${PN/-plugins/}"
@@ -22,7 +22,7 @@ SRC_URI="mirror://sourceforge/${MY_PN}/${MY_PN}/${PV}/${MY_P}.tar.gz"
 
 DEPEND="
 	~media-libs/avidemux-core-${PV}:${SLOT}[vdpau?]
-	~media-video/avidemux-${PV}:${SLOT}[opengl?,qt4?]
+	~media-video/avidemux-${PV}:${SLOT}[opengl?,qt5?]
 	>=dev-lang/spidermonkey-1.5-r2:0=
 	dev-libs/libxml2:2
 	media-libs/libpng:0=
@@ -63,14 +63,14 @@ RDEPEND="$DEPEND"
 
 S="${WORKDIR}/${MY_P}"
 
-PATCHES=( "${FILESDIR}"/${PN}-2.6.4-optional-pulse.patch )
+PATCHES=( "${FILESDIR}"/${PN}-2.6.4-optional-pulse.patch ${FILESDIR}/${PV}-disable-Qt5OpenGL.patch )
 
 src_prepare() {
 	default
 
 	processes="buildPluginsCommon:avidemux_plugins
 		buildPluginsCLI:avidemux_plugins"
-	use qt4 && processes+=" buildPluginsQt4:avidemux_plugins"
+	use qt5 && processes+=" buildPluginsQt5:avidemux_plugins"
 }
 
 src_configure() {
@@ -85,9 +85,13 @@ src_configure() {
 	for process in ${processes} ; do
 		local build="${process%%:*}"
 
+		local PLUGIN_UI=$(echo ${build/buildPlugins/} | tr '[:lower:]' '[:upper:]')
+		[[ ${PLUGIN_UI} == "QT5" ]] && PLUGIN_UI=QT4
+
 		local mycmakeargs=(
 			-DAVIDEMUX_SOURCE_DIR="${S}"
-			-DPLUGIN_UI=$(echo ${build/buildPlugins/} | tr '[:lower:]' '[:upper:]')
+			-DPLUGIN_UI="${PLUGIN_UI}"
+			-DENABLE_QT5="$(usex qt5)"
 			-DFAAC="$(usex aac)"
 			-DFAAD="$(usex aac)"
 			-DALSA="$(usex alsa)"
@@ -102,7 +106,6 @@ src_configure() {
 			-DOPUS="$(usex opus)"
 			-DOSS="$(usex oss)"
 			-DPULSEAUDIOSIMPLE="$(usex pulseaudio)"
-			-DQT4="$(usex qt4)"
 			-DFREETYPE2="$(usex truetype)"
 			-DTWOLAME="$(usex twolame)"
 			-DX264="$(usex x264)"
