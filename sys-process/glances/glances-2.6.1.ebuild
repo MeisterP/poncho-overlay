@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 PYTHON_COMPAT=( python{2_7,3_{3,4,5}} )
 PYTHON_REQ_USE="ncurses"
@@ -30,17 +30,13 @@ CONFIG_CHECK="~TASK_IO_ACCOUNTING ~TASK_DELAY_ACCT ~TASKSTATS"
 
 S="${WORKDIR}/${MYP}"
 
-# Remove duplicate entries of a prebuilt doc build and
-# ensure install of the file glances.conf in /etc/${PN}
-PATCHES=( "${FILESDIR}"/2.4.2-setup-data.patch )
+PATCHES=( ${FILESDIR}/2.6.1-setup-data.patch )
 
 pkg_setup() {
 	linux-info_pkg_setup
 }
 
 python_install_all() {
-	# add an intended file from original data set from setup.py to DOCS
-	local DOCS=( README.rst conf/glances.conf )
 	# setup for pre-built html docs in setup.py
 	use doc && local HTML_DOCS=( docs/_build/html/. )
 
