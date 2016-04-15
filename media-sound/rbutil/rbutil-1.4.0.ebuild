@@ -4,7 +4,7 @@
 
 EAPI=6
 
-inherit qmake-utils
+inherit eutils gnome2-utils qmake-utils
 
 DESCRIPTION="Rockbox opensource firmware manager for mp3 players"
 HOMEPAGE="http://www.rockbox.org/wiki/RockboxUtility"
@@ -15,10 +15,10 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="media-libs/speex
-	dev-qt/qtcore:4
-	dev-qt/qtgui:4
-	virtual/libusb:0"
+RDEPEND="dev-qt/qtcore:5
+	dev-qt/qtgui:5
+	dev-qt/qtmultimedia:5
+	virtual/libusb:1"
 DEPEND="${RDEPEND}"
 
 PATCHES=( "${FILESDIR}"/${PN}-1.3.1-accessibility.patch )
@@ -27,14 +27,31 @@ S=${WORKDIR}/RockboxUtility-v${PV}/${PN}/${PN}qt
 
 src_configure() {
 	# generate binary translations
-	lrelease ${PN}qt.pro || die
+	$(qt5_get_bindir)/lrelease ${PN}qt.pro || die
 
 	# noccache is required in order to call the correct compiler
-	eqmake4 CONFIG+=noccache
+	eqmake5 CONFIG+=noccache
 }
 
 src_install() {
 	newbin RockboxUtility ${PN}
 	newicon icons/rockbox-256.png ${PN}.png
-	make_desktop_entry ${PN} "Rockbox Utility"
+	make_desktop_entry ${PN} "Rockbox Utility" ${PN} "AudioVideo;Audio;Utility" "StartupWMClass=rbutil"
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+
+	elog "To get additional features, a number of optional runtime"
+	elog "dependencies may be installed:"
+	optfeature "Text to Speech" app-accessibility/espeak
+	optfeature "Voice Interface" media-libs/speex
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
 }
