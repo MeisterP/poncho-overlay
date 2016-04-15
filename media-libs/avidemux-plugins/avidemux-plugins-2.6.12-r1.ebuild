@@ -63,7 +63,7 @@ RDEPEND="$DEPEND"
 
 S="${WORKDIR}/${MY_P}"
 
-PATCHES=( "${FILESDIR}"/${PN}-2.6.4-optional-pulse.patch ${FILESDIR}/${PV}-disable-Qt5OpenGL.patch )
+PATCHES=( "${FILESDIR}"/${PN}-2.6.4-optional-pulse.patch )
 
 src_prepare() {
 	default
@@ -92,6 +92,8 @@ src_configure() {
 			-DAVIDEMUX_SOURCE_DIR="${S}"
 			-DPLUGIN_UI="${PLUGIN_UI}"
 			-DENABLE_QT5="$(usex qt5)"
+			-DOPENGL=OFF
+			-DVAPOURSYNTH=OFF
 			-DFAAC="$(usex aac)"
 			-DFAAD="$(usex aac)"
 			-DALSA="$(usex alsa)"
