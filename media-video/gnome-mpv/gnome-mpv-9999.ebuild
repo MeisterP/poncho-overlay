@@ -24,7 +24,7 @@ SLOT="0"
 IUSE=""
 
 DEPEND=">=dev-libs/glib-2.40:2
-	media-video/mpv[libmpv]
+	>=media-video/mpv-0.17.0[libmpv]
 	>=x11-libs/gtk+-3.20.0:3"
 RDEPEND="${DEPEND}"
 
