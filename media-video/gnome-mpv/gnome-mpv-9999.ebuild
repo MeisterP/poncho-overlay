@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
-inherit autotools gnome2-utils fdo-mime
+inherit eutils autotools gnome2-utils fdo-mime
 
 if [[ ${PV} == "9999" ]] ; then
 	inherit git-r3
@@ -33,6 +33,8 @@ src_prepare() {
 	mkdir m4 || die
 	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
 	sed -i '/^UPDATE_ICON/d' Makefile.am || die
+
+	eapply_user
 	eautoreconf
 }
 
@@ -45,6 +47,9 @@ pkg_postinst() {
 	fdo-mime_desktop_database_update
 	gnome2_icon_cache_update
 	gnome2_schemas_update
+
+	optfeature "Support for lua scripts" "media-video/mpv[lua]"
+	optfeature "Support for watching YouTube streams" "net-misc/youtube-dl"
 }
 
 pkg_postrm() {
