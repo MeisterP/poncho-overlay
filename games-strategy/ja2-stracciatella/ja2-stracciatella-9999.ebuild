@@ -4,7 +4,7 @@
 
 EAPI=6
 
-inherit git-r3
+inherit gnome2-utils git-r3
 
 DESCRIPTION="A port of Jagged Alliance 2 to SDL"
 HOMEPAGE="https://ja2-stracciatella.github.io/ https://github.com/ja2-stracciatella/ja2-stracciatella"
@@ -30,6 +30,7 @@ src_configure() {
 	cat <<- EOF > Makefile.config
 		BINARY_DIR               := /bin
 		MANPAGE_DIR              := /usr/share/man/man6
+		SHARED_DIR               := /usr/share
 		FULL_PATH_EXTRA_DATA_DIR := ${GAMES_DATADIR}/ja2/
 		INSTALLABLE              := yes
 	EOF
@@ -56,13 +57,24 @@ src_install() {
 	doins -r externalized mods
 	keepdir "${GAMES_DATADIR}/ja2/data"
 
+	newicon -s scalable _build/icons/logo.svg ${PN}.svg
+	domenu _build/distr-files-linux/${PN}.desktop
+
 	newman ja2_manpage ja2.6
 }
 
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
 pkg_postinst() {
-	games_pkg_postinst
+	gnome2_icon_cache_update
 
 	elog "You need to copy all files from the Data directory of"
 	elog "Jagged Alliance 2 installation to"
 	elog "${GAMES_DATADIR}/ja2/data"
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
 }
