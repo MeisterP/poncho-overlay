@@ -5,7 +5,7 @@
 EAPI="5"
 GCONF_DEBUG="no"
 
-inherit gnome2
+inherit autotools eutils gnome2
 
 DESCRIPTION="Manage your online calendars with simple and modern interface"
 HOMEPAGE="https://wiki.gnome.org/Apps/Calendar"
@@ -30,3 +30,10 @@ DEPEND="${RDEPEND}
 	sys-devel/gettext
 	virtual/pkgconfig
 "
+
+src_prepare() {
+	# https://bugzilla.gnome.org/show_bug.cgi?id=762428
+	epatch "${FILESDIR}"/${PN}-3.20.0-start-on-sunday.patch
+	eautoreconf
+	gnome2_src_prepare
+}
