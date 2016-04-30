@@ -20,7 +20,7 @@ DEPEND="dev-qt/qtcore:5"
 RDEPEND="${DEPEND}
 	>=gnome-base/gnome-session-3.20.0"
 
-PATCHES=( ${FILESDIR}/improve-font-size.patch )
+PATCHES=( ${FILESDIR}/upstream-fixes.patch )
 
 src_compile() {
 	eqmake5

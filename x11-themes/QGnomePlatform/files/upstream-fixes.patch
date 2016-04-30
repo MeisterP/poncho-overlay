@@ -1,0 +1,525 @@
+diff --git a/qgnomeplatform.pro b/qgnomeplatform.pro
+index 0786b51..b3b5989 100644
+--- a/qgnomeplatform.pro
++++ b/qgnomeplatform.pro
+@@ -10,14 +10,17 @@ QT += core-private \
+       platformsupport-private \
+       widgets
+ 
+-PKGCONFIG += gio-2.0
++PKGCONFIG += gio-2.0 \
++             gtk+-3.0
+ 
+ TARGET = qgnomeplatform
+ target.path += $$[QT_INSTALL_PLUGINS]/platformthemes
+ INSTALLS += target
+ 
+ SOURCES += src/platformplugin.cpp \
+-           src/qgnomeplatformtheme.cpp
++           src/qgnomeplatformtheme.cpp \
++           src/gnomehintssettings.cpp
+ 
+ HEADERS += src/platformplugin.h \
+-           src/qgnomeplatformtheme.h
++           src/qgnomeplatformtheme.h \
++           src/gnomehintssettings.h
+diff --git a/src/gnomehintssettings.cpp b/src/gnomehintssettings.cpp
+new file mode 100644
+index 0000000..3c9dd7c
+--- /dev/null
++++ b/src/gnomehintssettings.cpp
+@@ -0,0 +1,210 @@
++/*
++ * Copyright (C) 2016 Jan Grulich
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ *
++ */
++
++#include "gnomehintssettings.h"
++
++#include <QDir>
++#include <QString>
++#include <QPalette>
++#include <QMainWindow>
++#include <QApplication>
++#include <QGuiApplication>
++#include <QDialogButtonBox>
++#include <QtCore/QLoggingCategory>
++
++#include <gtk-3.0/gtk/gtksettings.h>
++
++Q_LOGGING_CATEGORY(QGnomePlatform, "qt.qpa.qgnomeplatform")
++
++GnomeHintsSettings::GnomeHintsSettings()
++    : QObject(0)
++    , m_gtkThemeDarkVariant(false)
++    , m_palette(nullptr)
++    , m_settings(g_settings_new("org.gnome.desktop.interface"))
++{
++    gtk_init(nullptr, nullptr);
++
++    // Get current theme and variant
++    g_object_get(gtk_settings_get_default(), "gtk-theme-name", &m_gtkTheme, "gtk-application-prefer-dark-theme", &m_gtkThemeDarkVariant, NULL);
++
++    if (!m_gtkTheme) {
++        qCWarning(QGnomePlatform) << "Couldn't get current gtk theme!";
++    } else {
++        qCDebug(QGnomePlatform) << "Theme name: " << m_gtkTheme;
++        qCDebug(QGnomePlatform) << "Dark version: " << (m_gtkThemeDarkVariant ? "yes" : "no");
++    }
++
++    gint cursorBlinkTime = g_settings_get_int(m_settings, "cursor-blink-time");
++//     g_object_get(gtk_settings_get_default(), "gtk-cursor-blink-time", &cursorBlinkTime, NULL);
++    if (cursorBlinkTime >= 100) {
++        qCDebug(QGnomePlatform) << "Cursor blink time: " << cursorBlinkTime;
++        m_hints[QPlatformTheme::CursorFlashTime] = cursorBlinkTime;
++    } else {
++        m_hints[QPlatformTheme::CursorFlashTime] = 1200;
++    }
++
++    gint doubleClickTime = 400;
++    g_object_get(gtk_settings_get_default(), "gtk-double-click-time", &doubleClickTime, NULL);
++    qCDebug(QGnomePlatform) << "Double click time: " << doubleClickTime;
++    m_hints[QPlatformTheme::MouseDoubleClickInterval] = doubleClickTime;
++
++    guint longPressTime = 500;
++    g_object_get(gtk_settings_get_default(), "gtk-long-press-time", &longPressTime, NULL);
++    qCDebug(QGnomePlatform) << "Long press time: " << longPressTime;
++    m_hints[QPlatformTheme::MousePressAndHoldInterval] = longPressTime;
++
++    gint doubleClickDistance = 5;
++    g_object_get(gtk_settings_get_default(), "gtk-double-click-distance", &doubleClickDistance, NULL);
++    qCDebug(QGnomePlatform) << "Double click distance: " << doubleClickDistance;
++    m_hints[QPlatformTheme::MouseDoubleClickDistance] = doubleClickDistance;
++
++    gint startDragDistance = 8;
++    g_object_get(gtk_settings_get_default(), "gtk-dnd-drag-threshold", &startDragDistance, NULL);
++    qCDebug(QGnomePlatform) << "Dnd drag threshold: " << startDragDistance;
++    m_hints[QPlatformTheme::StartDragDistance] = startDragDistance;
++
++    guint passwordMaskDelay = 0;
++    g_object_get(gtk_settings_get_default(), "gtk-entry-password-hint-timeout", &passwordMaskDelay, NULL);
++    qCDebug(QGnomePlatform) << "Password hint timeout: " << passwordMaskDelay;
++    m_hints[QPlatformTheme::PasswordMaskDelay] = passwordMaskDelay;
++
++    gchar *systemIconTheme = g_settings_get_string(m_settings, "icon-theme");
++//     g_object_get(gtk_settings_get_default(), "gtk-icon-theme-name", &systemIconTheme, NULL);
++    if (systemIconTheme) {
++        qCDebug(QGnomePlatform) << "Icon theme: " << systemIconTheme;
++        m_hints[QPlatformTheme::SystemIconThemeName] = systemIconTheme;
++        free(systemIconTheme);
++    } else {
++        m_hints[QPlatformTheme::SystemIconThemeName] = "Adwaita";
++    }
++    m_hints[QPlatformTheme::SystemIconFallbackThemeName] = "Adwaita";
++    m_hints[QPlatformTheme::IconThemeSearchPaths] = xdgIconThemePaths();
++
++    QStringList styleNames;
++    styleNames << QStringLiteral("adwaita")
++               << QStringLiteral("gtk+")
++               << QStringLiteral("fusion")
++               << QStringLiteral("windows");
++    m_hints[QPlatformTheme::StyleNames] = styleNames;
++
++    m_hints[QPlatformTheme::DialogButtonBoxLayout] = QDialogButtonBox::GnomeLayout;
++    m_hints[QPlatformTheme::DialogButtonBoxButtonsHaveIcons] = true;
++    m_hints[QPlatformTheme::KeyboardScheme] = QPlatformTheme::GnomeKeyboardScheme;
++    m_hints[QPlatformTheme::IconPixmapSizes] = QVariant::fromValue(QList<int>() << 512 << 256 << 128 << 64 << 32 << 22 << 16 << 8);
++    m_hints[QPlatformTheme::PasswordMaskCharacter] = QVariant(QChar(0x2022));
++
++                                        /* Other theme hints */
++    // KeyboardInputInterval, StartDragTime, KeyboardAutoRepeatRate, StartDragVelocity, DropShadow,
++    // MaximumScrollBarDragDistance, ItemViewActivateItemOnSingleClick, WindowAutoPlacement, DialogButtonBoxButtonsHaveIcons
++    // UseFullScreenForPopupMenu, UiEffects, SpellCheckUnderlineStyle, TabFocusBehavior, TabAllWidgets, PasswordMaskCharacter
++    // DialogSnapToDefaultButton, ContextMenuOnMouseRelease, WheelScrollLines
++    //  TODO TextCursorWidth, ToolButtonStyle, ToolBarIconSize
++
++    // Load fonts
++    loadFonts();
++
++    // Load palette
++    loadPalette();
++}
++
++GnomeHintsSettings::~GnomeHintsSettings()
++{
++    qDeleteAll(m_fonts);
++    delete m_palette;
++}
++
++void GnomeHintsSettings::loadFonts()
++{
++//     gdouble scaling = g_settings_get_double(m_settings, "text-scaling-factor");
++
++    QStringList fontTypes { "font-name", "monospace-font-name" };
++
++    Q_FOREACH (const QString fontType, fontTypes) {
++        gchar *fontName = g_settings_get_string(m_settings, fontType.toStdString().c_str());
++        if (!fontName) {
++            qCWarning(QGnomePlatform) << "Couldn't get " << fontType;
++        } else {
++            QString fontNameString(fontName);
++            QRegExp re("(.+)[ \t]+([0-9]+)");
++            int fontSize;
++            if (re.indexIn(fontNameString) == 0) {
++                fontSize = re.cap(2).toInt();
++                if (fontType == QLatin1String("font-name")) {
++                    m_fonts[QPlatformTheme::SystemFont] = new QFont(re.cap(1), fontSize, QFont::Normal);
++                    qCDebug(QGnomePlatform) << "Font name: " << re.cap(1) << " (size " << fontSize << ")";
++                } else if (fontType == QLatin1String("monospace-font-name")) {
++                    m_fonts[QPlatformTheme::FixedFont] = new QFont(re.cap(1), fontSize, QFont::Normal);
++                    qCDebug(QGnomePlatform) << "Monospace font name: " << re.cap(1) << " (size " << fontSize << ")";
++                }
++            } else {
++                if (fontType == QLatin1String("font-name")) {
++                    m_fonts[QPlatformTheme::SystemFont] = new QFont(fontNameString);
++                    qCDebug(QGnomePlatform) << "Font name: " << fontNameString;
++                } else if (fontType == QLatin1String("monospace-font-name")) {
++                    m_fonts[QPlatformTheme::FixedFont] = new QFont(fontNameString);
++                    qCDebug(QGnomePlatform) << "Monospace font name: " << fontNameString;
++                }
++            }
++            free(fontName);
++        }
++    }
++}
++
++void GnomeHintsSettings::loadPalette()
++{
++    if (m_palette) {
++        delete m_palette;
++        m_palette = nullptr;
++    }
++
++    m_palette = new QPalette();
++//     GtkCssProvider *gtkCssProvider = gtk_css_provider_get_named(themeName, preferDark ? "dark" : NULL);
++//
++//     if (!gtkCssProvider) {
++//         qCDebug(QGnomePlatform) << "Couldn't load current gtk css provider!";
++//         return;
++//     }
++
++//     qCDebug(QGnomePlatform) << gtk_css_provider_to_string(gtkCssProvider);
++}
++
++QStringList GnomeHintsSettings::xdgIconThemePaths() const
++{
++    QStringList paths;
++
++    const QFileInfo homeIconDir(QDir::homePath() + QStringLiteral("/.icons"));
++    if (homeIconDir.isDir()) {
++        paths << homeIconDir.absoluteFilePath();
++    }
++
++    QString xdgDirString = QFile::decodeName(qgetenv("XDG_DATA_DIRS"));
++
++    if (xdgDirString.isEmpty()) {
++        xdgDirString = QStringLiteral("/usr/local/share:/usr/share");
++    }
++
++    Q_FOREACH (const QString &xdgDir, xdgDirString.split(QLatin1Char(':'))) {
++        const QFileInfo xdgIconsDir(xdgDir + QStringLiteral("/icons"));
++        if (xdgIconsDir.isDir()) {
++            paths << xdgIconsDir.absoluteFilePath();
++        }
++    }
++
++    return paths;
++}
+diff --git a/src/gnomehintssettings.h b/src/gnomehintssettings.h
+new file mode 100644
+index 0000000..cbe5e89
+--- /dev/null
++++ b/src/gnomehintssettings.h
+@@ -0,0 +1,88 @@
++/*
++ * Copyright (C) 2016 Jan Grulich
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ *
++ */
++
++#ifndef GNOME_HINTS_SETTINGS_H
++#define GNOME_HINTS_SETTINGS_H
++
++#include <QFont>
++#include <QObject>
++#include <QVariant>
++
++#include <gio/gio.h>
++#include <qpa/qplatformtheme.h>
++
++#include <gtk-3.0/gtk/gtk.h>
++
++class QPalette;
++
++class GnomeHintsSettings : public QObject
++{
++    Q_OBJECT
++public:
++    explicit GnomeHintsSettings();
++    virtual ~GnomeHintsSettings();
++
++    inline QFont * font(QPlatformTheme::Font type) const
++    {
++        if (m_fonts.contains(type)) {
++            return m_fonts[type];
++        } else if (m_fonts.contains(QPlatformTheme::SystemFont)) {
++            return m_fonts[QPlatformTheme::SystemFont];
++        } else {
++            // GTK default font
++            return new QFont(QLatin1String("Sans"), 10);
++        }
++    }
++
++    inline bool gtkThemeDarkVariant() const
++    {
++        return m_gtkThemeDarkVariant;
++    }
++
++    inline QString gtkTheme() const
++    {
++        return QString(m_gtkTheme);
++    }
++
++    inline QVariant hint(QPlatformTheme::ThemeHint hint) const
++    {
++        return m_hints[hint];
++    }
++
++    inline QPalette *palette() const
++    {
++        return m_palette;
++    }
++
++private Q_SLOTS:
++    void loadFonts();
++    void loadPalette();
++
++private:
++    QStringList xdgIconThemePaths() const;
++
++    gboolean m_gtkThemeDarkVariant;
++    gchar *m_gtkTheme;
++    QPalette *m_palette;
++    GSettings *m_settings;
++    QHash<QPlatformTheme::Font, QFont*> m_fonts;
++    QHash<QPlatformTheme::ThemeHint, QVariant> m_hints;
++};
++
++#endif // GNOME_HINTS_SETTINGS_H
+diff --git a/src/qgnomeplatformtheme.cpp b/src/qgnomeplatformtheme.cpp
+index 5d9419c..9827e28 100644
+--- a/src/qgnomeplatformtheme.cpp
++++ b/src/qgnomeplatformtheme.cpp
+@@ -18,98 +18,52 @@
+  */
+ 
+ #include "qgnomeplatformtheme.h"
+-
++#include "gnomehintssettings.h"
+ #include <QApplication>
+ #include <QStyleFactory>
+-#include <QDebug>
+-#include <QRegExp>
+ 
+ QGnomePlatformTheme::QGnomePlatformTheme()
+-        : QGnomeTheme()
+-        , m_settings(g_settings_new("org.gnome.desktop.interface")) {
+-    getFont();
+-    getIconTheme();
+-    getGtkTheme();
++{
++    loadSettings();
+ }
+ 
+-QVariant QGnomePlatformTheme::themeHint(ThemeHint hint) const {
+-    switch(hint) {
+-        case StyleNames:
+-            return QStringList() << m_themeName << m_fallbackThemeNames;
+-        case SystemIconThemeName:
+-            return m_iconThemeName;
+-        case SystemIconFallbackThemeName:
+-            return "oxygen";
+-        default:
+-            return QGnomeTheme::themeHint(hint);
+-    }
++QGnomePlatformTheme::~QGnomePlatformTheme()
++{
++    delete m_hints;
+ }
+ 
+-const QFont *QGnomePlatformTheme::font(Font type) const {
+-    Q_UNUSED(type)
+-    return m_font;
++QVariant QGnomePlatformTheme::themeHint(QPlatformTheme::ThemeHint hintType) const
++{
++    QVariant hint = m_hints->hint(hintType);
++    if (hint.isValid()) {
++        return hint;
++    } else {
++        return QPlatformTheme::themeHint(hintType);
++    }
+ }
+ 
+-QPalette *QGnomePlatformTheme::palette(Palette type) const {
+-    Q_UNUSED(type)
+-    return new QPalette();
++const QPalette *QGnomePlatformTheme::palette(Palette type) const
++{
++    QPalette *palette = m_hints->palette();
++    if (palette && type == QPlatformTheme::SystemPalette) {
++        return palette;
++    } else {
++        return QPlatformTheme::palette(type);
++    }
+ }
+ 
+-bool QGnomePlatformTheme::usePlatformNativeDialog(DialogType type) const {
+-    Q_UNUSED(type)
++bool QGnomePlatformTheme::usePlatformNativeDialog(QPlatformTheme::DialogType type) const
++{
++    Q_UNUSED(type);
+     return true;
+ }
+ 
+-void QGnomePlatformTheme::getFont() {
+-    gdouble scaling = g_settings_get_double(m_settings, "text-scaling-factor");
+-    gchar *name = g_settings_get_string(m_settings, "font-name");
+-    if (!name)
+-        return;
+-    gchar *fixed = g_settings_get_string(m_settings, "monospace-font-name");
+-    if (!fixed) {
+-        free(name);
+-        return;
+-    }
+-
+-    QString rawFont(name);
+-
+-    if (m_font)
+-        delete m_font;
+-
+-    QRegExp re("(.+)[ \t]+([0-9]+)");
+-    int fontSize;
+-    if (re.indexIn(rawFont) == 0) {
+-        fontSize = re.cap(2).toInt();
+-        m_font = new QFont(re.cap(1), fontSize, QFont::Normal);
+-    }
+-    else {
+-        m_font = new QFont(rawFont);
+-        fontSize = m_font->pixelSize();
+-    }
+-
+-    m_font->setPixelSize(fontSize * scaling);
+-
+-    QGuiApplication::setFont(*m_font);
+-
+-    free(name);
++const QFont *QGnomePlatformTheme::font(Font type) const
++{
++    return m_hints->font(type);
+ }
+ 
+-void QGnomePlatformTheme::getIconTheme() {
+-    gchar *data = g_settings_get_string(m_settings, "icon-theme");
+-    if (!data)
+-        return;
+-
+-    m_iconThemeName = QString(data);
+-
+-    free(data);
+-}
+-
+-void QGnomePlatformTheme::getGtkTheme() {
+-    gchar *data = g_settings_get_string(m_settings, "gtk-theme");
+-    if (!data)
+-        return;
+-
+-    m_themeName = QString(data);
+-
+-    free(data);
++void QGnomePlatformTheme::loadSettings()
++{
++    m_hints = new GnomeHintsSettings;
+ }
+diff --git a/src/qgnomeplatformtheme.h b/src/qgnomeplatformtheme.h
+index 1ce9b0b..2538147 100644
+--- a/src/qgnomeplatformtheme.h
++++ b/src/qgnomeplatformtheme.h
+@@ -16,38 +16,31 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  *
+  */
+-#ifndef QGNOMEPLATFORMTHEME_H
+-#define QGNOMEPLATFORMTHEME_H
++#ifndef QGNOME_PLATFORM_THEME_H
++#define QGNOME_PLATFORM_THEME_H
+ 
+ #include <QVariant>
+ #include <QFont>
+ #include <QPalette>
+ #include <qpa/qplatformtheme.h>
+-#include <private/qgenericunixthemes_p.h>
+ 
+-#include <gio/gio.h>
++class GnomeHintsSettings;
+ 
+-class QGnomePlatformTheme : public QGnomeTheme
++class QGnomePlatformTheme : public QPlatformTheme
+ {
+ public:
+     QGnomePlatformTheme();
++    ~QGnomePlatformTheme();
+ 
+-    virtual QVariant themeHint(ThemeHint hint) const;
+-    virtual const QFont *font(Font type) const;
+-    virtual QPalette *palette(Palette type) const;
+-    virtual bool usePlatformNativeDialog(DialogType type) const;
++    QVariant themeHint(ThemeHint hint) const Q_DECL_OVERRIDE;
++    const QFont *font(Font type) const Q_DECL_OVERRIDE;
++    const QPalette *palette(Palette type = SystemPalette) const Q_DECL_OVERRIDE;
++    bool usePlatformNativeDialog(DialogType type) const Q_DECL_OVERRIDE;
+ 
+-protected:
+-    void getFont();
+-    void getIconTheme();
+-    void getGtkTheme();
++private:
++    void loadSettings();
+ 
+-    QFont *m_font { nullptr };
+-    QString m_themeName { "Adwaita" };
+-    QString m_iconThemeName { "Adwaita" };
+-    GSettings *m_settings { nullptr };
+-
+-    const QStringList m_fallbackThemeNames { "adwaita", "gtk+", "oxygen", "breeze" };
++    GnomeHintsSettings *m_hints;
+ };
+ 
+-#endif // STYLEPLUGIN_H
++#endif // QGNOME_PLATFORM_THEME_HH
