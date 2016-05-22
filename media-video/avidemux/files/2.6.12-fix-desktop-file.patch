@@ -1,21 +1,21 @@
-From d690e7beb8111558a5f7de15d760c7ec957868d1 Mon Sep 17 00:00:00 2001
+From 39399e48263b812ad21c1dfe80794c6e041764d3 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
-Date: Fri, 15 Apr 2016 14:23:32 +0200
+Date: Wed, 13 Apr 2016 16:45:57 +0200
 Subject: [PATCH] fix desktop file
 
 ---
- avidemux2.desktop => avidemux2-6.desktop | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
- rename avidemux2.desktop => avidemux2-6.desktop (66%)
+ avidemux2.desktop => avidemux2-6.desktop | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+ rename avidemux2.desktop => avidemux2-6.desktop (72%)
 
 diff --git a/avidemux2.desktop b/avidemux2-6.desktop
-similarity index 66%
+similarity index 72%
 rename from avidemux2.desktop
 rename to avidemux2-6.desktop
-index 46cc698..17c2aef 100644
+index 46cc698..d61011a 100644
 --- a/avidemux2.desktop
 +++ b/avidemux2-6.desktop
-@@ -1,11 +1,12 @@
+@@ -1,11 +1,11 @@
  [Desktop Entry]
  Encoding=UTF-8
 -Name=avidemux2
@@ -31,7 +31,6 @@ index 46cc698..17c2aef 100644
  Type=Application
 -Categories=Application;AudioVideo
 +Categories=AudioVideo;Video;
-+StartupWMClass=avidemux3_qt5
 -- 
 2.7.3
 

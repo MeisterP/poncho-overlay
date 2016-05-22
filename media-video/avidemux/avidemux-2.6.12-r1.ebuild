@@ -6,7 +6,7 @@ EAPI=6
 
 PLOCALES="ca cs de el es fr it ja pt_BR ru sr sr@latin tr"
 
-inherit eutils cmake-utils flag-o-matic l10n
+inherit cmake-utils flag-o-matic l10n
 
 SLOT="2.6"
 
@@ -35,7 +35,7 @@ RDEPEND="$DEPEND"
 PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt5?]"
 
 DOCS=( AUTHORS README )
-PATCHES=( ${FILESDIR}/${PV}-fix-desktop-file.patch )
+PATCHES=( ${FILESDIR}/${PV}-disable-Qt5OpenGL.patch ${FILESDIR}/${PV}-fix-desktop-file.patch )
 
 S="${WORKDIR}/${MY_P}"
 
@@ -53,7 +53,6 @@ src_configure() {
 	local mycmakeargs=(
 		-DAVIDEMUX_SOURCE_DIR='${S}'
 		-DENABLE_QT5="$(usex qt5)"
-		-DOPENGL=OFF
 		-DGETTEXT="$(usex nls)"
 		-DSDL="$(usex sdl)"
 		-DLIBVA="$(usex vaapi)"
@@ -85,7 +84,7 @@ src_configure() {
 
 src_compile() {
 	for process in ${processes} ; do
-		QT_SELECT=5 BUILD_DIR="${S}/${process%%:*}" cmake-utils_src_compile
+		BUILD_DIR="${S}/${process%%:*}" cmake-utils_src_compile
 	done
 }
 
@@ -107,6 +106,6 @@ src_install() {
 
 	if use qt5 ; then
 		fperms +x /usr/bin/avidemux3_qt5
-		domenu ${PN}2-6.desktop
+		domenu ${PN}-2.6.desktop
 	fi
 }
