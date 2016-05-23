@@ -4,15 +4,15 @@
 
 EAPI=6
 
-inherit gnome2-utils git-r3
+inherit gnome2-utils
 
 DESCRIPTION="A port of Jagged Alliance 2 to SDL"
 HOMEPAGE="https://ja2-stracciatella.github.io/ https://github.com/ja2-stracciatella/ja2-stracciatella"
-EGIT_REPO_URI="https://github.com/ja2-stracciatella/ja2-stracciatella.git"
+SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="SFI-SCLA"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="threads zlib"
 
 RDEPEND="media-libs/libsdl[X,sound,video]
