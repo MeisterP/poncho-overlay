@@ -25,11 +25,11 @@ IUSE=""
 
 DEPEND=">=dev-libs/glib-2.44:2
 	>=media-video/mpv-0.17.0[libmpv]
-	>=x11-libs/gtk+-3.20.0:3"
+	x11-libs/gtk+:3"
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	#fix "cannot create regular file ‘m4/intltool.m4’: No such file or directory"
+	# see https://bugs.launchpad.net/intltool/+bug/1581124
 	mkdir m4 || die
 	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
 	sed -i '/^UPDATE_ICON/d' Makefile.am || die
