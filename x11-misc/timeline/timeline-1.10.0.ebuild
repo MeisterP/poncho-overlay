@@ -5,8 +5,9 @@
 EAPI=6
 
 PYTHON_COMPAT=( python2_7 )
+PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
 
-inherit eutils gnome2-utils python-single-r1
+inherit eutils l10n gnome2-utils python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -16,12 +17,6 @@ LICENSE="GPL-3 CC-BY-SA-3.0"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
-
-LANGS="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
-
-for lang in $LANGS; do
-	IUSE="${IUSE} linguas_${lang}"
-done
 
 DEPEND="${PYTHON_DEPS}
 	dev-python/wxpython:3.0[${PYTHON_USEDEP}]
@@ -33,6 +28,11 @@ RDEPEND="${DEPEND}
 
 PATCHES=( "${FILESDIR}/timeline-1.10.0-path.patch" )
 
+src_prepare() {
+	default
+	l10n_find_plocales_changes "${S}/translations" "" ".po"
+}
+
 src_install() {
 	python_domodule source/timelinelib
 	python_newscript source/timeline.py ${PN}
@@ -40,9 +40,8 @@ src_install() {
 	insinto /usr/share/${PN}/icons
 	doins -r icons/{*.png,event_icons}
 
-	strip-linguas ${LANGS}
-	for lang in ${LINGUAS}; do
-		insinto /usr/share/${PN}/translations
+	insinto /usr/share/${PN}/translations
+	for lang in $(l10n_get_locales); do
 		doins translations/${lang}.po
 	done
 
