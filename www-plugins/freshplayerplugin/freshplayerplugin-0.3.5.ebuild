@@ -63,7 +63,7 @@ RDEPEND="${COMMON_DEPEND}
 	)
 	"
 
-PATCHES=( "${FILESDIR}/0.3.4-cmake.patch" "${FILESDIR}/0.3.4-git-revision.patch" )
+PATCHES=( "${FILESDIR}/0.3.5-cmake.patch" "${FILESDIR}/0.3.4-git-revision.patch" )
 DOCS=( ChangeLog data/freshwrapper.conf.example README.md )
 
 src_configure() {

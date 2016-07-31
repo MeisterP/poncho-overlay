@@ -1,13 +1,8 @@
-diff -uarN a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	2015-04-25 11:17:24.000000000 -0400
-+++ b/CMakeLists.txt	2015-04-26 20:14:43.152014529 -0400
-@@ -61,35 +61,36 @@
- # optional dependencies
- message(STATUS "checking for optional dependencies")
- 
--pkg_check_modules(PULSEAUDIO QUIET libpulse)
--pkg_check_modules(JACK QUIET jack)
--pkg_check_modules(SOXR QUIET soxr)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 975ca71..eb588ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -103,29 +103,33 @@ pkg_check_modules(SOXR QUIET soxr)
  set(WITH_PULSEAUDIO TRUE CACHE STRING "enable PulseAudio support")
  set(WITH_JACK TRUE CACHE STRING "enable JACK Audio Connection Kit")
  
@@ -41,13 +36,13 @@ diff -uarN a/CMakeLists.txt b/CMakeLists.txt
 +    pkg_check_modules(JACK QUIET jack)
 +    if (NOT JACK_FOUND)
 +        message(FATAL_ERROR "JACK support requested but not found.")
-+    endif()
-+    pkg_check_modules(SOXR QUIET soxr)
-+    if (NOT SOXR_FOUND)
-+        message(FATAL_ERROR "SOXR libray not found but needed for JACK support.")
      endif()
 -else()
 -    message(STATUS "  no jack found (optional)")
++    pkg_check_modules(SOXR QUIET soxr)
++    if (NOT SOXR_FOUND)
++        message(FATAL_ERROR "SOXR libray not found but needed for JACK support.")
++    endif()
 +    message(STATUS "  found jack, version ${JACK_VERSION}")
 +    message(STATUS "  found soxr, version ${SOXR_VERSION}")
 +    add_definitions(-DHAVE_JACK=1)
@@ -56,15 +51,17 @@ diff -uarN a/CMakeLists.txt b/CMakeLists.txt
 +    list(APPEND REQ_LIBRARIES    "${JACK_LIBRARIES}" "${SOXR_LIBRARIES}")
  endif()
  
- list(APPEND REQ_LIBRARIES img-resources)
---- a/src/CMakeLists.txt	2015-12-20 08:38:33.000000000 -0500
-+++ b/src/CMakeLists.txt	2015-12-26 20:45:07.000000000 -0500
-@@ -5,7 +5,7 @@
+ # hw accelerated decoding
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 90d80f2..c3f983d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -5,7 +5,7 @@ endif()
  
  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
  
--set(MOZPLUGIN_INSTALL_DIR "lib${LIB_SUFFIX}/mozilla/plugins/" CACHE PATH "plugin install directory")
-+set(MOZPLUGIN_INSTALL_DIR "lib${LIB_SUFFIX}/nsbrowser/plugins/" CACHE PATH "plugin install directory")
+-set(MOZPLUGIN_INSTALL_DIR "lib${LIB_SUFFIX}/mozilla/plugins/" CACHE STRING "plugin install directory")
++set(MOZPLUGIN_INSTALL_DIR "lib${LIB_SUFFIX}/nsbrowser/plugins/" CACHE STRING "plugin install directory")
  
  add_subdirectory(uri_parser)
  add_subdirectory(config_parser)
