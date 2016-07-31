@@ -41,12 +41,13 @@ RDEPEND="${COMMON_DEPEND}
 	gnome-base/librsvg:=
 	gnome-base/gnome-desktop:3=[introspection]
 
-	>=media-libs/gstreamer-1.6.0:1.0[introspection]
-	>=media-libs/gstreamer-editing-services-1.6.0:1.0[introspection]
-	>=media-libs/gst-plugins-base-1.6.0:1.0
+	>=media-libs/gstreamer-1.8.2:1.0[introspection]
+	>=media-libs/gstreamer-editing-services-1.8.2:1.0[introspection]
+	>=media-libs/gst-plugins-base-1.8.2:1.0
 	>=media-libs/gst-plugins-bad-1.6.1:1.0[gtk]
-	>=media-libs/gst-plugins-good-1.6.0:1.0
-	>=media-plugins/gst-plugins-libav-1.6.0:1.0
+	>=media-libs/gst-plugins-good-1.8.2:1.0
+	>=media-plugins/gst-plugins-libav-1.8.2:1.0
+	>=media-plugins/gst-transcoder-1.8.1
 
 	x11-libs/libnotify[introspection]
 	>=x11-libs/gtk+-3.10.0:3[introspection]
