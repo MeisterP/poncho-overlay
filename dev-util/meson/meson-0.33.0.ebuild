@@ -20,6 +20,7 @@ DEPEND="${PYTHON_DEPS}
 	dev-util/ninja"
 RDEPEND="${DEPEND}"
 
+PATCHES=( ${FILESDIR}/DT_RUNPATH.patch )
 DOCS=( authors.txt contributing.txt )
 
 src_install() {
