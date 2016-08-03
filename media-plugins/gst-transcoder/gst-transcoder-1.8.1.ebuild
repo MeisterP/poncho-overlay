@@ -22,5 +22,14 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_configure() {
-	./configure --prefix=/usr
+	mkdir builddir
+	meson builddir --buildtype=plain --prefix=/usr
+}
+
+src_compile(){
+	ninja -C builddir -v
+}
+
+src_install(){
+	DESTDIR="${D}" ninja -C builddir install
 }
