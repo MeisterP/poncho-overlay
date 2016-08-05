@@ -4,63 +4,48 @@
 
 EAPI=6
 
-inherit gnome2-utils git-r3
+inherit gnome2-utils cmake-utils git-r3
 
 DESCRIPTION="A port of Jagged Alliance 2 to SDL"
-HOMEPAGE="https://ja2-stracciatella.github.io/ https://github.com/ja2-stracciatella/ja2-stracciatella"
+HOMEPAGE="https://ja2-stracciatella.github.io"
 EGIT_REPO_URI="https://github.com/ja2-stracciatella/ja2-stracciatella.git"
 
 LICENSE="SFI-SCLA"
 SLOT="0"
 KEYWORDS=""
-IUSE="threads zlib"
+IUSE=""
 
-RDEPEND="media-libs/libsdl[X,sound,video]
-	zlib? ( sys-libs/zlib )"
+DEPEND="dev-libs/boost
+	media-libs/libsdl[X,sound,video]"
 
-GAMES_DATADIR="/usr/share"
+RDEPEND="${DEPEND}"
+
+PATCHES=( ${FILESDIR}/0.15.0-skip-unittest-install.patch )
+DOCS=( README.md changes.md contributors.txt)
+
+GAMES_DATADIR="/usr/share/ja2"
 
 src_prepare() {
 	default
-	sed -e "s:/some/place/where/the/data/is:${GAMES_DATADIR}/ja2:" \
+	sed -e "s:/some/place/where/the/data/is:${GAMES_DATADIR}:" \
 		-i sgp/SGP.cc || die
 }
 
 src_configure() {
-	cat <<- EOF > Makefile.config
-		BINARY_DIR               := /bin
-		MANPAGE_DIR              := /usr/share/man/man6
-		SHARED_DIR               := /usr/share
-		FULL_PATH_EXTRA_DATA_DIR := ${GAMES_DATADIR}/ja2/
-		INSTALLABLE              := yes
-	EOF
+	local mycmakeargs=(
+		-DEXTRA_DATA_DIR="${GAMES_DATADIR}"
+		-DLOCAL_BOOST_LIB=OFF
+		-DWITH_UNITTESTS=OFF
+		-DWITH_FIXMES=OFF
+		-DWITH_MAEMO=OFF
+	)
 
-	cat <<- EOF > ja2config.h
-		#define EXTRA_DATA_DIR "$GAMES_DATADIR/ja2/"
-	EOF
+	cmake-utils_src_configure
 }
 
-src_compile() {
-	local myconf
-
-	myconf="WITH_UNITTESTS=0 WITH_DEBUGINFO=0"
-	use zlib && myconf+=" WITH_ZLIB=1"
-	use threads && myconf+=" WITH_LPTHREAD=1"
-
-	emake ${myconf}
-}
-
-src_install() {
-	dobin ja2
-
-	insinto "${GAMES_DATADIR}/ja2/"
-	doins -r externalized mods
-	keepdir "${GAMES_DATADIR}/ja2/data"
-
-	newicon -s scalable _build/icons/logo.svg ${PN}.svg
-	domenu _build/distr-files-linux/${PN}.desktop
-
-	newman ja2_manpage ja2.6
+src_install(){
+	cmake-utils_src_install
+	keepdir "${GAMES_DATADIR}/data"
 }
 
 pkg_preinst() {
@@ -73,7 +58,7 @@ pkg_postinst() {
 	if [[ -z ${REPLACING_VERSIONS} ]]; then
 		elog "You need to copy all files from the Data directory of"
 		elog "Jagged Alliance 2 installation to"
-		elog "${GAMES_DATADIR}/ja2/data"
+		elog "${GAMES_DATADIR}/data"
 	fi
 }
 
