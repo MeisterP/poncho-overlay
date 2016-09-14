@@ -151,6 +151,8 @@ QA_PREBUILT="/opt/*"
 
 QA_WX_LOAD="opt/vmware/lib/vmware/tools-upgraders/vmware-tools-upgrader-32 opt/vmware/lib/vmware/bin/vmware-vmx-stats opt/vmware/lib/vmware/bin/vmware-vmx-debug opt/vmware/lib/vmware/bin/vmware-vmx"
 
+QA_EXECSTACK="opt/vmware/lib/vmware/tools-upgraders/vmware-tools-upgrader-32"
+
 src_unpack() {
 	default
 	local bundle=${MY_P}.x86_64.bundle
@@ -264,6 +266,8 @@ src_install() {
 
 	# workaround for hardcoded search paths needed during shared objects loading
 	if ! use bundled-libs ; then
+		dosym /$(get_libdir)/libz.so.1 \
+			"${VM_INSTALL_DIR}"/lib/vmware/lib/libz.so.1/libz.so.1
 		dosym /usr/$(get_libdir)/libglib-2.0.so.0 \
 			"${VM_INSTALL_DIR}"/lib/vmware/lib/libglib-2.0.so.0/libglib-2.0.so.0
 		# Bug 432918
