@@ -7,7 +7,7 @@ EAPI=6
 inherit gnome2-utils cmake-utils git-r3
 
 DESCRIPTION="A port of Jagged Alliance 2 to SDL"
-HOMEPAGE="https://ja2-stracciatella.github.io"
+HOMEPAGE="https://ja2-stracciatella.github.io https://github.com/ja2-stracciatella/ja2-stracciatella"
 EGIT_REPO_URI="https://github.com/ja2-stracciatella/ja2-stracciatella.git"
 
 LICENSE="SFI-SCLA"
