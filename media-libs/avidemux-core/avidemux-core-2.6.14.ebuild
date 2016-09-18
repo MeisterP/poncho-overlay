@@ -17,7 +17,8 @@ IUSE="debug nls sdl system-ffmpeg vaapi vdpau video_cards_fglrx xv"
 KEYWORDS="~amd64"
 
 MY_PN="${PN/-core/}"
-	MY_P="${MY_PN}_${PV}"
+MY_P="${MY_PN}_${PV}"
+
 SRC_URI="mirror://sourceforge/${MY_PN}/${MY_PN}/${PV}/${MY_P}.tar.gz"
 
 # Trying to use virtual; ffmpeg misses aac,cpudetection USE flags now though, are they needed?
@@ -45,11 +46,11 @@ DEPEND="
 "
 
 S="${WORKDIR}/${MY_P}"
-BUILD_DIR="${S}/buildCore"
 
 DOCS=( AUTHORS README )
 
 src_prepare() {
+	BUILD_DIR="${S}/buildCore"
 	mkdir "${BUILD_DIR}" || die "Can't create build folder."
 
 	default
@@ -101,4 +102,9 @@ src_compile() {
 
 src_install() {
 	cmake-utils_src_install -j1
+}
+
+pkg_postinst() {
+	sed -i -e "s:/var/tmp/portage/media-libs/avidemux-core-2.6.14/work/avidemux_2.6.14/buildCore/ffmpeg/source/:/usr/include/avidemux/2.6/:" \
+		"${EROOT}/usr/include/avidemux/2.6/cmake/admFFmpegUtil.cmake" || die "Fixing admFFmpegUtil.cmake failed"
 }
