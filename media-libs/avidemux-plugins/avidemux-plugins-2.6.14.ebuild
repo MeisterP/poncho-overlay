@@ -63,7 +63,7 @@ RDEPEND="$DEPEND"
 
 S="${WORKDIR}/${MY_P}"
 
-PATCHES=( "${FILESDIR}"/${PN}-2.6.4-optional-pulse.patch )
+PATCHES=( "${FILESDIR}"/${PN}-2.6.14-optional-pulse.patch )
 
 src_prepare() {
 	default
