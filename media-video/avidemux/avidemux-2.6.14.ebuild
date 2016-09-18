@@ -19,6 +19,7 @@ IUSE="debug opengl nls qt5 sdl vaapi vdpau video_cards_fglrx xv"
 KEYWORDS="~amd64"
 
 MY_P="${PN}_${PV}"
+
 SRC_URI="mirror://sourceforge/${PN}/${PN}/${PV}/${MY_P}.tar.gz"
 
 DEPEND="
@@ -35,7 +36,7 @@ RDEPEND="$DEPEND"
 PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt5?]"
 
 DOCS=( AUTHORS README )
-PATCHES=( ${FILESDIR}/${PV}-fix-desktop-file.patch )
+PATCHES=( ${FILESDIR}/2.6.12-fix-desktop-file.patch )
 
 S="${WORKDIR}/${MY_P}"
 
