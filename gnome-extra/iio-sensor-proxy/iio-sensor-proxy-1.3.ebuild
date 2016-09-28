@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -6,7 +6,7 @@ EAPI=5
 
 DESCRIPTION="IIO sensors to D-Bus proxy"
 HOMEPAGE="https://github.com/hadess/iio-sensor-proxy"
-SRC_URI="https://secure.freedesktop.org/~hadess/${P}.tar.xz"
+SRC_URI="https://github.com/hadess/${PN}/releases/download/${PV}/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
