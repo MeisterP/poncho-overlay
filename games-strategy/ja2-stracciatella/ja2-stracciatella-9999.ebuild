@@ -16,7 +16,7 @@ KEYWORDS=""
 IUSE=""
 
 DEPEND="dev-libs/boost
-	media-libs/libsdl[X,sound,video]"
+	media-libs/libsdl2[X,sound,video]"
 
 RDEPEND="${DEPEND}"
 
