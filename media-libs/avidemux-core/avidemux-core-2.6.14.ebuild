@@ -101,10 +101,7 @@ src_compile() {
 }
 
 src_install() {
+	# revert edit from src_prepare prior to installing
+	sed -i -e "s:getFfmpegLibNames(\"${S}/buildCore/ffmpeg/source/\"):getFfmpegLibNames(\"\${sourceDir}\"):g" cmake/admFFmpegUtil.cmake
 	cmake-utils_src_install -j1
-}
-
-pkg_postinst() {
-	sed -i -e "s:/var/tmp/portage/media-libs/avidemux-core-2.6.14/work/avidemux_2.6.14/buildCore/ffmpeg/source/:/usr/include/avidemux/2.6/:" \
-		"${EROOT}/usr/include/avidemux/2.6/cmake/admFFmpegUtil.cmake" || die "Fixing admFFmpegUtil.cmake failed"
 }
