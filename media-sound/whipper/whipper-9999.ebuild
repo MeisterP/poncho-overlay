@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="5"
+EAPI="6"
 
 PYTHON_COMPAT=( python2_7 )
 
@@ -22,16 +22,19 @@ DEPEND="${PYTHON_DEPS}
 	dev-python/python-musicbrainz-ngs[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}
 	app-cdr/cdrdao
-	dev-python/pycdio[${PYTHON_USEDEP}]
 	dev-python/cddb-py[${PYTHON_USEDEP}]
 	dev-python/gst-python:0.10[${PYTHON_USEDEP}]
-	dev-python/pygobject[${PYTHON_USEDEP}]
-	dev-python/pygtk[${PYTHON_USEDEP}]
+	dev-python/pycdio[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]
-	media-plugins/gst-plugins-meta:0.10[ffmpeg,flac,lame,vorbis,wavpack]
+	media-libs/flac
+	media-libs/libsndfile
+	media-plugins/gst-plugins-meta:0.10[ffmpeg,lame,vorbis]
 	media-sound/cdparanoia"
 
+PATCHES=( "${FILESDIR}/sox.patch" )
+
 src_prepare() {
+	default
 	eautoreconf
 }
 
