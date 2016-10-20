@@ -5,8 +5,9 @@
 EAPI="6"
 
 PYTHON_COMPAT=( python2_7 )
+DISTUTILS_SINGLE_IMPL=1
 
-inherit git-r3 autotools bash-completion-r1 python-single-r1
+inherit git-r3 distutils-r1
 
 DESCRIPTION="Unix CD ripper preferring accuracy over speed"
 HOMEPAGE="https://github.com/JoeLametta/whipper"
@@ -16,7 +17,6 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
 IUSE=""
-RESTRICT="test"
 
 DEPEND="${PYTHON_DEPS}
 	dev-python/python-musicbrainz-ngs[${PYTHON_USEDEP}]"
@@ -29,21 +29,19 @@ RDEPEND="${DEPEND}
 	media-libs/flac
 	media-libs/libsndfile
 	media-plugins/gst-plugins-meta:0.10[ffmpeg,lame,vorbis]
-	media-sound/cdparanoia"
+	media-sound/cdparanoia
+	media-sound/sox"
 
-PATCHES=( "${FILESDIR}/sox.patch" )
-
-src_prepare() {
-	default
-	eautoreconf
-}
-
-src_configure() {
-	# disable doc and test
-	ac_cv_prog_EPYDOC="" ac_cv_prog_PYCHECKER="" econf
+src_compile() {
+	distutils-r1_src_compile
+	pushd src
+		emake
+	popd
 }
 
 src_install() {
-	emake DESTDIR="${D}" completiondir="$(get_bashcompdir)" install
-	dodoc AUTHORS ChangeLog HACKING NEWS README.md RELEASE TODO
+	distutils-r1_src_install
+	pushd src
+		emake PREFIX="${D}/usr" install
+	popd
 }
