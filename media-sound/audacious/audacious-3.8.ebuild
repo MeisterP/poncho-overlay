@@ -18,18 +18,18 @@ LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux"
 
-IUSE="+chardet nls gtk gtk3 qt5"
+IUSE="nls gtk gtk3 qt5"
 REQUIRED_USE="
 	^^ ( gtk gtk3 qt5 )
 "
 DOCS="AUTHORS"
 
-RDEPEND=">=dev-libs/dbus-glib-0.60
+RDEPEND="app-i18n/libguess
+	>=dev-libs/dbus-glib-0.60
 	>=dev-libs/glib-2.28
 	>=x11-libs/cairo-1.2.6
 	>=x11-libs/pango-1.8.0
 	virtual/freedesktop-icon-theme
-	chardet? ( >=app-i18n/libguess-1.2 )
 	gtk?  ( x11-libs/gtk+:2 )
 	gtk3? ( x11-libs/gtk+:3 )
 	qt5? ( dev-qt/qtcore:5
@@ -65,7 +65,6 @@ src_configure() {
 	econf \
 		--enable-dbus \
 		${gtk} \
-		$(use_enable chardet) \
 		$(use_enable nls) \
 		$(use_enable qt5 qt)
 }
