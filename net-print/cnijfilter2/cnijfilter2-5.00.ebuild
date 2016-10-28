@@ -1,10 +1,10 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
-inherit eutils autotools
+inherit autotools
 
 DESCRIPTION="Canon InkJet Printer Driver for Linux (Pixus/Pixma-Series)"
 HOMEPAGE="http://www.canon-europe.com/Support/"
@@ -21,11 +21,11 @@ DEPEND="dev-libs/libxml2
 	net-print/cups"
 RDEPEND="${DEPEND}"
 
+PATCHES=( "${FILESDIR}/libexec.patch" )
 S="${WORKDIR}/${PN}-source-${PV}-1"
 
 src_prepare () {
-	epatch "${FILESDIR}/libexec.patch"
-
+	default
 	for i in cmdtocanonij2 cnijbe2 lgmon3 rastertocanonij tocanonij tocnpwg
 	do
 		pushd $i
