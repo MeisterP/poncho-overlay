@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 DESCRIPTION="IIO sensors to D-Bus proxy"
 HOMEPAGE="https://github.com/hadess/iio-sensor-proxy"
@@ -15,7 +15,8 @@ IUSE=""
 
 RDEPEND="dev-libs/glib:*
 	gnome-base/gnome-common
-	virtual/libgudev"
+	virtual/libgudev
+	virtual/udev"
 
 DEPEND="${RDEPEND}
 	dev-util/gtk-doc-am
