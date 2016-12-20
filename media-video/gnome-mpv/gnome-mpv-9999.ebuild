@@ -24,7 +24,7 @@ SLOT="0"
 IUSE=""
 
 DEPEND=">=dev-libs/glib-2.44:2
-	>=media-video/mpv-0.17.0[libmpv]
+	>=media-video/mpv-0.21.0[libmpv]
 	x11-libs/gtk+:3"
 RDEPEND="${DEPEND}"
 
@@ -33,6 +33,7 @@ src_prepare() {
 	mkdir m4 || die
 	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
 	sed -i '/^UPDATE_ICON/d' Makefile.am || die
+	sed -i '/audio\/amr/d' data/io.github.GnomeMpv.desktop.in || die
 
 	eapply_user
 	eautoreconf
