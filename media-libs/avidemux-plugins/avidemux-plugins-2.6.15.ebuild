@@ -8,13 +8,13 @@ inherit cmake-utils flag-o-matic
 
 SLOT="2.6"
 
-DESCRIPTION="Plugins for avidemux"
+DESCRIPTION="Plugins for media-video/avidemux"
 HOMEPAGE="http://fixounet.free.fr/avidemux"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="aac aften a52 alsa amr debug dts fontconfig fribidi jack lame libsamplerate cpu_flags_x86_mmx nvenc opengl opus oss pulseaudio qt5 vorbis truetype twolame xv xvid x264 x265 vdpau vpx"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 
 MY_PN="${PN/-plugins/}"
 MY_P="${MY_PN}_${PV}"
@@ -42,7 +42,7 @@ DEPEND="
 		libsamplerate? ( media-libs/libsamplerate:0 )
 	)
 	lame? ( media-sound/lame:0 )
-	nvenc? ( media-video/nvidia_video_sdk:0 )
+	nvenc? ( amd64? ( media-video/nvidia_video_sdk:0 ) )
 	opus? ( media-libs/opus:0 )
 	oss? ( virtual/os-headers:0 )
 	pulseaudio? ( media-sound/pulseaudio:0 )
@@ -67,10 +67,6 @@ PATCHES=( "${FILESDIR}"/${PN}-2.6.14-optional-pulse.patch )
 
 src_prepare() {
 	default
-
-	processes="buildPluginsCommon:avidemux_plugins
-		buildPluginsCLI:avidemux_plugins"
-	use qt5 && processes+=" buildPluginsQt5:avidemux_plugins"
 }
 
 src_configure() {
@@ -81,6 +77,13 @@ src_configure() {
 
 	# See bug 432322.
 	use x86 && replace-flags -O0 -O1
+
+	# Needed for gcc-6
+	append-cxxflags $(test-flags-CXX -std=gnu++98)
+
+	processes="buildPluginsCommon:avidemux_plugins
+		buildPluginsCLI:avidemux_plugins"
+	use qt5 && processes+=" buildPluginsQt5:avidemux_plugins"
 
 	for process in ${processes} ; do
 		local build="${process%%:*}"
@@ -97,7 +100,7 @@ src_configure() {
 			-DFAAC="$(usex aac)"
 			-DFAAD="$(usex aac)"
 			-DALSA="$(usex alsa)"
-			-DAFTEB="$(usex aften)"
+			-DAFTEN="$(usex aften)"
 			-DOPENCORE_AMRWB="$(usex amr)"
 			-DOPENCORE_AMRNB="$(usex amr)"
 			-DLIBDCA="$(usex dts)"
@@ -118,10 +121,11 @@ src_configure() {
 			-DVORBIS="$(usex vorbis)"
 			-DLIBVORBIS="$(usex vorbis)"
 			-DVPX="$(usex vpx)"
+			-DVPXDEC="$(usex vpx)"
 		)
 
 		if use debug ; then
-			mycmakeargs+=" -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1"
+			mycmakeargs+=( -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1 )
 		fi
 
 		mkdir "${S}"/${build} || die "Can't create build folder."
