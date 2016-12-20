@@ -11,12 +11,12 @@ inherit eutils cmake-utils flag-o-matic l10n
 SLOT="2.6"
 
 DESCRIPTION="Video editor designed for simple cutting, filtering and encoding tasks"
-HOMEPAGE="http://fixounet.free.fr/${PN}"
+HOMEPAGE="http://fixounet.free.fr/avidemux"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="debug opengl nls qt5 sdl vaapi vdpau video_cards_fglrx xv"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 
 MY_P="${PN}_${PV}"
 
@@ -64,16 +64,11 @@ src_configure() {
 	)
 
 	if use debug ; then
-		mycmakeargs+=" -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1"
+		mycmakeargs+=( -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1 )
 	fi
 
-	for process in ${processes} ; do
-		local build="${process%%:*}"
-
-		mkdir "${S}"/${build} || die "Can't create build folder."
-		cd "${S}"/${build} || die "Can't enter build folder."
-		CMAKE_USE_DIR="${S}"/${process#*:} BUILD_DIR="${S}"/${build} cmake-utils_src_configure
-	done
+	# Needed for gcc-6
+	append-cxxflags $(test-flags-CXX -std=gnu++98)
 
 	# Add lax vector typing for PowerPC.
 	if use ppc || use ppc64 ; then
@@ -82,6 +77,14 @@ src_configure() {
 
 	# See bug 432322.
 	use x86 && replace-flags -O0 -O1
+
+	for process in ${processes} ; do
+		local build="${process%%:*}"
+
+		mkdir "${S}"/${build} || die "Can't create build folder."
+		cd "${S}"/${build} || die "Can't enter build folder."
+		CMAKE_USE_DIR="${S}"/${process#*:} BUILD_DIR="${S}"/${build} cmake-utils_src_configure
+	done
 }
 
 src_compile() {
