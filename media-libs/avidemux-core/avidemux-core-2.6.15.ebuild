@@ -8,13 +8,13 @@ inherit cmake-utils flag-o-matic
 
 SLOT="2.6"
 
-DESCRIPTION="Core libraries for avidemux"
+DESCRIPTION="Core libraries for media-video/avidemux"
 HOMEPAGE="http://fixounet.free.fr/avidemux"
 
 # Multiple licenses because of all the bundled stuff.
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 IUSE="debug nls sdl system-ffmpeg vaapi vdpau video_cards_fglrx xv"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 
 MY_PN="${PN/-core/}"
 MY_P="${MY_PN}_${PV}"
@@ -76,11 +76,14 @@ src_prepare() {
 
 	# See bug 432322.
 	use x86 && replace-flags -O0 -O1
+
+	# Needed for gcc-6
+	append-cxxflags $(test-flags-CXX -std=gnu++98)
 }
 
 src_configure() {
 	local mycmakeargs=(
-		-DAVIDEMUX_SOURCE_DIR='${S}'
+		-DAVIDEMUX_SOURCE_DIR="'${S}'"
 		-DGETTEXT="$(usex nls)"
 		-DSDL="$(usex sdl)"
 		-DLIBVA="$(usex vaapi)"
@@ -90,7 +93,7 @@ src_configure() {
 	)
 
 	if use debug ; then
-		mycmakeargs+=" -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1"
+		mycmakeargs+=( -DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug -DADM_DEBUG=1 )
 	fi
 
 	CMAKE_USE_DIR="${S}"/avidemux_core cmake-utils_src_configure
