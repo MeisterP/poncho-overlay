@@ -28,7 +28,8 @@ RDEPEND="${DEPEND}
 	dev-python/pyxdg[${PYTHON_USEDEP}]
 	media-libs/flac
 	media-libs/libsndfile
-	media-plugins/gst-plugins-meta:0.10[ffmpeg,lame,vorbis]
+	media-libs/gst-plugins-base:0.10
+	media-libs/gst-plugins-good:0.10
 	media-sound/cdparanoia
 	media-sound/sox"
 
