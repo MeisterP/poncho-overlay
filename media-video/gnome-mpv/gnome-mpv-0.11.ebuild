@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -24,7 +24,7 @@ SLOT="0"
 IUSE=""
 
 DEPEND=">=dev-libs/glib-2.44:2
-	>=media-video/mpv-0.17.0[libmpv]
+	>=media-video/mpv-0.21.0[libmpv]
 	x11-libs/gtk+:3"
 RDEPEND="${DEPEND}"
 
