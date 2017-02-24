@@ -4,7 +4,7 @@
 
 EAPI=6
 
-inherit eutils autotools gnome2-utils fdo-mime
+inherit gnome2-utils fdo-mime
 
 if [[ ${PV} == "9999" ]] ; then
 	inherit git-r3
@@ -23,19 +23,30 @@ LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-DEPEND=">=dev-libs/glib-2.44:2
+RDEPEND=">=dev-libs/glib-2.44:2
 	>=media-video/mpv-0.21.0[libmpv]
 	x11-libs/gtk+:3"
-RDEPEND="${DEPEND}"
+DEPEND="${RDEPEND}
+	>=dev-util/meson-0.37.0"
 
-src_prepare() {
-	# see https://bugs.launchpad.net/intltool/+bug/1581124
-	mkdir m4 || die
-	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
-	sed -i '/^UPDATE_ICON/d' Makefile.am || die
+src_configure(){
+	# Not a normal configure
+	# --buildtype=plain needed for honoring CFLAGS/CXXFLAGS and not
+	# defaulting to debug
 
-	eapply_user
-	eautoreconf
+	meson --prefix="${EPREFIX}/usr" \
+		--libdir="$(get_libdir)" \
+		--buildtype=plain mesonbuild || die
+}
+
+src_compile() {
+	# We cannot use 'make' as it won't allow us to build verbosely
+	ninja -v -C mesonbuild || die
+}
+
+src_install(){
+	DESTDIR=${D} ninja -v -C mesonbuild install || die
+	dodoc README.md AUTHORS
 }
 
 pkg_preinst() {
