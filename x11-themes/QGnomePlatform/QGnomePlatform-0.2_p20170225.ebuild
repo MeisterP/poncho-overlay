@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -6,7 +6,7 @@ EAPI=6
 
 inherit qmake-utils
 
-SNAPSHOT="36e03a0c33dd526131111f39352bee9ed190e955"
+SNAPSHOT="d613bf532084600328e42c305c9eff36b6df45e6"
 
 DESCRIPTION="QPlatformTheme for a better Qt application inclusion in GNOME"
 HOMEPAGE="https://github.com/MartinBriza/QGnomePlatform"
