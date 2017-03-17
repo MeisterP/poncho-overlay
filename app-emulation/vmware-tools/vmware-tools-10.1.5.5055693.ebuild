@@ -1,11 +1,11 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
 inherit versionator vmware-bundle
 
 MY_PV="$(replace_version_separator 3 - $PV)"
-BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/12.5.2/4638234/linux/packages/"
+BASE_URI="https://softwareupdate.vmware.com/cds/vmw-desktop/ws/12.5.4/5192485/linux/packages/"
 
 DESCRIPTION="VMware Tools for guest operating systems"
 HOMEPAGE="http://www.vmware.com/"
