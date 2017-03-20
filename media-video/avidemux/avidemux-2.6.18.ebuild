@@ -28,10 +28,8 @@ DEPEND="
 	qt5? ( dev-qt/qtgui:5
 		dev-qt/qtscript:5 )
 	vaapi? ( x11-libs/libva:0 )
-	video_cards_fglrx? (
-		|| ( >=x11-drivers/ati-drivers-14.12-r3
-			x11-libs/xvba-video:0 )
-		)"
+	video_cards_fglrx? ( x11-drivers/xf86-video-amdgpu )
+"
 RDEPEND="$DEPEND"
 PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt5?]"
 
