@@ -1,0 +1,41 @@
+From 6693a4174f038a24cca8043cde2395e3992ec3f2 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Sat, 10 Dec 2016 13:52:47 +0100
+Subject: [PATCH] Revert "Allow options with a single dash (backwards
+ compatibility)"
+
+This reverts commit eb4754979b2d8cb35c393ffd0cd3d889479f2cf6.
+---
+ rust/Cargo.toml           | 2 +-
+ rust/src/stracciatella.rs | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/rust/Cargo.toml b/rust/Cargo.toml
+index 26ead6a..957ec3c 100644
+--- a/rust/Cargo.toml
++++ b/rust/Cargo.toml
+@@ -14,7 +14,7 @@ name = "stracciatella"
+ path = "src/stracciatella.rs"
+ 
+ [dependencies]
+-getopts = { git = "https://github.com/rust-lang-nursery/getopts" }
++getopts = "0.2"
+ libc = "0.2.16"
+ serde = "0.8"
+ serde_json = "0.8"
+diff --git a/rust/src/stracciatella.rs b/rust/src/stracciatella.rs
+index 859ff36..940c3cd 100644
+--- a/rust/src/stracciatella.rs
++++ b/rust/src/stracciatella.rs
+@@ -112,8 +112,6 @@ fn get_resolution(resolution_str: &str) -> Option<(u16, u16)> {
+ pub fn get_command_line_options() -> Options {
+     let mut opts = Options::new();
+ 
+-    opts.long_only(true);
+-
+     opts.optmulti(
+         "",
+         "mod",
+-- 
+2.7.3
+
