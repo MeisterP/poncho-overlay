@@ -1,4 +1,4 @@
-poncho-overlay
+poncho-overlay [![Build Status](https://travis-ci.org/MeisterP/poncho-overlay.svg?branch=master)](https://travis-ci.org/MeisterP/poncho-overlay)
 --------------
 
 This is a Gentoo overlay for packages not in the main tree.
