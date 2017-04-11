@@ -1,7 +1,7 @@
-From 6693a4174f038a24cca8043cde2395e3992ec3f2 Mon Sep 17 00:00:00 2001
+From 3be1ef2907b07de96e5c480632c720a36aea01c9 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
-Date: Sat, 10 Dec 2016 13:52:47 +0100
-Subject: [PATCH] Revert "Allow options with a single dash (backwards
+Date: Tue, 11 Apr 2017 12:50:48 +0200
+Subject: [PATCH 1/2] Revert "Allow options with a single dash (backwards
  compatibility)"
 
 This reverts commit eb4754979b2d8cb35c393ffd0cd3d889479f2cf6.
@@ -37,5 +37,5 @@ index 859ff36..940c3cd 100644
          "",
          "mod",
 -- 
-2.7.3
+2.10.2
 
