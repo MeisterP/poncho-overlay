@@ -239,7 +239,7 @@ src_prepare() {
 
 	DOC_CONTENTS="
 /etc/env.d is updated during ${PN} installation. Please run:\n
-env-update && source /etc/profile\n
+'env-update && source /etc/profile'\n
 Before you can use ${PN}, you must configure a default network setup.
 You can do this by running 'emerge --config ${PN}'.\n
 To be able to run ${PN} your user must be in the vmware group.\n
