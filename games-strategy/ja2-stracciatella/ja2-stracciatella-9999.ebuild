@@ -3,16 +3,13 @@
 
 EAPI=6
 
-CRATES="
-getopts-0.2.14
-libc-0.2.21
-serde-0.8.23
-serde_json-0.8.6
-
-dtoa-0.2.2
-itoa-0.1.1
-num-traits-0.1.37
-"
+CRATES="getopts-0.2.14
+	libc-0.2.21
+	serde-0.8.23
+	serde_json-0.8.6
+	dtoa-0.2.2
+	itoa-0.1.1
+	num-traits-0.1.37"
 
 inherit gnome2-utils cargo cmake-utils git-r3
 
@@ -54,7 +51,7 @@ src_prepare() {
 }
 
 src_configure() {
-	CMAKE_BUILD_TYPE=Release
+	CMAKE_BUILD_TYPE=RelWithDebInfo
 
 	local mycmakeargs=(
 		-DEXTRA_DATA_DIR="${GAMES_DATADIR}"
