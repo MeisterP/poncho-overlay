@@ -9,7 +9,7 @@
          <email>poncho@spahan.ch</email>
          <name>Poncho</name>
       </owner>
-      <source type="git">git://github.com/MeisterP/poncho-overlay.git</source>
+      <source type="git">https://github.com/MeisterP/poncho-overlay.git</source>
       <feed>https://github.com/MeisterP/poncho-overlay/commits/master.atom</feed>
    </repo>
 </repositories>
