@@ -22,13 +22,12 @@ DEPEND="${PYTHON_DEPS}
 RDEPEND="${DEPEND}
 	app-cdr/cdrdao
 	dev-python/cddb-py[${PYTHON_USEDEP}]
-	dev-python/gst-python:0.10[${PYTHON_USEDEP}]
 	dev-python/pycdio[${PYTHON_USEDEP}]
+	dev-python/pygobject:2[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]
 	media-libs/flac
 	media-libs/libsndfile
-	media-libs/gst-plugins-base:0.10
-	media-libs/gst-plugins-good:0.10
+	media-libs/mutagen[${PYTHON_USEDEP}]
 	media-sound/cdparanoia
 	media-sound/sox"
 
