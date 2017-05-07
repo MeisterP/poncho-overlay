@@ -19,7 +19,7 @@ MY_PN="${PN/-plugins/}"
 MY_P="${MY_PN}_${PV}"
 SRC_URI="mirror://sourceforge/${MY_PN}/${MY_PN}/${PV}/${MY_P}.tar.gz"
 
-DEPEND="
+RDEPEND="
 	~media-libs/avidemux-core-${PV}:${SLOT}[vdpau?]
 	~media-video/avidemux-${PV}:${SLOT}[opengl?,qt5?]
 	>=dev-lang/spidermonkey-1.5-r2:0=
@@ -43,7 +43,6 @@ DEPEND="
 	lame? ( media-sound/lame:0 )
 	nvenc? ( amd64? ( media-video/nvidia_video_sdk:0 ) )
 	opus? ( media-libs/opus:0 )
-	oss? ( virtual/os-headers:0 )
 	pulseaudio? ( media-sound/pulseaudio:0 )
 	truetype? ( media-libs/freetype:2 )
 	twolame? ( media-sound/twolame:0 )
@@ -58,7 +57,8 @@ DEPEND="
 	vorbis? ( media-libs/libvorbis:0 )
 	vpx? ( media-libs/libvpx:0 )
 "
-RDEPEND="$DEPEND"
+DEPEND="$RDEPEND
+	oss? ( virtual/os-headers:0 )"
 
 S="${WORKDIR}/${MY_P}"
 
