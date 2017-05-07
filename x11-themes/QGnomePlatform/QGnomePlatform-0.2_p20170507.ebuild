@@ -5,12 +5,12 @@ EAPI=6
 
 inherit qmake-utils
 
-SNAPSHOT="d613bf532084600328e42c305c9eff36b6df45e6"
+SNAPSHOT="c7f9c475dd9130659001d06c5ddf3cbc224db390"
 
 DESCRIPTION="QPlatformTheme for a better Qt application inclusion in GNOME"
 HOMEPAGE="https://github.com/MartinBriza/QGnomePlatform"
 #SRC_URI="https://github.com/MartinBriza/${PN}/archive/${PV}.tar.gz"
-SRC_URI="https://github.com/MartinBriza/QGnomePlatform/archive/${SNAPSHOT}.zip"
+SRC_URI="https://github.com/MartinBriza/QGnomePlatform/archive/${SNAPSHOT}.zip -> ${P}.zip"
 
 LICENSE="GPL-2"
 SLOT="0"
