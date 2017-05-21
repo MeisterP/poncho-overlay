@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit gnome2-utils fdo-mime
+inherit gnome2-utils fdo-mime meson
 
 if [[ ${PV} == "9999" ]] ; then
 	inherit git-r3
@@ -25,28 +25,9 @@ IUSE=""
 RDEPEND=">=dev-libs/glib-2.44:2
 	>=media-video/mpv-0.21.0[libmpv]
 	x11-libs/gtk+:3"
-DEPEND="${RDEPEND}
-	>=dev-util/meson-0.37.0"
+DEPEND="${RDEPEND}"
 
-src_configure(){
-	# Not a normal configure
-	# --buildtype=plain needed for honoring CFLAGS/CXXFLAGS and not
-	# defaulting to debug
-
-	meson --prefix="${EPREFIX}/usr" \
-		--libdir="$(get_libdir)" \
-		--buildtype=plain mesonbuild || die
-}
-
-src_compile() {
-	# We cannot use 'make' as it won't allow us to build verbosely
-	ninja -v -C mesonbuild || die
-}
-
-src_install(){
-	DESTDIR=${D} ninja -v -C mesonbuild install || die
-	dodoc README.md AUTHORS
-}
+DOCS=( AUTHORS README.md )
 
 pkg_preinst() {
 	gnome2_icon_savelist
