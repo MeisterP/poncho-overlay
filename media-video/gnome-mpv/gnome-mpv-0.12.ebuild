@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit eutils autotools gnome2-utils fdo-mime
+inherit gnome2-utils fdo-mime meson
 
 if [[ ${PV} == "9999" ]] ; then
 	inherit git-r3
@@ -22,20 +22,12 @@ LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-DEPEND=">=dev-libs/glib-2.44:2
+RDEPEND=">=dev-libs/glib-2.44:2
 	>=media-video/mpv-0.21.0[libmpv]
 	x11-libs/gtk+:3"
-RDEPEND="${DEPEND}"
+DEPEND="${RDEPEND}"
 
-src_prepare() {
-	# see https://bugs.launchpad.net/intltool/+bug/1581124
-	mkdir m4 || die
-	sed -i '/^UPDATE_DESKTOP/d' Makefile.am || die
-	sed -i '/^UPDATE_ICON/d' Makefile.am || die
-
-	eapply_user
-	eautoreconf
-}
+DOCS=( AUTHORS README.md )
 
 pkg_preinst() {
 	gnome2_icon_savelist
