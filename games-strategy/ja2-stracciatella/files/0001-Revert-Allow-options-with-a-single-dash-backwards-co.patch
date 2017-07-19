@@ -18,9 +18,9 @@ index 26ead6a..957ec3c 100644
  path = "src/stracciatella.rs"
  
  [dependencies]
--getopts = { git = "https://github.com/rust-lang-nursery/getopts" }
+-getopts = { git = "https://github.com/rust-lang-nursery/getopts", rev = "b8beaf63" }
 +getopts = "0.2"
- libc = "0.2.16"
+ libc = "0.2"
  serde = "0.8"
  serde_json = "0.8"
 diff --git a/rust/src/stracciatella.rs b/rust/src/stracciatella.rs
