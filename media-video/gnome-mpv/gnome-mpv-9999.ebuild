@@ -27,7 +27,6 @@ RDEPEND=">=dev-libs/glib-2.44:2
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}"
 
-PATCHES=( ${FILESDIR}/fix-Exec-line-in-io.github.GnomeMpv.patch )
 DOCS=( AUTHORS README.md )
 
 pkg_preinst() {
