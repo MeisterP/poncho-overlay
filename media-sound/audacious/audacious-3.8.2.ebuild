@@ -23,8 +23,7 @@ REQUIRED_USE="
 "
 DOCS="AUTHORS"
 
-RDEPEND="app-i18n/libguess
-	>=dev-libs/dbus-glib-0.60
+RDEPEND=">=dev-libs/dbus-glib-0.60
 	>=dev-libs/glib-2.28
 	>=x11-libs/cairo-1.2.6
 	>=x11-libs/pango-1.8.0
