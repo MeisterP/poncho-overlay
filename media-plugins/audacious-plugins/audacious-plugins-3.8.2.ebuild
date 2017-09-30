@@ -14,7 +14,8 @@ SRC_URI="!gtk3? ( http://distfiles.audacious-media-player.org/${MY_P}.tar.bz2 )
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="aac alsa bs2b cdda cue filewriter ffmpeg flac fluidsynth gnome http gtk gtk3 jack libnotify libsamplerate lirc mms mp3 nls pulseaudio qt5 scrobbler sdl sid sndfile vorbis wavpack"
+IUSE="aac +adplug alsa aosd bs2b cdda cue ffmpeg flac fluidsynth gnome http gtk gtk3 jack
+lame libnotify libsamplerate lirc mms mp3 nls pulseaudio qt5 scrobbler sdl sid sndfile vorbis wavpack"
 REQUIRED_USE="
 	^^ ( gtk gtk3 qt5 )
 "
@@ -27,7 +28,6 @@ REQUIRED_USE="
 #   ladspa
 #   playlist-manager
 #   search-tool
-#   statusicon
 #   skins
 #   vtx
 # Plugins with a configure option:
@@ -35,22 +35,24 @@ REQUIRED_USE="
 #   gtkui
 #   hotkey
 #   notify
+#   statusicon
 
 RDEPEND="app-arch/unzip
 	>=dev-libs/dbus-glib-0.60
 	dev-libs/libxml2:2
-	media-libs/adplug
 	media-libs/libmodplug
 	~media-sound/audacious-${PV}
 	>=media-sound/audacious-3.7.1-r1
+	media-libs/adplug
 	( || ( >=dev-libs/glib-2.32.2[utils] dev-util/gdbus-codegen ) )
 	aac? ( >=media-libs/faad2-2.7 )
 	alsa? ( >=media-libs/alsa-lib-1.0.16 )
+	aosd? ( x11-libs/libXrender
+		x11-libs/libXcomposite )
 	bs2b? ( media-libs/libbs2b )
 	cdda? ( >=media-libs/libcddb-1.2.1
 		dev-libs/libcdio-paranoia )
 	cue? ( media-libs/libcue )
-	filewriter? ( media-sound/lame )
 	ffmpeg? ( >=virtual/ffmpeg-0.7.3 )
 	flac? ( >=media-libs/libvorbis-1.0
 		>=media-libs/flac-1.2.1-r1 )
@@ -59,14 +61,17 @@ RDEPEND="app-arch/unzip
 	gtk? ( x11-libs/gtk+:2
 		   ~media-sound/audacious-${PV}[gtk?] )
 	gtk3? ( x11-libs/gtk+:3
+			media-libs/adplug
 			~media-sound/audacious-${PV}[gtk3?] )
 	qt5? ( dev-qt/qtcore:5
 		   dev-qt/qtgui:5
 		   dev-qt/qtmultimedia:5
 		   dev-qt/qtwidgets:5
+		   media-libs/adplug
 		   ~media-sound/audacious-${PV}[qt5?] )
 	jack? ( >=media-libs/bio2jack-0.4
 		media-sound/jack-audio-connection-kit )
+	lame? ( media-sound/lame )
 	libnotify? ( x11-libs/libnotify )
 	libsamplerate? ( media-libs/libsamplerate )
 	lirc? ( app-misc/lirc )
@@ -138,19 +143,22 @@ src_configure() {
 		${gtk} \
 		${notify} \
 		--enable-modplug \
+		--enable-mpris2 \
 		--disable-soxr \
+		--disable-oss4 \
 		$(use_enable aac) \
 		$(use_enable alsa) \
+		$(use_enable aosd) \
 		$(use_enable bs2b) \
 		$(use_enable cdda cdaudio) \
 		$(use_enable cue) \
-		$(use_enable filewriter) \
-		$(use_enable filewriter filewriter_mp3) \
-		$(use_enable flac flac) \
+		$(use_enable flac) \
 		$(use_enable fluidsynth amidiplug) \
+		$(use_enable flac filewriter) \
 		$(use_enable http neon) \
 		$(use_enable jack) \
 		$(use_enable gnome gnomeshortcuts) \
+		$(use_enable lame filewriter_mp3) \
 		$(use_enable libsamplerate resample) \
 		$(use_enable lirc) \
 		$(use_enable mms) \
