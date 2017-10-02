@@ -1,0 +1,25 @@
+From 3aa25e05c383628b408281185f71b26b2dca2ba5 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Mon, 2 Oct 2017 11:48:19 +0200
+Subject: [PATCH 2/2] change default language to english
+
+---
+ gplaycli.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gplaycli.conf b/gplaycli.conf
+index a86702d..357f1c0 100644
+--- a/gplaycli.conf
++++ b/gplaycli.conf
+@@ -3,7 +3,7 @@ gmail_address=
+ gmail_password=
+ #keyring_service=gplaycli
+ android_ID=3d716411bf8bc802
+-language=fr_FR
++language=en_EN
+ token=True
+ token_url=https://matlink.fr/token/email/gplaycliacc@gmail.com
+ 
+-- 
+2.13.6
+
