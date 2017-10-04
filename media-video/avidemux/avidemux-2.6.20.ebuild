@@ -104,7 +104,7 @@ src_configure() {
 src_compile() {
 	for process in ${processes} ; do
 		local build="${WORKDIR}/${P}_build/${process%%:*}"
-		BUILD_DIR="${build}" cmake-utils_src_compile
+		QT_SELECT=5 BUILD_DIR="${build}" cmake-utils_src_compile
 	done
 }
 
