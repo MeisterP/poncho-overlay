@@ -3,7 +3,7 @@
 
 EAPI=6
 
-CRATES="getopts-0.2.14
+CRATES="getopts-0.2.15
 	libc-0.2.21
 	serde-0.8.23
 	serde_json-0.8.6
@@ -27,10 +27,12 @@ RDEPEND="dev-libs/boost
 	media-libs/libsdl2[X,sound,video]"
 
 DEPEND="${RDEPEND}
+	dev-libs/rapidjson
 	dev-util/cargo"
 
-PATCHES=( "${FILESDIR}/0001-Revert-Allow-options-with-a-single-dash-backwards-co.patch"
-	"${FILESDIR}/0002-Only-depend-on-release-packages.patch" )
+PATCHES=( "${FILESDIR}/0001-use-stable-version-of-getopts.patch"
+	"${FILESDIR}/0002-make-INSTALL_LIB_DIR-configurable.patch"
+	"${FILESDIR}/0003-only-use-profile.release.patch" )
 
 DOCS=( README.md changes.md contributors.txt )
 
@@ -55,7 +57,11 @@ src_configure() {
 
 	local mycmakeargs=(
 		-DEXTRA_DATA_DIR="${GAMES_DATADIR}"
+		-DINSTALL_LIB_DIR="/usr/$(get_libdir)"
+		-DLOCAL_SDL_LIB=OFF
 		-DLOCAL_BOOST_LIB=OFF
+		-DLOCAL_RAPIDJSON_LIB=OFF
+		-DLOCAL_GTEST_LIB=OFF
 		-DWITH_UNITTESTS=OFF
 		-DWITH_FIXMES=OFF
 		-DWITH_MAEMO=OFF

@@ -1,0 +1,43 @@
+From 49b6fbd0912655dc5b3217cde6c727739b92449d Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Wed, 4 Oct 2017 11:59:22 +0200
+Subject: [PATCH 2/3] make INSTALL_LIB_DIR configurable
+
+---
+ CMakeLists.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1e80fea00..2dfc3436e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,6 +36,7 @@ if (NOT CMAKE_BUILD_TYPE)
+ endif()
+ set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
+ set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
++set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+ set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
+ set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
+ option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
+@@ -59,6 +60,9 @@ add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
+ message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
+ add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
+ 
++message(STATUS "Setting directory for libraries to" "${INSTALL_LIB_DIR}")
++add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
++
+ if (WITH_FIXMES)
+     message(STATUS "Building with fixme messages" )
+     add_definitions(-DWITH_FIXMES)
+@@ -229,7 +233,7 @@ include(CPack)
+ if (UNIX AND NOT MINGW AND NOT APPLE)
+     install(TARGETS ${BINARY} RUNTIME DESTINATION bin)
+     install(DIRECTORY assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
+-    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION lib)
++    install(FILES ${STRACCIATELLA_SHARED_LIB} DESTINATION ${INSTALL_LIB_DIR})
+     install(FILES assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
+     install(
+         FILES assets/icons/logo.svg
+-- 
+2.13.6
+

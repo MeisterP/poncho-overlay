@@ -1,0 +1,38 @@
+From 27eaece4182f06435bac9a387db74db745524f4a Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Wed, 4 Oct 2017 12:18:10 +0200
+Subject: [PATCH 3/3] only use profile.release
+
+---
+ rust/Cargo.toml | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/rust/Cargo.toml b/rust/Cargo.toml
+index 4c921aa36..006a478d3 100644
+--- a/rust/Cargo.toml
++++ b/rust/Cargo.toml
+@@ -4,8 +4,6 @@ version = "0.1.0"
+ authors = ["Stefan Lau <github@stefanlau.com>"]
+ release-debuginfo = true
+ 
+-[profile.dev]
+-rpath = true
+ [profile.release]
+ rpath = true
+ 
+@@ -19,12 +17,3 @@ getopts = "0.2.15"
+ libc = "0.2"
+ serde = "0.8"
+ serde_json = "0.8"
+-
+-[dev-dependencies]
+-regex = "0.1"
+-tempdir = "0.3"
+-
+-[target.'cfg(windows)'.dependencies]
+-winapi = "0.2"
+-user32-sys = "0.2"
+-shell32-sys = "0.1"
+-- 
+2.13.6
+
