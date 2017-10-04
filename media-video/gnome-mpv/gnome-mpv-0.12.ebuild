@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit gnome2-utils fdo-mime meson
+inherit gnome2-utils xdg-utils meson
 
 if [[ ${PV} == "9999" ]] ; then
 	inherit git-r3
@@ -35,7 +35,7 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	fdo-mime_desktop_database_update
+	xdg_desktop_database_update
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 
@@ -44,7 +44,7 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	fdo-mime_desktop_database_update
+	xdg_desktop_database_update
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
