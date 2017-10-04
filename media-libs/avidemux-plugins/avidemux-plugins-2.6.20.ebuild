@@ -23,7 +23,7 @@ KEYWORDS="~amd64 ~x86"
 
 RDEPEND="
 	~media-libs/avidemux-core-${PV}:${SLOT}[vdpau?]
-	~media-video/avidemux-${PV}:${SLOT}[opengl?,qt5?]
+	~media-video/avidemux-${PV}:${SLOT}[opengl?,qt4?,qt5?]
 	>=dev-lang/spidermonkey-1.5-r2:0=
 	dev-libs/libxml2:2
 	media-libs/a52dec:0
@@ -81,7 +81,7 @@ src_prepare() {
 
 	processes="buildPluginsCommon:avidemux_plugins
 		buildPluginsCLI:avidemux_plugins"
-	use qt5 && processes+=" buildPluginsQt5:avidemux_plugins"
+	use qt4 && processes+=" buildPluginsQt4:avidemux_plugins"
 
 	for process in ${processes} ; do
 		CMAKE_USE_DIR="${S}"/${process#*:} cmake-utils_src_prepare
@@ -100,15 +100,9 @@ src_configure() {
 	for process in ${processes} ; do
 		local build="${WORKDIR}/${P}_build/${process%%:*}"
 
-		local PLUGIN_UI=$(echo ${build/buildPlugins/} | tr '[:lower:]' '[:upper:]')
-		[[ ${PLUGIN_UI} == "QT5" ]] && PLUGIN_UI=QT4
-
 		local mycmakeargs=(
 			-DAVIDEMUX_SOURCE_DIR='${S}'
-			-DPLUGIN_UI="${PLUGIN_UI}"
-			-DENABLE_QT5="$(usex qt5)"
-			-DOPENGL=OFF
-			-DVAPOURSYNTH=OFF
+			-DPLUGIN_UI=$(echo ${build/buildPlugins/} | tr '[:lower:]' '[:upper:]')
 			-DFAAC="$(usex aac)"
 			-DFAAD="$(usex aac)"
 			-DALSA="$(usex alsa)"
@@ -125,6 +119,7 @@ src_configure() {
 			-DOPUS="$(usex opus)"
 			-DOSS="$(usex oss)"
 			-DPULSEAUDIOSIMPLE="$(usex pulseaudio)"
+			-DQT4="$(usex qt4)"
 			-DFREETYPE2="$(usex truetype)"
 			-DTWOLAME="$(usex twolame)"
 			-DX264="$(usex x264)"
@@ -140,6 +135,10 @@ src_configure() {
 			-DUSE_EXTERNAL_LIBMAD=yes
 			-DUSE_EXTERNAL_LIBMP4V2=yes
 		)
+
+		if use qt5 ; then
+			mycmakeargs+=( -DENABLE_QT5=True )
+		fi
 
 		if use debug ; then
 			mycmakeargs+=( -DVERBOSE=1 -DADM_DEBUG=1 )
