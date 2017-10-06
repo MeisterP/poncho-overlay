@@ -30,9 +30,7 @@ DEPEND="${RDEPEND}
 	dev-libs/rapidjson
 	dev-util/cargo"
 
-PATCHES=( "${FILESDIR}/0001-use-stable-version-of-getopts.patch"
-	"${FILESDIR}/0002-make-INSTALL_LIB_DIR-configurable.patch"
-	"${FILESDIR}/0003-only-use-profile.release.patch" )
+PATCHES=( "${FILESDIR}/0003-only-use-profile.release.patch" )
 
 DOCS=( README.md changes.md contributors.txt )
 
