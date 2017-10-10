@@ -25,6 +25,7 @@ RDEPEND="${DEPEND}
 	dev-python/pycdio[${PYTHON_USEDEP}]
 	dev-python/pygobject:2[${PYTHON_USEDEP}]
 	dev-python/pyxdg[${PYTHON_USEDEP}]
+	dev-python/requests[${PYTHON_USEDEP}]
 	media-libs/flac
 	media-libs/libsndfile
 	media-libs/mutagen[${PYTHON_USEDEP}]
