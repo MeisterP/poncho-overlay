@@ -6,16 +6,14 @@
 		<name>Poncho</name>
 	</maintainer>
 	<use>
-		<flag name="adplug">Build with AdPlug (Adlib sound card emulation)
-			support</flag>
-		<flag name="aosd">Enable support for Audacious OSD</flag>
-		<flag name="bs2b">Enable Bauer Bauer stereophonic-to-binaural
-			headphone filter</flag>
+		<flag name="bs2b">Enable Bauer Bauer stereophonic-to-binaural headphone filter</flag>
 		<flag name="cue">Support CUE sheets using the libcue library</flag>
-		<flag name="fluidsynth">Support FluidSynth as MIDI synth backend</flag>
+		<flag name='filewriter'>Enable outputing to file</flag>
 		<flag name="http">Support HTTP streams through neon</flag>
-		<flag name="gtk3">Link against version 3 of the GIMP Toolkit instead of version 2 (x11-libs/gtk+)</flag>
+		<flag name='midi'>Support amidi-plug (<pkg>media-sound/fluidsynth</pkg>)</flag>
 		<flag name="scrobbler">Build with scrobbler/LastFM submission support</flag>
 		<flag name="sid">Build with SID (Commodore 64 Audio) support</flag>
+		<flag name='soxr'>Enable SoX Resampler library</flag>
+		<flag name='spectrum'>Enable OpenGL spectram analizer</flag>
 	</use>
 </pkgmetadata>
