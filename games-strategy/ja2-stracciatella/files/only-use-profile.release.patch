@@ -1,0 +1,17 @@
+diff --git a/rust/Cargo.toml b/rust/Cargo.toml
+index f9fd15897..f51dd50f5 100644
+--- a/rust/Cargo.toml
++++ b/rust/Cargo.toml
+@@ -20,12 +20,3 @@ libc = "0.2"
+ serde = "1"
+ serde_derive = "1"
+ serde_json = "1"
+-
+-[dev-dependencies]
+-regex = "0.1"
+-tempdir = "0.3"
+-
+-[target.'cfg(windows)'.dependencies]
+-winapi = "0.2"
+-user32-sys = "0.2"
+-shell32-sys = "0.1"

@@ -3,15 +3,21 @@
 
 EAPI=6
 
-CRATES="getopts-0.2.15
-	libc-0.2.21
-	serde-0.8.23
-	serde_json-0.8.6
-	dtoa-0.2.2
-	itoa-0.1.1
-	num-traits-0.1.37"
+CRATES="dtoa-0.4.2
+	getopts-0.2.15
+	itoa-0.3.4
+	libc-0.2.33
+	num-traits-0.1.40
+	quote-0.3.15
+	serde-1.0.18
+	serde_derive-1.0.18
+	serde_derive_internals-0.16.0
+	serde_json-1.0.5
+	syn-0.11.11
+	synom-0.11.3
+	unicode-xid-0.0.4"
 
-inherit gnome2-utils cargo cmake-utils git-r3
+inherit gnome2-utils flag-o-matic cargo cmake-utils git-r3
 
 DESCRIPTION="A port of Jagged Alliance 2 to SDL"
 HOMEPAGE="https://ja2-stracciatella.github.io https://github.com/ja2-stracciatella/ja2-stracciatella"
@@ -24,13 +30,14 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="dev-libs/boost
-	media-libs/libsdl2[X,sound,video]"
+	media-libs/libsdl2[X,sound,video]
+	x11-libs/fltk"
 
 DEPEND="${RDEPEND}
 	dev-libs/rapidjson
 	dev-util/cargo"
 
-PATCHES=( "${FILESDIR}/0003-only-use-profile.release.patch" )
+PATCHES=( "${FILESDIR}/only-use-profile.release.patch" )
 
 DOCS=( README.md changes.md contributors.txt )
 
@@ -42,7 +49,7 @@ src_unpack() {
 }
 
 src_prepare() {
-	default
+	cmake-utils_src_prepare
 	sed -i -e "s:/some/place/where/the/data/is:${GAMES_DATADIR}:g" \
 		rust/src/stracciatella.rs || die
 
@@ -51,11 +58,13 @@ src_prepare() {
 }
 
 src_configure() {
+	append-cppflags "-I/usr/include/fltk"
 	CMAKE_BUILD_TYPE=RelWithDebInfo
 
 	local mycmakeargs=(
 		-DEXTRA_DATA_DIR="${GAMES_DATADIR}"
 		-DINSTALL_LIB_DIR="/usr/$(get_libdir)"
+		-DBUILD_LAUNCHER=ON
 		-DLOCAL_SDL_LIB=OFF
 		-DLOCAL_BOOST_LIB=OFF
 		-DLOCAL_RAPIDJSON_LIB=OFF
