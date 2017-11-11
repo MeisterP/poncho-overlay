@@ -29,7 +29,7 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-RDEPEND="dev-libs/boost
+RDEPEND="dev-libs/boost:=
 	media-libs/libsdl2[X,sound,video]
 	x11-libs/fltk"
 
