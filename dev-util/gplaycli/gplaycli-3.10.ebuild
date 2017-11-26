@@ -9,7 +9,7 @@ inherit distutils-r1
 
 DESCRIPTION="GPlayCli, a Google play downloader command line interface"
 HOMEPAGE="https://github.com/matlink/gplaycli"
-SRC_URI="https://github.com/matlink/gplaycli/archive/2.15.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/matlink/gplaycli/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="AGPL-3"
 SLOT="0"
@@ -20,12 +20,9 @@ IUSE=""
 #python3 -> pyaxmlparser
 
 DEPEND="${PYTHON_DEPS}
-	dev-python/clint[${PYTHON_USEDEP}]
-	dev-python/ndg-httpsclient[${PYTHON_USEDEP}]
 	dev-python/protobuf-python[${PYTHON_USEDEP}]
 	dev-python/pyaxmlparser[${PYTHON_USEDEP}]
-	dev-python/pycrypto[${PYTHON_USEDEP}]
-	>=dev-python/requests-0.12[${PYTHON_USEDEP}]"
+	dev-python/gpapi[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/${PV}-config.patch" "${FILESDIR}/${PV}-language.patch" )
+PATCHES=( "${FILESDIR}/3.10-config.patch" "${FILESDIR}/2.15-language.patch" )

@@ -1,0 +1,13 @@
+diff --git a/setup.py b/setup.py
+index 0ea1ae1..a1bf75c 100644
+--- a/setup.py
++++ b/setup.py
+@@ -28,7 +28,7 @@ setup(name='GPlayCli',
+             'gplaycli': 'gplaycli',
+         },
+         data_files=[
+-            [os.path.expanduser('~')+'/.config/gplaycli', ['gplaycli.conf','cron/cronjob']],
++            ['/etc/gplaycli/', ['gplaycli.conf','cron/cronjob']],
+         ],
+         install_requires=[
+                 'protobuf',
