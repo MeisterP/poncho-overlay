@@ -27,11 +27,11 @@ SRC_URI="$(cargo_crate_uris ${CRATES})"
 LICENSE="SFI-SCLA"
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="launcher"
 
 RDEPEND="dev-libs/boost:=
 	media-libs/libsdl2[X,sound,video]
-	x11-libs/fltk"
+	launcher? ( x11-libs/fltk )"
 
 DEPEND="${RDEPEND}
 	dev-libs/rapidjson
@@ -64,7 +64,7 @@ src_configure() {
 	local mycmakeargs=(
 		-DEXTRA_DATA_DIR="${GAMES_DATADIR}"
 		-DINSTALL_LIB_DIR="/usr/$(get_libdir)"
-		-DBUILD_LAUNCHER=ON
+		-DBUILD_LAUNCHER=$(usex launcher ON OFF)
 		-DLOCAL_SDL_LIB=OFF
 		-DLOCAL_BOOST_LIB=OFF
 		-DLOCAL_RAPIDJSON_LIB=OFF
