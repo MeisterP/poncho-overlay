@@ -82,10 +82,6 @@ src_install(){
 	keepdir "${GAMES_DATADIR}/data"
 }
 
-pkg_preinst() {
-	gnome2_icon_savelist
-}
-
 pkg_postinst() {
 	gnome2_icon_cache_update
 

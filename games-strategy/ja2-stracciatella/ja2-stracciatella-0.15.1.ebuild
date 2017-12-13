@@ -62,10 +62,6 @@ src_install() {
 	newman ja2_manpage ja2.6
 }
 
-pkg_preinst() {
-	gnome2_icon_savelist
-}
-
 pkg_postinst() {
 	gnome2_icon_cache_update
 
