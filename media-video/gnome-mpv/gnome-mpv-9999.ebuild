@@ -29,11 +29,6 @@ DEPEND="${RDEPEND}"
 
 DOCS=( AUTHORS README.md )
 
-pkg_preinst() {
-	gnome2_icon_savelist
-	gnome2_schemas_savelist
-}
-
 pkg_postinst() {
 	xdg_desktop_database_update
 	gnome2_icon_cache_update
