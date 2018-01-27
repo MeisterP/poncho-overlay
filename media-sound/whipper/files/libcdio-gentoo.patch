@@ -1,0 +1,52 @@
+diff --git a/whipper/program/cdparanoia.py b/whipper/program/cdparanoia.py
+index af707f5..d72295e 100644
+--- a/whipper/program/cdparanoia.py
++++ b/whipper/program/cdparanoia.py
+@@ -295,10 +295,10 @@ class ReadTrackTask(task.Task):
+ 
+         bufsize = 1024
+         if self._overread:
+-            argv = ["cd-paranoia", "--stderr-progress",
++            argv = ["libcdio-paranoia", "--stderr-progress",
+                     "--sample-offset=%d" % self._offset, "--force-overread", ]
+         else:
+-            argv = ["cd-paranoia", "--stderr-progress",
++            argv = ["libcdio-paranoia", "--stderr-progress",
+                     "--sample-offset=%d" % self._offset, ]
+         if self._device:
+             argv.extend(["--force-cdrom-device", self._device, ])
+@@ -317,7 +317,7 @@ class ReadTrackTask(task.Task):
+         except OSError as e:
+             import errno
+             if e.errno == errno.ENOENT:
+-                raise common.MissingDependencyException('cd-paranoia')
++                raise common.MissingDependencyException('libcdio-paranoia')
+ 
+             raise
+ 
+@@ -579,8 +579,8 @@ _VERSION_RE = re.compile(
+ 
+ 
+ def getCdParanoiaVersion():
+-    getter = common.VersionGetter('cd-paranoia',
+-                                  ["cd-paranoia", "-V"],
++    getter = common.VersionGetter('libcdio-paranoia',
++                                  ["libcdio-paranoia", "-V"],
+                                   _VERSION_RE,
+                                   "%(version)s %(release)s")
+ 
+@@ -605,12 +605,12 @@ class AnalyzeTask(ctask.PopenTask):
+     def __init__(self, device=None):
+         # cdparanoia -A *always* writes cdparanoia.log
+         self.cwd = tempfile.mkdtemp(suffix='.whipper.cache')
+-        self.command = ['cd-paranoia', '-A']
++        self.command = ['libcdio-paranoia', '-A']
+         if device:
+             self.command += ['-d', device]
+ 
+     def commandMissing(self):
+-        raise common.MissingDependencyException('cd-paranoia')
++        raise common.MissingDependencyException('libcdio-paranoia')
+ 
+     def readbyteserr(self, bytes):
+         self._output.append(bytes)

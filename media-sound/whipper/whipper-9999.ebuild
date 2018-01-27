@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -21,6 +21,7 @@ DEPEND="${PYTHON_DEPS}
 	dev-python/python-musicbrainz-ngs[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}
 	app-cdr/cdrdao
+	dev-libs/libcdio-paranoia
 	dev-python/cddb-py[${PYTHON_USEDEP}]
 	dev-python/pycdio[${PYTHON_USEDEP}]
 	dev-python/pygobject:2[${PYTHON_USEDEP}]
@@ -29,8 +30,9 @@ RDEPEND="${DEPEND}
 	media-libs/flac
 	media-libs/libsndfile
 	media-libs/mutagen[${PYTHON_USEDEP}]
-	media-sound/cdparanoia
 	media-sound/sox"
+
+PATCHES=( "${FILESDIR}/libcdio-gentoo.patch" )
 
 src_compile() {
 	distutils-r1_src_compile
