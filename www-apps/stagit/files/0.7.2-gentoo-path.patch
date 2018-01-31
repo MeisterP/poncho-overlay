@@ -1,0 +1,44 @@
+diff --git a/Makefile b/Makefile
+index 43c6e56..ce30365 100644
+--- a/Makefile
++++ b/Makefile
+@@ -70,7 +70,6 @@ install: all
+ 		logo.png\
+ 		example_create.sh\
+ 		example_post-receive.sh\
+-		README\
+ 		${DESTDIR}${PREFIX}/share/${NAME}
+ 	# installing manual pages.
+ 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
+diff --git a/config.mk b/config.mk
+index 477f4fc..0b24b36 100644
+--- a/config.mk
++++ b/config.mk
+@@ -1,14 +1,14 @@
+ # customize below to fit your system
+ 
+ # paths
+-PREFIX = /usr/local
+-MANPREFIX = ${PREFIX}/man
++PREFIX = /usr
++MANPREFIX = ${PREFIX}/share/man
+ 
+ # compiler and linker
+ #CC = cc
+ 
+-GITINC = /usr/local/include
+-GITLIB = /usr/local/lib
++GITINC = /usr/include
++GITLIB = /usr/lib
+ 
+ # includes and libs
+ INCS = -I${GITINC}
+@@ -20,7 +20,7 @@ LIBS = -L${GITLIB} -lgit2
+ 
+ # optimized
+ CFLAGS = -O2 -std=c99 ${INCS}
+-LDFLAGS = -s ${LIBS}
++LDFLAGS = ${LIBS}
+ 
+ # optimized static
+ #CFLAGS = -static -O2 -std=c99 ${INCS}
