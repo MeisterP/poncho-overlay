@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -22,7 +22,7 @@ IUSE=""
 DEPEND="${PYTHON_DEPS}
 	dev-python/protobuf-python[${PYTHON_USEDEP}]
 	dev-python/pyaxmlparser[${PYTHON_USEDEP}]
-	dev-python/gpapi[${PYTHON_USEDEP}]"
+	=dev-python/gpapi-0.4.1[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/3.10-config.patch" "${FILESDIR}/2.15-language.patch" )
+PATCHES=( "${FILESDIR}/3.10-config.patch" )
