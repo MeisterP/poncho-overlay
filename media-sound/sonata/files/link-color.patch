@@ -1,0 +1,10 @@
+diff --git a/sonata/ui/info.css b/sonata/ui/info.css
+index 54f9e21..d743f2d 100644
+--- a/sonata/ui/info.css
++++ b/sonata/ui/info.css
+@@ -1,4 +1,4 @@
+ .link {
+-  color: @link_color;
++  color: #0000FF;
+ }
+ 
