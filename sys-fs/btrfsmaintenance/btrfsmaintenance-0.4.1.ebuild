@@ -12,11 +12,9 @@ SRC_URI="https://github.com/kdave/btrfsmaintenance/archive/v${PV}.tar.gz -> ${P}
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="systemd"
+IUSE=""
 
-RDEPEND="systemd? ( sys-apps/systemd )
-	sys-fs/btrfs-progs
-	virtual/cron"
+RDEPEND="sys-fs/btrfs-progs"
 
 src_prepare() {
 	# Fix config path into watching service
@@ -26,7 +24,7 @@ src_prepare() {
 }
 
 src_install() {
-	dodoc README.md CONTRIBUTING.md btrfsmaintenance.changes
+	dodoc README.md CONTRIBUTING.md CHANGES.md
 	insinto /etc/default
 	newins sysconfig.btrfsmaintenance btrfsmaintenance
 	insinto /usr/share/btrfsmaintenance
@@ -39,13 +37,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	elog "Installing default btrfsmaintenance scripts"
-	if use systemd; then
-		"${EROOT%/}"/usr/share/btrfsmaintenance/btrfsmaintenance-refresh-cron.sh systemd-timer || die
-	else
-		"${EROOT%/}"/usr/share/btrfsmaintenance/btrfsmaintenance-refresh-cron.sh || die
-	fi
-	elog "Now edit cron periods and mount points in /etc/default/btrfsmaintenance "
+	elog "Edit cron periods and mount points in /etc/default/btrfsmaintenance "
 	elog "then run /usr/share/btrfsmaintenance/btrfsmaintenance-refresh-cron.sh to"
 	elog "update cron symlinks or run"
 	elog "/usr/share/btrfsmaintenance/btrfsmaintenance-refresh-cron.sh systemd-timer"

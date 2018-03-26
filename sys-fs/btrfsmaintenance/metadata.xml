@@ -2,8 +2,8 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<maintainer type="person">
-		<email>martin.dummer@gmx.net</email>
-		<name>Martin Dummer</name>
+		<email>poncho@spahan.ch</email>
+		<name>Poncho</name>
 	</maintainer>
 	<maintainer type="project">
 		<email>proxy-maint@gentoo.org</email>
@@ -12,9 +12,4 @@
 	<upstream>
 		<remote-id type="github">kdave/btrfsmaintenance</remote-id>
 	</upstream>
-	<use>
-		<flag name="systemd">
-			Enable systemd services and timers instead of cron timers
-		</flag>
-	</use>
 </pkgmetadata>
