@@ -4,12 +4,12 @@
 EAPI=6
 PYTHON_COMPAT=( python3_{4,5} )
 
-inherit python-r1 autotools eutils
+inherit python-single-r1 autotools eutils
 
 DESCRIPTION="An implementation of the MPRIS 2 interface as a client for MPD"
 HOMEPAGE="https://github.com/eonpatapon/mpDris2"
 #SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${PV}.tar.gz -> ${P}.tar.gz"
-MY_COMMIT="3de5317c57cd6ccdf99f4846c872fe6147e7c662"
+MY_COMMIT="1231f84b52089b6434853ccc9f562eb28eb563e0"
 SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${MY_COMMIT}.zip -> ${P}.zip"
 
 LICENSE="GPL-3"
@@ -24,9 +24,14 @@ RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/mpDris2-${MY_COMMIT}"
 
-src_prepare () {
+src_prepare() {
 	default
 	eautoreconf
+}
+
+src_install() {
+	default
+	python_fix_shebang "${ED}"usr/bin/mpDris2
 }
 
 pkg_postinst() {
