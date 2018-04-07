@@ -1,11 +1,11 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 
 inherit eutils udev qmake-utils
 
-MY_PV="3.5-DEV1710"
+MY_PV="3.5-DEV1802"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -16,24 +16,30 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="dev-qt/qtbluetooth:5
+RDEPEND="dev-qt/qtbluetooth:5
+	dev-qt/qtcharts:5
+	dev-qt/qtconcurrent:5
 	dev-qt/qtmultimedia:5[widgets]
 	dev-qt/qtserialport:5
 	dev-qt/qtsvg:5
-	dev-qt/qttranslations:5
 	dev-qt/qtwebkit:5
-	x11-libs/qwt[qt5]"
-RDEPEND="${DEPEND}"
+	virtual/libusb:1"
+DEPEND="${RDEPEND}
+	sys-devel/bison
+	sys-devel/flex"
 
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
 src_prepare() {
 	eapply_user
 
-	cp src/gcconfig.pri.in src/gcconfig.pri ||die
+	cp src/gcconfig.pri.in src/gcconfig.pri || die
 	sed -i -e "s:#CONFIG += release:CONFIG += release:" \
 		-e "s:#QMAKE_LRELEASE = /usr/bin/lrelease:QMAKE_LRELEASE = "$(qt5_get_bindir)"/lrelease:" \
+		-e "s:#LIBUSB_INSTALL = /usr/local:LIBUSB_INSTALL = /usr:" \
+		-e "s:#LIBUSB_LIBS =:LIBUSB_LIBS = -lusb:" \
 		-e "s:#LIBZ_LIBS    = -lz:LIBZ_LIBS = -lz:" \
+		-e "s:#QMAKE_CXXFLAGS += -O3:QMAKE_CXXFLAGS += -O3:" \
 		src/gcconfig.pri || die
 
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
