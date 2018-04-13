@@ -23,6 +23,8 @@ RDEPEND="dev-qt/qtbluetooth:5
 	dev-qt/qtserialport:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebkit:5
+
+	dev-libs/libical
 	virtual/libusb:1"
 DEPEND="${RDEPEND}
 	sys-devel/bison
@@ -33,14 +35,21 @@ S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 src_prepare() {
 	eapply_user
 
-	cp src/gcconfig.pri.in src/gcconfig.pri || die
-	sed -i -e "s:#CONFIG += release:CONFIG += release:" \
-		-e "s:#QMAKE_LRELEASE = /usr/bin/lrelease:QMAKE_LRELEASE = "$(qt5_get_bindir)"/lrelease:" \
-		-e "s:#LIBUSB_INSTALL = /usr/local:LIBUSB_INSTALL = /usr:" \
-		-e "s:#LIBUSB_LIBS =:LIBUSB_LIBS = -lusb:" \
-		-e "s:#LIBZ_LIBS    = -lz:LIBZ_LIBS = -lz:" \
-		-e "s:#QMAKE_CXXFLAGS += -O3:QMAKE_CXXFLAGS += -O3:" \
-		src/gcconfig.pri || die
+	cat <<- EOF > src/gcconfig.pri || die
+		CONFIG += release
+		QMAKE_CXXFLAGS += -O3
+		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
+
+		LIBZ_LIBS = -lz
+
+		LIBUSB_INSTALL = /usr
+		LIBUSB_LIBS = -lusb
+
+		ICAL_INSTALL = /usr
+		ICAL_LIBS = -lical
+
+		DEFINES += GC_VIDEO_QT5
+	EOF
 
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
 	sed -i -e "s:/usr/local/:/usr/:" \
