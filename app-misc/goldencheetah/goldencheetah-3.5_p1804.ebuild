@@ -5,7 +5,7 @@ EAPI=6
 
 inherit eutils udev qmake-utils
 
-MY_PV="3.5-DEV1802"
+MY_PV="3.5-DEV1804"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -56,7 +56,7 @@ src_install() {
 	udev_dorules src/Resources/linux/51-garmin-usb.rules
 
 	doicon src/Resources/images/gc.png
-	make_desktop_entry GoldenCheetah GoldenCheetah gc Science
+	make_desktop_entry GoldenCheetah GoldenCheetah gc Science StartupWMClass=GoldenCheetah
 
 	dodoc README.md
 }
