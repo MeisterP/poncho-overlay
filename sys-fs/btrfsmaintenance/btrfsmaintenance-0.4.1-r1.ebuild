@@ -16,6 +16,10 @@ IUSE=""
 
 RDEPEND="sys-fs/btrfs-progs"
 
+PATCHES=(
+	"${FILESDIR}/fix-btrfs-defrag.patch"
+	)
+
 src_prepare() {
 	# Fix config path into watching service
 	sed -i 's%/etc/sysconfig/btrfsmaintenance%/etc/default/btrfsmaintenance%g' btrfsmaintenance-refresh.* || \
@@ -31,9 +35,7 @@ src_install() {
 	doins btrfsmaintenance-functions
 	exeinto /usr/share/btrfsmaintenance
 	doexe btrfs*.sh
-	systemd_dounit *.service
-	systemd_dounit *.timer
-	systemd_dounit *.path
+	systemd_dounit *.service *.timer *.path
 }
 
 pkg_postinst() {
