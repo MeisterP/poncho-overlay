@@ -20,9 +20,8 @@ IUSE=""
 #python3 -> pyaxmlparser
 
 DEPEND="${PYTHON_DEPS}
-	dev-python/protobuf-python[${PYTHON_USEDEP}]
 	dev-python/pyaxmlparser[${PYTHON_USEDEP}]
-	=dev-python/gpapi-0.4.1[${PYTHON_USEDEP}]"
+	=dev-python/gpapi-0.4.2[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/3.10-config.patch" )
+PATCHES=( "${FILESDIR}/3.23-config.patch" )
