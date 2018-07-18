@@ -3,26 +3,15 @@
 
 EAPI=6
 
-inherit linux-mod
-
-case ${PV} in
-9999)
-	inherit git-r3
-	KEYWORDS=""
-	EGIT_REPO_URI="git://github.com/umlaeute/v4l2loopback.git"
-	;;
-*)
-	inherit vcs-snapshot
-	KEYWORDS="~amd64 ~x86"
-	SRC_URI="https://github.com/umlaeute/v4l2loopback/tarball/v${PV} -> ${P}.tar.gz"
-	;;
-esac
+inherit linux-mod vcs-snapshot
 
 DESCRIPTION="v4l2 loopback device which output is it's own input"
 HOMEPAGE="https://github.com/umlaeute/v4l2loopback"
+SRC_URI="https://github.com/umlaeute/v4l2loopback/tarball/v${PV} -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
+KEYWORDS="~amd64 ~x86"
 IUSE="examples"
 
 CONFIG_CHECK="VIDEO_DEV"
