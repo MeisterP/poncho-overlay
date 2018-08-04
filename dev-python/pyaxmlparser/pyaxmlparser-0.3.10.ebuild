@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -17,5 +17,6 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND="${PYTHON_DEPS}
+	>=dev-python/click-6.7[${PYTHON_USEDEP}]
 	>=dev-python/lxml-3.7.3[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
