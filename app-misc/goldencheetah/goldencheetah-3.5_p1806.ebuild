@@ -23,17 +23,17 @@ RDEPEND="dev-qt/qtbluetooth:5
 	dev-qt/qtserialport:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebkit:5
-
-	dev-libs/libical
 	virtual/libusb:1"
 DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex"
+	
+PATCHES=( ${FILESDIR}/missing-ifdef-GC_HAVE_ICAL.patch )
 
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
 src_prepare() {
-	eapply_user
+	default
 
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release
@@ -44,9 +44,6 @@ src_prepare() {
 
 		LIBUSB_INSTALL = /usr
 		LIBUSB_LIBS = -lusb
-
-		ICAL_INSTALL = /usr
-		ICAL_LIBS = -lical
 
 		DEFINES += GC_VIDEO_QT5
 	EOF
