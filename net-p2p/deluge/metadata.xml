@@ -6,7 +6,8 @@
 		<name>Poncho</name>
 	</maintainer>
 	<use>
-<!--		<flag name="webinterface">Install dependencies needed for the web interface</flag>-->
+		<flag name="webinterface">Install dependencies needed for the web
+			interface</flag>
 		<flag name="console">Enable default console UI</flag>
 	</use>
 </pkgmetadata>
