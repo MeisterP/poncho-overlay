@@ -5,7 +5,7 @@ EAPI=6
 
 inherit eutils udev qmake-utils
 
-MY_PV="3.5-DEV1804"
+MY_PV=${PV/_p/-DEV}
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -27,7 +27,7 @@ RDEPEND="dev-qt/qtbluetooth:5
 DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex"
-	
+
 PATCHES=( ${FILESDIR}/missing-ifdef-GC_HAVE_ICAL.patch )
 
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
@@ -45,7 +45,9 @@ src_prepare() {
 		LIBUSB_INSTALL = /usr
 		LIBUSB_LIBS = -lusb
 
+		#DEFINES += NOWEBKIT
 		DEFINES += GC_VIDEO_QT5
+		DEFINES += GC_WANT_ROBOT
 	EOF
 
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
