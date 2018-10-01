@@ -28,8 +28,6 @@ DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex"
 
-PATCHES=( ${FILESDIR}/missing-ifdef-GC_HAVE_ICAL.patch )
-
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
 src_prepare() {
