@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -20,9 +20,10 @@ RDEPEND="dev-qt/qtbluetooth:5
 	dev-qt/qtcharts:5
 	dev-qt/qtconcurrent:5
 	dev-qt/qtmultimedia:5[widgets]
+	dev-qt/qtpositioning:5
 	dev-qt/qtserialport:5
 	dev-qt/qtsvg:5
-	dev-qt/qtwebkit:5
+	dev-qt/qtwebengine:5[widgets]
 	virtual/libusb:1"
 DEPEND="${RDEPEND}
 	sys-devel/bison
@@ -43,9 +44,8 @@ src_prepare() {
 		LIBUSB_INSTALL = /usr
 		LIBUSB_LIBS = -lusb
 
-		#DEFINES += NOWEBKIT
+		DEFINES += NOWEBKIT
 		DEFINES += GC_VIDEO_QT5
-		DEFINES += GC_WANT_ROBOT
 	EOF
 
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
