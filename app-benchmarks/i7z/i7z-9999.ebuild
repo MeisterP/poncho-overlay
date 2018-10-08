@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -12,11 +12,9 @@ EGIT_REPO_URI="https://github.com/ajaiantilal/i7z.git"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="X"
+IUSE=""
 
-RDEPEND="
-	sys-libs/ncurses:=
-	X? ( dev-qt/qtgui:4 )"
+RDEPEND="sys-libs/ncurses:="
 DEPEND="${RDEPEND}"
 
 PATCHES=( "${FILESDIR}"/${P}-ncurses.patch )
@@ -26,16 +24,6 @@ src_prepare() {
 	tc-export CC
 }
 
-src_compile() {
-	default
-	if use X; then
-		cd GUI
-		eqmake4 ${PN}_GUI.pro
-		emake clean && emake
-	fi
-}
-
 src_install() {
 	emake DESTDIR="${ED}" docdir=/usr/share/doc/${PF} install
-	use X && dosbin GUI/i7z_GUI
 }
