@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -16,12 +16,9 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-#python2 -> androguard
-#python3 -> pyaxmlparser
-
 DEPEND="${PYTHON_DEPS}
 	dev-python/pyaxmlparser[${PYTHON_USEDEP}]
-	=dev-python/gpapi-0.4.2[${PYTHON_USEDEP}]"
+	~dev-python/gpapi-0.4.2[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
 
 PATCHES=( "${FILESDIR}/3.23-config.patch" )
