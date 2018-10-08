@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit eutils udev qmake-utils
+inherit eutils flag-o-matic udev qmake-utils
 
 MY_PV=${PV/_p/-DEV}
 
@@ -24,7 +24,7 @@ RDEPEND="dev-qt/qtbluetooth:5
 	dev-qt/qtserialport:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebengine:5[widgets]
-	virtual/libusb:1"
+	virtual/libusb:0"
 DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex"
@@ -36,7 +36,6 @@ src_prepare() {
 
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release
-		QMAKE_CXXFLAGS += -O3
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
 
 		LIBZ_LIBS = -lz
@@ -54,6 +53,7 @@ src_prepare() {
 }
 
 src_configure() {
+	replace-flags -O? -O3
 	eqmake5
 }
 
