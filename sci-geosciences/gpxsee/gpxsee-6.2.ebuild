@@ -3,7 +3,7 @@
 
 EAPI=6
 
-PLOCALES="cs de fi fr pl ru sv"
+PLOCALES="cs da de en fi fr nb pl ru sv"
 inherit qmake-utils l10n xdg-utils gnome2-utils
 
 MY_PN="GPXSee"
@@ -23,6 +23,8 @@ RDEPEND="dev-qt/qtwidgets:5
 	dev-qt/qtcore:5"
 DEPEND="${RDEPEND}
 	dev-qt/linguist-tools:5"
+
+PATCHES=( "${FILESDIR}/${PV}-fixed-broken-bounds-handling.patch" )
 
 S="${WORKDIR}/${MY_P}"
 
@@ -47,7 +49,7 @@ src_compile() {
 src_install() {
 	local lang
 	newbin ${MY_PN} ${PN}
-	dodoc README.md
+	dodoc README.md CONTRIBUTING.md
 	insinto /usr/share/${PN}
 	doins -r pkg/maps pkg/csv
 
@@ -60,8 +62,8 @@ src_install() {
 	doins pkg/${PN}.desktop
 	insinto /usr/share/mime/packages
 	doins pkg/${PN}.xml
-	insinto /usr/share/pixmaps
-	doins icons/${PN}.png
+	doicon -s 64 icons/${PN}.png
+	newicon -s 128 icons/${PN}@2x.png ${PN}.png
 }
 
 pkg_postinst() {
