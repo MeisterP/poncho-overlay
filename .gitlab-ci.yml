@@ -1,14 +1,27 @@
+image: gentoo/stage3-amd64
+
 variables:
   GIT_DEPTH: 1
+  PORTDIR: "$CI_PROJECT_DIR/.cache/portage"
+  DISTDIR: "$CI_PROJECT_DIR/.cache/portage/distfiles"
+  PKGDIR: "$CI_PROJECT_DIR/.cache/portage/packages"
 
-stages:
-  - repoman
+cache:
+  key: gentoo-stage3-amd64-repoman
+  paths:
+    - .cache/portage/distfiles
+    - .cache/portage/packages
+
+before_script:
+  - mkdir -p $PORTDIR
+  - emerge-webrsync --quiet --keep
+  - eselect profile set default/linux/amd64/13.0
+  - emerge --noreplace dev-vcs/git app-portage/repoman --quiet --quiet-build --buildpkg --usepkg
 
 repoman:
-  image:
-    name: chaoslab/repoman:latest
-    entrypoint: ["/bin/bash", "-c"]
-  stage: repoman
+  stage: test
+  tags:
+    - large-richard
   script:
     - repoman --version
-    - repoman -xiIdv
+    - repoman full -xiIdv
