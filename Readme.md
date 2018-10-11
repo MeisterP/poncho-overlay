@@ -1,4 +1,4 @@
-poncho-overlay [![pipeline status](https://0xacab.org/Poncho/poncho-overlay/badges/master/pipeline.svg)](https://0xacab.org/Poncho/poncho-overlay/commits/master)
+poncho-overlay [![pipeline status](https://0xacab.org/Poncho/poncho-overlay/badges/master/pipeline.svg)](https://0xacab.org/Poncho/poncho-overlay/pipelines)
 --------------
 
 This is a Gentoo overlay for packages not in the main tree.
