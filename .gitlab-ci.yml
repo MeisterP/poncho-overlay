@@ -15,7 +15,7 @@ cache:
 before_script:
   - mkdir -p $PORTDIR
   - emerge-webrsync --quiet --keep
-  - eselect profile set default/linux/amd64/13.0
+  - eselect profile set default/linux/amd64/17.0
   - emerge --noreplace dev-vcs/git app-portage/repoman --quiet --quiet-build --buildpkg --usepkg
 
 repoman:
