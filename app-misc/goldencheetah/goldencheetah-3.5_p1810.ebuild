@@ -3,7 +3,9 @@
 
 EAPI=6
 
-inherit eutils flag-o-matic udev qmake-utils
+PYTHON_COMPAT=( python3_{4,5,6,7} )
+
+inherit eutils flag-o-matic udev qmake-utils python-single-r1
 
 MY_PV=${PV/_p/-DEV}
 
@@ -16,7 +18,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="dev-qt/qtbluetooth:5
+RDEPEND="${PYTHON_DEPS}
+	dev-qt/qtbluetooth:5
 	dev-qt/qtcharts:5
 	dev-qt/qtconcurrent:5
 	dev-qt/qtmultimedia:5[widgets]
@@ -26,6 +29,7 @@ RDEPEND="dev-qt/qtbluetooth:5
 	dev-qt/qtwebengine:5[widgets]
 	virtual/libusb:0"
 DEPEND="${RDEPEND}
+	virtual/pkgconfig
 	sys-devel/bison
 	sys-devel/flex"
 
@@ -35,14 +39,12 @@ src_prepare() {
 	default
 
 	cat <<- EOF > src/gcconfig.pri || die
-		CONFIG += release
+		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
-
-		LIBZ_LIBS = -lz
+		PKGCONFIG = zlib libusb python3
 
 		LIBUSB_INSTALL = /usr
-		LIBUSB_LIBS = -lusb
-
+		DEFINES += GC_WANT_PYTHON
 		DEFINES += NOWEBKIT
 		DEFINES += GC_VIDEO_QT5
 	EOF
