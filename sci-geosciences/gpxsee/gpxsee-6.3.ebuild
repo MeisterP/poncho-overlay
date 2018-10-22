@@ -24,8 +24,6 @@ RDEPEND="dev-qt/qtwidgets:5
 DEPEND="${RDEPEND}
 	dev-qt/linguist-tools:5"
 
-PATCHES=( "${FILESDIR}/${PV}-fixed-broken-bounds-handling.patch" )
-
 S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
