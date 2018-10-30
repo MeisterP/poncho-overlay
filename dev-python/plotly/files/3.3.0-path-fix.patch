@@ -1,0 +1,12 @@
+diff --unified --new-file --recursive --show-c-function plotly-3.3.0-orig/setup.py plotly-3.3.0/setup.py
+--- plotly-3.3.0-orig/setup.py	2018-09-26 00:16:15.000000000 +0200
++++ plotly-3.3.0/setup.py	2018-10-30 15:08:49.962542904 +0100
+@@ -274,7 +274,7 @@ setup(name='plotly',
+               'plotlywidget/static/index.js',
+               'plotlywidget/static/index.js.map',
+           ]),
+-          ('etc/jupyter/nbconfig/notebook.d', ['plotlywidget.json']),
++          ('/etc/jupyter/nbconfig/notebook.d', ['plotlywidget.json']),
+       ],
+       install_requires=['decorator>=4.0.6',
+                         'nbformat>=4.2',
