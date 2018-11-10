@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -25,7 +25,10 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/sonata-${MY_COMMIT}"
 
-PATCHES=( "${FILESDIR}/link-color.patch" )
+PATCHES=(
+	"${FILESDIR}/link-color.patch"
+	"${FILESDIR}/volume.patch"
+	)
 
 pkg_postinst() {
 	elog "To get additional features, a number of optional runtime"
