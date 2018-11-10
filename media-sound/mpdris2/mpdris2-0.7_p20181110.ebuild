@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -9,7 +9,7 @@ inherit python-single-r1 autotools eutils
 DESCRIPTION="An implementation of the MPRIS 2 interface as a client for MPD"
 HOMEPAGE="https://github.com/eonpatapon/mpDris2"
 #SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${PV}.tar.gz -> ${P}.tar.gz"
-MY_COMMIT="1231f84b52089b6434853ccc9f562eb28eb563e0"
+MY_COMMIT="e3bdb9e1bd4dceb3e05eeda7cfbd975bf6ed26a5"
 SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${MY_COMMIT}.zip -> ${P}.zip"
 
 LICENSE="GPL-3"
