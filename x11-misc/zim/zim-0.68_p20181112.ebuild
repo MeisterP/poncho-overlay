@@ -8,7 +8,7 @@ DISTUTILS_SINGLE_IMPL=1
 
 inherit xdg-utils distutils-r1 gnome2-utils virtualx
 
-MY_COMMIT="cc80f33582fb744d7df9ebb25530e6c5449cf32b"
+MY_COMMIT="95fa702587805ce0f41c41fe2223ee81484a8fe8"
 
 DESCRIPTION="A desktop wiki"
 HOMEPAGE="http://zim-wiki.org/"
