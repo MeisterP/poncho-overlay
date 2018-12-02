@@ -1,0 +1,20 @@
+diff --unified --new-file --recursive --show-c-function pitivi-0.99/meson.build pitivi-0.99-fix/meson.build
+--- pitivi-0.99/meson.build	2017-09-21 09:12:37.000000000 +0200
++++ pitivi-0.99-fix/meson.build	2018-12-02 12:41:03.865058215 +0100
+@@ -71,5 +71,8 @@ subdir('data')
+ if not get_option('disable-help')
+     subdir('help')
+ endif
+-subdir('tests')
+-subdir('tests/validate-tests')
++
++if get_option('enable-tests')
++    subdir('tests')
++    subdir('tests/validate-tests')
++endif
+diff --unified --new-file --recursive --show-c-function pitivi-0.99/meson_options.txt pitivi-0.99-fix/meson_options.txt
+--- pitivi-0.99/meson_options.txt	2017-09-21 09:12:37.000000000 +0200
++++ pitivi-0.99-fix/meson_options.txt	2018-12-02 12:40:51.228193347 +0100
+@@ -1 +1,2 @@
+ option('disable-help', type : 'boolean', value : false)
++option('enable-tests', type : 'boolean', value : false)
