@@ -1,0 +1,27 @@
+From c0c2ffdcc0049e5726ee1a19ab5eb941da450ed3 Mon Sep 17 00:00:00 2001
+From: Ale Martinez <amtriathlon@gmail.com>
+Date: Mon, 19 Nov 2018 21:50:31 -0300
+Subject: [PATCH 5/5] Changed Notes to Calendar Text in LTMPopup It shows more
+ context information than notes and allows user customization.
+
+---
+ src/Charts/LTMPopup.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Charts/LTMPopup.cpp b/src/Charts/LTMPopup.cpp
+index 4cc1952c..13d7779a 100644
+--- a/src/Charts/LTMPopup.cpp
++++ b/src/Charts/LTMPopup.cpp
+@@ -511,7 +511,8 @@ LTMPopup::rideSelected()
+             metrics->setText(setSummaryHTML(have));
+ 
+             notes->setText(""); //! stop crash (?)
+-            notes->setText(have->getText("Notes", ""));
++            // Use calendar text for more information and to allow customization
++            notes->setText(have->getText("Calendar Text", ""));
+         }
+     }
+     resizeEvent(NULL);
+-- 
+2.19.2
+

@@ -35,6 +35,12 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
+PATCHES=("${FILESDIR}/0001-Remove-google.api-for-openstreetmap-mode-1-4.patch"
+	"${FILESDIR}/0002-RideMapWindow-Use-leaflet-instead-of-googlemap-api-f.patch"
+	"${FILESDIR}/0003-RideMap-3-4-draw-interval-on-OSM.patch"
+	"${FILESDIR}/0004-Only-try-and-build-CalDAVCloud-if-ical-is-present.patch"
+	"${FILESDIR}/0005-Changed-Notes-to-Calendar-Text-in-LTMPopup.patch" )
+
 src_prepare() {
 	default
 
@@ -44,9 +50,8 @@ src_prepare() {
 		PKGCONFIG = zlib libusb python3
 
 		LIBUSB_INSTALL = /usr
-		DEFINES += GC_WANT_PYTHON
-		DEFINES += NOWEBKIT
-		DEFINES += GC_VIDEO_QT5
+		DEFINES += GC_WANT_PYTHON GC_WANT_ROBOT
+		DEFINES += NOWEBKIT GC_VIDEO_QT5
 	EOF
 
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
