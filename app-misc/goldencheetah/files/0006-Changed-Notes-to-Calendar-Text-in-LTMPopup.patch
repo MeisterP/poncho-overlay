@@ -1,7 +1,7 @@
-From c0c2ffdcc0049e5726ee1a19ab5eb941da450ed3 Mon Sep 17 00:00:00 2001
+From cdcc705a2d2702dd5aa934b13692d973f7cb4422 Mon Sep 17 00:00:00 2001
 From: Ale Martinez <amtriathlon@gmail.com>
 Date: Mon, 19 Nov 2018 21:50:31 -0300
-Subject: [PATCH 5/5] Changed Notes to Calendar Text in LTMPopup It shows more
+Subject: [PATCH 6/7] Changed Notes to Calendar Text in LTMPopup It shows more
  context information than notes and allows user customization.
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 5/5] Changed Notes to Calendar Text in LTMPopup It shows more
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/Charts/LTMPopup.cpp b/src/Charts/LTMPopup.cpp
-index 4cc1952c..13d7779a 100644
+index 4cc1952cd..13d7779a9 100644
 --- a/src/Charts/LTMPopup.cpp
 +++ b/src/Charts/LTMPopup.cpp
 @@ -511,7 +511,8 @@ LTMPopup::rideSelected()

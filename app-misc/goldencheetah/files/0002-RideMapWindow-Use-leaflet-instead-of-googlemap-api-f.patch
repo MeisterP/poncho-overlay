@@ -1,7 +1,7 @@
-From 6e21eb858e90f41c03cfa5b4bd8d04ee152e41aa Mon Sep 17 00:00:00 2001
+From 46a4dfabbc1effc5b24509749adfa02f14823c3d Mon Sep 17 00:00:00 2001
 From: grauser <Damien.Grauser@gmail.com>
 Date: Wed, 3 Oct 2018 13:37:07 +0200
-Subject: [PATCH 2/5] RideMapWindow : Use leaflet instead of googlemap api for
+Subject: [PATCH 2/7] RideMapWindow : Use leaflet instead of googlemap api for
  OSM 2/4
 
 Trace ride, intervals and markers
@@ -10,7 +10,7 @@ Trace ride, intervals and markers
  1 file changed, 124 insertions(+), 73 deletions(-)
 
 diff --git a/src/Charts/RideMapWindow.cpp b/src/Charts/RideMapWindow.cpp
-index b9f9350a..73e7b5e4 100644
+index b9f9350a2..73e7b5e4c 100644
 --- a/src/Charts/RideMapWindow.cpp
 +++ b/src/Charts/RideMapWindow.cpp
 @@ -408,8 +408,9 @@ void RideMapWindow::createHtml()

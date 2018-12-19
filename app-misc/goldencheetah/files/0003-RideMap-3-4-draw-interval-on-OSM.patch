@@ -1,14 +1,14 @@
-From 07e8db63ed491725d8a3a5be777906df239f71bd Mon Sep 17 00:00:00 2001
+From 803fb73c2cfd0042bbf2da17cd728c83fccaaec0 Mon Sep 17 00:00:00 2001
 From: grauser <Damien.Grauser@gmail.com>
 Date: Wed, 10 Oct 2018 22:37:21 +0200
-Subject: [PATCH 3/5] RideMap : 3/4 draw interval on OSM
+Subject: [PATCH 3/7] RideMap : 3/4 draw interval on OSM
 
 ---
  src/Charts/RideMapWindow.cpp | 76 +++++++++++++++++++++++++++---------
  1 file changed, 58 insertions(+), 18 deletions(-)
 
 diff --git a/src/Charts/RideMapWindow.cpp b/src/Charts/RideMapWindow.cpp
-index 73e7b5e4..9077b6e5 100644
+index 73e7b5e4c..9077b6e50 100644
 --- a/src/Charts/RideMapWindow.cpp
 +++ b/src/Charts/RideMapWindow.cpp
 @@ -531,13 +531,11 @@ void RideMapWindow::createHtml()

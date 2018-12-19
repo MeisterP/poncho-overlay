@@ -1,7 +1,7 @@
-From 567dd74cda45956f3280ae3ddaa962a196f403db Mon Sep 17 00:00:00 2001
+From ae7ef0a5968ea8232ea5f503090971a3769a7836 Mon Sep 17 00:00:00 2001
 From: Ian Martin <ian.martin@cantab.net>
 Date: Sat, 20 Oct 2018 18:22:29 +0100
-Subject: [PATCH 4/5] Only try and build CalDAVCloud if ical is present
+Subject: [PATCH 7/7] Only try and build CalDAVCloud if ical is present
 
 CalDAVCloud requires ical so do not add to build unless
 ical is present.
@@ -10,7 +10,7 @@ ical is present.
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/src.pro b/src/src.pro
-index 49b08d67..5a544398 100644
+index 49b08d670..5a544398e 100644
 --- a/src/src.pro
 +++ b/src/src.pro
 @@ -409,8 +409,8 @@ contains(DEFINES, "GC_WANT_R") {

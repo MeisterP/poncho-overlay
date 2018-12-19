@@ -38,8 +38,10 @@ S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 PATCHES=("${FILESDIR}/0001-Remove-google.api-for-openstreetmap-mode-1-4.patch"
 	"${FILESDIR}/0002-RideMapWindow-Use-leaflet-instead-of-googlemap-api-f.patch"
 	"${FILESDIR}/0003-RideMap-3-4-draw-interval-on-OSM.patch"
-	"${FILESDIR}/0004-Only-try-and-build-CalDAVCloud-if-ical-is-present.patch"
-	"${FILESDIR}/0005-Changed-Notes-to-Calendar-Text-in-LTMPopup.patch" )
+	"${FILESDIR}/0004-RideMapWindow-Remove-the-google-option.patch"
+	"${FILESDIR}/0005-RideMapWindow-4-4-Display-interval-markers-and-draw-.patch"
+	"${FILESDIR}/0006-Changed-Notes-to-Calendar-Text-in-LTMPopup.patch"
+	"${FILESDIR}/0007-Only-try-and-build-CalDAVCloud-if-ical-is-present.patch")
 
 src_prepare() {
 	default

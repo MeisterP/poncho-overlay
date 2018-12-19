@@ -1,7 +1,7 @@
-From d56b035eb0f80c85c226d3a2713daef97e8ea418 Mon Sep 17 00:00:00 2001
+From 3ad608a4fa98ffcad2838a7240afcbd07e604fd4 Mon Sep 17 00:00:00 2001
 From: grauser <Damien.Grauser@gmail.com>
 Date: Mon, 1 Oct 2018 14:33:30 +0200
-Subject: [PATCH 1/5] Remove google.api for openstreetmap mode 1/4
+Subject: [PATCH 1/7] Remove google.api for openstreetmap mode 1/4
 
 This first commit breaks the openstreetmap display
 ---
@@ -9,7 +9,7 @@ This first commit breaks the openstreetmap display
  1 file changed, 193 insertions(+), 89 deletions(-)
 
 diff --git a/src/Charts/RideMapWindow.cpp b/src/Charts/RideMapWindow.cpp
-index b36d925f..b9f9350a 100644
+index b36d925fe..b9f9350a2 100644
 --- a/src/Charts/RideMapWindow.cpp
 +++ b/src/Charts/RideMapWindow.cpp
 @@ -1,7 +1,7 @@
