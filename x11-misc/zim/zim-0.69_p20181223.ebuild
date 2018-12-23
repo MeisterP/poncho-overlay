@@ -8,7 +8,7 @@ DISTUTILS_SINGLE_IMPL=1
 
 inherit xdg-utils distutils-r1 gnome2-utils virtualx
 
-MY_COMMIT="95fa702587805ce0f41c41fe2223ee81484a8fe8"
+MY_COMMIT="425395d306506bc737cf9f62bf2a903b46552a87"
 
 DESCRIPTION="A desktop wiki"
 HOMEPAGE="http://zim-wiki.org/"
@@ -61,7 +61,7 @@ pkg_postinst() {
 	xdg_desktop_database_update
 	gnome2_icon_cache_update
 	if ! has_version ${CATEGORY}/${PN}; then
-		einfo "Please emerge these packages for additional functionality"
+		einfo "Please install these packages for additional functionality"
 		einfo "    dev-lang/R"
 		einfo "    app-text/gtkspell"
 		einfo "    dev-vcs/bzr"
