@@ -1,0 +1,22 @@
+From 5c043085fc466e77ae67b2176b87b2f350ab36d7 Mon Sep 17 00:00:00 2001
+From: Konstantinos Merentitis <merentitis@gmail.com>
+Date: Wed, 2 Jan 2019 14:00:00 +0200
+Subject: [PATCH] plot (storyline) extraction
+
+---
+ lib/IMDB_Movie.pm | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/IMDB_Movie.pm b/lib/IMDB_Movie.pm
+index 3dbaee2..1758e9e 100644
+--- a/lib/IMDB_Movie.pm
++++ b/lib/IMDB_Movie.pm
+@@ -765,7 +765,7 @@ sub _plot {
+ 
+ sub _storyline {
+     # storyline is longer than plot
+-    my $plot = _get_info(shift, "storyline", "h2", "/p", "em", "span") or return undef;
++    my $plot = _get_info(shift, "storyline", "h2", "/span") or return undef;
+     $plot =~ s/ *\|.*$//;
+     # print "\nstory: $plot\n";
+     return $plot;
