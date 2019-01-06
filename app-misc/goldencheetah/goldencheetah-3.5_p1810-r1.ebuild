@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -7,11 +7,13 @@ PYTHON_COMPAT=( python3_{4,5,6,7} )
 
 inherit eutils flag-o-matic udev qmake-utils python-single-r1
 
-MY_PV=${PV/_p/-DEV}
+#MY_PV=${PV/_p/-DEV}
+MY_COMMIT=ae3320d2ecabcab65c6c33219e739a3e414e623c
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
-SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.zip -> ${PF}.zip"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -33,15 +35,10 @@ DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex"
 
-S="${WORKDIR}/GoldenCheetah-${MY_PV}"
+#S="${WORKDIR}/GoldenCheetah-${MY_PV}"
+S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
-PATCHES=("${FILESDIR}/0001-Remove-google.api-for-openstreetmap-mode-1-4.patch"
-	"${FILESDIR}/0002-RideMapWindow-Use-leaflet-instead-of-googlemap-api-f.patch"
-	"${FILESDIR}/0003-RideMap-3-4-draw-interval-on-OSM.patch"
-	"${FILESDIR}/0004-RideMapWindow-Remove-the-google-option.patch"
-	"${FILESDIR}/0005-RideMapWindow-4-4-Display-interval-markers-and-draw-.patch"
-	"${FILESDIR}/0006-Changed-Notes-to-Calendar-Text-in-LTMPopup.patch"
-	"${FILESDIR}/0007-Only-try-and-build-CalDAVCloud-if-ical-is-present.patch")
+PATCHES=( "${FILESDIR}/define-SIP_MODULE_NAME.patch" )
 
 src_prepare() {
 	default
