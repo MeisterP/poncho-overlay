@@ -7,13 +7,11 @@ PYTHON_COMPAT=( python3_{4,5,6,7} )
 
 inherit eutils flag-o-matic udev qmake-utils python-single-r1
 
-#MY_PV=${PV/_p/-DEV}
-MY_COMMIT=ae3320d2ecabcab65c6c33219e739a3e414e623c
+MY_PV=${PV/_p/-DEV}
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
-#SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz"
-SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.zip -> ${PF}.zip"
+SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -35,8 +33,7 @@ DEPEND="${RDEPEND}
 	sys-devel/bison
 	sys-devel/flex"
 
-#S="${WORKDIR}/GoldenCheetah-${MY_PV}"
-S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
+S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
 PATCHES=( "${FILESDIR}/define-SIP_MODULE_NAME.patch" )
 
