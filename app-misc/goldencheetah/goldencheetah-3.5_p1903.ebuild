@@ -1,11 +1,11 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 PYTHON_COMPAT=( python3_{4,5,6,7} )
 
-inherit eutils flag-o-matic udev qmake-utils python-single-r1
+inherit desktop flag-o-matic udev qmake-utils python-single-r1
 
 MY_PV=${PV/_p/-DEV}
 
@@ -65,7 +65,16 @@ src_install() {
 	udev_dorules src/Resources/linux/51-garmin-usb.rules
 
 	doicon src/Resources/images/gc.png
-	make_desktop_entry GoldenCheetah GoldenCheetah gc Science StartupWMClass=GoldenCheetah
+	newmenu - goldencheetah.desktop <<-EOF
+		[Desktop Entry]
+		Version=1.0
+		Type=Application
+		Name=GoldenCheetah
+		Comment=Cycling Power Analysis Software.
+		Exec=GoldenCheetah
+		Icon=gc
+		Categories=Science;Sports;
+	EOF
 
-	dodoc README.md
+	dodoc README.md CONTRIBUTING.md
 }
