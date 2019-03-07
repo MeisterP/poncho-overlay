@@ -1,12 +1,12 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 PYTHON_COMPAT=( python2_7 )
 PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
 
-inherit eutils l10n gnome2-utils python-single-r1
+inherit desktop xdg-utils l10n python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -54,15 +54,18 @@ src_install() {
 }
 
 pkg_postinst() {
-	gnome2_icon_cache_update
+	xdg_desktop_database_update
+	xdg_icon_cache_update
 
-	elog "To get additional features, a number of optional runtime"
-	elog "dependencies may be installed:"
-	optfeature "iCalendar files support" dev-python/icalendar
-	optfeature "the builtin documentation" dev-python/markdown
-	optfeature "export to svg support" dev-python/pysvg
+	if ! has_version ${CATEGORY}/${PN}; then
+		elog "Please install these packages for additional functionality"
+		elog "    dev-python/icalendar  iCalendar file support"
+		elog "    dev-python/markdown   view the builtin documentation"
+		elog "    dev-python/pysvg      export to svg"
+	fi
 }
 
 pkg_postrm() {
-	gnome2_icon_cache_update
+	xdg_desktop_database_update
+	xdg_icon_cache_update
 }
