@@ -1,0 +1,50 @@
+From acc87b6677471f5e4e10b6818db533de92989e82 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Fri, 8 Mar 2019 20:46:22 +0100
+Subject: [PATCH] HrvMeasuresCsvImport.cpp: allow HR only csv files
+
+---
+ src/FileIO/HrvMeasuresCsvImport.cpp | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/src/FileIO/HrvMeasuresCsvImport.cpp b/src/FileIO/HrvMeasuresCsvImport.cpp
+index 64749c4a5..739199a33 100644
+--- a/src/FileIO/HrvMeasuresCsvImport.cpp
++++ b/src/FileIO/HrvMeasuresCsvImport.cpp
+@@ -41,7 +41,6 @@ HrvMeasuresCsvImport::getHrvMeasures(QString &error, QDateTime from, QDateTime t
+   // all variables to be defined here (to allow :goto - for simplified error handling/less redundant code)
+   bool tsExists = false;
+   bool dateExists = false;
+-  bool rmssdExists = false;
+ 
+   QString fileName = QFileDialog::getOpenFileName(NULL, tr("Select HRV measurements file to import"), "", tr("CSV Files (*.csv)"));
+   if (fileName.isEmpty()) {
+@@ -79,16 +78,11 @@ HrvMeasuresCsvImport::getHrvMeasures(QString &error, QDateTime from, QDateTime t
+   foreach(QString h, headers) {
+       if (h == "timestamp_measurement" || h == "Datetime") tsExists = true;
+       if (h == "date") dateExists = true;
+-      if (h == "rMSSD" || h == "rMSSD_lying" || h == "Rmssd") rmssdExists = true;
+   }
+   if (!tsExists && !dateExists) {
+       error = tr("Column 'timestamp_measurement'/'Datetime'/'date' is missing.");
+       goto error;
+   }
+-  if (!rmssdExists) {
+-      error = tr("Column 'rMSSD'/'rMSSD_lying'/'Rmssd' is missing.");
+-      goto error;
+-  }
+ 
+   // No duplicates and minimal "timestamp"/"date" and "rmssd" exist
+   emit downloadProgress(50);
+@@ -198,7 +192,7 @@ HrvMeasuresCsvImport::getHrvMeasures(QString &error, QDateTime from, QDateTime t
+           }
+       }
+       // only append if we have a good date & rMSSD
+-      if (m.when > QDateTime::fromMSecsSinceEpoch(0) && m.rmssd > 0.0) {
++      if (m.when > QDateTime::fromMSecsSinceEpoch(0)) {
+           m.source = HrvMeasure::CSV;
+           data.append(m);
+       }
+-- 
+2.19.2
+

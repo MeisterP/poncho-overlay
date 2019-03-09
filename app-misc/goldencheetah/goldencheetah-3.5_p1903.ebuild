@@ -35,7 +35,8 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
-PATCHES=( "${FILESDIR}/define-SIP_MODULE_NAME.patch" )
+PATCHES=( "${FILESDIR}/define-SIP_MODULE_NAME.patch"
+	"${FILESDIR}/allow-HR-only-csv-files.patch" )
 
 src_prepare() {
 	default
