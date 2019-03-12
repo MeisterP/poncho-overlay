@@ -29,14 +29,14 @@ RDEPEND="${PYTHON_DEPS}
 	dev-qt/qtwebengine:5[widgets]
 	virtual/libusb:0"
 DEPEND="${RDEPEND}
-	virtual/pkgconfig
+	dev-python/sip
 	sys-devel/bison
-	sys-devel/flex"
+	sys-devel/flex
+	virtual/pkgconfig"
 
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
-PATCHES=( "${FILESDIR}/define-SIP_MODULE_NAME.patch"
-	"${FILESDIR}/allow-HR-only-csv-files.patch" )
+PATCHES=( "${FILESDIR}/allow-HR-only-csv-files.patch" )
 
 src_prepare() {
 	default
@@ -54,6 +54,8 @@ src_prepare() {
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
 	sed -i -e "s:/usr/local/:/usr/:" \
 		qwt/qwtconfig.pri || die
+
+	sip -c src/Python/SIP src/Python/SIP/goldencheetah.sip || die
 }
 
 src_configure() {
