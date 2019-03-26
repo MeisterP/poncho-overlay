@@ -36,7 +36,13 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
-PATCHES=( "${FILESDIR}/allow-HR-only-csv-files.patch" )
+PATCHES=(
+	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3043
+	"${FILESDIR}"/allow-HR-only-csv-files.patch
+
+	# https://github.com/GoldenCheetah/GoldenCheetah/issues/922
+	"${FILESDIR}"/f8d530db4ccbcfd50d280a46b40d3125aadae671.patch
+	)
 
 src_prepare() {
 	default
