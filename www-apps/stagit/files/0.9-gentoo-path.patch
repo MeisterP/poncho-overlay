@@ -1,27 +1,17 @@
-diff --git a/Makefile b/Makefile
-index 43c6e56..ce30365 100644
---- a/Makefile
-+++ b/Makefile
-@@ -70,7 +70,6 @@ install: all
- 		logo.png\
- 		example_create.sh\
- 		example_post-receive.sh\
--		README\
- 		${DESTDIR}${PREFIX}/share/${NAME}
- 	# installing manual pages.
- 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 diff --git a/config.mk b/config.mk
-index 477f4fc..0b24b36 100644
+index 90419a0..243b1cb 100644
 --- a/config.mk
 +++ b/config.mk
-@@ -1,14 +1,14 @@
+@@ -1,15 +1,15 @@
  # customize below to fit your system
  
  # paths
 -PREFIX = /usr/local
 -MANPREFIX = ${PREFIX}/man
+-DOCPREFIX = ${PREFIX}/share/doc/stagit
 +PREFIX = /usr
 +MANPREFIX = ${PREFIX}/share/man
++DOCPREFIX = ${PREFIX}/share/doc/${P}
  
  # compiler and linker
  #CC = cc
@@ -33,12 +23,18 @@ index 477f4fc..0b24b36 100644
  
  # includes and libs
  INCS = -I${GITINC}
-@@ -20,7 +20,7 @@ LIBS = -L${GITLIB} -lgit2
+@@ -20,11 +20,11 @@ LIBS = -L${GITLIB} -lgit2
+ #LDFLAGS = ${LIBS}
  
  # optimized
- CFLAGS = -O2 -std=c99 ${INCS}
+-CFLAGS = -O2 -std=c99 ${INCS}
 -LDFLAGS = -s ${LIBS}
-+LDFLAGS = ${LIBS}
++CFLAGS += ${INCS}
++LDFLAGS += ${LIBS}
  
  # optimized static
  #CFLAGS = -static -O2 -std=c99 ${INCS}
+ #LDFLAGS = -static -s ${LIBS}
+ 
+-CPPFLAGS = -D_XOPEN_SOURCE=700 -D_DEFAULT_SOURCE -D_BSD_SOURCE ${INCS}
++CPPFLAGS += -D_XOPEN_SOURCE=700 -D_DEFAULT_SOURCE -D_BSD_SOURCE ${INCS}

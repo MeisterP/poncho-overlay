@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -15,4 +15,7 @@ IUSE=""
 DEPEND="dev-libs/libgit2"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/${PV}-gentoo-path.patch" )
+PATCHES=(
+	"${FILESDIR}"/0.9.2
+	"${FILESDIR}"/${PV}-gentoo-path.patch
+	)

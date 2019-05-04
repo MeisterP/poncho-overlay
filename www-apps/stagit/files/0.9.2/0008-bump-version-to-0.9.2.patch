@@ -1,0 +1,25 @@
+From c783e54dae5bd74de2280e31223ce8a0ad0d611d Mon Sep 17 00:00:00 2001
+From: Hiltjo Posthuma <hiltjo@codemadness.org>
+Date: Tue, 23 Apr 2019 20:53:05 +0200
+Subject: [PATCH 8/8] bump version to 0.9.2
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index aca1353..78e7d4f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ include config.mk
+ 
+ NAME = stagit
+-VERSION = 0.9.1
++VERSION = 0.9.2
+ 
+ SRC = \
+ 	stagit.c\
+-- 
+2.21.0
+
