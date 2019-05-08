@@ -25,6 +25,8 @@ LICENSE="GPL-2"
 SLOT="0"
 IUSE="examples"
 
+PATCHES=( "${FILESDIR}/5.1-v4l2_get_timestamp.patch" )
+
 CONFIG_CHECK="VIDEO_DEV"
 MODULE_NAMES="v4l2loopback(video:)"
 BUILD_TARGETS="all"
