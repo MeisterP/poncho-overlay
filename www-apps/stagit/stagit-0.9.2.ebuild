@@ -4,8 +4,8 @@
 EAPI=6
 
 DESCRIPTION="static git page generator"
-HOMEPAGE="http://git.2f30.org/stagit/"
-SRC_URI="http://dl.2f30.org/releases/stagit-${PV}.tar.gz"
+HOMEPAGE="https://git.codemadness.org/stagit/"
+SRC_URI="https://codemadness.org/releases/stagit/stagit-${PV}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
@@ -16,6 +16,5 @@ DEPEND="dev-libs/libgit2"
 RDEPEND="${DEPEND}"
 
 PATCHES=(
-	"${FILESDIR}"/0.9.2
-	"${FILESDIR}"/${PV}-gentoo-path.patch
+	"${FILESDIR}"/0.9-gentoo-path.patch
 	)
