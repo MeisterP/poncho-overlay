@@ -8,7 +8,7 @@ inherit distutils-r1
 
 DESCRIPTION="Python SVG document creation library"
 HOMEPAGE="https://github.com/alorence/pysvg-py3"
-SRC_URI="https://files.pythonhosted.org/packages/cf/86/ee1c6cfa9d50425e33707462b5e1cf6f4679faf006206c40d00c6c73c228/${P}.post2.tar.gz"
+SRC_URI="https://files.pythonhosted.org/packages/63/92/a0d9d3c3f339bdd7f364e3e85033fc7649bb59d651dbab88ef9774e4cdaf/${P}.post3.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
@@ -16,4 +16,4 @@ KEYWORDS="~amd64 ~x86"
 
 DEPEND=""
 
-S="${WORKDIR}/${P}.post2"
+S="${WORKDIR}/${P}.post3"
