@@ -24,4 +24,4 @@ RDEPEND="dev-python/decorator[${PYTHON_USEDEP}]
 DEPEND="${RDEPEND}
 	dev-python/setuptools[${PYTHON_USEDEP}]"
 
-PATCHES=( "${FILESDIR}/3.3.0-path-fix.patch" )
+PATCHES=( "${FILESDIR}/4.0.0-path-fix.patch" )

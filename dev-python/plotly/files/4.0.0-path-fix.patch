@@ -1,0 +1,12 @@
+diff --unified --new-file --recursive --show-c-function plotly-4.0.0/setup.py plotly-4.0.0-fix/setup.py
+--- plotly-4.0.0/setup.py	2019-07-16 18:41:27.000000000 +0200
++++ plotly-4.0.0-fix/setup.py	2019-07-25 07:47:19.675685108 +0200
+@@ -487,7 +487,7 @@ setup(
+             "share/jupyter/nbextensions/plotlywidget",
+             ["plotlywidget/static/extension.js", "plotlywidget/static/index.js"],
+         ),
+-        ("etc/jupyter/nbconfig/notebook.d", ["plotlywidget.json"]),
++        ("/etc/jupyter/nbconfig/notebook.d", ["plotlywidget.json"]),
+     ],
+     install_requires=["retrying>=1.3.3", "six"],
+     zip_safe=False,
