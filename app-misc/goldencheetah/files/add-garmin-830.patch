@@ -1,0 +1,11 @@
+diff --unified --new-file --recursive --show-c-function GoldenCheetah-3.5-DEV1903/src/FileIO/FitRideFile.cpp GoldenCheetah-3.5-DEV1903-new/src/FileIO/FitRideFile.cpp
+--- GoldenCheetah-3.5-DEV1903/src/FileIO/FitRideFile.cpp	2019-02-22 10:38:21.000000000 +0100
++++ GoldenCheetah-3.5-DEV1903-new/src/FileIO/FitRideFile.cpp	2019-09-22 10:26:04.948022484 +0200
+@@ -374,6 +374,7 @@ struct FitFileReaderState
+                 case 2604: return "Garmin Fenix 5x";
+                 case 2691: return "Garmin FR935";
+                 case 2697: return "Garmin Fenix 5";
++                case 3122: return "Garmin Edge 830";
+                 case 20119: return "Garmin Training Center";
+                 case 65532: return "Android ANT+ Plugin";
+                 case 65534: return "Garmin Connect Website";

@@ -42,6 +42,9 @@ PATCHES=(
 
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/922
 	"${FILESDIR}"/f8d530db4ccbcfd50d280a46b40d3125aadae671.patch
+
+	# add new garmin device
+	"${FILESDIR}"/add-garmin-830.patch
 	)
 
 src_prepare() {
