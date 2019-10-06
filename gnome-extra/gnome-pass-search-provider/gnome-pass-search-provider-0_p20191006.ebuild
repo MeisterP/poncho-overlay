@@ -1,13 +1,13 @@
 # Copyright 2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 PYTHON_COMPAT=( python3_{5,6} )
 
-inherit desktop gnome2-utils systemd python-single-r1
+inherit desktop systemd python-single-r1
 
-COMMIT="45cea53ef4f25fb8a0b905587cc5be816668c3a0"
+COMMIT="f12076dc512c677542ca9fe38686444c6f485dd9"
 
 DESCRIPTION="Pass password manager search provider for gnome-shell"
 HOMEPAGE="https://github.com/jle64/gnome-pass-search-provider"
@@ -40,14 +40,4 @@ src_install() {
 	newins conf/org.gnome.Pass.SearchProvider.service.dbus org.gnome.Pass.SearchProvider.service
 
 	systemd_newuserunit conf/org.gnome.Pass.SearchProvider.service.systemd org.gnome.Pass.SearchProvider.service
-
-	doicon -s 512 "${FILESDIR}"/password-manager.png
-}
-
-pkg_postinst() {
-	gnome2_icon_cache_update
-}
-
-pkg_postrm() {
-	gnome2_icon_cache_update
 }
