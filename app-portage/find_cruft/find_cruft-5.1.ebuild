@@ -1,8 +1,8 @@
-# Copyright 2016-2017 Gentoo Foundation
+# Copyright 2016-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-RESTRICT="mirror"
+EAPI=7
+
 inherit eutils
 
 DESCRIPTION="find cruft files not managed by portage"
@@ -27,7 +27,7 @@ src_prepare() {
 
 src_install() {
 	dobin bin/*
-	dodoc README
+	dodoc README.md ChangeLog
 	insinto /etc
 	doins -r etc/*
 	insinto /usr/share/zsh/site-functions
