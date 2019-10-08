@@ -26,6 +26,13 @@ RDEPEND="${DEPEND}
 
 S=${WORKDIR}/${PN}-${COMMIT}
 
+src_prepare() {
+	default
+
+	# https://github.com/jle64/gnome-pass-search-provider/issues/18
+	sed -i -e '/NoDisplay=true/d' conf/org.gnome.Pass.SearchProvider.desktop || die
+}
+
 src_install() {
 	python_scriptinto /usr/lib/gnome-pass-search-provider
 	python_doscript gnome-pass-search-provider.py
