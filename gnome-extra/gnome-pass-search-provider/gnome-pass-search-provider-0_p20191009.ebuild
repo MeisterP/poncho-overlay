@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{5,6} )
 
 inherit desktop systemd python-single-r1
 
-COMMIT="f12076dc512c677542ca9fe38686444c6f485dd9"
+COMMIT="b114e12f515ef60249b20b7d072d2707e29ac98a"
 
 DESCRIPTION="Pass password manager search provider for gnome-shell"
 HOMEPAGE="https://github.com/jle64/gnome-pass-search-provider"
@@ -25,13 +25,6 @@ RDEPEND="${DEPEND}
 	dev-python/pygobject:3[${PYTHON_USEDEP}]"
 
 S=${WORKDIR}/${PN}-${COMMIT}
-
-src_prepare() {
-	default
-
-	# https://github.com/jle64/gnome-pass-search-provider/issues/18
-	sed -i -e '/NoDisplay=true/d' conf/org.gnome.Pass.SearchProvider.desktop || die
-}
 
 src_install() {
 	python_scriptinto /usr/lib/gnome-pass-search-provider
