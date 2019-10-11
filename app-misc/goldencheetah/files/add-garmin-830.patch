@@ -1,11 +1,33 @@
-diff --unified --new-file --recursive --show-c-function GoldenCheetah-3.5-DEV1903/src/FileIO/FitRideFile.cpp GoldenCheetah-3.5-DEV1903-new/src/FileIO/FitRideFile.cpp
---- GoldenCheetah-3.5-DEV1903/src/FileIO/FitRideFile.cpp	2019-02-22 10:38:21.000000000 +0100
-+++ GoldenCheetah-3.5-DEV1903-new/src/FileIO/FitRideFile.cpp	2019-09-22 10:26:04.948022484 +0200
-@@ -374,6 +374,7 @@ struct FitFileReaderState
-                 case 2604: return "Garmin Fenix 5x";
-                 case 2691: return "Garmin FR935";
-                 case 2697: return "Garmin Fenix 5";
+From 2b4951e8b7bba2ee2d1ba733c5589aae154c9652 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Fri, 11 Oct 2019 09:45:17 +0200
+Subject: [PATCH] src/FileIO/FitRideFile.cpp: add Garmin Edge 830
+
+---
+ src/FileIO/FitRideFile.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/FileIO/FitRideFile.cpp b/src/FileIO/FitRideFile.cpp
+index 7ae5d9cb5..383bb89e8 100644
+--- a/src/FileIO/FitRideFile.cpp
++++ b/src/FileIO/FitRideFile.cpp
+@@ -379,6 +379,7 @@ struct FitFileReaderState
+                 case 3111: return "Garmin Fenix 5x +";
+                 case 3112: return "Garmin Edge 520 +";
+                 case 3113: return "Garmin FR945";
 +                case 3122: return "Garmin Edge 830";
+                 case 3291: return "Garmin Fenix 6x";
                  case 20119: return "Garmin Training Center";
                  case 65532: return "Android ANT+ Plugin";
-                 case 65534: return "Garmin Connect Website";
+@@ -421,7 +422,7 @@ struct FitFileReaderState
+                 case 272: return "Powertap C1";
+                 case 288: return "Powertap P1";
+                 case 4096: return "Powertap G3";
+-                case 4353: return "Powercal";
++                case 4353: return "PowercalF";
+ 
+                 default: return QString("Powertap Device %1").arg(prod);
+             }
+-- 
+2.21.0
+

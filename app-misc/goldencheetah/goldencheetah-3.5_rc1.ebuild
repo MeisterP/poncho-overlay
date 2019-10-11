@@ -5,13 +5,13 @@ EAPI=7
 
 PYTHON_COMPAT=( python3_{5,6,7} )
 
-inherit desktop flag-o-matic udev qmake-utils python-single-r1
+inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_PV=${PV/_p/-DEV}
+MY_PV=${PV/_rc/-RC}
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
-SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${MY_PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -27,7 +27,7 @@ RDEPEND="${PYTHON_DEPS}
 	dev-qt/qtserialport:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebengine:5[widgets]
-	virtual/libusb:0"
+	virtual/libusb:1"
 DEPEND="${RDEPEND}
 	dev-python/sip
 	sys-devel/bison
@@ -40,23 +40,24 @@ PATCHES=(
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3043
 	"${FILESDIR}"/allow-HR-only-csv-files.patch
 
-	# https://github.com/GoldenCheetah/GoldenCheetah/issues/922
-	"${FILESDIR}"/f8d530db4ccbcfd50d280a46b40d3125aadae671.patch
+	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
+	"${FILESDIR}"/only_scale_on_ctrl_mouse_wheel.patch
 
 	# add new garmin device
 	"${FILESDIR}"/add-garmin-830.patch
 	)
 
 src_prepare() {
-	default
+	xdg_src_prepare
 
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
-		PKGCONFIG = zlib libusb python3
+		PKGCONFIG = zlib libusb-1.0 python3
 
 		LIBUSB_INSTALL = /usr
-		DEFINES += GC_WANT_PYTHON GC_WANT_ROBOT
+		LIBUSB_USE_V_1 = true
+		DEFINES += GC_WANT_PYTHON
 		DEFINES += NOWEBKIT GC_VIDEO_QT5
 	EOF
 

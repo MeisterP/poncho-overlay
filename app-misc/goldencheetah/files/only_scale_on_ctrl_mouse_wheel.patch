@@ -1,0 +1,48 @@
+From 60b029e41f959005d4b1c55f760edfc8e46d7d16 Mon Sep 17 00:00:00 2001
+From: Antonius Riha <antoniusriha@gmail.com>
+Date: Sat, 1 Jun 2019 16:48:31 +0200
+Subject: [PATCH] Workout: Only scale on Ctrl+mouse wheel
+
+---
+ src/Train/WorkoutWidget.cpp | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/src/Train/WorkoutWidget.cpp b/src/Train/WorkoutWidget.cpp
+index a0e8b7b1b5..3f8ee317d7 100644
+--- a/src/Train/WorkoutWidget.cpp
++++ b/src/Train/WorkoutWidget.cpp
+@@ -550,19 +550,25 @@ WorkoutWidget::eventFilter(QObject *obj, QEvent *event)
+     //
+     if (event->type() == QEvent::Wheel) {
+ 
+-        // STATE: NONE
+-        if (state == none) {
+-            QWheelEvent *w = static_cast<QWheelEvent*>(event);
++        Qt::KeyboardModifiers kmod = static_cast<QInputEvent*>(event)->modifiers();
++        bool ctrl = (kmod & Qt::ControlModifier) != 0;
++        if (ctrl) {
++
++            // STATE: NONE
++            if (state == none) {
++
++                QWheelEvent *w = static_cast<QWheelEvent*>(event);
+ #if QT_VERSION >= 0x050000
+-            updateNeeded = scale(w->angleDelta());
++                updateNeeded = scale(w->angleDelta());
+ #else
+-            updateNeeded = scale(QPoint(0,w->delta()));
++                updateNeeded = scale(QPoint(0,w->delta()));
+ #endif
+-            filterNeeded = true;
+-        }
++                filterNeeded = true;
++            }
+ 
+-        // will need to ..
+-        recompute();
++            // will need to ..
++            recompute();
++        }
+     }
+ 
+     //
