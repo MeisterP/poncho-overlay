@@ -6,7 +6,7 @@ EAPI=7
 PYTHON_COMPAT=( python2_7 )
 PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
 
-inherit desktop xdg-utils l10n python-single-r1
+inherit desktop l10n xdg python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -14,7 +14,7 @@ SRC_URI="mirror://sourceforge/thetimelineproj/${P}.zip"
 
 LICENSE="GPL-3 CC-BY-SA-3.0"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND="${PYTHON_DEPS}
@@ -28,7 +28,7 @@ RDEPEND="${DEPEND}
 PATCHES=( "${FILESDIR}/timeline-1.10.0-path.patch" )
 
 src_prepare() {
-	default
+	xdg_src_prepare
 	l10n_find_plocales_changes "${S}/translations" "" ".po"
 }
 
@@ -54,8 +54,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	xdg_desktop_database_update
-	xdg_icon_cache_update
+	xdg_pkg_postinst
 
 	if ! has_version ${CATEGORY}/${PN}; then
 		elog "Please install these packages for additional functionality"
@@ -63,9 +62,4 @@ pkg_postinst() {
 		elog "    dev-python/markdown   view the builtin documentation"
 		elog "    dev-python/pysvg      export to svg"
 	fi
-}
-
-pkg_postrm() {
-	xdg_desktop_database_update
-	xdg_icon_cache_update
 }
