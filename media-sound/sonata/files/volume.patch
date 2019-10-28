@@ -1,0 +1,14 @@
+diff --unified --new-file --recursive --show-c-function sonata-0a1d63022720f95d092cc82da53f2b210d2ed26a/sonata/main.py sonata-0a1d63022720f95d092cc82da53f2b210d2ed26a-fix/sonata/main.py
+--- sonata-0a1d63022720f95d092cc82da53f2b210d2ed26a/sonata/main.py	2016-12-08 12:34:08.000000000 +0100
++++ sonata-0a1d63022720f95d092cc82da53f2b210d2ed26a-fix/sonata/main.py	2018-11-10 16:32:21.760931555 +0100
+@@ -1410,8 +1410,8 @@ class Base:
+                 self.current.center_song_in_list()
+ 
+         if self.prevstatus is None \
+-           or self.status['volume'] != self.prevstatus['volume']:
+-            self.volumebutton.set_value(int(self.status['volume']))
++           or self.status.get('volume') != self.prevstatus.get('volume'):
++            self.volumebutton.set_value(int(self.status.get('volume', 0)))
+ 
+         if self.conn:
+             if mpdh.mpd_is_updating(self.status):
