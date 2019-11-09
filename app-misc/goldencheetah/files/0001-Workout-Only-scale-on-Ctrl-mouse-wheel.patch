@@ -1,14 +1,14 @@
-From 60b029e41f959005d4b1c55f760edfc8e46d7d16 Mon Sep 17 00:00:00 2001
+From 797ca80cf8bd689341558e8b9dbb0fff7eb76f2f Mon Sep 17 00:00:00 2001
 From: Antonius Riha <antoniusriha@gmail.com>
 Date: Sat, 1 Jun 2019 16:48:31 +0200
-Subject: [PATCH] Workout: Only scale on Ctrl+mouse wheel
+Subject: [PATCH 1/4] Workout: Only scale on Ctrl+mouse wheel
 
 ---
  src/Train/WorkoutWidget.cpp | 24 +++++++++++++++---------
  1 file changed, 15 insertions(+), 9 deletions(-)
 
 diff --git a/src/Train/WorkoutWidget.cpp b/src/Train/WorkoutWidget.cpp
-index a0e8b7b1b5..3f8ee317d7 100644
+index a0e8b7b1b..3f8ee317d 100644
 --- a/src/Train/WorkoutWidget.cpp
 +++ b/src/Train/WorkoutWidget.cpp
 @@ -550,19 +550,25 @@ WorkoutWidget::eventFilter(QObject *obj, QEvent *event)
@@ -46,3 +46,6 @@ index a0e8b7b1b5..3f8ee317d7 100644
      }
  
      //
+-- 
+2.23.0
+

@@ -1,7 +1,7 @@
-From acc87b6677471f5e4e10b6818db533de92989e82 Mon Sep 17 00:00:00 2001
+From a5937981f58e023c6c6244053543d055ca46374d Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Fri, 8 Mar 2019 20:46:22 +0100
-Subject: [PATCH] HrvMeasuresCsvImport.cpp: allow HR only csv files
+Subject: [PATCH 2/4] HrvMeasuresCsvImport.cpp: allow HR only csv files
 
 ---
  src/FileIO/HrvMeasuresCsvImport.cpp | 8 +-------
@@ -46,5 +46,5 @@ index 64749c4a5..739199a33 100644
            data.append(m);
        }
 -- 
-2.19.2
+2.23.0
 

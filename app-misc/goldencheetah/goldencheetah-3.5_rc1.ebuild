@@ -37,14 +37,14 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/GoldenCheetah-${MY_PV}"
 
 PATCHES=(
-	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3043
-	"${FILESDIR}"/allow-HR-only-csv-files.patch
-
 	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
-	"${FILESDIR}"/only_scale_on_ctrl_mouse_wheel.patch
+	"${FILESDIR}"/0001-Workout-Only-scale-on-Ctrl-mouse-wheel.patch
 
-	# add new garmin device
-	"${FILESDIR}"/add-garmin-830.patch
+	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3043
+	"${FILESDIR}"/0002-HrvMeasuresCsvImport.cpp-allow-HR-only-csv-files.patch
+
+	"${FILESDIR}"/0003-src-FileIO-FitRideFile.cpp-add-Garmin-Edge-830.patch
+	"${FILESDIR}"/0004-src-FileIO-FitRideFile.cpp-add-Stages-Cycling.patch
 	)
 
 src_prepare() {
