@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python2_7 )
+PYTHON_COMPAT=( python3_{5,6,7} )
 PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
 
 inherit desktop l10n xdg python-single-r1
@@ -18,14 +18,14 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND="${PYTHON_DEPS}
-	dev-python/wxpython:3.0[${PYTHON_USEDEP}]
+	dev-python/wxpython:4.0[${PYTHON_USEDEP}]
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
 	dev-python/humblewx[${PYTHON_USEDEP}]
 	dev-python/pytz[${PYTHON_USEDEP}]"
 
-PATCHES=( "${FILESDIR}/timeline-1.10.0-path.patch" )
+PATCHES=( "${FILESDIR}/timeline-2.0.0-path.patch" )
 
 src_prepare() {
 	xdg_src_prepare
@@ -37,7 +37,7 @@ src_install() {
 	python_newscript source/timeline.py ${PN}
 
 	insinto /usr/share/${PN}/icons
-	doins -r icons/{*.png,*.bmp,event_icons}
+	doins -r icons/{*.png,*.bmp,*.ico,event_icons}
 
 	insinto /usr/share/${PN}/translations
 	for lang in $(l10n_get_locales); do
@@ -50,7 +50,7 @@ src_install() {
 
 	make_desktop_entry ${PN} Timeline ${PN} Graphics
 
-	dodoc AUTHORS README
+	dodoc AUTHORS README documentation/changelog.rst
 }
 
 pkg_postinst() {
