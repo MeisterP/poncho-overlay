@@ -27,6 +27,7 @@ RDEPEND="${PYTHON_DEPS}
 	dev-qt/qtserialport:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebengine:5[widgets]
+	media-libs/libsamplerate
 	virtual/libusb:1"
 DEPEND="${RDEPEND}
 	dev-python/sip
@@ -53,10 +54,11 @@ src_prepare() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
-		PKGCONFIG = zlib libusb-1.0 python3
+		PKGCONFIG = zlib libusb-1.0 samplerate python3
 
-		LIBUSB_INSTALL = /usr
+		LIBUSB_INSTALL = true
 		LIBUSB_USE_V_1 = true
+		SAMPLERATE_INSTALL = true
 		DEFINES += GC_WANT_PYTHON
 		DEFINES += NOWEBKIT GC_VIDEO_QT5
 	EOF
