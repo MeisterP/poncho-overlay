@@ -11,12 +11,14 @@ COMMIT="da2db4130e6bc902e1ed0e8bcf76a16688be98ec"
 
 DESCRIPTION="Pass password manager search provider for gnome-shell"
 HOMEPAGE="https://github.com/jle64/gnome-pass-search-provider"
-SRC_URI="https://github.com/jle64/gnome-pass-search-provider/archive/${COMMIT}.zip -> ${P}.zip"
+SRC_URI="https://github.com/jle64/gnome-pass-search-provider/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
+
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
@@ -33,8 +35,7 @@ src_install() {
 	insinto /usr/share/gnome-shell/search-providers
 	doins conf/org.gnome.Pass.SearchProvider.ini
 
-	insinto /usr/share/applications
-	doins conf/org.gnome.Pass.SearchProvider.desktop
+	domenu conf/org.gnome.Pass.SearchProvider.desktop
 
 	insinto /usr/share/dbus-1/services
 	newins conf/org.gnome.Pass.SearchProvider.service.dbus org.gnome.Pass.SearchProvider.service

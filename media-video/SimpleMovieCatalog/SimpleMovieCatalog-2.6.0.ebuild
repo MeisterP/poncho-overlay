@@ -1,11 +1,11 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 DESCRIPTION="Scan for movies, query imdb and generate a catalog."
-HOMEPAGE="http://smoviecat.sourceforge.net/ https://github.com/damienlangg/SimpleMovieCatalog"
-SRC_URI="mirror://sourceforge/smoviecat/${PN}-${PV}.zip"
+HOMEPAGE="https://github.com/damienlangg/SimpleMovieCatalog"
+SRC_URI="https://github.com/damienlangg/SimpleMovieCatalog/archive/V${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3+"
 SLOT="0"
@@ -18,8 +18,6 @@ RDEPEND="${DEPEND}"
 
 PATCHES=( ${FILESDIR}/storyline-extraction.patch )
 
-S="${WORKDIR}/${PN}"
-
 src_prepare(){
 	default
 	sed -i 's/^my $system_install = 0;/my $system_install = 1;/' moviecat.pl || die
@@ -30,5 +28,5 @@ src_install() {
 	dosym moviecat.pl /usr/bin/moviecat
 	insinto /usr/share/smoviecat
 	doins -r lib
-	dodoc doc/{changelog,sample-cfg}.txt README.txt
+	dodoc doc/{changelog,sample-cfg}.txt
 }

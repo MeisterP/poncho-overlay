@@ -18,6 +18,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
 RDEPEND="${PYTHON_DEPS}
 	dev-qt/qtbluetooth:5
 	dev-qt/qtcharts:5

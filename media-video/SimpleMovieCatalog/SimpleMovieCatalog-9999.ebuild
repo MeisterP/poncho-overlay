@@ -1,12 +1,12 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit git-r3
 
 DESCRIPTION="Scan for movies, query imdb and generate a catalog."
-HOMEPAGE="http://smoviecat.sourceforge.net/ https://github.com/damienlangg/SimpleMovieCatalog"
+HOMEPAGE="https://github.com/damienlangg/SimpleMovieCatalog"
 EGIT_REPO_URI="https://github.com/damienlangg/SimpleMovieCatalog.git"
 
 LICENSE="GPL-3+"

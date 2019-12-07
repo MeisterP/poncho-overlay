@@ -10,7 +10,7 @@ inherit distutils-r1 eutils
 DESCRIPTION="GTK 3 client for the Music Player Daemon"
 HOMEPAGE="https://github.com/multani/sonata"
 MY_COMMIT="cee3555d05d09ee96f011ad3f01058ca4c7b15bd"
-SRC_URI="https://github.com/multani/sonata/archive/${MY_COMMIT}.zip -> ${P}.zip"
+SRC_URI="https://github.com/multani/sonata/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"

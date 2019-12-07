@@ -15,10 +15,13 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
 DEPEND="dev-python/dbus-python[${PYTHON_USEDEP}]
 	dev-python/pygobject:3[${PYTHON_USEDEP}]
 	dev-python/python-mpd[${PYTHON_USEDEP}]"
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	${PYTHON_DEPS}"
 
 S="${WORKDIR}/mpDris2-${PV}"
 

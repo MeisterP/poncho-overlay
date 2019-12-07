@@ -17,6 +17,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
 DEPEND="${PYTHON_DEPS}
 	dev-python/wxpython:4.0[${PYTHON_USEDEP}]
 	sys-devel/gettext"
@@ -24,6 +26,8 @@ DEPEND="${PYTHON_DEPS}
 RDEPEND="${DEPEND}
 	dev-python/humblewx[${PYTHON_USEDEP}]
 	dev-python/pytz[${PYTHON_USEDEP}]"
+
+BDEPEND="app-arch/unzip"
 
 PATCHES=( "${FILESDIR}/timeline-2.0.0-path.patch" )
 
