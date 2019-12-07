@@ -61,6 +61,7 @@ src_prepare() {
 		SAMPLERATE_INSTALL = true
 		DEFINES += GC_WANT_PYTHON
 		DEFINES += NOWEBKIT GC_VIDEO_QT5
+		DEFINES += GC_WANT_ROBOT
 	EOF
 
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
