@@ -7,11 +7,11 @@ PYTHON_COMPAT=( python3_{5,6,7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_PV=${PV/_rc/-RC}
+MY_PV="${PV/_rc/-RC}X"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
-SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${MY_PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${MY_PV}.tar.gz -> ${PN}-${MY_PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
