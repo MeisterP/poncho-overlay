@@ -18,8 +18,7 @@ IUSE=""
 
 PATCHES=( "${FILESDIR}/tqdm-4.23.3.patch" )
 
-BDEPEND="${PYTHON_DEPS}
-	dev-python/setuptools[${PYTHON_USEDEP}]"
+BDEPEND="${PYTHON_DEPS}"
 RDEPEND="${PYTHON_DEPS}
 	>=dev-python/crcmod-1.7[${PYTHON_USEDEP}]
 	>=dev-python/tqdm-4.23.3[${PYTHON_USEDEP}]
