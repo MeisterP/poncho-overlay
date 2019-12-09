@@ -1,11 +1,11 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-PYTHON_COMPAT=( python3_{4,5,6} )
+EAPI=7
+PYTHON_COMPAT=( python3_{5,6,7,8} )
 DISTUTILS_SINGLE_IMPL=1
 
-inherit distutils-r1 eutils
+inherit distutils-r1 eutils desktop
 
 DESCRIPTION="GTK 3 client for the Music Player Daemon"
 HOMEPAGE="https://github.com/multani/sonata"
@@ -27,16 +27,15 @@ S="${WORKDIR}/sonata-${MY_COMMIT}"
 
 PATCHES=( "${FILESDIR}/link-color.patch" )
 
+src_install() {
+	distutils-r1_src_install
+	rm -rf "${D}"/usr/share/sonata || die
+	newicon sonata/pixmaps/sonata-large.png sonata.png
+}
+
 pkg_postinst() {
 	elog "To get additional features, a number of optional runtime"
 	elog "dependencies may be installed:"
 	optfeature "multimedia key support" dev-python/dbus-python
 	optfeature "editing metadata" dev-python/tagpy
-}
-
-src_install() {
-	distutils-r1_src_install
-	rm -rf "${D}"/usr/share/sonata || die
-	insinto /usr/share/pixmaps
-	newins sonata/pixmaps/sonata-large.png sonata.png
 }
