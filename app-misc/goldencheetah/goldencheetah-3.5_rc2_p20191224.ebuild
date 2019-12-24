@@ -7,11 +7,13 @@ PYTHON_COMPAT=( python3_{5,6,7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_PV="${PV/_rc/-RC}X"
+#MY_PV="${PV/_rc/-RC}X"
+MY_COMMIT="26723b2755cce2a65f87502f5acc1d9425d32d86"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
-SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${MY_PV}.tar.gz -> ${PN}-${MY_PV}.tar.gz"
+#SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${MY_PV}.tar.gz -> ${PN}-${MY_PV}.tar.gz"
+SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -37,7 +39,8 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/pkgconfig"
 
-S="${WORKDIR}/GoldenCheetah-${MY_PV}"
+#S="${WORKDIR}/GoldenCheetah-${MY_PV}"
+S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
 PATCHES=(
 	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
