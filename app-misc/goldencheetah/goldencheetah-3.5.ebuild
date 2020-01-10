@@ -1,19 +1,15 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{5,6,7,8} )
+PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-#MY_PV="${PV/_rc/-RC}X"
-MY_COMMIT="26723b2755cce2a65f87502f5acc1d9425d32d86"
-
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
-#SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${MY_PV}.tar.gz -> ${PN}-${MY_PV}.tar.gz"
-SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -29,6 +25,7 @@ RDEPEND="${PYTHON_DEPS}
 	dev-qt/qtmultimedia:5[widgets]
 	dev-qt/qtpositioning:5
 	dev-qt/qtserialport:5
+	dev-qt/qtsql:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebengine:5[widgets]
 	media-libs/libsamplerate
@@ -39,8 +36,7 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/pkgconfig"
 
-#S="${WORKDIR}/GoldenCheetah-${MY_PV}"
-S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
+S="${WORKDIR}/GoldenCheetah-${PV}"
 
 PATCHES=(
 	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
