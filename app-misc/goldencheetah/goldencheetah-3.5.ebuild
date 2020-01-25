@@ -47,6 +47,9 @@ PATCHES=(
 
 	"${FILESDIR}"/0003-src-FileIO-FitRideFile.cpp-add-Garmin-Edge-830.patch
 	"${FILESDIR}"/0004-src-FileIO-FitRideFile.cpp-add-Stages-Cycling.patch
+
+	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3294
+	"${FILESDIR}"/a92833f919ab05642433fd2c4aa57ce84ab0842d.patch
 	)
 
 src_prepare() {
