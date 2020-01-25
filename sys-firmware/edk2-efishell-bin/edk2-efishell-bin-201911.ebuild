@@ -1,14 +1,13 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
 DESCRIPTION="EFI-Shell - provides native UDK implemenations of a UEFI Shell 2.0"
-HOMEPAGE="http://www.tianocore.org/edk2/"
-SRC_URI="https://raw.githubusercontent.com/tianocore/edk2/UDK2014.SP1/EdkShellBinPkg/FullShell/X64/Shell_Full.efi
-	-> ${P}.efi"
+HOMEPAGE="https://github.com/tianocore/tianocore.github.io/wiki/EDK-II"
+SRC_URI="https://github.com/tianocore/edk2/releases/download/edk2-stable201911/ShellBinPkg.zip -> ${P}.zip"
 
-LICENSE="intel-ucode"
+LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
@@ -16,16 +15,13 @@ IUSE=""
 DEPEND=""
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}"
-
-src_unpack() {
-	cp "${DISTDIR}"/${P}.efi "${WORKDIR}"/shellx64.efi || die
-}
-
 src_install() {
 	insinto "/usr/share/${PN}"
-	doins shellx64.efi
+	newins UefiShell/X64/Shell.efi shellx64.efi
+	dodoc UefiShell/UefiShell.inf
 }
+
+S="${WORKDIR}/ShellBinPkg"
 
 pkg_postinst() {
 	elog "To support your motherboards \"Launch EFI Shell from filesystem device\""
