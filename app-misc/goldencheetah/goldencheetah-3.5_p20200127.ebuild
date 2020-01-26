@@ -7,9 +7,12 @@ PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
+MY_COMMIT="40d03c4402fa7f7b09c0806a1a0d93098ed67e0c"
+
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
-SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${PV}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/V${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -36,20 +39,16 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/pkgconfig"
 
-S="${WORKDIR}/GoldenCheetah-${PV}"
+#S="${WORKDIR}/GoldenCheetah-${PV}"
+S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
 PATCHES=(
 	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
 	"${FILESDIR}"/0001-Workout-Only-scale-on-Ctrl-mouse-wheel.patch
 
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3043
+	# https://github.com/GoldenCheetah/GoldenCheetah/issues/2872
 	"${FILESDIR}"/0002-HrvMeasuresCsvImport.cpp-allow-HR-only-csv-files.patch
-
-	"${FILESDIR}"/0003-src-FileIO-FitRideFile.cpp-add-Garmin-Edge-830.patch
-	"${FILESDIR}"/0004-src-FileIO-FitRideFile.cpp-add-Stages-Cycling.patch
-
-	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3294
-	"${FILESDIR}"/a92833f919ab05642433fd2c4aa57ce84ab0842d.patch
 	)
 
 src_prepare() {
