@@ -1,9 +1,9 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{5,6,7} )
+PYTHON_COMPAT=( python3_{6,7} )
 PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
 
 inherit desktop l10n xdg python-single-r1
@@ -20,12 +20,16 @@ IUSE=""
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 DEPEND="${PYTHON_DEPS}
-	dev-python/wxpython:4.0[${PYTHON_USEDEP}]
+	$(python_gen_cond_dep '
+		dev-python/wxpython:4.0[${PYTHON_MULTI_USEDEP}]
+	')
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
-	dev-python/humblewx[${PYTHON_USEDEP}]
-	dev-python/pytz[${PYTHON_USEDEP}]"
+	$(python_gen_cond_dep '
+		dev-python/humblewx[${PYTHON_MULTI_USEDEP}]
+		dev-python/pytz[${PYTHON_MULTI_USEDEP}]
+	')"
 
 BDEPEND="app-arch/unzip"
 
