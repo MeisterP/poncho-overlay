@@ -17,11 +17,14 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="dev-python/pygobject:3[${PYTHON_USEDEP}]
-	dev-python/python-mpd[${PYTHON_USEDEP}]
+BDEPEND="virtual/pkgconfig"
+DEPEND="$(python_gen_cond_dep '
+		dev-python/pygobject:3[${PYTHON_MULTI_USEDEP}]
+		dev-python/python-mpd[${PYTHON_MULTI_USEDEP}]
+	')
+
 	x11-libs/gtk+:3"
-DEPEND="${RDEPEND}
-	virtual/pkgconfig"
+RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/sonata-${MY_COMMIT}"
 
