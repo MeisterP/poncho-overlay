@@ -1,9 +1,9 @@
-# Copyright 2019 Gentoo Authors
+# Copyright 2019-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{5,6} )
+PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit desktop systemd python-single-r1
 
@@ -23,8 +23,10 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
 	app-admin/pass[X]
-	dev-python/fuzzywuzzy[${PYTHON_USEDEP}]
-	dev-python/pygobject:3[${PYTHON_USEDEP}]"
+	$(python_gen_cond_dep '
+		dev-python/fuzzywuzzy[${PYTHON_MULTI_USEDEP}]
+		dev-python/pygobject:3[${PYTHON_MULTI_USEDEP}]
+	')"
 
 S=${WORKDIR}/${PN}-${COMMIT}
 
