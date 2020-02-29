@@ -45,7 +45,7 @@ src_install() {
 	python_newscript source/timeline.py ${PN}
 
 	insinto /usr/share/${PN}/icons
-	doins -r icons/{*.png,*.bmp,*.ico,event_icons}
+	doins -r icons/{*.png,*.ico,event_icons}
 
 	insinto /usr/share/${PN}/translations
 	for lang in $(l10n_get_locales); do
