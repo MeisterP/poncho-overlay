@@ -1,9 +1,10 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{5,6} )
+PYTHON_COMPAT=( python3_{6,7} )
+DISTUTILS_USE_SETUPTOOLS=rdepend
 
 inherit distutils-r1
 
@@ -22,5 +23,5 @@ BDEPEND="${PYTHON_DEPS}"
 RDEPEND="${PYTHON_DEPS}
 	>=dev-python/crcmod-1.7[${PYTHON_USEDEP}]
 	>=dev-python/tqdm-4.23.3[${PYTHON_USEDEP}]
-	>=media-libs/mutagen-1.38[${PYTHON_USEDEP}]
-	media-video/ffmpeg"
+	>=media-libs/mutagen-1.43[${PYTHON_USEDEP}]
+	>=media-video/ffmpeg-4.2"
