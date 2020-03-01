@@ -22,6 +22,6 @@ RDEPEND=">=dev-python/requests-2.21.0[${PYTHON_USEDEP}]
 	>=dev-python/aiohttp-3.5.4[${PYTHON_USEDEP}]"
 BDEPEND=""
 
-PATCHES=( "${FILESDIR}/${PV}-no-tests-install.patch" )
+PATCHES=( "${FILESDIR}/1.6.5-no-tests-install.patch" )
 
 S="${WORKDIR}/${MY_PN}-${PV}"
