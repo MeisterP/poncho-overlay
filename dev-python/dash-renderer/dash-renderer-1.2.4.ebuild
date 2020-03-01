@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python3_{5,6} )
 inherit distutils-r1
 
 DESCRIPTION="Dash front-end renderer"
-HOMEPAGE="https://plot.ly/dash"
+HOMEPAGE="https://plot.ly/dash https://pypi.org/project/dash-renderer/"
 SRC_URI="mirror://pypi/${PN:0:1}/${PN/-/_}/${P/-/_}.tar.gz"
 
 LICENSE="MIT"
