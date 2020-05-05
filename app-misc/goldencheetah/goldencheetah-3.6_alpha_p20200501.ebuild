@@ -21,6 +21,7 @@ IUSE=""
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 RDEPEND="${PYTHON_DEPS}
+	dev-libs/libical
 	dev-qt/qtbluetooth:5
 	dev-qt/qtcharts:5
 	dev-qt/qtconcurrent:5
@@ -38,7 +39,6 @@ DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/pkgconfig"
 
-#S="${WORKDIR}/GoldenCheetah-${PV}"
 S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
 PATCHES=(
@@ -56,11 +56,12 @@ src_prepare() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
-		PKGCONFIG = zlib libusb-1.0 samplerate python3
+		PKGCONFIG = zlib libusb-1.0 samplerate libical python3
 
 		LIBUSB_INSTALL = true
 		LIBUSB_USE_V_1 = true
 		SAMPLERATE_INSTALL = true
+		ICAL_INSTALL = true
 		DEFINES += GC_WANT_PYTHON
 		DEFINES += NOWEBKIT GC_VIDEO_QT5
 		DEFINES += GC_WANT_ROBOT
