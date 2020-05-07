@@ -21,7 +21,8 @@ IUSE="test"
 
 DEPEND="test? ( dev-python/pytest[${PYTHON_USEDEP}] )
 	dev-python/setuptools[${PYTHON_USEDEP}]"
-RDEPEND="dev-python/flask[${PYTHON_USEDEP}]"
+RDEPEND="dev-python/flask[${PYTHON_USEDEP}]
+	dev-python/brotlipy[${PYTHON_USEDEP}]"
 
 S="${WORKDIR}/${MY_P}"
 
