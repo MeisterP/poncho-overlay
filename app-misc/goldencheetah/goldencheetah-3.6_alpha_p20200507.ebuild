@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="211b9b23cdd933477ad5fd946dd622883cccce8d"
+MY_COMMIT="fcc9660b64e8b681ffb375cf089c83480838e0da"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -32,6 +32,7 @@ RDEPEND="${PYTHON_DEPS}
 	dev-qt/qtsvg:5
 	dev-qt/qtwebengine:5[widgets]
 	media-libs/libsamplerate
+	sci-libs/gsl
 	virtual/libusb:1"
 DEPEND="${RDEPEND}
 	dev-python/sip
@@ -56,12 +57,13 @@ src_prepare() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
-		PKGCONFIG = zlib libusb-1.0 samplerate libical python3
+		PKGCONFIG = zlib libusb-1.0 samplerate libical gsl python3
 
 		LIBUSB_INSTALL = true
 		LIBUSB_USE_V_1 = true
 		SAMPLERATE_INSTALL = true
 		ICAL_INSTALL = true
+		DEFINES += GC_WANT_GSL
 		DEFINES += GC_WANT_PYTHON
 		DEFINES += NOWEBKIT GC_VIDEO_QT5
 		DEFINES += GC_WANT_ROBOT
