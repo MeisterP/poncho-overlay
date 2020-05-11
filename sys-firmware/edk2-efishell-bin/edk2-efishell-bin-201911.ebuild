@@ -12,6 +12,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
+BDEPEND="app-arch/unzip"
 DEPEND=""
 RDEPEND="${DEPEND}"
 
