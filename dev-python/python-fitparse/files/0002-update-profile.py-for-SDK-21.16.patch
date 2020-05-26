@@ -1,7 +1,7 @@
-From e9db99afb737a7af9815697ddd3d7c2e2b36a626 Mon Sep 17 00:00:00 2001
+From 4aa2eb55d51c5585c4e0a81ee5931ba46562a35d Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sun, 3 Nov 2019 13:51:15 +0100
-Subject: [PATCH 2/3] update profile.py for SDK 21.16
+Subject: [PATCH 2/4] update profile.py for SDK 21.16
 
 ---
  fitparse/profile.py | 277 +++++++++++++++++++++++++++++++++++---------
@@ -373,5 +373,5 @@ index 1d28d9e..1ef1164 100644
      2: MessageType(
          name='device_settings',
 -- 
-2.23.0
+2.26.2
 

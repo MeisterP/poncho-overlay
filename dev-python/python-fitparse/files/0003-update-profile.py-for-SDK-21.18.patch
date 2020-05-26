@@ -1,7 +1,7 @@
-From 9643f0205424f0a0bd00728971c467e6df5ee55b Mon Sep 17 00:00:00 2001
+From e5f8d0dab06096e6881c2adf73fea67b94af8589 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Sun, 17 Nov 2019 10:28:32 +0100
-Subject: [PATCH 3/3] update profile.py for SDK 21.18
+Subject: [PATCH 3/4] update profile.py for SDK 21.18
 
 ---
  fitparse/profile.py | 56 +++++++++++++++++++++++++++++++++++++++++++--
@@ -110,5 +110,5 @@ index 1ef1164..a8bb3cb 100644
  
      # ************************* Activity File Messages *************************
 -- 
-2.23.0
+2.26.2
 
