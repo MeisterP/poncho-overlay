@@ -1,14 +1,14 @@
-From a5937981f58e023c6c6244053543d055ca46374d Mon Sep 17 00:00:00 2001
+From 71b30c5c67bc6268fb68c82e90e7142c22b93e20 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
 Date: Fri, 8 Mar 2019 20:46:22 +0100
-Subject: [PATCH 2/4] HrvMeasuresCsvImport.cpp: allow HR only csv files
+Subject: [PATCH 2/3] HrvMeasuresCsvImport.cpp: allow HR only csv files
 
 ---
  src/FileIO/HrvMeasuresCsvImport.cpp | 8 +-------
  1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/src/FileIO/HrvMeasuresCsvImport.cpp b/src/FileIO/HrvMeasuresCsvImport.cpp
-index 64749c4a5..739199a33 100644
+index 3462835de..420f2f496 100644
 --- a/src/FileIO/HrvMeasuresCsvImport.cpp
 +++ b/src/FileIO/HrvMeasuresCsvImport.cpp
 @@ -41,7 +41,6 @@ HrvMeasuresCsvImport::getHrvMeasures(QString &error, QDateTime from, QDateTime t
@@ -36,7 +36,7 @@ index 64749c4a5..739199a33 100644
  
    // No duplicates and minimal "timestamp"/"date" and "rmssd" exist
    emit downloadProgress(50);
-@@ -198,7 +192,7 @@ HrvMeasuresCsvImport::getHrvMeasures(QString &error, QDateTime from, QDateTime t
+@@ -199,7 +193,7 @@ HrvMeasuresCsvImport::getHrvMeasures(QString &error, QDateTime from, QDateTime t
            }
        }
        // only append if we have a good date & rMSSD
@@ -46,5 +46,5 @@ index 64749c4a5..739199a33 100644
            data.append(m);
        }
 -- 
-2.23.0
+2.26.2
 

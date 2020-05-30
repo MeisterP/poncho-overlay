@@ -3,11 +3,11 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_COMPAT=( python3_{7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="d4a5eaa50140b2d93827799026fed85fac05eb23"
+MY_COMMIT="a8473441aedda60ac2b7a0d2794a3ab0cfd1a71f"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -57,15 +57,14 @@ src_prepare() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
-		PKGCONFIG = zlib libusb-1.0 samplerate libical gsl python3
+		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical python3
 
 		LIBUSB_INSTALL = true
 		LIBUSB_USE_V_1 = true
 		SAMPLERATE_INSTALL = true
 		ICAL_INSTALL = true
-		DEFINES += GC_WANT_GSL
 		DEFINES += GC_WANT_PYTHON
-		DEFINES += NOWEBKIT GC_VIDEO_QT5
+		DEFINES += GC_VIDEO_QT5
 		DEFINES += GC_WANT_ROBOT
 	EOF
 
