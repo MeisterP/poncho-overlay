@@ -12,7 +12,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="dev-libs/libgit2"
+DEPEND="dev-libs/libgit2:="
 RDEPEND="${DEPEND}"
 
 PATCHES=(
