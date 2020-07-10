@@ -5,7 +5,7 @@
  	  --stringparam make.clean.html "1" \
  	  --stringparam html.valid.html "1" \
 -	  --stringparam html.stylesheet \
--	  "http://www.gpsbabel.org/style3.css" \
+-	  "https://www.gpsbabel.org/style3.css" \
 +	  --nonet \
 +	  --stringparam html.stylesheet "gpsbabel.org-style3.css" \
  	  http://docbook.sourceforge.net/release/xsl/current/xhtml/docbook.xsl \
