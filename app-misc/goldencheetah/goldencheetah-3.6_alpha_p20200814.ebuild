@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="08632206c3c53eb89b1a3c70ed9763f2677feefc"
+MY_COMMIT="64e83121cadf5478e46fd5ec793e5e25a85183be"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -45,10 +45,6 @@ S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 PATCHES=(
 	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
 	"${FILESDIR}"/0001-Workout-Only-scale-on-Ctrl-mouse-wheel.patch
-
-	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3043
-	# https://github.com/GoldenCheetah/GoldenCheetah/issues/2872
-	"${FILESDIR}"/0002-HrvMeasuresCsvImport.cpp-allow-HR-only-csv-files.patch
 	)
 
 src_prepare() {
