@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="90e20d79bd131fe6414b8807bd0df6e48851897b"
+MY_COMMIT="35606d321c3993bc4ff49d84f3c6cdf1f1cba711"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
