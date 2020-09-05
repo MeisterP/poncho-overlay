@@ -36,7 +36,7 @@ RDEPEND="${PYTHON_DEPS}
 	virtual/libusb:1"
 DEPEND="${RDEPEND}
 	dev-python/sip
-	sys-devel/bison
+	>=sys-devel/bison-3.7
 	sys-devel/flex
 	virtual/pkgconfig"
 
@@ -48,6 +48,10 @@ PATCHES=(
 
 	# let measures.ini overwrite the defaults
 	"${FILESDIR}"/0002-Revert-Make-measures.ini-global-looking-for-it-in-gc.patch
+
+	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3586
+	"${FILESDIR}"/0001-Fix-building-with-bison-3.7.patch
+	"${FILESDIR}"/0002-require-bison-3.7.patch
 	)
 
 src_prepare() {
