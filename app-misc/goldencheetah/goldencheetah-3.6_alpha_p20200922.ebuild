@@ -25,13 +25,13 @@ RDEPEND="${PYTHON_DEPS}
 	dev-qt/qtbluetooth:5
 	dev-qt/qtcharts:5
 	dev-qt/qtconcurrent:5
-	dev-qt/qtmultimedia:5[widgets]
 	dev-qt/qtpositioning:5
 	dev-qt/qtserialport:5
 	dev-qt/qtsql:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebengine:5[widgets]
 	media-libs/libsamplerate
+	media-video/vlc
 	sci-libs/gsl
 	virtual/libusb:1"
 DEPEND="${RDEPEND}
@@ -60,14 +60,15 @@ src_prepare() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
-		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical python3
+		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical libvlc python3
 
 		LIBUSB_INSTALL = true
 		LIBUSB_USE_V_1 = true
 		SAMPLERATE_INSTALL = true
 		ICAL_INSTALL = true
+		VLC_INSTALL = true
 		DEFINES += GC_WANT_PYTHON
-		DEFINES += GC_VIDEO_QT5
+		DEFINES += GC_VIDEO_VLC
 		DEFINES += GC_WANT_ROBOT
 	EOF
 
