@@ -5,7 +5,7 @@ EAPI=7
 
 inherit desktop qmake-utils xdg
 
-MY_COMMIT="6328ddfa68252f96c159cf21ffd35223796aa895"
+MY_COMMIT="aa672908f7a30fefa5e42e8c3167175d8b6d0d3c"
 
 DESCRIPTION="Engaging virtual cycling experience"
 HOMEPAGE="https://github.com/MeisterP/big-ring/tree/develop"
