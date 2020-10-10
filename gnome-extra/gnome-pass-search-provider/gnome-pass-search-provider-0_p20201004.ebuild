@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit desktop systemd python-single-r1
 
-COMMIT="da2db4130e6bc902e1ed0e8bcf76a16688be98ec"
+COMMIT="bbceb716b1c8713f3d598455237f3810e68cbc14"
 
 DESCRIPTION="Pass password manager search provider for gnome-shell"
 HOMEPAGE="https://github.com/jle64/gnome-pass-search-provider"
