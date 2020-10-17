@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="0dfa8f0e0082d05bb1ed5d7fca34dbb8e0bca2b9"
+MY_COMMIT="4c62c52fc34a7ccbf94d6fcf3d4cd17a9ce77818"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -51,7 +51,6 @@ PATCHES=(
 
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3586
 	"${FILESDIR}"/0001-Fix-building-with-bison-3.7.patch
-	"${FILESDIR}"/0002-require-bison-3.7.patch
 	)
 
 src_prepare() {
