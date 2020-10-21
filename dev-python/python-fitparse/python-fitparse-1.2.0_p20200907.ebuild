@@ -4,13 +4,16 @@
 EAPI=7
 
 PYTHON_COMPAT=( python3_{7,8} )
+DISTUTILS_USE_SETUPTOOLS=no
+
 inherit distutils-r1
 
-COMMIT=c789893237967ca4c5640e4c4e7d9f904b67e307
+COMMIT=df18ae826acacada67259e6216b8afd95b7b4dd4
 
 DESCRIPTION="Python library to parse ANT/Garmin .FIT files"
 HOMEPAGE="https://github.com/dtcooper/python-fitparse https://pythonhosted.org/fitparse/"
-SRC_URI="https://github.com/dtcooper/python-fitparse/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/dtcooper/python-fitparse/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/MeisterP/python-fitparse/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
@@ -20,13 +23,6 @@ IUSE=""
 DEPEND=""
 RDEPEND="${DEPEND}"
 BDEPEND=""
-
-PATCHES=(
-	"${FILESDIR}"/0001-update-profile.py-for-SDK-20.88.patch
-	"${FILESDIR}"/0002-update-profile.py-for-SDK-21.16.patch
-	"${FILESDIR}"/0003-update-profile.py-for-SDK-21.18.patch
-	"${FILESDIR}"/0004-update-profile.py-for-SDK-21.30.patch
-	)
 
 DOCS=( README.md CONTRIBUTING.md )
 
