@@ -1,9 +1,9 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
-inherit cmake-utils
+inherit cmake
 MY_PN="libwebcam"
 MY_P="${MY_PN}-src-${PV}"
 
@@ -22,6 +22,10 @@ RDEPEND="${DEPEND}"
 S="${WORKDIR}/${MY_PN}-${PV}"
 
 src_install() {
-	cmake-utils_src_install
-	rm -fr "${D}"usr/lib*/${MY_PN}.a || die
+	cmake_src_install
+	rm -v "${D}"/usr/lib*/${MY_PN}.a || die
+	rm -v "${D}"/usr/share/uvcdynctrl/data/046d/logitech.xml~
+
+	rm -v "${D}"/usr/share/man/man1/*.gz || die
+	newman "${WORKDIR}"/libwebcam-${PV}/uvcdynctrl/uvcdynctrl.1_ uvcdynctrl.1
 }
