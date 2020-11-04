@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{7,8} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="4c50c1fb53fd3768b90927235f3e17132d78284c"
+MY_COMMIT="4af953ee00ab6d5af88b1b4a6d80afbefb714c0a"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -45,9 +45,6 @@ S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 PATCHES=(
 	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
 	"${FILESDIR}"/0001-Workout-Only-scale-on-Ctrl-mouse-wheel.patch
-
-	# let measures.ini overwrite the defaults
-	"${FILESDIR}"/0002-Revert-Make-measures.ini-global-looking-for-it-in-gc.patch
 
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3586
 	"${FILESDIR}"/0001-Fix-building-with-bison-3.7.patch
