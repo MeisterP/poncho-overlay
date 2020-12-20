@@ -8,7 +8,7 @@ DISTUTILS_USE_SETUPTOOLS=no
 
 inherit distutils-r1
 
-COMMIT=df18ae826acacada67259e6216b8afd95b7b4dd4
+COMMIT=3e1197f54cf6094f1465bb5a61d6b07043b99a5a
 
 DESCRIPTION="Python library to parse ANT/Garmin .FIT files"
 HOMEPAGE="https://github.com/dtcooper/python-fitparse https://pythonhosted.org/fitparse/"
