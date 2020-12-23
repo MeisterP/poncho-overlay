@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_COMPAT=( python3_{7,8} )
 DISTUTILS_USE_SETUPTOOLS=rdepend
 
 inherit distutils-r1
@@ -16,8 +16,6 @@ LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
-
-PATCHES=( "${FILESDIR}/tqdm-4.23.3.patch" )
 
 BDEPEND="${PYTHON_DEPS}"
 RDEPEND="${PYTHON_DEPS}
