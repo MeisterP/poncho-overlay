@@ -1,14 +1,13 @@
-# Copyright 2020 Gentoo Authors
+# Copyright 2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{7,8,9} )
-DISTUTILS_USE_SETUPTOOLS=no
+PYTHON_COMPAT=( python3_{8,9} )
 
 inherit distutils-r1
 
-COMMIT=3e1197f54cf6094f1465bb5a61d6b07043b99a5a
+COMMIT=c5865d712da8b7a1cef08329366e131fc3e19305
 
 DESCRIPTION="Python library to parse ANT/Garmin .FIT files"
 HOMEPAGE="https://github.com/dtcooper/python-fitparse https://pythonhosted.org/fitparse/"
