@@ -1,0 +1,38 @@
+From 794433a999e54667b5df1c68927798a2a19cbd58 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Fri, 5 Feb 2021 16:55:39 +0100
+Subject: [PATCH] Add Shimano EW-WU111
+
+---
+ src/FileIO/FitRideFile.cpp | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/FileIO/FitRideFile.cpp b/src/FileIO/FitRideFile.cpp
+index 180f83195..4c3ff58a6 100644
+--- a/src/FileIO/FitRideFile.cpp
++++ b/src/FileIO/FitRideFile.cpp
+@@ -476,6 +476,13 @@ struct FitFileReaderState
+                 case 1: return "o_synce navi2coach";
+                 default: return QString("o_synce %1").arg(prod);
+             }
++        } else if (manu == 41) {
++            // Shimano
++            switch (prod) {
++                case -1:  return "Shimano";
++                case 28728: return "Shimano EW-WU111";
++                default: return QString("Shimano %1").arg(prod);
++            }
+         } else if (manu == 48) {
+             // Pioneer
+             switch (prod) {
+@@ -591,6 +598,7 @@ struct FitFileReaderState
+ 
+     QString getDeviceType(int device_type) {
+         switch (device_type) {
++            case 1: return "Di2"; // E-TUBE Wireless Unit
+             case 4: return "Headunit"; // bike_power
+             case 11: return "Powermeter"; // bike_power
+             case 17: return "Biketrainer"; // fitness equipment
+-- 
+2.26.2
+

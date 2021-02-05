@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8,9} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="d8c21e4070c61efaed421adf7ab8372041862c0e"
+MY_COMMIT="0eb8d63d076a15dcafec0f7e4fc45c227ca99fe5"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -48,6 +48,8 @@ PATCHES=(
 
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3586
 	"${FILESDIR}"/0001-Fix-building-with-bison-3.7.patch
+
+	"${FILESDIR}"/0001-Add-Shimano-EW-WU111.patch
 	)
 
 src_prepare() {
