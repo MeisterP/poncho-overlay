@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8,9} )
 
 inherit distutils-r1
 
-COMMIT=c5865d712da8b7a1cef08329366e131fc3e19305
+COMMIT=f7e9772d43569bc8dd91e3d239bfebc7250b6fcd
 
 DESCRIPTION="Python library to parse ANT/Garmin .FIT files"
 HOMEPAGE="https://github.com/dtcooper/python-fitparse https://pythonhosted.org/fitparse/"
