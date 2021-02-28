@@ -29,7 +29,7 @@ index 180f83195..4c3ff58a6 100644
  
      QString getDeviceType(int device_type) {
          switch (device_type) {
-+            case 1: return "Di2"; // E-TUBE Wireless Unit
++            case 1: return "Di2"; // ANT+ private network
              case 4: return "Headunit"; // bike_power
              case 11: return "Powermeter"; // bike_power
              case 17: return "Biketrainer"; // fitness equipment
