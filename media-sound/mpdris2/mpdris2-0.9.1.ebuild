@@ -1,10 +1,10 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-PYTHON_COMPAT=( python3_{6,7,8,9} )
+PYTHON_COMPAT=( python3_{7,8,9} )
 
-inherit python-single-r1 autotools eutils
+inherit python-single-r1 autotools optfeature
 
 DESCRIPTION="An implementation of the MPRIS 2 interface as a client for MPD"
 HOMEPAGE="https://github.com/eonpatapon/mpDris2"
@@ -39,8 +39,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	elog "To get additional features, a number of optional runtime"
-	elog "dependencies may be installed:"
 	optfeature "notifications on track change" dev-python/notify-python
 	optfeature "read covers from music files" media-libs/mutagen
 }
