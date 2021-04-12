@@ -5,7 +5,7 @@ EAPI=7
 
 inherit linux-mod
 
-MY_COMMIT="275023f068b29e725287e50e58d7c70e37600ca3"
+MY_COMMIT="21310d9959ca8c30b4e6187277031b2f89ac493c"
 
 DESCRIPTION="Linux Driver for WMI on Gigabyte Mainboards"
 HOMEPAGE="https://github.com/t-8ch/linux-gigabyte-wmi-driver"
