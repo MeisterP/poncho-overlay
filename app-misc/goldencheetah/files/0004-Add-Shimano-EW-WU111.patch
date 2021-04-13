@@ -1,14 +1,14 @@
-From 794433a999e54667b5df1c68927798a2a19cbd58 Mon Sep 17 00:00:00 2001
+From c6dd82023e6df1547dc1ad0bc881f5f57894e4b3 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
-Date: Fri, 5 Feb 2021 16:55:39 +0100
-Subject: [PATCH] Add Shimano EW-WU111
+Date: Tue, 13 Apr 2021 09:50:20 +0200
+Subject: [PATCH 4/5] Add Shimano EW-WU111
 
 ---
  src/FileIO/FitRideFile.cpp | 8 ++++++++
  1 file changed, 8 insertions(+)
 
 diff --git a/src/FileIO/FitRideFile.cpp b/src/FileIO/FitRideFile.cpp
-index 180f83195..4c3ff58a6 100644
+index 693b31b61..edfe98cf4 100644
 --- a/src/FileIO/FitRideFile.cpp
 +++ b/src/FileIO/FitRideFile.cpp
 @@ -476,6 +476,13 @@ struct FitFileReaderState
@@ -25,14 +25,14 @@ index 180f83195..4c3ff58a6 100644
          } else if (manu == 48) {
              // Pioneer
              switch (prod) {
-@@ -591,6 +598,7 @@ struct FitFileReaderState
+@@ -601,6 +608,7 @@ struct FitFileReaderState
  
      QString getDeviceType(int device_type) {
          switch (device_type) {
-+            case 1: return "Di2"; // ANT+ private network
++            case 1: return "Di2"; // Ant+ private network
              case 4: return "Headunit"; // bike_power
              case 11: return "Powermeter"; // bike_power
              case 17: return "Biketrainer"; // fitness equipment
 -- 
-2.26.2
+2.26.3
 

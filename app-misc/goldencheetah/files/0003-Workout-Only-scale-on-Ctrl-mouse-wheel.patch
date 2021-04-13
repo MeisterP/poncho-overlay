@@ -1,17 +1,17 @@
-From bf85739a2e70ff7bd5c0b92554d9c6078daedfc1 Mon Sep 17 00:00:00 2001
+From 7f0a9aa6ca312ccb5f6ea0ab558bbd27a97817d5 Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
-Date: Sat, 30 May 2020 13:05:15 +0200
-Subject: [PATCH 1/2] Workout: Only scale on Ctrl+mouse wheel
+Date: Tue, 13 Apr 2021 09:50:20 +0200
+Subject: [PATCH 3/5] Workout: Only scale on Ctrl+mouse wheel
 
 ---
  src/Train/WorkoutWidget.cpp | 21 +++++++++++++--------
  1 file changed, 13 insertions(+), 8 deletions(-)
 
 diff --git a/src/Train/WorkoutWidget.cpp b/src/Train/WorkoutWidget.cpp
-index 73c83251c..ffed2a0a2 100644
+index a42bcf731..7bbf6d921 100644
 --- a/src/Train/WorkoutWidget.cpp
 +++ b/src/Train/WorkoutWidget.cpp
-@@ -565,15 +565,20 @@ WorkoutWidget::eventFilter(QObject *obj, QEvent *event)
+@@ -571,15 +571,20 @@ WorkoutWidget::eventFilter(QObject *obj, QEvent *event)
      //
      if (event->type() == QEvent::Wheel) {
  
@@ -41,5 +41,5 @@ index 73c83251c..ffed2a0a2 100644
  
      //
 -- 
-2.26.2
+2.26.3
 

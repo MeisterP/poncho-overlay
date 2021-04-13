@@ -1,7 +1,7 @@
-From e1f42f8b3340eb4695ad73be764332e75b7bce90 Mon Sep 17 00:00:00 2001
+From d861c1bf75dda12d4f733ffe2adfaeaeeec28ddc Mon Sep 17 00:00:00 2001
 From: Poncho <poncho@spahan.ch>
-Date: Mon, 7 Sep 2020 09:39:49 +0200
-Subject: [PATCH 1/2] Fix building with bison 3.7
+Date: Tue, 13 Apr 2021 09:50:20 +0200
+Subject: [PATCH 1/5] Fix building with bison 3.7
 
 Bison 3.7 changes how header files are included [1][2], in that instead of
 copying and inserting the contents of a file, the file itself is included
@@ -32,7 +32,7 @@ index c532c06ee..3d4e914ee 100644
  %token <leaf> SYMBOL PYTHON
  
 diff --git a/src/Core/RideDB.y b/src/Core/RideDB.y
-index e2b63cc0d..86f8a2ec9 100644
+index d6da086bd..f2001e23c 100644
 --- a/src/Core/RideDB.y
 +++ b/src/Core/RideDB.y
 @@ -40,6 +40,8 @@ void RideDBerror(void*jc, const char *error) // used by parser aka yyerror()
@@ -59,5 +59,5 @@ index 2cbbef9fc..d5c77a779 100644
  %lex-param { void *scanner }
  %parse-param { struct JsonContext *jc }
 -- 
-2.26.2
+2.26.3
 

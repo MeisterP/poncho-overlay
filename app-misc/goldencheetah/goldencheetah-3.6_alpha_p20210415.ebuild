@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8,9} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="a0a9c316418397b904824314b628c41058148cbe"
+MY_COMMIT="465ec039a293f6b7f84e2e78649581cc85ac67c0"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -43,13 +43,14 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
 PATCHES=(
-	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
-	"${FILESDIR}"/0001-Workout-Only-scale-on-Ctrl-mouse-wheel.patch
-
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3586
 	"${FILESDIR}"/0001-Fix-building-with-bison-3.7.patch
+	"${FILESDIR}"/0002-require-bison-3.4.patch
 
-	"${FILESDIR}"/0001-Add-Shimano-EW-WU111.patch
+	# https://github.com/GoldenCheetah/GoldenCheetah/pull/3113
+	"${FILESDIR}"/0003-Workout-Only-scale-on-Ctrl-mouse-wheel.patch
+
+	"${FILESDIR}"/0004-Add-Shimano-EW-WU111.patch
 	)
 
 src_prepare() {
