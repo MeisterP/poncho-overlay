@@ -1,10 +1,10 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-COMMIT=d6445e21d20f66edd1d2d53d329e654b4dce3cdc
-PYTHON_COMPAT=( python3_{7,8} )
+COMMIT=c4ed69eed8dfdea3f958b2c0d93b79e70522009a
+PYTHON_COMPAT=( python3_{7..9} )
 DISTUTILS_SINGLE_IMPL="true"
 DISTUTILS_USE_SETUPTOOLS="rdepend"
 inherit desktop distutils-r1
@@ -19,8 +19,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="dbus taglib"
 
 BDEPEND="
-	virtual/pkgconfig
-"
+	virtual/pkgconfig"
 RDEPEND="
 	$(python_gen_cond_dep '
 		dev-python/pygobject:3[${PYTHON_MULTI_USEDEP}]
@@ -32,8 +31,10 @@ RDEPEND="
 
 S="${WORKDIR}/${PN}-${COMMIT}"
 
+distutils_enable_tests unittest
+
 src_install() {
 	distutils-r1_src_install
 	doicon -s 128 sonata/pixmaps/sonata.png
-	rm -r "${D}"/usr/share/sonata || die
+	rm -r "${ED}"/usr/share/sonata || die
 }
