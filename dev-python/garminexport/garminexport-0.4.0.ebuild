@@ -12,9 +12,18 @@ SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
+IUSE="+vanilla"
 KEYWORDS="~amd64 ~x86"
 
 DEPEND="dev-python/requests[${PYTHON_USEDEP}]
 	dev-python/python-dateutil[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
 BDEPEND=""
+
+src_prepare() {
+	if ! use vanilla; then
+		PATCHES+=( "${FILESDIR}/0.3.0-use-the-same-filename-as-edge.patch" )
+	fi
+
+	distutils-r1_python_prepare_all
+}

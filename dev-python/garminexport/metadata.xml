@@ -5,4 +5,7 @@
 		<email>poncho@spahan.ch</email>
 		<name>Poncho</name>
 	</maintainer>
+	<use>
+		<flag name="vanilla">Disable downstream patch to use the same filenames as Edge devices</flag>
+	</use>
 </pkgmetadata>
