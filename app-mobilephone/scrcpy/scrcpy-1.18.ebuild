@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit meson
+inherit meson optfeature
 
 KEYWORDS="~amd64 ~x86"
 
@@ -30,7 +30,10 @@ src_configure() {
 		-Dcompile_app=true
 		-Dcompile_server=true
 		-Dprebuilt_server="${DISTDIR}/scrcpy-server-v${PV}"
-		-Dhidpi_support=true
 	)
 	meson_src_configure
+}
+
+pkg_postinst() {
+	optfeature "device screen capture as a webcam" media-video/v4l2loopback
 }
