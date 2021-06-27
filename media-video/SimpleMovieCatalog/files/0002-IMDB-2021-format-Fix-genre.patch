@@ -1,0 +1,32 @@
+From 356ed23fc402d7bd495544321c69204402d3deda Mon Sep 17 00:00:00 2001
+From: lexmiller <lex.miller@gmail.com>
+Date: Thu, 3 Jun 2021 13:14:48 +0900
+Subject: [PATCH 2/4] IMDB 2021 format: Fix genre
+
+---
+ lib/IMDB_Movie.pm | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/lib/IMDB_Movie.pm b/lib/IMDB_Movie.pm
+index 1758e9e..444becf 100644
+--- a/lib/IMDB_Movie.pm
++++ b/lib/IMDB_Movie.pm
+@@ -658,13 +658,11 @@ sub _genre {
+     my $parser = shift;
+     my ($tag,@genre);
+ 
+-    # OLD: my $genre = _get_info($parser, "genre", "h5", "/div");
+-    my $genre = _get_info($parser, "genres:|genre:", "h4|h5", "/div") or return undef;
++    my $genre = _get_info($parser, "^genres|^genre", "span", "/ul") or return undef;
+     # print "\nGENRE: '$genre'\n";
+     $genre =~ s/ see more.*$//i;
+     $genre =~ s/ more.*$//i;
+-    $genre =~ s/[^\w|-]//g;
+-    @genre = split(/\|/, $genre);
++    @genre = split(' ', $genre);
+ 
+     return undef if (!@genre);
+     return [ unique(@genre) ];
+-- 
+2.31.1
+

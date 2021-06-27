@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -16,7 +16,12 @@ DEPEND="dev-lang/perl
 	 dev-perl/libwww-perl"
 RDEPEND="${DEPEND}"
 
-PATCHES=( ${FILESDIR}/storyline-extraction.patch )
+PATCHES=(
+	"${FILESDIR}"/0001-plot-storyline-extraction.patch
+	"${FILESDIR}"/0002-IMDB-2021-format-Fix-genre.patch
+	"${FILESDIR}"/0003-IMDB-2021-format-Fix-origtitle.patch
+	"${FILESDIR}"/0004-IMDB-2021-format-Fix-user-rating.patch
+)
 
 src_prepare(){
 	default
