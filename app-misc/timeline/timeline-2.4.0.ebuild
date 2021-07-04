@@ -6,7 +6,7 @@ EAPI=7
 PYTHON_COMPAT=( python3_{8,9} )
 PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
 
-inherit desktop l10n xdg python-single-r1
+inherit desktop plocale xdg python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="http://thetimelineproj.sourceforge.net/"
@@ -37,7 +37,7 @@ PATCHES=( "${FILESDIR}/timeline-2.0.0-path.patch" )
 
 src_prepare() {
 	xdg_src_prepare
-	l10n_find_plocales_changes "${S}/translations" "" ".po"
+	plocale_find_changes "${S}/translations" "" ".po"
 }
 
 src_install() {
@@ -48,7 +48,7 @@ src_install() {
 	doins -r icons/{*.png,*.ico,event_icons}
 
 	insinto /usr/share/${PN}/translations
-	for lang in $(l10n_get_locales); do
+	for lang in $(plocale_get_locales); do
 		doins translations/${lang}.po
 	done
 
