@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit autotools
+inherit meson
 
 DESCRIPTION="IIO sensors to D-Bus proxy"
 HOMEPAGE="https://gitlab.freedesktop.org/hadess/iio-sensor-proxy"
@@ -16,14 +16,9 @@ IUSE=""
 
 RDEPEND="dev-libs/glib:*
 	gnome-base/gnome-common
-	dev-libs/libgudev
+	>=dev-libs/libgudev-237
 	virtual/udev"
 
 DEPEND="${RDEPEND}
 	dev-util/gtk-doc
 	virtual/pkgconfig"
-
-src_prepare() {
-	default
-	eautoreconf
-}
