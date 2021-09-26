@@ -492,8 +492,11 @@ src_prepare() {
 	rm -v "${WORKDIR}"/firefox-patches/0002-Fortify-sources-properly.patch
 	rm -v "${WORKDIR}"/firefox-patches/0003-Check-additional-plugins-dir.patch
 	rm -v "${WORKDIR}"/firefox-patches/0010-Fix-building-spellchecker-when-using-GCC-and-PGO.patch
+	rm -v "${WORKDIR}"/firefox-patches/0011-bmo-1526653-Include-struct-definitions-for-user_vfp-.patch
 	rm -v "${WORKDIR}"/firefox-patches/0030-Disable-FFVPX-with-VA-API.patch
 	rm -v "${WORKDIR}"/firefox-patches/0031-Enable-FLAC-on-platforms-without-ffvpx-via-ffmpeg.patch
+	rm -v "${WORKDIR}"/firefox-patches/0034-bmo-1721326-Allow-dynamic-PTHREAD_STACK_MIN.patch
+	rm -v "${WORKDIR}"/firefox-patches/0035-bmo-1721326-Use-small-stack-for-DoClone.patch
 
 	eapply "${WORKDIR}/firefox-patches"
 
