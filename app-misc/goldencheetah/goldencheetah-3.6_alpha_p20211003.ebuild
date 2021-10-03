@@ -1,13 +1,13 @@
 # Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 PYTHON_COMPAT=( python3_{8,9} )
 
 inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
 
-MY_COMMIT="a3c1f6d2fc17e2d7e261f1d7b38cca60ca0228f7"
+MY_COMMIT="272963b8324daf1bad310f5dfef488ec7d96590f"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -20,7 +20,12 @@ IUSE=""
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
-RDEPEND="${PYTHON_DEPS}
+BDEPEND="dev-python/sip
+	>=sys-devel/bison-3.7
+	sys-devel/flex
+	virtual/pkgconfig"
+
+DEPEND="${PYTHON_DEPS}
 	dev-libs/libical
 	dev-qt/qtbluetooth:5
 	dev-qt/qtcharts:5
@@ -34,11 +39,8 @@ RDEPEND="${PYTHON_DEPS}
 	media-video/vlc
 	sci-libs/gsl
 	virtual/libusb:1"
-DEPEND="${RDEPEND}
-	dev-python/sip
-	>=sys-devel/bison-3.7
-	sys-devel/flex
-	virtual/pkgconfig"
+
+RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
@@ -54,7 +56,7 @@ PATCHES=(
 	)
 
 src_prepare() {
-	xdg_src_prepare
+	default
 
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
