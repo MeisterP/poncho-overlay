@@ -5,9 +5,9 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_{8,9} )
 
-inherit desktop flag-o-matic udev qmake-utils python-single-r1 xdg
+inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="272963b8324daf1bad310f5dfef488ec7d96590f"
+MY_COMMIT="09e2ac95daaa213374274293d5230176583023c4"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -43,6 +43,10 @@ DEPEND="${PYTHON_DEPS}
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
+
+DOCS=( README.md CONTRIBUTING.md )
+
+FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
 
 PATCHES=(
 	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3586
@@ -101,5 +105,11 @@ src_install() {
 		Categories=Science;Sports;
 	EOF
 
-	dodoc README.md CONTRIBUTING.md
+	einstalldocs
 }
+
+pkg_postinst() {
+	fcaps_pkg_postinst
+	xdg_pkg_postinst
+}
+
