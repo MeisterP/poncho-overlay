@@ -1,7 +1,7 @@
 # Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 PYTHON_COMPAT=( python3_{8,9} )
 PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
@@ -21,14 +21,14 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 DEPEND="${PYTHON_DEPS}
 	$(python_gen_cond_dep '
-		dev-python/wxpython:4.0[${PYTHON_MULTI_USEDEP}]
+		dev-python/wxpython:4.0[${PYTHON_USEDEP}]
 	')
 	sys-devel/gettext"
 
 RDEPEND="${DEPEND}
 	$(python_gen_cond_dep '
-		dev-python/humblewx[${PYTHON_MULTI_USEDEP}]
-		dev-python/pytz[${PYTHON_MULTI_USEDEP}]
+		dev-python/humblewx[${PYTHON_USEDEP}]
+		dev-python/pytz[${PYTHON_USEDEP}]
 	')"
 
 BDEPEND="app-arch/unzip"
@@ -36,7 +36,7 @@ BDEPEND="app-arch/unzip"
 PATCHES=( "${FILESDIR}/timeline-2.0.0-path.patch" )
 
 src_prepare() {
-	xdg_src_prepare
+	default
 	plocale_find_changes "${S}/translations" "" ".po"
 }
 
