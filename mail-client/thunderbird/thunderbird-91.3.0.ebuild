@@ -3,9 +3,9 @@
 
 EAPI="7"
 
-FIREFOX_PATCHSET="firefox-91-patches-02.tar.xz"
+FIREFOX_PATCHSET="firefox-91esr-patches-01.tar.xz"
 
-LLVM_MAX_SLOT=12
+LLVM_MAX_SLOT=13
 
 PYTHON_COMPAT=( python3_{7..10} )
 PYTHON_REQ_USE="ncurses,sqlite,ssl"
@@ -48,7 +48,7 @@ if [[ ${PV} == *_rc* ]] ; then
 fi
 
 PATCH_URIS=(
-	https://dev.gentoo.org/~{axs,polynomial-c,whissi}/mozilla/patchsets/${FIREFOX_PATCHSET}
+	https://dev.gentoo.org/~{polynomial-c,whissi}/mozilla/patchsets/${FIREFOX_PATCHSET}
 )
 
 SRC_URI="${MOZ_SRC_BASE_URI}/source/${MOZ_P}.source.tar.xz -> ${MOZ_P_DISTFILES}.source.tar.xz
@@ -57,7 +57,7 @@ SRC_URI="${MOZ_SRC_BASE_URI}/source/${MOZ_P}.source.tar.xz -> ${MOZ_P_DISTFILES}
 DESCRIPTION="Thunderbird Mail Client"
 HOMEPAGE="https://www.mozilla.org/thunderbird"
 
-KEYWORDS="~amd64 ~arm64 ~ppc64 ~x86"
+KEYWORDS="~amd64 ~x86"
 
 SLOT="0/$(ver_cut 1)"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
@@ -77,6 +77,14 @@ BDEPEND="${PYTHON_DEPS}
 	virtual/pkgconfig
 	>=virtual/rust-1.51.0
 	|| (
+		(
+			sys-devel/clang:13
+			sys-devel/llvm:13
+			clang? (
+				=sys-devel/lld-13*
+				pgo? ( =sys-libs/compiler-rt-sanitizers-13*[profile] )
+			)
+		)
 		(
 			sys-devel/clang:12
 			sys-devel/llvm:12
@@ -126,6 +134,7 @@ CDEPEND="
 	>=dev-libs/libffi-3.0.10:=
 	media-video/ffmpeg
 	x11-libs/libX11
+	x11-libs/libxcb
 	x11-libs/libXcomposite
 	x11-libs/libXdamage
 	x11-libs/libXext
@@ -173,6 +182,8 @@ RDEPEND="${CDEPEND}
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${CDEPEND}
+	x11-libs/libICE
+	x11-libs/libSM
 	pulseaudio? (
 		|| (
 			media-sound/pulseaudio
@@ -203,11 +214,9 @@ llvm_check_deps() {
 				return 1
 			fi
 		fi
-		einfo "Using LLVM slot ${LLVM_SLOT} to build" >&2
-	else
-		einfo "Using gcc to build" >&2
 	fi
 
+	einfo "Using LLVM slot ${LLVM_SLOT} to build" >&2
 }
 
 MOZ_LANGS=(
@@ -948,6 +957,7 @@ src_install() {
 	local PREFS_DIR="${MOZILLA_FIVE_HOME}/defaults/pref"
 	insinto "${PREFS_DIR}"
 	newins "${FILESDIR}"/gentoo-default-prefs.js gentoo-prefs.js
+
 	local GENTOO_PREFS="${ED}${PREFS_DIR}/gentoo-prefs.js"
 
 	# Set dictionary path to use system hunspell
@@ -1063,7 +1073,9 @@ pkg_postinst() {
 		elog
 	fi
 
-	local show_doh_information show_normandy_information show_shortcut_information
+	local show_doh_information
+	local show_normandy_information
+	local show_shortcut_information
 
 	if [[ -z "${REPLACING_VERSIONS}" ]] ; then
 		# New install; Tell user that DoH is disabled by default
