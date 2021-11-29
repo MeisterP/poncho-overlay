@@ -3,11 +3,11 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{8,9} )
+PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="f9b2b60b3799b06ab457dfb3bbcfa7661f5c19e1"
+MY_COMMIT="006dbdf102235acdf451b9fb3375d37226ed0517"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="http://goldencheetah.org"
@@ -112,4 +112,3 @@ pkg_postinst() {
 	fcaps_pkg_postinst
 	xdg_pkg_postinst
 }
-
