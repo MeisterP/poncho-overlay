@@ -1,4 +1,4 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -7,10 +7,10 @@ PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="ecb7910d40f18ec65be541b0be83b0c1c48c26e8"
+MY_COMMIT="7230e28730969d96f96b69c9896b96e981d73eba"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
-HOMEPAGE="http://goldencheetah.org"
+HOMEPAGE="https://www.goldencheetah.org"
 SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
@@ -37,7 +37,7 @@ DEPEND="${PYTHON_DEPS}
 	dev-qt/qtwebengine:5[widgets]
 	media-libs/libsamplerate
 	media-video/vlc
-	sci-libs/gsl
+	sci-libs/gsl:=
 	virtual/libusb:1"
 
 RDEPEND="${DEPEND}"
