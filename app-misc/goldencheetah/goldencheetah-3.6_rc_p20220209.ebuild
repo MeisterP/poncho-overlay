@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="a13da9e91751566fec544673b4b2509b12821a3b"
+MY_COMMIT="150155ba846dba1b2a6c9e95f85ccd17589c3d28"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -54,9 +54,6 @@ PATCHES=(
 	"${FILESDIR}"/0002-require-bison-3.4.patch
 
 	"${FILESDIR}"/0003-Add-Shimano-EW-WU111.patch
-
-	# https://github.com/GoldenCheetah/GoldenCheetah/pull/4154
-	"${FILESDIR}"/LocalContentCanAccess.patch
 	)
 
 src_prepare() {
