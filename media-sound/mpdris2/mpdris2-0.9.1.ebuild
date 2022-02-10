@@ -1,4 +1,4 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -18,9 +18,9 @@ IUSE=""
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 DEPEND="$(python_gen_cond_dep '
-	dev-python/dbus-python[${PYTHON_MULTI_USEDEP}]
-	dev-python/pygobject:3[${PYTHON_MULTI_USEDEP}]
-	dev-python/python-mpd[${PYTHON_MULTI_USEDEP}]
+	dev-python/dbus-python[${PYTHON_USEDEP}]
+	dev-python/pygobject:3[${PYTHON_USEDEP}]
+	dev-python/python-mpd[${PYTHON_USEDEP}]
 	')"
 
 RDEPEND="${DEPEND}
