@@ -1,4 +1,4 @@
-# Copyright 2019-2021 Gentoo Authors
+# Copyright 2019-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -24,8 +24,8 @@ DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
 	app-admin/pass[X]
 	$(python_gen_cond_dep '
-		dev-python/fuzzywuzzy[${PYTHON_MULTI_USEDEP}]
-		dev-python/pygobject:3[${PYTHON_MULTI_USEDEP}]
+		dev-python/fuzzywuzzy[${PYTHON_USEDEP}]
+		dev-python/pygobject:3[${PYTHON_USEDEP}]
 	')"
 
 S=${WORKDIR}/${PN}-${COMMIT}
