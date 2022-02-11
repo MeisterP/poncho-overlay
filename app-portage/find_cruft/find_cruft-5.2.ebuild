@@ -1,9 +1,9 @@
-# Copyright 2016-2021 Gentoo Authors
+# Copyright 2013-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
-inherit eutils
+inherit optfeature
 
 DESCRIPTION="find cruft files not managed by portage"
 HOMEPAGE="https://github.com/vaeth/find_cruft/"
@@ -22,13 +22,13 @@ src_prepare() {
 	use prefix || sed -i \
 		-e '1s"^#!/usr/bin/env perl$"#!'"${EPREFIX}/usr/bin/perl"'"' \
 		-- bin/* || die
-	eapply_user
+	default
 }
 
 src_install() {
 	dobin bin/*
-	dodoc README.md ChangeLog
-	insinto /etc
+	dodoc README.md
+	insinto /usr/lib/find_cruft
 	doins -r etc/*
 	insinto /usr/share/zsh/site-functions
 	doins zsh/_*
