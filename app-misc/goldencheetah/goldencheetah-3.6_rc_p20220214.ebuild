@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="150155ba846dba1b2a6c9e95f85ccd17589c3d28"
+MY_COMMIT="f0b0d18e0e3d20e304f990f5de95c0b350f94f07"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -75,8 +75,7 @@ src_prepare() {
 	EOF
 
 	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
-	sed -i -e "s:/usr/local/:/usr/:" \
-		qwt/qwtconfig.pri || die
+	sed -i -e "s:/usr/local/:/usr/:" qwt/qwtconfig.pri || die
 
 	sip -c src/Python/SIP src/Python/SIP/goldencheetah.sip || die
 }
