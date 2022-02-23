@@ -25,14 +25,6 @@ index 247b036dd..84dbe4d94 100644
          } else if (manu == 48) {
              // Pioneer
              switch (prod) {
-@@ -662,6 +669,7 @@ struct FitFileReaderState
- 
-     QString getDeviceType(int device_type) {
-         switch (device_type) {
-+            case 1: return "Di2"; // Ant+ private network
-             case 4: return "Headunit"; // bike_power
-             case 11: return "Powermeter"; // bike_power
-             case 12: return "Sensor Hub";
 -- 
 2.32.0
 
