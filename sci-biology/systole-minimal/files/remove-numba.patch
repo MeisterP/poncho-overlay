@@ -1,0 +1,210 @@
+From 271667accabc6def7a6d8ed158a81cf7615d8976 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Fri, 18 Feb 2022 23:22:27 +0100
+Subject: [PATCH] remove numba
+
+---
+ systole/detectors/christov.py           | 5 -----
+ systole/detectors/engelse_zeelenberg.py | 3 ---
+ systole/detectors/hamilton.py           | 4 ----
+ systole/detectors/moving_average.py     | 2 --
+ systole/detectors/pan_tompkins.py       | 3 ---
+ systole/hrv.py                          | 2 --
+ systole/utils.py                        | 2 --
+ 7 files changed, 21 deletions(-)
+
+diff --git a/systole/detectors/christov.py b/systole/detectors/christov.py
+index c369371..f08f4b5 100644
+--- a/systole/detectors/christov.py
++++ b/systole/detectors/christov.py
+@@ -1,7 +1,6 @@
+ # Author: Nicolas Legrand <nicolas.legrand@cfin.au.dk>
+ 
+ import numpy as np
+-from numba import jit
+ from scipy.signal import lfilter
+ 
+ 
+@@ -47,7 +46,6 @@ def christov(signal, sfreq):
+     return peaks
+ 
+ 
+-@jit(nopython=True)
+ def numba_one(sfreq):
+     total_taps = 0
+ 
+@@ -58,7 +56,6 @@ def numba_one(sfreq):
+     return b, total_taps
+ 
+ 
+-@jit(nopython=True)
+ def numba_two(sfreq, total_taps):
+     b = np.ones(int(0.028 * sfreq))
+     b = b / int(0.028 * sfreq)
+@@ -67,7 +64,6 @@ def numba_two(sfreq, total_taps):
+     return b, total_taps
+ 
+ 
+-@jit(nopython=True)
+ def numba_three(sfreq, total_taps, MA2):
+     Y = []
+     for i in range(1, len(MA2) - 1):
+@@ -81,7 +77,6 @@ def numba_three(sfreq, total_taps, MA2):
+     return b, Y, total_taps
+ 
+ 
+-@jit(nopython=True)
+ def numba_four(MA3, sfreq, total_taps):
+ 
+     MA3[0:total_taps] = 0
+diff --git a/systole/detectors/engelse_zeelenberg.py b/systole/detectors/engelse_zeelenberg.py
+index 12badbd..f48ed2a 100644
+--- a/systole/detectors/engelse_zeelenberg.py
++++ b/systole/detectors/engelse_zeelenberg.py
+@@ -1,7 +1,6 @@
+ # Author: Nicolas Legrand <nicolas.legrand@cfin.au.dk>
+ 
+ import numpy as np
+-from numba import jit
+ from scipy.signal import butter, lfilter
+ 
+ 
+@@ -48,7 +47,6 @@ def engelse_zeelenberg(signal, sfreq):
+     return peaks
+ 
+ 
+-@jit(nopython=True)
+ def numba_one(filtered_ecg):
+     diff = np.zeros(len(filtered_ecg))
+     for i in range(4, len(diff)):
+@@ -56,7 +54,6 @@ def numba_one(filtered_ecg):
+     return diff
+ 
+ 
+-@jit(nopython=True)
+ def numba_two(sfreq, low_pass, signal):
+ 
+     low_pass[: int(0.2 * sfreq)] = 0
+diff --git a/systole/detectors/hamilton.py b/systole/detectors/hamilton.py
+index 6a2c64b..916d9e9 100644
+--- a/systole/detectors/hamilton.py
++++ b/systole/detectors/hamilton.py
+@@ -1,7 +1,6 @@
+ # Author: Nicolas Legrand <nicolas.legrand@cfin.au.dk>
+ 
+ import numpy as np
+-from numba import jit
+ from scipy.signal import butter, lfilter
+ 
+ 
+@@ -44,7 +43,6 @@ def hamilton(signal: np.ndarray, sfreq: int) -> np.ndarray:
+     return peaks
+ 
+ 
+-@jit(nopython=True)
+ def numba_first(signal, sfreq):
+     signal = np.asarray(signal)
+     f1 = 8 / sfreq
+@@ -52,7 +50,6 @@ def numba_first(signal, sfreq):
+     return [f1 * 2, f2 * 2]
+ 
+ 
+-@jit(nopython=True)
+ def numba_second(filtered_ecg, sfreq):
+     diff = np.abs(np.diff(filtered_ecg))
+     b = np.ones(int(0.08 * sfreq))
+@@ -61,7 +58,6 @@ def numba_second(filtered_ecg, sfreq):
+     return diff, a, b
+ 
+ 
+-@jit(nopython=True)
+ def numba_third(ma, b, sfreq):
+     ma[0 : len(b) * 2] = 0
+ 
+diff --git a/systole/detectors/moving_average.py b/systole/detectors/moving_average.py
+index 2322876..cc4815d 100644
+--- a/systole/detectors/moving_average.py
++++ b/systole/detectors/moving_average.py
+@@ -1,7 +1,6 @@
+ # Author: Nicolas Legrand <nicolas.legrand@cfin.au.dk>
+ 
+ import numpy as np
+-from numba import jit
+ from scipy.signal import butter, lfilter
+ 
+ from systole.detectors.pan_tompkins import MWA_cumulative
+@@ -51,7 +50,6 @@ def moving_average(signal: np.ndarray, sfreq: int) -> np.ndarray:
+     return peaks
+ 
+ 
+-@jit(nopython=True)
+ def numba_one(signal, mwa_qrs, mwa_beat, sfreq, filtered_ecg):
+ 
+     blocks = np.zeros(len(signal))
+diff --git a/systole/detectors/pan_tompkins.py b/systole/detectors/pan_tompkins.py
+index 921e555..f51578a 100644
+--- a/systole/detectors/pan_tompkins.py
++++ b/systole/detectors/pan_tompkins.py
+@@ -3,7 +3,6 @@
+ from typing import List
+ 
+ import numpy as np
+-from numba import jit
+ from scipy.signal import butter, lfilter
+ 
+ 
+@@ -52,7 +51,6 @@ def pan_tompkins(
+     return np.array(peaks, dtype=int)
+ 
+ 
+-@jit(nopython=True)
+ def MWA_cumulative(input_array: np.ndarray, window_size: int) -> np.ndarray:
+     """Cumulative moving average method"""
+ 
+@@ -64,7 +62,6 @@ def MWA_cumulative(input_array: np.ndarray, window_size: int) -> np.ndarray:
+     return ret
+ 
+ 
+-@jit(nopython=True)
+ def panPeakDetect(detection: np.ndarray, sfreq: int) -> List:
+     """Pan-Tompkins detection algorithm.
+ 
+diff --git a/systole/hrv.py b/systole/hrv.py
+index 6f57686..ab5a6ee 100644
+--- a/systole/hrv.py
++++ b/systole/hrv.py
+@@ -4,7 +4,6 @@ from typing import Dict, List, Optional, Tuple, Union
+ 
+ import numpy as np
+ import pandas as pd
+-from numba import jit
+ from scipy import interpolate
+ from scipy.signal import welch
+ from scipy.spatial.distance import cdist
+@@ -609,7 +608,6 @@ def poincare(
+     return sd1, sd2
+ 
+ 
+-@jit(nopython=True)
+ def _poincare(rr: np.ndarray) -> Tuple[float, float]:
+     """Compute SD1 and SD2 from the Poincaré nonlinear method for heart rate variability."""
+ 
+diff --git a/systole/utils.py b/systole/utils.py
+index 5d83076..0bf2d96 100644
+--- a/systole/utils.py
++++ b/systole/utils.py
+@@ -3,11 +3,9 @@
+ from typing import List, Optional, Tuple, Union
+ 
+ import numpy as np
+-from numba import jit
+ from scipy.interpolate import interp1d
+ 
+ 
+-@jit(nopython=True)
+ def norm_triggers(
+     triggers: Union[List, np.ndarray],
+     threshold: int = 1,
+-- 
+2.34.1
+
