@@ -68,6 +68,5 @@ pkg_postinst() {
 		elog "Please install these packages for additional functionality"
 		elog "    dev-python/icalendar  iCalendar file support"
 		elog "    dev-python/markdown   view the builtin documentation"
-		elog "    dev-python/pysvg      export to svg"
 	fi
 }
