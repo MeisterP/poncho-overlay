@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8..10} )
 inherit distutils-r1
 
 DESCRIPTION="Garmin Connect activity exporter and backup tool"
-HOMEPAGE="https://github.com/petergardfjall/garminexport https://pypi.org/project/garminexport"
+HOMEPAGE="https://github.com/petergardfjall/garminexport https://pypi.org/project/garminexport/"
 SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
@@ -19,8 +19,6 @@ DEPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
 	dev-python/python-dateutil[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}"
 BDEPEND=""
-
-PATCHES=( "${FILESDIR}/0.4.0-cloudscraper.patch" )
 
 src_prepare() {
 	if ! use vanilla; then
