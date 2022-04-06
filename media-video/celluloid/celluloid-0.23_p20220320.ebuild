@@ -5,7 +5,7 @@ EAPI=7
 
 inherit gnome2-utils meson xdg
 
-MY_COMMIT="c59f7395d4168aafd02e587985463f0d46cea002"
+MY_COMMIT="369002ae6e30905941c5fbfe0bebdd7755014eee"
 
 DESCRIPTION="A simple GTK+ frontend for mpv"
 HOMEPAGE="https://celluloid-player.github.io/"
