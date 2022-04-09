@@ -6,9 +6,12 @@ PYTHON_COMPAT=( python3_{8..9} )
 
 inherit meson python-single-r1 xdg
 
+MY_COMMIT="f6e32842586f4d1492e3d1562c34f8501e2d891c"
+
 DESCRIPTION="Simple yet full-featured LaTeX editor written in Python with Gtk"
 HOMEPAGE="https://www.cvfosammmm.org/setzer/"
-SRC_URI="https://github.com/cvfosammmm/Setzer/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/cvfosammmm/Setzer/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/cvfosammmm/Setzer/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -20,7 +23,6 @@ DEPEND=""
 RDEPEND="${DEPEND}
 	${PYTHON_DEPS}
 	$(python_gen_cond_dep '
-		app-text/pdfminer[${PYTHON_USEDEP}]
 		dev-python/pexpect[${PYTHON_USEDEP}]
 		dev-python/pycairo[${PYTHON_USEDEP}]
 		dev-python/pygobject[${PYTHON_USEDEP}]
@@ -32,9 +34,9 @@ RDEPEND="${DEPEND}
 	x11-libs/gtksourceview:4"
 BDEPEND=""
 
+S="${WORKDIR}/Setzer-${MY_COMMIT}"
+
 src_install() {
 	meson_src_install
 	python_optimize
 }
-
-S=${WORKDIR}/Setzer-${PV}
