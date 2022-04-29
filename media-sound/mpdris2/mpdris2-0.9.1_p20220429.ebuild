@@ -6,9 +6,12 @@ PYTHON_COMPAT=( python3_{8..10} )
 
 inherit python-single-r1 autotools optfeature
 
+MY_COMMIT="5e5cdacea6e55544064f8b10e0b49bbe2aa044d9"
+
 DESCRIPTION="An implementation of the MPRIS 2 interface as a client for MPD"
 HOMEPAGE="https://github.com/eonpatapon/mpDris2"
-SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${PV}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -26,7 +29,8 @@ DEPEND="$(python_gen_cond_dep '
 RDEPEND="${DEPEND}
 	${PYTHON_DEPS}"
 
-S="${WORKDIR}/mpDris2-${PV}"
+#S="${WORKDIR}/mpDris2-${PV}"
+S="${WORKDIR}/mpDris2-${MY_COMMIT}"
 
 src_prepare() {
 	default
@@ -39,6 +43,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	optfeature "notifications on track change" dev-python/notify-python
+	optfeature "notifications on track change" x11-libs/libnotify[introspection]
 	optfeature "read covers from music files" media-libs/mutagen
 }
