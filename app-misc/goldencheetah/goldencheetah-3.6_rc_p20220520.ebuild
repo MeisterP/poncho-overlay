@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{8..11} )
+PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
@@ -20,7 +20,10 @@ IUSE=""
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
-BDEPEND="dev-python/sip
+BDEPEND="${PYTHON_DEPS}
+	$(python_gen_cond_dep '
+		dev-python/sip:0[${PYTHON_USEDEP}]
+	')
 	>=sys-devel/bison-3.7
 	sys-devel/flex
 	virtual/pkgconfig"
