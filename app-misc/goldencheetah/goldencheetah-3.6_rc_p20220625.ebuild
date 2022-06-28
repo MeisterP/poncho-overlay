@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="4345c97960f1f1afe9a6f7d749ebda4367b5122b"
+MY_COMMIT="ab055101e1462136999a2ab69919b88eee6a98cb"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -110,5 +110,10 @@ src_install() {
 pkg_postinst() {
 	fcaps_pkg_postinst
 	xdg_pkg_postinst
+	udev_reload
+}
+
+pkg_postrm() {
+	xdg_pkg_postrm
 	udev_reload
 }
