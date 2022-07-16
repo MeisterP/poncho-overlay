@@ -6,7 +6,7 @@ PYTHON_COMPAT=( python3_{8..11} )
 
 inherit meson python-single-r1 xdg
 
-MY_COMMIT="f6e32842586f4d1492e3d1562c34f8501e2d891c"
+MY_COMMIT="5b20ecd90021c056c4893d6a8ed477a9236f8622"
 
 DESCRIPTION="Simple yet full-featured LaTeX editor written in Python with Gtk"
 HOMEPAGE="https://www.cvfosammmm.org/setzer/"
