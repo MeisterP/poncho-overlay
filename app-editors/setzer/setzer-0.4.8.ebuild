@@ -6,12 +6,9 @@ PYTHON_COMPAT=( python3_{8..11} )
 
 inherit meson python-single-r1 xdg
 
-MY_COMMIT="5b20ecd90021c056c4893d6a8ed477a9236f8622"
-
 DESCRIPTION="Simple yet full-featured LaTeX editor written in Python with Gtk"
 HOMEPAGE="https://www.cvfosammmm.org/setzer/"
-#SRC_URI="https://github.com/cvfosammmm/Setzer/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
-SRC_URI="https://github.com/cvfosammmm/Setzer/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/cvfosammmm/Setzer/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -34,7 +31,7 @@ RDEPEND="${DEPEND}
 	x11-libs/gtksourceview:4"
 BDEPEND=""
 
-S="${WORKDIR}/Setzer-${MY_COMMIT}"
+S="${WORKDIR}/Setzer-${PV}"
 
 src_install() {
 	meson_src_install
