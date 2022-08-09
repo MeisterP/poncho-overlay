@@ -6,7 +6,7 @@ EAPI=7
 CMAKE_MAKEFILE_GENERATOR="emake"
 I18N_PV=2.7.8
 
-inherit cmake desktop flag-o-matic xdg
+inherit cmake desktop flag-o-matic qmake-utils xdg
 
 DESCRIPTION="Video editor designed for simple cutting, filtering and encoding tasks"
 HOMEPAGE="http://fixounet.free.fr/avidemux"
@@ -19,14 +19,15 @@ SRC_URI="
 LICENSE="GPL-1 GPL-2 MIT PSF-2 public-domain"
 SLOT="2.7"
 KEYWORDS="~amd64 ~x86"
-IUSE="debug nls opengl qt5 sdl vaapi vdpau xv"
+IUSE="debug nls nvenc opengl qt5 sdl vaapi vdpau xv"
 
 BDEPEND="
 	dev-lang/yasm
 	qt5? ( dev-qt/linguist-tools:5 )
 "
 DEPEND="
-	~media-libs/avidemux-core-${PV}:${SLOT}[nls?,sdl?,vaapi?,vdpau?,xv?]
+	~media-libs/avidemux-core-${PV}:${SLOT}[nls?,sdl?,vaapi?,vdpau?,xv?,nvenc?]
+	nvenc? ( amd64? ( media-video/nvidia-video-codec:0 ) )
 	opengl? ( virtual/opengl:0 )
 	qt5? (
 		dev-qt/qtcore:5
@@ -102,6 +103,7 @@ src_configure() {
 
 	use qt5 && mycmakeargs+=(
 			-DENABLE_QT5="$(usex qt5)"
+			-DLRELEASE_EXECUTABLE="$(qt5_get_bindir)/lrelease"
 	)
 
 	use debug && mycmakeargs+=( -DVERBOSE=1 -DADM_DEBUG=1 )
