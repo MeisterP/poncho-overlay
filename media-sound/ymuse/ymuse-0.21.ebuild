@@ -6,8 +6,8 @@ EAPI=8
 inherit desktop go-module xdg
 
 EGO_SUM=(
-	"github.com/fhs/gompd/v2 v2.2.0"
-	"github.com/fhs/gompd/v2 v2.2.0/go.mod"
+	"github.com/fhs/gompd/v2 v2.2.1-0.20220620205817-bbf835995263"
+	"github.com/fhs/gompd/v2 v2.2.1-0.20220620205817-bbf835995263/go.mod"
 	"github.com/gotk3/gotk3 v0.6.1"
 	"github.com/gotk3/gotk3 v0.6.1/go.mod"
 	"github.com/op/go-logging v0.0.0-20160315200505-970db520ece7"
@@ -41,7 +41,10 @@ src_compile() {
 src_install() {
 	dobin ymuse
 
-	domenu resources/ymuse.desktop
+	domenu resources/com.yktoo.ymuse.desktop
+
+	insinto /usr/share/metainfo/
+	doins resources/metainfo/com.yktoo.ymuse.metainfo.xml
 
 	insinto /usr/share/locale/
 	doins -r resources/i18n/*
