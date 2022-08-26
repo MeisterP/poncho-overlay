@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit meson
+inherit udev meson
 
 DESCRIPTION="IIO sensors to D-Bus proxy"
 HOMEPAGE="https://gitlab.freedesktop.org/hadess/iio-sensor-proxy"
@@ -22,3 +22,11 @@ RDEPEND="dev-libs/glib:*
 DEPEND="${RDEPEND}
 	dev-util/gtk-doc
 	virtual/pkgconfig"
+
+pkg_postinst() {
+	udev_reload
+}
+
+pkg_postrm() {
+	udev_reload
+}
