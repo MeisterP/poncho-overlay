@@ -30,7 +30,7 @@ BDEPEND=""
 
 S=${WORKDIR}/${P/-minimal/}
 
-PATCHES=( ${FILESDIR}/remove-numba.patch )
+PATCHES=( ${FILESDIR}/remove-numba-sleepecg.patch )
 
 src_prepare() {
 	rm -r systole/datasets systole/plots systole/recording.py || die
