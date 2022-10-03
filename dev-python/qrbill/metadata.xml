@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <maintainer type="person">
+    <email>poncho@spahan.ch</email>
+    <name>Poncho</name>
+  </maintainer>
+  <upstream>
+    <remote-id type="pypi">garminconnect</remote-id>
+    <maintainer status="unknown">
+      <email>ron@cyberjunky.nl</email>
+      <name>Ron Klinkien</name>
+    </maintainer>
+  </upstream>
+</pkgmetadata>
