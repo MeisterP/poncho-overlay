@@ -23,7 +23,7 @@ DEPEND="
 	nvenc? ( media-video/nvidia-video-codec )
 	sdl? ( media-libs/libsdl:0 )
 	system-ffmpeg? ( >=media-video/ffmpeg-9:0[mp3,theora] )
-	vaapi? ( x11-libs/libva:0= )
+	vaapi? ( media-libs/libva:0= )
 	vdpau? ( x11-libs/libvdpau:0 )
 	xv? ( x11-libs/libXv:0 )
 "
