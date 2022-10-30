@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="9af08b7f3c62e81658568324f4eb6598dfa55079"
+MY_COMMIT="67352f6dc2ce5726d496b791e7377f3421b549f6"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -51,18 +51,13 @@ DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
 
-PATCHES=(
-	# https://github.com/GoldenCheetah/GoldenCheetah/issues/3586
-	"${FILESDIR}"/0001-Fix-building-with-bison-3.7.patch
-	"${FILESDIR}"/0002-require-bison-3.4.patch
-	)
-
 src_prepare() {
 	default
 
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
+		QMAKE_MOVE = cp
 		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical libvlc python3-embed
 
 		LIBUSB_INSTALL = true
