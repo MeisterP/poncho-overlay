@@ -5,4 +5,7 @@
 		<email>poncho@spahan.ch</email>
 		<name>Poncho</name>
 	</maintainer>
+	<upstream>
+		<remote-id type="github">dtcooper/python-fitparse</remote-id>
+	</upstream>
 </pkgmetadata>
