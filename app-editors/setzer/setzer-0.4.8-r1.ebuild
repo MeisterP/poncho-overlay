@@ -28,8 +28,11 @@ RDEPEND="${DEPEND}
 	app-text/gspell
 	app-text/poppler
 	dev-tex/latexmk
+	net-libs/webkit-gtk:4.1
 	x11-libs/gtksourceview:4"
 BDEPEND=""
+
+PATCHES=( "${FILESDIR}/webkit-4.1.patch" )
 
 S="${WORKDIR}/Setzer-${PV}"
 

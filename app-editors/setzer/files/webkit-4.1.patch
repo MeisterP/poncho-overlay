@@ -1,0 +1,26 @@
+diff --git a/setzer/workspace/help_panel/help_panel.py b/setzer/workspace/help_panel/help_panel.py
+index 3b0aeeb..5181be2 100644
+--- a/setzer/workspace/help_panel/help_panel.py
++++ b/setzer/workspace/help_panel/help_panel.py
+@@ -17,7 +17,7 @@
+ 
+ import gi
+ gi.require_version('Gtk', '3.0')
+-gi.require_version('WebKit2', '4.0')
++gi.require_version('WebKit2', '4.1')
+ from gi.repository import WebKit2
+ from gi.repository import GLib
+ 
+diff --git a/setzer/workspace/help_panel/help_panel_controller.py b/setzer/workspace/help_panel/help_panel_controller.py
+index 540fa4e..42b9caa 100644
+--- a/setzer/workspace/help_panel/help_panel_controller.py
++++ b/setzer/workspace/help_panel/help_panel_controller.py
+@@ -16,7 +16,7 @@
+ # along with this program. If not, see <http://www.gnu.org/licenses/>
+ 
+ import gi
+-gi.require_version('WebKit2', '4.0')
++gi.require_version('WebKit2', '4.1')
+ from gi.repository import WebKit2
+ 
+ import webbrowser
