@@ -5,9 +5,12 @@ EAPI=8
 
 inherit meson
 
+MY_COMMIT="6e8b0d067c52c3a7e0c3de745337e6e733c59207"
+
 DESCRIPTION="A VA-API implemention using NVIDIA's NVDEC"
 HOMEPAGE="https://github.com/elFarto/nvidia-vaapi-driver"
-SRC_URI="https://github.com/elFarto/${PN}/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/elFarto/${PN}/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/elFarto/${PN}/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
@@ -19,6 +22,6 @@ DEPEND="media-libs/gst-plugins-bad
 	media-libs/libglvnd"
 RDEPEND="${DEPEND}"
 
-PATCHES=(
-	"${FILESDIR}/${PN}-01-install-path.patch"
-)
+PATCHES=( "${FILESDIR}/${PN}-01-install-path.patch" )
+
+S="${WORKDIR}/${PN}-${MY_COMMIT}"
