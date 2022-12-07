@@ -5,7 +5,7 @@ EAPI=8
 
 inherit meson
 
-MY_COMMIT="6e8b0d067c52c3a7e0c3de745337e6e733c59207"
+MY_COMMIT="a79b9a4f5bbefb0341d3fda087306c0ca183b918"
 
 DESCRIPTION="A VA-API implemention using NVIDIA's NVDEC"
 HOMEPAGE="https://github.com/elFarto/nvidia-vaapi-driver"
