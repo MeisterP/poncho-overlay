@@ -25,3 +25,15 @@ RDEPEND="${DEPEND}"
 PATCHES=( "${FILESDIR}/${PN}-01-install-path.patch" )
 
 S="${WORKDIR}/${PN}-${MY_COMMIT}"
+
+src_install() {
+	meson_src_install
+
+	newenvd - 99vaapi <<-EOF
+		# Controls which backend this library uses. Either egl (default), or direct
+		#NVD_BACKEND=direct
+
+		# Controls the maximum concurrent instances of the driver will be allowed per-process
+		#NVD_MAX_INSTANCES=
+	EOF
+}
