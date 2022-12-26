@@ -1,7 +1,7 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 DESCRIPTION="EFI-Shell - provides native UDK implemenations of a UEFI Shell 2.0"
 HOMEPAGE="https://github.com/tianocore/tianocore.github.io/wiki/EDK-II"
