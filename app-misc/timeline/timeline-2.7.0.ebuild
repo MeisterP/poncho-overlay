@@ -9,7 +9,7 @@ PLOCALES="ca de el es eu fr gl he it ko lt nl pl pt pt_BR ru sv tr vi zh_CN"
 inherit desktop plocale xdg python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
-HOMEPAGE="http://thetimelineproj.sourceforge.net/"
+HOMEPAGE="https://thetimelineproj.sourceforge.net/"
 SRC_URI="mirror://sourceforge/thetimelineproj/${P}.zip"
 
 LICENSE="GPL-3 CC-BY-SA-3.0"
