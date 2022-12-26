@@ -5,4 +5,7 @@
 		<email>poncho@spahan.ch</email>
 		<name>Poncho</name>
 	</maintainer>
+	<upstream>
+		<remote-id type="freedesktop-gitlab">hadess/iio-sensor-proxy</remote-id>
+	</upstream>
 </pkgmetadata>
