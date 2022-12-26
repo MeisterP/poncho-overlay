@@ -1,9 +1,10 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
-inherit cmake
+inherit cmake udev
+
 MY_PN="libwebcam"
 MY_P="${MY_PN}-src-${PV}"
 
@@ -28,4 +29,12 @@ src_install() {
 
 	rm -v "${D}"/usr/share/man/man1/*.gz || die
 	newman "${WORKDIR}"/libwebcam-${PV}/uvcdynctrl/uvcdynctrl.1_ uvcdynctrl.1
+}
+
+pkg_postinst() {
+	udev_reload
+}
+
+pkg_postrm() {
+	udev_reload
 }
