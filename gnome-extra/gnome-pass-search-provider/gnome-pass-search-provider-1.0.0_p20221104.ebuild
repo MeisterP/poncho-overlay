@@ -1,13 +1,13 @@
 # Copyright 2019-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
-PYTHON_COMPAT=( python3_{8..10} )
+PYTHON_COMPAT=( python3_{8..11} )
 
 inherit desktop systemd python-single-r1
 
-COMMIT="7fb89aebd23649c18345486a642bc0c8bc85479c"
+COMMIT="6789843eeb77821d6050e58b436ebbc81d13f890"
 
 DESCRIPTION="Pass password manager search provider for gnome-shell"
 HOMEPAGE="https://github.com/jle64/gnome-pass-search-provider"
