@@ -1,12 +1,13 @@
 # Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
+
 PYTHON_COMPAT=( python3_{8..10} )
 
 inherit python-single-r1 autotools optfeature
 
-MY_COMMIT="5e5cdacea6e55544064f8b10e0b49bbe2aa044d9"
+MY_COMMIT="55465b8cf6b6b48fb45da43a8579ad335809c99a"
 
 DESCRIPTION="An implementation of the MPRIS 2 interface as a client for MPD"
 HOMEPAGE="https://github.com/eonpatapon/mpDris2"
