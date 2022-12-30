@@ -5,4 +5,8 @@
 		<email>poncho@spahan.ch</email>
 		<name>Poncho</name>
 	</maintainer>
+	<upstream>
+		<remote-id type="github">CSchoel/nolds</remote-id>
+		<remote-id type="pypi">nolds</remote-id>
+	</upstream>
 </pkgmetadata>
