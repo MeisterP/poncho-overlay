@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{8..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="33ba1c03ecded8e919b916f64d5768c499fd790d"
+MY_COMMIT="abb69b8fb5660d39147c16cd29c92ca2a1e0ed69"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
