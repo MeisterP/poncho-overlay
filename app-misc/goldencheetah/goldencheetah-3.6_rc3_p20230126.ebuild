@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{9..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="b689d29653a9d6d87786319e8ed62cf195482adb"
+MY_COMMIT="b6fae05d4853df70145825851adb271ccc385567"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -51,9 +51,7 @@ DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
 
-src_prepare() {
-	default
-
+src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
@@ -70,13 +68,10 @@ src_prepare() {
 		DEFINES += GC_WANT_ROBOT
 	EOF
 
-	cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
-	sed -i -e "s:/usr/local/:/usr/:" qwt/qwtconfig.pri || die
+	sed -e "s:/usr/local/:/usr/:" qwt/qwtconfig.pri.in > qwt/qwtconfig.pri || die
 
 	sip -c src/Python/SIP src/Python/SIP/goldencheetah.sip || die
-}
 
-src_configure() {
 	replace-flags -O? -O3
 	eqmake5
 }
