@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{9..10} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="11decfc508b510ec73d4c898d091ef0ccb98662a"
+MY_COMMIT="13167e021cc5280e35dd4952273bc454a714b476"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -15,7 +15,7 @@ SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.tar
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 IUSE=""
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
@@ -33,6 +33,7 @@ DEPEND="${PYTHON_DEPS}
 	dev-qt/qtbluetooth:5
 	dev-qt/qtcharts:5
 	dev-qt/qtconcurrent:5
+	dev-qt/qtmultimedia:5[widgets]
 	dev-qt/qtpositioning:5
 	dev-qt/qtserialport:5
 	dev-qt/qtsql:5
