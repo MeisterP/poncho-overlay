@@ -5,4 +5,8 @@
 		<email>poncho@spahan.ch</email>
 		<name>Poncho</name>
 	</maintainer>
+	<upstream>
+		<remote-id type="github">chasmani/piecewise-regression</remote-id>
+		<remote-id type="pypi">piecewise-regression</remote-id>
+	</upstream>
 </pkgmetadata>
