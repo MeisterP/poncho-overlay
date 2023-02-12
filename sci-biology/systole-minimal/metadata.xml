@@ -5,4 +5,8 @@
 		<email>poncho@spahan.ch</email>
 		<name>Poncho</name>
 	</maintainer>
+	<upstream>
+		<remote-id type="github">embodied-computation-group/systole</remote-id>
+		<remote-id type="pypi">systole</remote-id>
+	</upstream>
 </pkgmetadata>

@@ -4,7 +4,7 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_{9..10} )
+PYTHON_COMPAT=( python3_{9..11} )
 inherit distutils-r1
 
 DESCRIPTION="Package for cardiac signal synchrony and analysis"
@@ -13,7 +13,7 @@ HOMEPAGE="
 	https://github.com/embodied-computation-group/systole/
 	https://pypi.org/project/systole/
 	"
-SRC_URI="https://github.com/embodied-computation-group/systole/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/embodied-computation-group/systole/archive/refs/tags/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
