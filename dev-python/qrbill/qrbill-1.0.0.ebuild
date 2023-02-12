@@ -4,7 +4,8 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
-PYTHON_COMPAT=( python3_10 )
+PYTHON_COMPAT=( python3_{9..10} )
+
 inherit distutils-r1
 
 DESCRIPTION="A library to generate Swiss QR-bill payment slips"
@@ -22,8 +23,6 @@ RDEPEND="dev-python/iso3166[${PYTHON_USEDEP}]
 	dev-python/qrcode[${PYTHON_USEDEP}]
 	dev-python/svgwrite[${PYTHON_USEDEP}]"
 BDEPEND=""
-
-S=${WORKDIR}/swiss-qr-bill-${PV}
 
 src_prepare() {
 	rm -rf tests || die
