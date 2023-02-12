@@ -5,4 +5,8 @@
 		<email>poncho@spahan.ch</email>
 		<name>Poncho</name>
 	</maintainer>
+	<upstream>
+		<remote-id type="github">sukhbinder/intersection</remote-id>
+		<remote-id type="pypi">intersect</remote-id>
+	</upstream>
 </pkgmetadata>
