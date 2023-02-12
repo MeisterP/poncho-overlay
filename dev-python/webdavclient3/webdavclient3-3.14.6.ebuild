@@ -3,12 +3,14 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{9..10} )
+DISTUTILS_USE_PEP517=setuptools
+PYTHON_COMPAT=( python3_{9..11} )
+
 inherit distutils-r1
 
 DESCRIPTION="Python WebDAV Client 3"
 HOMEPAGE="https://github.com/ezhov-evgeny/webdav-client-python-3"
-SRC_URI="https://github.com/ezhov-evgeny/webdav-client-python-3/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/ezhov-evgeny/webdav-client-python-3/archive/refs/tags/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
@@ -29,6 +31,7 @@ BDEPEND=""
 
 S=${WORKDIR}/webdav-client-python-3-${PV}
 
-python_prepare() {
+src_prepare() {
+	default
 	sed -i -e "s/find_packages()/find_packages(exclude=['tests'])/" setup.py || die
 }
