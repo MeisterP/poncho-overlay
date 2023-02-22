@@ -6,11 +6,10 @@ EAPI=8
 DISTUTILS_USE_PEP517=setuptools
 PYTHON_COMPAT=( python3_{9..11} )
 
-inherit distutils-r1
+inherit distutils-r1 pypi
 
 DESCRIPTION="Library that simplifies creating user interfaces with wxPython"
 HOMEPAGE="https://github.com/thetimelineproj/humblewx"
-SRC_URI="mirror://pypi/h/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
