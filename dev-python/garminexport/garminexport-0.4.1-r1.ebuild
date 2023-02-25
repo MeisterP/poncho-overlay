@@ -27,5 +27,7 @@ src_prepare() {
 		PATCHES+=( "${FILESDIR}/0.3.0-use-the-same-filename-as-edge.patch" )
 	fi
 
-	distutils-r1_python_prepare_all
+	sed -i -e "s:>=3.5.\*:>=3.5:" setup.py || die
+
+	default
 }
