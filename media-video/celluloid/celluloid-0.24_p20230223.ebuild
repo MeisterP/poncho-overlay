@@ -1,11 +1,11 @@
-# Copyright 1999-2022 Gentoo Authors
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 inherit gnome2-utils meson xdg
 
-MY_COMMIT="6f727c165995867ab3a8105069c5ff1f693f18d0"
+MY_COMMIT="71257642d8a106e81af2ac0806449e688a67a59a"
 
 DESCRIPTION="A simple GTK+ frontend for mpv"
 HOMEPAGE="https://celluloid-player.github.io/"
