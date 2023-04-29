@@ -24,7 +24,7 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 DEPEND="$(python_gen_cond_dep '
 	dev-python/dbus-python[${PYTHON_USEDEP}]
 	dev-python/pygobject:3[${PYTHON_USEDEP}]
-	dev-python/python-mpd[${PYTHON_USEDEP}]
+	dev-python/python-mpd2[${PYTHON_USEDEP}]
 	')"
 
 RDEPEND="${DEPEND}
