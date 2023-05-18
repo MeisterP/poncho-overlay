@@ -20,8 +20,6 @@ DEPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
-PATCHES=( "${FILESDIR}/fix_the_404_errors.patch" )
-
 src_prepare() {
 	if ! use vanilla; then
 		PATCHES+=( "${FILESDIR}/0.3.0-use-the-same-filename-as-edge.patch" )
