@@ -28,7 +28,9 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}"/${PN}-4.18-darwin.patch "${FILESDIR}"/${PN}-4.19.25-pyframe_getback.patch)
+PATCHES=( "${FILESDIR}"/${PN}-4.18-darwin.patch
+	"${FILESDIR}"/${PN}-4.19.25-py_ssize_t_clean.patch
+	"${FILESDIR}"/${PN}-4.19.25-pyframe_getback.patch )
 
 src_prepare() {
 	# Sub-slot sanity check
