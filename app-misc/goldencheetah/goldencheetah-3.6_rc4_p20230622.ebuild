@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..11} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="dc3436dc65bdfa5ad0fa80552ca30c738c74508e"
+MY_COMMIT="7173437ab259404f8f960b113a14bb2e25da7d85"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -51,8 +51,6 @@ S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
-
-PATCHES=( "${FILESDIR}/garmin-edge-840.patch" )
 
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
