@@ -3,7 +3,7 @@
 
 EAPI=8
 
-DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_USE_PEP517=pdm-backend
 PYTHON_COMPAT=( python3_{9..11} )
 
 inherit distutils-r1 pypi
@@ -17,6 +17,5 @@ KEYWORDS="~amd64"
 
 RESTRICT="test"
 
-RDEPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
-	dev-python/requests[${PYTHON_USEDEP}]"
+RDEPEND="dev-python/garth[${PYTHON_USEDEP}]"
 BDEPEND=""
