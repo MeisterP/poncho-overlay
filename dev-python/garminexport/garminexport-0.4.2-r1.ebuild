@@ -5,6 +5,7 @@ EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
 PYTHON_COMPAT=( python3_{9..11} )
+
 inherit distutils-r1 pypi
 
 DESCRIPTION="Garmin Connect activity exporter and backup tool"
@@ -12,20 +13,26 @@ HOMEPAGE="https://github.com/petergardfjall/garminexport https://pypi.org/projec
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="+vanilla"
 KEYWORDS="~amd64"
 
-DEPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
-	dev-python/python-dateutil[${PYTHON_USEDEP}]"
-RDEPEND="${DEPEND}"
+IUSE="+vanilla"
+
+REPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
+	dev-python/python-dateutil[${PYTHON_USEDEP}]
+	dev-python/garth[${PYTHON_USEDEP}]"
 BDEPEND=""
+
+RESTRICT="test"
+
+# https://github.com/petergardfjall/garminexport/pull/104
+PATCHES=( "${FILESDIR}/0.4.2-garth.patch" )
 
 src_prepare() {
 	if ! use vanilla; then
-		PATCHES+=( "${FILESDIR}/0.3.0-use-the-same-filename-as-edge.patch" )
+		PATCHES+=( "${FILESDIR}/0.4.2-use-the-same-filename-as-edge.patch" )
 	fi
 
-	sed -i -e "s:>=3.5.\*:>=3.5:" setup.py || die
+	sed -e 's/license_file/license_files/g' -i setup.cfg || die
 
 	default
 }
