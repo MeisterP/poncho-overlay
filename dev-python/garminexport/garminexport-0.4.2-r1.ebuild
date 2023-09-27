@@ -17,7 +17,7 @@ KEYWORDS="~amd64"
 
 IUSE="+vanilla"
 
-REPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
+RDEPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
 	dev-python/python-dateutil[${PYTHON_USEDEP}]
 	dev-python/garth[${PYTHON_USEDEP}]"
 BDEPEND=""
