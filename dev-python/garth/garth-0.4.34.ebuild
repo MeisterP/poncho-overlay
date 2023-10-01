@@ -19,7 +19,7 @@ RESTRICT="test"
 
 RDEPEND="
 	>=dev-python/requests-2.0.0[${PYTHON_USEDEP}]
-	>=dev-python/pydantic-2.0.0[${PYTHON_USEDEP}]
+	>=dev-python/pydantic-1.10.13[${PYTHON_USEDEP}]
 	>=dev-python/requests-oauthlib-1.3.1[${PYTHON_USEDEP}]
 "
 BDEPEND=""
