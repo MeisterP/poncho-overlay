@@ -5,12 +5,12 @@ EAPI=8
 
 inherit gnome2-utils meson xdg
 
-#MY_COMMIT="a609dd033bb1ba6e29415e89c1876c6545f731c1"
+MY_COMMIT="a61b4762c64d39af71dc421540dd5aec16860942"
 
 DESCRIPTION="A simple GTK+ frontend for mpv"
 HOMEPAGE="https://celluloid-player.github.io/"
-SRC_URI="https://github.com/celluloid-player/celluloid/releases/download/v${PV}/${P}.tar.xz"
-#SRC_URI="https://github.com/celluloid-player/celluloid/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+#SRC_URI="https://github.com/celluloid-player/celluloid/releases/download/v${PV}/${P}.tar.xz"
+SRC_URI="https://github.com/celluloid-player/celluloid/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3+"
 SLOT="0"
@@ -26,7 +26,7 @@ BDEPEND="dev-util/glib-utils
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig"
 
-#S="${WORKDIR}/celluloid-${MY_COMMIT}"
+S="${WORKDIR}/celluloid-${MY_COMMIT}"
 
 pkg_postinst() {
 	xdg_pkg_postinst
