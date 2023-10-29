@@ -17,5 +17,5 @@ KEYWORDS="~amd64"
 
 RESTRICT="test"
 
-RDEPEND="dev-python/garth[${PYTHON_USEDEP}]"
-BDEPEND=""
+RDEPEND="dev-python/garth[${PYTHON_USEDEP}]
+	dev-python/withings-sync[${PYTHON_USEDEP}]"
