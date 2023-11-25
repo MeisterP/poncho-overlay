@@ -6,8 +6,8 @@ EAPI="8"
 inherit xdg
 
 DESCRIPTION="Free, easy, personal accounting for everyone"
-HOMEPAGE="http://homebank.free.fr/index.php"
-SRC_URI="http://homebank.free.fr/public/sources/${P}.tar.gz"
+HOMEPAGE="https://www.gethomebank.org/"
+SRC_URI="https://www.gethomebank.org/public/sources/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
