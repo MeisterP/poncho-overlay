@@ -20,7 +20,6 @@ IUSE="+vanilla"
 RDEPEND="dev-python/cloudscraper[${PYTHON_USEDEP}]
 	dev-python/python-dateutil[${PYTHON_USEDEP}]
 	dev-python/garth[${PYTHON_USEDEP}]"
-BDEPEND=""
 
 RESTRICT="test"
 

@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -10,10 +10,8 @@ SRC_URI="https://github.com/tianocore/edk2/releases/download/edk2-stable201911/S
 LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
 BDEPEND="app-arch/unzip"
-DEPEND=""
 RDEPEND="${DEPEND}"
 
 src_install() {

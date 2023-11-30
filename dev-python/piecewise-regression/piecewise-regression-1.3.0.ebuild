@@ -29,7 +29,6 @@ RDEPEND="
 	dev-python/scipy[${PYTHON_USEDEP}]
 	dev-python/statsmodels[${PYTHON_USEDEP}]
 	"
-BDEPEND=""
 
 DOCS=( docs/README.rst )
 

@@ -19,7 +19,6 @@ RDEPEND="
 	dev-python/numpy[${PYTHON_USEDEP}]
 	sci-libs/scikit-learn[${PYTHON_USEDEP}]
 	"
-BDEPEND=""
 
 PATCHES=( "${FILESDIR}/0001-drop-support-for-python-2.7-don-t-depend-on-future.patch" )
 

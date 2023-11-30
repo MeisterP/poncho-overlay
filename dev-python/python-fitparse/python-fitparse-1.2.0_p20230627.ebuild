@@ -18,11 +18,8 @@ SRC_URI="https://github.com/MeisterP/python-fitparse/archive/${COMMIT}.tar.gz ->
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
-DEPEND=""
 RDEPEND="${DEPEND}"
-BDEPEND=""
 
 DOCS=( README.md CONTRIBUTING.md )
 

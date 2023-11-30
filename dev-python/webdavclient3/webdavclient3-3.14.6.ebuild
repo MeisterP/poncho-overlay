@@ -27,7 +27,6 @@ DEPEND="dev-python/certifi[${PYTHON_USEDEP}]
 	dev-python/urllib3[${PYTHON_USEDEP}]"
 	#	dev-python/oauthlib[${PYTHON_USEDEP}]
 RDEPEND="${DEPEND}"
-BDEPEND=""
 
 S=${WORKDIR}/webdav-client-python-3-${PV}
 

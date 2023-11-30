@@ -25,7 +25,6 @@ RESTRICT="test"
 RDEPEND="
 	dev-python/numpy[${PYTHON_USEDEP}]
 	"
-BDEPEND=""
 
 DOCS=( readme.md )
 

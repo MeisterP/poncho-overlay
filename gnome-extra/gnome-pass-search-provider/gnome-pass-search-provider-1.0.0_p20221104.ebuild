@@ -16,7 +16,6 @@ SRC_URI="https://github.com/jle64/gnome-pass-search-provider/archive/${COMMIT}.t
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 

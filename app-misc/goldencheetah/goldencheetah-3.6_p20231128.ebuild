@@ -16,7 +16,6 @@ SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.tar
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 

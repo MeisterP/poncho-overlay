@@ -26,7 +26,6 @@ RDEPEND="
 	dev-python/scipy[${PYTHON_USEDEP}]
 	dev-python/pandas[${PYTHON_USEDEP}]
 	"
-BDEPEND=""
 
 S=${WORKDIR}/${P/-minimal/}
 

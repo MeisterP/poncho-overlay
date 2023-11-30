@@ -17,7 +17,6 @@ SRC_URI="https://github.com/eonpatapon/mpDris2/archive/${MY_COMMIT}.tar.gz -> ${
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 

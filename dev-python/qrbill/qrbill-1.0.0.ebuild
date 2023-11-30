@@ -21,7 +21,6 @@ RDEPEND="dev-python/iso3166[${PYTHON_USEDEP}]
 	dev-python/python-stdnum[${PYTHON_USEDEP}]
 	dev-python/qrcode[${PYTHON_USEDEP}]
 	dev-python/svgwrite[${PYTHON_USEDEP}]"
-BDEPEND=""
 
 src_prepare() {
 	rm -rf tests || die

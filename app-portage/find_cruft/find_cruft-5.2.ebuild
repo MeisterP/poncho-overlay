@@ -12,7 +12,6 @@ SRC_URI="https://github.com/vaeth/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
 RDEPEND=">=dev-lang/perl-5.8"
 #	|| ( >=dev-lang/perl-5.9.4 >=virtual/perl-File-Spec-3.0 )

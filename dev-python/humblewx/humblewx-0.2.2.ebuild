@@ -14,7 +14,6 @@ HOMEPAGE="https://github.com/thetimelineproj/humblewx"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
 
 DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}"
