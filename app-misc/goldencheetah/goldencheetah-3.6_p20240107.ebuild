@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..12} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="31636b196d5cb7bab0595f420697511672872a63"
+MY_COMMIT="84a024db21184df4fc0f7f1a935f6a3383426581"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -68,7 +68,7 @@ src_configure() {
 		DEFINES += GC_WANT_ROBOT
 	EOF
 
-	sed -e "s:/usr/local/:/usr/:" qwt/qwtconfig.pri.in > qwt/qwtconfig.pri || die
+	cp -v qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
 
 	sip -c src/Python/SIP src/Python/SIP/goldencheetah.sip || die
 
