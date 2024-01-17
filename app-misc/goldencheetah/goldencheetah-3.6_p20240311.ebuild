@@ -31,15 +31,17 @@ BDEPEND="${PYTHON_DEPS}
 
 DEPEND="${PYTHON_DEPS}
 	dev-libs/libical
-	dev-qt/qtbluetooth:5
-	dev-qt/qtcharts:5
-	dev-qt/qtconcurrent:5
-	dev-qt/qtmultimedia:5[widgets]
-	dev-qt/qtpositioning:5
-	dev-qt/qtserialport:5
-	dev-qt/qtsql:5
-	dev-qt/qtsvg:5
-	dev-qt/qtwebengine:5[widgets]
+	dev-qt/qt5compat
+	dev-qt/qtbase:6[concurrent,gui,network,opengl,sql,sqlite,widgets,xml]
+	dev-qt/qtcharts:6
+	dev-qt/qtconnectivity:6[bluetooth]
+	dev-qt/qtmultimedia:6
+	dev-qt/qtpositioning:6
+	dev-qt/qtserialport:6
+	dev-qt/qtsvg:6
+	dev-qt/qttools:6[linguist]
+	dev-qt/qtwebchannel:6
+	dev-qt/qtwebengine:6[widgets]
 	media-libs/libsamplerate
 	media-video/vlc
 	sci-libs/gsl:=
@@ -54,7 +56,7 @@ FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
-		QMAKE_LRELEASE = $(qt5_get_bindir)/lrelease
+		QMAKE_LRELEASE = $(qt6_get_bindir)/lrelease
 		QMAKE_MOVE = cp
 		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical libvlc python3-embed
 
@@ -73,7 +75,7 @@ src_configure() {
 	sip -c src/Python/SIP src/Python/SIP/goldencheetah.sip || die
 
 	replace-flags -O? -O3
-	eqmake5
+	eqmake6
 }
 
 src_install() {
