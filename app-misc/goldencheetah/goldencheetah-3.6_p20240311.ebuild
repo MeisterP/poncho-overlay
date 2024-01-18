@@ -41,7 +41,7 @@ DEPEND="${PYTHON_DEPS}
 	dev-qt/qtsvg:6
 	dev-qt/qttools:6[linguist]
 	dev-qt/qtwebchannel:6
-	dev-qt/qtwebengine:6[widgets]
+	dev-qt/qtwebengine:6[widgets,qml]
 	media-libs/libsamplerate
 	media-video/vlc
 	sci-libs/gsl:=
