@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -7,15 +7,8 @@ PYTHON_COMPAT=( python3_{10..12} )
 inherit python-r1 toolchain-funcs
 
 DESCRIPTION="Python bindings generator for C/C++ libraries"
-HOMEPAGE="https://www.riverbankcomputing.com/software/sip/"
-
-MY_P=${PN}-${PV/_pre/.dev}
-if [[ ${PV} == *_pre* ]]; then
-	SRC_URI="https://dev.gentoo.org/~pesa/distfiles/${MY_P}.tar.gz"
-else
-	SRC_URI="https://www.riverbankcomputing.com/static/Downloads/${PN}/${PV}/${MY_P}.tar.gz"
-fi
-S=${WORKDIR}/${MY_P}
+HOMEPAGE="https://github.com/Python-SIP/sip"
+SRC_URI="https://www.riverbankcomputing.com/static/Downloads/${PN}/${PV}/${P}.tar.gz"
 
 # Sub-slot based on SIP_API_MAJOR_NR from siplib/sip.h
 SLOT="0/12"
@@ -28,9 +21,15 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}"/${PN}-4.18-darwin.patch
-	"${FILESDIR}"/${PN}-4.19.25-py_ssize_t_clean.patch
-	"${FILESDIR}"/${PN}-4.19.25-pyframe_getback.patch )
+# Fedora patches
+# see https://src.fedoraproject.org/rpms/sip
+PATCHES=(
+	"${FILESDIR}"/${PN}-4.18-no_rpath.patch
+	"${FILESDIR}"/${PN}-4.18-no_strip.patch
+	"${FILESDIR}"/${PN}-4.19.18-no_hardcode_sip_so.patch
+	"${FILESDIR}"/${P}-pyframe_getback.patch
+	"${FILESDIR}"/${P}-py_ssize_t_clean.patch
+	)
 
 src_prepare() {
 	# Sub-slot sanity check

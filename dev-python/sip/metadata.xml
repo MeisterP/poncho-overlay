@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="project">
-		<email>qt@gentoo.org</email>
-		<name>Gentoo Qt Project</name>
+	<maintainer type="person">
+		<email>poncho@spahan.ch</email>
+		<name>Poncho</name>
 	</maintainer>
 	<upstream>
-		<maintainer status="active">
-			<email>phil@riverbankcomputing.com</email>
-			<name>Phil Thompson</name>
-		</maintainer>
-		<remote-id type="pypi">sip</remote-id>
+		<remote-id type="github">Python-SIP/sip</remote-id>
 	</upstream>
 </pkgmetadata>
