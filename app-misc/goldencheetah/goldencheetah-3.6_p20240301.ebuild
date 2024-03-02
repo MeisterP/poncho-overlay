@@ -7,11 +7,13 @@ PYTHON_COMPAT=( python3_{10..12} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="2afd38cb3086cd3068bf4e4d444dc1210123afb5"
+MY_COMMIT="dbf8877c53a432c95a28ecf9cd459827598974be"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
+
 SRC_URI="https://github.com/GoldenCheetah/GoldenCheetah/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -44,8 +46,6 @@ DEPEND="${PYTHON_DEPS}
 	virtual/libusb:1"
 
 RDEPEND="${DEPEND}"
-
-S="${WORKDIR}/GoldenCheetah-${MY_COMMIT}"
 
 DOCS=( README.md CONTRIBUTING.md )
 
