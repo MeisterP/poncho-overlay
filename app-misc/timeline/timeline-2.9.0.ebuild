@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -10,7 +10,7 @@ inherit desktop plocale xdg python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="https://thetimelineproj.sourceforge.net/"
-SRC_URI="mirror://sourceforge/thetimelineproj/${P}.zip"
+SRC_URI="https://downloads.sourceforge.net/thetimelineproj/${P}.zip"
 
 LICENSE="GPL-3 CC-BY-SA-3.0"
 SLOT="0"
