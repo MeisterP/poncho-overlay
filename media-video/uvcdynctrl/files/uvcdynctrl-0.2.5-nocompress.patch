@@ -1,0 +1,20 @@
+--- a/uvcdynctrl/CMakeLists.txt 2022-08-09 15:30:43.158579983 +0200
++++ b/uvcdynctrl/CMakeLists.txt	2022-08-09 15:31:25.661930433 +0200
+@@ -58,7 +58,7 @@
+ 
+ #create man pages
+ execute_process (
+-	COMMAND			sh -c "rm -f ${CMAKE_CURRENT_BINARY_DIR}/*.gz; cp ${CMAKE_CURRENT_SOURCE_DIR}/uvcdynctrl.1_ ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl.1; cp ${CMAKE_CURRENT_SOURCE_DIR}/uvcdynctrl.1_ ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl-${UVCDYNCTRL_VERSION}.1; gzip --best ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl-${UVCDYNCTRL_VERSION}.1; gzip --best ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl.1;"
++	COMMAND			sh -c "cp ${CMAKE_CURRENT_SOURCE_DIR}/uvcdynctrl.1_ ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl.1; cp ${CMAKE_CURRENT_SOURCE_DIR}/uvcdynctrl.1_ ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl-${UVCDYNCTRL_VERSION}.1;"
+ 	RESULT_VARIABLE		MAN_BUILD_RESULT
+ 	
+ )
+@@ -114,7 +114,7 @@
+ 	PATTERN ".git" EXCLUDE
+ )
+ install (
+-	FILES	${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl.1.gz ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl-${UVCDYNCTRL_VERSION}.1.gz 
++	FILES	${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl.1 ${CMAKE_CURRENT_BINARY_DIR}/uvcdynctrl-${UVCDYNCTRL_VERSION}.1
+ 	DESTINATION share/man/man1
+ )
+ 

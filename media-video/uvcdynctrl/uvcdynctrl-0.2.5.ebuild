@@ -1,4 +1,4 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -6,29 +6,27 @@ EAPI=8
 inherit cmake udev
 
 MY_PN="libwebcam"
-MY_P="${MY_PN}-src-${PV}"
 
-HOMEPAGE="https://sourceforge.net/projects/libwebcam/"
 DESCRIPTION="Manage dynamic controls in uvcvideo"
-SRC_URI="mirror://sourceforge/${MY_PN}/${MY_P}.tar.gz"
-
-KEYWORDS="~amd64"
-SLOT="0"
-LICENSE="GPL-3"
-IUSE=""
-
-DEPEND="dev-libs/libxml2"
-RDEPEND="${DEPEND}"
+HOMEPAGE="https://sourceforge.net/projects/libwebcam/"
+SRC_URI="https://downloads.sourceforge.net/${MY_PN}/${MY_PN}-src-${PV}.tar.gz"
 
 S="${WORKDIR}/${MY_PN}-${PV}"
 
+LICENSE="GPL-3"
+SLOT="0"
+KEYWORDS="~amd64"
+IUSE="static-libs"
+
+DEPEND="dev-libs/libxml2:*"
+RDEPEND="${DEPEND}"
+
+PATCHES=( "${FILESDIR}/${P}-nocompress.patch" )
+
 src_install() {
 	cmake_src_install
-	rm -v "${D}"/usr/lib*/${MY_PN}.a || die
-	rm -v "${D}"/usr/share/uvcdynctrl/data/046d/logitech.xml~
-
-	rm -v "${D}"/usr/share/man/man1/*.gz || die
-	newman "${WORKDIR}"/libwebcam-${PV}/uvcdynctrl/uvcdynctrl.1_ uvcdynctrl.1
+	use static-libs || rm -fr "${D}"/usr/lib*/${MY_PN}.a
+	rm -f "${D}"/usr/share/uvcdynctrl/data/046d/logitech.xml~
 }
 
 pkg_postinst() {
