@@ -5,11 +5,11 @@ EAPI=8
 
 inherit gnome2-utils meson xdg
 
-DESCRIPTION="A simple GTK+ frontend for mpv"
-HOMEPAGE="https://celluloid-player.github.io/ https://github.com/celluloid-player/celluloid"
+DESCRIPTION="Simple GTK+ frontend for mpv"
+HOMEPAGE="https://celluloid-player.github.io/"
 #SRC_URI="https://github.com/celluloid-player/celluloid/releases/download/v${PV}/${P}.tar.xz"
 
-MY_COMMIT="6c2b83e8318fb4383ed5f9da3108aae1bf374d12"
+MY_COMMIT="a1ec3f920bc9e8869224b438a145250ae027fcc7"
 SRC_URI="https://github.com/celluloid-player/celluloid/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/celluloid-${MY_COMMIT}"
 
@@ -17,7 +17,7 @@ LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64"
 
-RDEPEND=">=dev-libs/glib-2.66
+RDEPEND=">=dev-libs/glib-2.66:2
 	>=gui-libs/gtk-4.6.1:4
 	>=gui-libs/libadwaita-1.2.0:1
 	>=media-video/mpv-0.32:=[libmpv]
