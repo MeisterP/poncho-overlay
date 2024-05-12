@@ -10,9 +10,7 @@ HOMEPAGE="
 	https://www.gethomebank.org/
 	https://launchpad.net/homebank
 "
-
-SRC_URI="https://www.gethomebank.org/public/sources/homebank-${PV//_/-}.tar.gz"
-S="${WORKDIR}/homebank-${PV//_/-}"
+SRC_URI="https://www.gethomebank.org/public/sources/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
