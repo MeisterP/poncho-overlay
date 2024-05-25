@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..12} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="cfb8c2f6da61a4bf5d1e98c2f7a5b47194493b40"
+MY_COMMIT="2ac2cd66a145c2da7e1bb3fde2989ef3b1f0db35"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -52,6 +52,8 @@ RDEPEND="${DEPEND}"
 DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
+
+PATCHES=( "${FILESDIR}/0001-qwt-fix-QwtLegend-colors-with-qt-6.7.patch" )
 
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
