@@ -10,7 +10,7 @@ DESCRIPTION="Python bindings generator for C/C++ libraries"
 HOMEPAGE="https://github.com/Python-SIP/sip"
 SRC_URI="https://www.riverbankcomputing.com/static/Downloads/${PN}/${PV}/${P}.tar.gz"
 
-LICENSE="|| ( GPL-2 GPL-3 SIP )"
+LICENSE="|| ( GPL-2 GPL-3 )"
 # Sub-slot based on SIP_API_MAJOR_NR from siplib/sip.h
 SLOT="0/12"
 KEYWORDS="~amd64"
