@@ -15,6 +15,8 @@ HOMEPAGE="https://github.com/dtcooper/python-fitparse https://pythonhosted.org/f
 #SRC_URI="https://github.com/dtcooper/python-fitparse/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 SRC_URI="https://github.com/MeisterP/python-fitparse/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 
+S=${WORKDIR}/python-fitparse-${COMMIT}
+
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
@@ -22,8 +24,6 @@ KEYWORDS="~amd64"
 RDEPEND="${DEPEND}"
 
 DOCS=( README.md CONTRIBUTING.md )
-
-S=${WORKDIR}/python-fitparse-${COMMIT}
 
 python_test() {
 	"${EPYTHON}" ./run_tests.py || die "Tests fail with ${EPYTHON}"
