@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..12} )
 
 inherit python-single-r1 autotools optfeature
 
-MY_COMMIT="4a7dc031ca6b3f944983deede5309237115e27c4"
+MY_COMMIT="e40238ba1d3c7a81d34e5f96b150e40b5b29d4af"
 
 DESCRIPTION="An implementation of the MPRIS 2 interface as a client for MPD"
 
@@ -29,11 +29,6 @@ DEPEND="$(python_gen_cond_dep '
 
 RDEPEND="${DEPEND}
 	${PYTHON_DEPS}"
-
-PATCHES=(
-	"${FILESDIR}/0001-Add-managed-option-to-disable-timer.patch"
-	"${FILESDIR}/0002-mpDris2.service.in-remove-WantedBy-default.target.patch"
-)
 
 src_prepare() {
 	default
