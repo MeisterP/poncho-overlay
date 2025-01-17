@@ -1,11 +1,11 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2024-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 inherit cmake udev linux-info
 
-MY_COMMIT="2c14b222a432e34750bb3929c620bbdffd1c75be"
+MY_COMMIT="bed2c1f00dc105c812a8bb6b30df3e0dbce7cb90"
 
 DESCRIPTION="Forked from libfido2 to provide a FIDO2.1 key management tool"
 HOMEPAGE="https://github.com/token2/fido2-manage"
