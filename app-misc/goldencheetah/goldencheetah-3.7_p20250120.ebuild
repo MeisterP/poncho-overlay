@@ -43,7 +43,6 @@ DEPEND="${PYTHON_DEPS}
 	dev-qt/qtwebchannel:6
 	dev-qt/qtwebengine:6[widgets,qml]
 	media-libs/libsamplerate
-	media-video/vlc
 	sci-libs/gsl:=
 	virtual/libusb:1"
 
@@ -58,15 +57,14 @@ src_configure() {
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt6_get_bindir)/lrelease
 		QMAKE_MOVE = cp
-		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical libvlc python3-embed
+		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical python3-embed
 
 		LIBUSB_INSTALL = true
 		LIBUSB_USE_V_1 = true
 		SAMPLERATE_INSTALL = true
 		ICAL_INSTALL = true
-		VLC_INSTALL = true
 		DEFINES += GC_WANT_PYTHON
-		DEFINES += GC_VIDEO_VLC
+		DEFINES += GC_VIDEO_QT6
 		DEFINES += GC_WANT_ROBOT
 	EOF
 
