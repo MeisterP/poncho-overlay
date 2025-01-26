@@ -18,7 +18,7 @@ declare -g -r -A ZBS_DEPENDENCIES=(
 	[iterm2_themes-12204fc99743d8232e691ac22e058519bfc6ea92de4a11c6dba59b117531c847cd6a.tar.gz]='https://github.com/mbadolato/iTerm2-Color-Schemes/archive/0e23daf59234fc892cba949562d7bf69204594bb.tar.gz'
 	[iterm2_themes-1220cc25b537556a42b0948437c791214c229efb78b551c80b1e9b18d70bf0498620.tar.gz]='https://github.com/mbadolato/iTerm2-Color-Schemes/archive/e030599a6a6e19fcd1ea047c7714021170129d56.tar.gz'
 	[libpng-1220aa013f0c83da3fb64ea6d327f9173fa008d10e28bc9349eac3463457723b1c66.tar.gz]='https://github.com/pnggroup/libpng/archive/refs/tags/v1.6.43.tar.gz'
-	[libxev-12206029de146b685739f69b10a6f08baee86b3d0a5f9a659fa2b2b66c9602078bbf.tar.gz]='https://github.com/mitchellh/libxev/archive/db6a52bafadf00360e675fefa7926e8e6c0e9931.tar.gz'
+	[libxev-1220ebf88622c4d502dc59e71347e4d28c47e033f11b59aff774ae5787565c40999c.tar.gz]='https://github.com/mitchellh/libxev/archive/31eed4e337fed7b0149319e5cdbb62b848c24fbd.tar.gz'
 	[libxml2-122032442d95c3b428ae8e526017fad881e7dc78eab4d558e9a58a80bfbd65a64f7d.tar.gz]='https://github.com/GNOME/libxml2/archive/refs/tags/v2.11.5.tar.gz'
 	[mach-glfw-12206ed982e709e565d536ce930701a8c07edfd2cfdce428683f3f2a601d37696a62.tar.gz]='https://github.com/mitchellh/mach-glfw/archive/37c2995f31abcf7e8378fba68ddcf4a3faa02de0.tar.gz'
 	[oniguruma-1220c15e72eadd0d9085a8af134904d9a0f5dfcbed5f606ad60edc60ebeccd9706bb.tar.gz]='https://github.com/kkos/oniguruma/archive/refs/tags/v6.9.9.tar.gz'
@@ -87,7 +87,6 @@ QA_PRESTRIPPED="usr/bin/ghostty"
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-1.0.2-bzip2-dependency.patch
-	"${FILESDIR}"/${PN}-1.0.2-copy-terminfo-using-installdir.patch
 	"${FILESDIR}"/${PN}-1.0.2-nautilus.patch
 )
 
