@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..12} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="84ad06657eff9b63cf88f8830413a9a53a944b8a"
+MY_COMMIT="95315fd8e7cab6d0be75100b01c3788e1da4b0bf"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -80,7 +80,7 @@ src_install() {
 	dobin src/GoldenCheetah
 	udev_dorules src/Resources/linux/51-garmin-usb.rules
 
-	doicon src/Resources/images/gc.png
+	doicon src/Resources/images-src/gc.svg
 	newmenu - goldencheetah.desktop <<-EOF
 		[Desktop Entry]
 		Version=1.0
