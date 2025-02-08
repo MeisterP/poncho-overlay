@@ -1,14 +1,3 @@
-From 0361a36acea79547bd5742ef0181a3b121518f5b Mon Sep 17 00:00:00 2001
-From: Ivor Hewitt <ivor.hewitt@gmail.com>
-Date: Sat, 25 Jan 2025 22:22:18 +0000
-Subject: [PATCH] qt6 player support
-
----
- src/Train/TrainSidebar.cpp |  40 ++++++-----
- src/Train/VideoWindow.cpp  | 135 ++++++++++++++++++++++++++-----------
- src/Train/VideoWindow.h    |   4 +-
- 3 files changed, 120 insertions(+), 59 deletions(-)
-
 diff --git a/src/Train/TrainSidebar.cpp b/src/Train/TrainSidebar.cpp
 index 64a43c411..86f126b3e 100644
 --- a/src/Train/TrainSidebar.cpp
@@ -470,6 +459,3 @@ index 40c9ff391..6c4e1dd26 100644
  #ifdef GC_VIDEO_QT5
  #include <QMediaContent>
  #endif
--- 
-2.45.3
-
