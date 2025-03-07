@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{10..12} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="01144435082b260ece09611de9de0ef740ee2b05"
+MY_COMMIT="b57e4386cb552d63d89ac17d7d71939cdc454935"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -51,9 +51,6 @@ RDEPEND="${DEPEND}"
 DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
-
-# https://github.com/GoldenCheetah/GoldenCheetah/pull/4609
-PATCHES=( "${FILESDIR}/qt6-player-support.patch" )
 
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
