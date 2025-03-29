@@ -10,7 +10,7 @@ inherit desktop plocale xdg python-single-r1
 
 DESCRIPTION="Application for displaying and navigating events on a timeline"
 HOMEPAGE="https://thetimelineproj.sourceforge.net/"
-SRC_URI="https://downloads.sourceforge.net/thetimelineproj/${P}.zip"
+SRC_URI="https://downloads.sourceforge.net/project/thetimelineproj/thetimelineproj/${PV}/${P}.zip"
 
 LICENSE="GPL-3 CC-BY-SA-3.0"
 SLOT="0"
