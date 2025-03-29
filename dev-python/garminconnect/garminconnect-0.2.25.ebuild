@@ -18,4 +18,4 @@ KEYWORDS="~amd64"
 RESTRICT="test"
 
 RDEPEND=">=dev-python/garth-0.5.2[${PYTHON_USEDEP}]
-	=dev-python/withings-sync-4.2.5[${PYTHON_USEDEP}]"
+	~dev-python/withings-sync-4.2.5[${PYTHON_USEDEP}]"
