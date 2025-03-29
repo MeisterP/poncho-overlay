@@ -20,8 +20,6 @@ RDEPEND="
 	dev-python/scikit-learn[${PYTHON_USEDEP}]
 	"
 
-PATCHES=( "${FILESDIR}/0001-drop-support-for-python-2.7-don-t-depend-on-future.patch" )
-
 src_prepare() {
 	sed -i -e "/'clean': CleanCommand/d" setup.py || die
 	default
