@@ -13,7 +13,9 @@ HOMEPAGE="
 	https://github.com/embodied-computation-group/systole/
 	https://pypi.org/project/systole/
 	"
+
 SRC_URI="https://github.com/embodied-computation-group/systole/archive/refs/tags/v${PV}.tar.gz -> ${P}.gh.tar.gz"
+S=${WORKDIR}/${P/-minimal/}
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -26,8 +28,6 @@ RDEPEND="
 	dev-python/scipy[${PYTHON_USEDEP}]
 	dev-python/pandas[${PYTHON_USEDEP}]
 	"
-
-S=${WORKDIR}/${P/-minimal/}
 
 PATCHES=( "${FILESDIR}/remove-numba-sleepecg.patch" )
 

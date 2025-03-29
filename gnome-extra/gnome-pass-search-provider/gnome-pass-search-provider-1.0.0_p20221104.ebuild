@@ -11,7 +11,9 @@ COMMIT="6789843eeb77821d6050e58b436ebbc81d13f890"
 
 DESCRIPTION="Pass password manager search provider for gnome-shell"
 HOMEPAGE="https://github.com/jle64/gnome-pass-search-provider"
+
 SRC_URI="https://github.com/jle64/gnome-pass-search-provider/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
+S=${WORKDIR}/${PN}-${COMMIT}
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -26,8 +28,6 @@ RDEPEND="${DEPEND}
 		dev-python/fuzzywuzzy[${PYTHON_USEDEP}]
 		dev-python/pygobject:3[${PYTHON_USEDEP}]
 	')"
-
-S=${WORKDIR}/${PN}-${COMMIT}
 
 src_install() {
 	python_scriptinto /usr/lib/gnome-pass-search-provider

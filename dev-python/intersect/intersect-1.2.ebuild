@@ -14,7 +14,9 @@ HOMEPAGE="
 	https://pypi.org/project/intersect/
 	https://github.com/sukhbinder/intersection
 "
+
 SRC_URI="https://github.com/sukhbinder/intersection/archive/${MY_COMMIT}.tar.gz -> ${P}.gh.tar.gz"
+S="${WORKDIR}/intersection-${MY_COMMIT}"
 
 LICENSE="MIT"
 SLOT="0"
@@ -27,8 +29,6 @@ RDEPEND="
 	"
 
 DOCS=( readme.md )
-
-S="${WORKDIR}/intersection-${MY_COMMIT}"
 
 src_prepare() {
 	sed -i -e "s:packages=find_packages(),:packages=find_packages(exclude=('tests',)),:" setup.py || die
