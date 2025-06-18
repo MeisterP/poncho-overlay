@@ -1,0 +1,20 @@
+diff --git a/src/meson.build b/src/meson.build
+index 15881c6..62fc435 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -32,7 +32,6 @@ run_command(
+ cargo_bin  = find_program('cargo')
+ cargo_opt  = [ '--manifest-path', meson.project_source_root() / 'Cargo.toml' ]
+ cargo_opt += [ '--target-dir', meson.project_build_root()  / 'src' ]
+-cargo_env  = [ 'CARGO_HOME=' + meson.project_build_root()  / 'cargo-home' ]
+ 
+ if get_option('buildtype') == 'release'
+   cargo_opt += [ '--release' ]
+@@ -50,7 +49,6 @@ cargo_build = custom_target(
+   install: true,
+   install_dir: get_option('bindir'),
+   command: [
+-    'env', cargo_env,
+     cargo_bin, 'build',
+     cargo_opt, '&&', 'cp', 'src' / rust_target / meson.project_name(), '@OUTPUT@',
+   ]
