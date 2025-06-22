@@ -5,7 +5,7 @@ EAPI=8
 
 inherit cmake udev linux-info
 
-MY_COMMIT="bed2c1f00dc105c812a8bb6b30df3e0dbce7cb90"
+MY_COMMIT="4fc6a4e0d905dcc2a7bfee70232a0398e9e4b45d"
 
 DESCRIPTION="Forked from libfido2 to provide a FIDO2.1 key management tool"
 HOMEPAGE="https://github.com/token2/fido2-manage"
