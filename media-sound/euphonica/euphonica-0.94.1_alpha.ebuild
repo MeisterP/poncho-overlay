@@ -96,6 +96,8 @@ CRATES="
 	deranged@0.3.11
 	derive_more@0.99.18
 	digest@0.10.7
+	dirs-sys@0.3.7
+	dirs@4.0.0
 	displaydoc@0.2.5
 	dtoa-short@0.3.5
 	dtoa@1.0.9
@@ -237,6 +239,7 @@ CRATES="
 	libfuzzer-sys@0.4.8
 	libloading@0.8.6
 	libm@0.2.11
+	libredox@0.1.3
 	librsvg@2.58.1
 	libspa-sys@0.8.0
 	libspa@0.8.0
@@ -354,11 +357,13 @@ CRATES="
 	rayon@1.10.0
 	rctree@0.6.0
 	redox_syscall@0.5.2
+	redox_users@0.4.6
 	regex-automata@0.4.7
 	regex-syntax@0.8.4
 	regex@1.10.6
 	reqwest@0.11.27
 	reqwest@0.12.5
+	resolve-path@0.1.0
 	rgb@0.8.40
 	ring@0.17.14
 	ringbuffer@0.15.0
