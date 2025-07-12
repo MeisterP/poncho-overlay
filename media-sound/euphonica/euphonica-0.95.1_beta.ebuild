@@ -554,7 +554,7 @@ CRATES="
 inherit cargo meson gnome2-utils xdg
 
 MY_PV=$(ver_rs 3 '-')
-R_MPD_COMMIT=48979d90f57e422d36b79a40c84d323c4bf55e09
+R_MPD_COMMIT=8eeee0116036bb345324f8b2328c25a434a892d1
 
 DESCRIPTION="An MPD client with delusions of grandeur"
 HOMEPAGE="https://github.com/htkhiem/euphonica"
