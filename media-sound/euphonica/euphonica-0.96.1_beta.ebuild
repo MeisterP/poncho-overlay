@@ -6,273 +6,271 @@
 EAPI=8
 
 CRATES="
-	addr2line@0.22.0
-	adler@1.0.2
-	ahash@0.8.11
+	addr2line@0.24.2
+	adler2@2.0.1
+	ahash@0.8.12
 	aho-corasick@1.1.3
-	aligned-vec@0.5.0
+	aligned-vec@0.6.4
 	android-tzdata@0.1.1
 	android_system_properties@0.1.5
 	annotate-snippets@0.9.2
-	anyhow@1.0.95
+	anyhow@1.0.98
 	approx@0.5.1
 	arbitrary@1.4.1
 	arg_enum_proc_macro@0.3.4
 	arrayvec@0.7.6
-	ashpd@0.10.2
-	async-broadcast@0.7.1
-	async-channel@2.3.1
-	async-executor@1.13.1
-	async-fs@2.1.2
-	async-io@2.3.4
+	ashpd@0.10.3
+	async-broadcast@0.7.2
+	async-channel@2.5.0
+	async-executor@1.13.2
+	async-fs@2.1.3
+	async-io@2.5.0
 	async-lock@3.4.0
-	async-process@2.3.0
+	async-process@2.4.0
 	async-recursion@1.1.1
-	async-signal@0.2.10
+	async-signal@0.2.12
 	async-task@4.7.1
-	async-trait@0.1.83
+	async-trait@0.1.88
 	atomic-waker@1.1.2
-	atomic@0.6.0
+	atomic@0.6.1
 	auto-palette@0.6.0
-	autocfg@1.3.0
-	av1-grain@0.2.3
-	avif-serialize@0.8.2
-	aws-lc-rs@1.12.2
-	aws-lc-sys@0.25.0
-	backtrace@0.3.73
-	base64@0.13.1
+	autocfg@1.5.0
+	av1-grain@0.2.4
+	avif-serialize@0.8.5
+	aws-lc-rs@1.13.2
+	aws-lc-sys@0.30.0
+	backtrace@0.3.75
 	base64@0.21.7
 	base64@0.22.1
 	bindgen@0.69.5
 	bit_field@0.10.2
 	bitflags@1.3.2
-	bitflags@2.6.0
+	bitflags@2.9.1
 	bitstream-io@2.6.0
 	bitvec@1.0.1
 	block-buffer@0.10.4
 	block@0.1.6
-	blocking@1.6.1
-	bson@2.11.0
+	blocking@1.6.2
+	bson@2.15.0
 	bufstream@0.1.4
-	built@0.7.5
-	bumpalo@3.16.0
-	bytemuck@1.16.1
+	built@0.7.7
+	bumpalo@3.19.0
+	bytemuck@1.23.1
 	byteorder-lite@0.1.0
 	byteorder@1.5.0
-	bytes@1.7.0
-	cairo-rs@0.19.4
-	cairo-rs@0.20.0
-	cairo-sys-rs@0.19.2
-	cairo-sys-rs@0.20.0
+	bytes@1.10.1
+	cairo-rs@0.20.12
+	cairo-rs@0.21.0
+	cairo-sys-rs@0.20.10
+	cairo-sys-rs@0.21.0
 	cast@0.3.0
-	cc@1.2.10
+	cc@1.2.30
 	cexpr@0.6.0
 	cfg-expr@0.15.8
-	cfg-if@1.0.0
+	cfg-expr@0.20.1
+	cfg-if@1.0.1
 	cfg_aliases@0.2.1
-	chrono@0.4.38
+	chrono@0.4.41
 	clang-sys@1.8.1
-	cmake@0.1.52
+	cmake@0.1.54
 	color_quant@1.1.0
-	colorutils-rs@0.7.3
+	colorutils-rs@0.7.5
 	concurrent-queue@2.5.0
 	convert_case@0.6.0
 	cookie-factory@0.3.3
-	core-foundation-sys@0.8.6
+	core-foundation-sys@0.8.7
 	core-foundation@0.9.4
-	cpufeatures@0.2.14
-	crc32fast@1.4.2
+	cpufeatures@0.2.17
+	crc32fast@1.5.0
 	crossbeam-channel@0.5.15
-	crossbeam-deque@0.8.5
+	crossbeam-deque@0.8.6
 	crossbeam-epoch@0.9.18
-	crossbeam-utils@0.8.20
-	crunchy@0.2.2
+	crossbeam-utils@0.8.21
+	crunchy@0.2.4
 	crypto-common@0.1.6
 	cssparser-macros@0.6.1
 	cssparser@0.31.2
 	data-url@0.3.1
 	dbus-secret-service@4.0.3
 	dbus@0.9.7
-	deranged@0.3.11
-	derive_more@0.99.18
+	deranged@0.4.0
+	derive_more@0.99.20
 	digest@0.10.7
 	dirs-sys@0.3.7
 	dirs@4.0.0
 	displaydoc@0.2.5
 	dtoa-short@0.3.5
-	dtoa@1.0.9
+	dtoa@1.0.10
 	dunce@1.0.5
 	duplicate@2.0.0
-	either@1.13.0
-	encoding_rs@0.8.34
+	either@1.15.0
+	encoding_rs@0.8.35
 	endi@1.1.0
-	enumflags2@0.7.10
-	enumflags2_derive@0.7.10
-	equivalent@1.0.1
-	errno@0.3.9
-	erydanos@0.2.16
-	event-listener-strategy@0.5.2
-	event-listener@5.3.1
-	exr@1.72.0
+	enumflags2@0.7.12
+	enumflags2_derive@0.7.12
+	equator-macro@0.4.2
+	equator@0.4.2
+	equivalent@1.0.2
+	errno@0.3.13
+	erydanos@0.2.18
+	event-listener-strategy@0.5.4
+	event-listener@5.4.0
+	exr@1.73.0
 	fallible-iterator@0.3.0
 	fallible-streaming-iterator@0.1.9
-	fastrand@2.1.0
-	fdeflate@0.3.4
+	fastrand@2.3.0
+	fdeflate@0.3.7
 	field-offset@0.3.6
-	flate2@1.0.30
+	flate2@1.1.2
 	float-cmp@0.8.0
 	float-cmp@0.9.0
-	flume@0.11.0
 	fnv@1.0.7
-	foldhash@0.1.4
+	foldhash@0.1.5
 	foreign-types-shared@0.1.1
 	foreign-types@0.3.2
 	form_urlencoded@1.2.1
 	fs_extra@1.3.0
 	funty@2.0.0
 	futf@0.1.5
-	futures-channel@0.3.30
-	futures-core@0.3.30
-	futures-executor@0.3.30
-	futures-io@0.3.30
-	futures-lite@2.3.0
-	futures-macro@0.3.30
-	futures-sink@0.3.30
-	futures-task@0.3.30
-	futures-util@0.3.30
-	futures@0.3.30
+	futures-channel@0.3.31
+	futures-core@0.3.31
+	futures-executor@0.3.31
+	futures-io@0.3.31
+	futures-lite@2.6.0
+	futures-macro@0.3.31
+	futures-sink@0.3.31
+	futures-task@0.3.31
+	futures-util@0.3.31
+	futures@0.3.31
 	fxhash@0.2.1
-	gdk-pixbuf-sys@0.20.0
-	gdk-pixbuf@0.20.0
-	gdk4-sys@0.9.0
-	gdk4@0.9.0
+	gdk-pixbuf-sys@0.21.0
+	gdk-pixbuf@0.21.0
+	gdk4-sys@0.10.0
+	gdk4@0.10.0
 	generic-array@0.14.7
-	getrandom@0.2.15
-	getrandom@0.3.2
-	gettext-rs@0.7.0
-	gettext-sys@0.21.3
-	gif@0.13.1
-	gimli@0.29.0
-	gio-sys@0.19.8
-	gio-sys@0.20.8
-	gio@0.19.8
-	gio@0.20.7
-	glib-macros@0.19.9
-	glib-macros@0.20.7
-	glib-sys@0.19.8
-	glib-sys@0.20.7
-	glib@0.19.9
-	glib@0.20.7
+	getrandom@0.2.16
+	getrandom@0.3.3
+	gettext-rs@0.7.2
+	gettext-sys@0.22.5
+	gif@0.13.3
+	gimli@0.31.1
+	gio-sys@0.20.10
+	gio-sys@0.21.0
+	gio@0.20.12
+	gio@0.21.0
+	glib-macros@0.20.12
+	glib-macros@0.21.0
+	glib-sys@0.20.10
+	glib-sys@0.21.0
+	glib@0.20.12
+	glib@0.21.0
 	glob@0.3.2
-	gobject-sys@0.19.8
-	gobject-sys@0.20.0
-	graphene-rs@0.20.0
-	graphene-sys@0.20.0
-	gsk4-sys@0.9.0
-	gsk4@0.9.0
-	gtk4-macros@0.9.0
-	gtk4-sys@0.9.0
-	gtk4@0.9.0
-	h2@0.3.26
-	h2@0.4.7
-	half@2.4.1
-	hashbrown@0.14.5
-	hashbrown@0.15.2
+	gobject-sys@0.20.10
+	gobject-sys@0.21.0
+	graphene-rs@0.21.0
+	graphene-sys@0.21.0
+	gsk4-sys@0.10.0
+	gsk4@0.10.0
+	gtk4-macros@0.10.0
+	gtk4-sys@0.10.0
+	gtk4@0.10.0
+	h2@0.3.27
+	h2@0.4.11
+	half@2.6.0
+	hashbrown@0.15.4
 	hashlink@0.10.0
 	heck@0.5.0
-	hermit-abi@0.3.9
-	hermit-abi@0.4.0
+	hermit-abi@0.5.2
 	hex@0.4.3
 	home@0.5.11
-	http-body-util@0.1.2
+	http-body-util@0.1.3
 	http-body@0.4.6
 	http-body@1.0.1
 	http@0.2.12
-	http@1.1.0
-	httparse@1.9.4
+	http@1.3.1
+	httparse@1.10.1
 	httpdate@1.0.3
-	hyper-rustls@0.27.5
+	hyper-rustls@0.27.7
 	hyper-tls@0.6.0
-	hyper-util@0.1.6
-	hyper@0.14.30
-	hyper@1.4.1
+	hyper-util@0.1.15
+	hyper@0.14.32
+	hyper@1.6.0
 	iana-time-zone-haiku@0.1.2
-	iana-time-zone@0.1.60
-	icu_collections@1.5.0
-	icu_locid@1.5.0
-	icu_locid_transform@1.5.0
-	icu_locid_transform_data@1.5.0
-	icu_normalizer@1.5.0
-	icu_normalizer_data@1.5.0
-	icu_properties@1.5.1
-	icu_properties_data@1.5.0
-	icu_provider@1.5.0
-	icu_provider_macros@1.5.0
-	idna@0.5.0
+	iana-time-zone@0.1.63
+	icu_collections@2.0.0
+	icu_locale_core@2.0.0
+	icu_normalizer@2.0.0
+	icu_normalizer_data@2.0.0
+	icu_properties@2.0.1
+	icu_properties_data@2.0.1
+	icu_provider@2.0.0
 	idna@1.0.3
-	idna_adapter@1.2.0
-	image-webp@0.1.3
-	image@0.24.9
-	image@0.25.1
+	idna_adapter@1.2.1
+	image-webp@0.2.3
+	image@0.25.6
 	imgref@1.11.0
-	indexmap@2.2.6
+	indexmap@2.10.0
 	interpolate_name@0.2.4
-	ipnet@2.9.0
+	io-uring@0.7.8
+	ipnet@2.11.0
+	iri-string@0.7.8
 	is-docker@0.2.0
 	is-wsl@0.4.0
 	itertools@0.12.1
 	itertools@0.13.0
-	itoa@1.0.11
-	jobserver@0.1.32
-	jpeg-decoder@0.3.1
-	js-sys@0.3.69
-	keyring@3.6.1
+	itoa@1.0.15
+	jobserver@0.1.33
+	jpeg-decoder@0.3.2
+	js-sys@0.3.77
+	keyring@3.6.2
 	language-tags@0.3.2
-	lazy_static@1.4.0
+	lazy_static@1.5.0
 	lazycell@1.3.0
 	lebe@0.5.2
-	libadwaita-sys@0.7.0
-	libadwaita@0.7.0
-	libblur@0.14.4
-	libc@0.2.169
+	libadwaita-sys@0.8.0
+	libadwaita@0.8.0
+	libblur@0.14.10
+	libc@0.2.174
 	libdbus-sys@0.2.5
-	libfuzzer-sys@0.4.8
-	libloading@0.8.6
-	libm@0.2.11
-	libredox@0.1.3
-	librsvg@2.58.1
+	libfuzzer-sys@0.4.10
+	libloading@0.8.8
+	libm@0.2.15
+	libredox@0.1.6
+	librsvg@2.60.0
 	libspa-sys@0.8.0
 	libspa@0.8.0
 	libsqlite3-sys@0.31.0
 	linux-keyutils@0.2.4
-	linux-raw-sys@0.4.14
-	litemap@0.7.4
+	linux-raw-sys@0.4.15
+	linux-raw-sys@0.9.4
+	litemap@0.8.0
 	locale_config@0.3.0
-	lock_api@0.4.12
-	log@0.4.22
+	lock_api@0.4.13
+	log@0.4.27
 	loop9@0.1.5
 	lucene_query_builder@0.3.0
 	lucene_query_builder_rs_derive@0.3.0
 	mac@0.1.1
 	malloc_buf@0.0.6
-	markup5ever@0.11.0
-	matrixmultiply@0.3.8
+	markup5ever@0.12.1
+	matrixmultiply@0.3.10
 	maybe-rayon@0.1.1
-	memchr@2.7.4
+	memchr@2.7.5
 	memoffset@0.9.1
 	microfft@0.4.0
 	mime@0.3.17
 	minimal-lexical@0.2.1
-	miniz_oxide@0.7.4
-	mio@1.0.1
+	miniz_oxide@0.8.9
+	mio@1.0.4
 	mpris-server@0.8.1
 	musicbrainz_rs@0.5.0
 	nalgebra-macros@0.2.2
-	nalgebra@0.32.6
-	native-tls@0.2.12
+	nalgebra@0.33.2
+	native-tls@0.2.14
 	new_debug_unreachable@1.0.6
 	nix@0.27.1
 	nix@0.29.0
+	nix@0.30.1
 	nom@7.1.3
 	noop_proc_macro@0.3.0
 	num-bigint@0.4.6
@@ -287,98 +285,99 @@ CRATES="
 	objc-foundation@0.1.1
 	objc@0.2.7
 	objc_id@0.1.1
-	object@0.36.2
-	once_cell@1.19.0
+	object@0.36.7
+	once_cell@1.21.3
 	open@5.3.2
 	openssl-macros@0.1.1
-	openssl-probe@0.1.5
-	openssl-sys@0.9.108
-	openssl@0.10.72
+	openssl-probe@0.1.6
+	openssl-sys@0.9.109
+	openssl@0.10.73
 	ordered-stream@0.2.0
-	pango-sys@0.19.8
-	pango-sys@0.20.0
-	pango@0.19.8
-	pango@0.20.0
-	pangocairo-sys@0.19.8
-	pangocairo@0.19.8
-	parking@2.2.0
-	parking_lot@0.12.3
-	parking_lot_core@0.9.10
+	pango-sys@0.20.10
+	pango-sys@0.21.0
+	pango@0.20.12
+	pango@0.21.0
+	pangocairo-sys@0.20.10
+	pangocairo@0.20.10
+	parking@2.2.1
+	parking_lot@0.12.4
+	parking_lot_core@0.9.11
 	paste@1.0.15
 	pathdiff@0.2.3
 	percent-encoding@2.3.1
 	phf@0.10.1
-	phf@0.11.2
+	phf@0.11.3
 	phf_codegen@0.10.0
+	phf_codegen@0.11.3
 	phf_generator@0.10.0
-	phf_generator@0.11.2
-	phf_macros@0.11.2
+	phf_generator@0.11.3
+	phf_macros@0.11.3
 	phf_shared@0.10.0
-	phf_shared@0.11.2
-	pin-project-internal@1.1.5
-	pin-project-lite@0.2.14
-	pin-project@1.1.5
+	phf_shared@0.11.3
+	pin-project-lite@0.2.16
 	pin-utils@0.1.0
 	piper@0.2.4
 	pipewire-sys@0.8.0
 	pipewire@0.8.0
-	pkg-config@0.3.30
-	png@0.17.13
-	polling@3.7.3
-	portable-atomic-util@0.2.2
-	portable-atomic@1.6.0
+	pkg-config@0.3.32
+	png@0.17.16
+	polling@3.9.0
+	portable-atomic-util@0.2.4
+	portable-atomic@1.11.1
+	potential_utf@0.1.2
 	powerfmt@0.2.0
-	ppv-lite86@0.2.17
+	ppv-lite86@0.2.21
 	precomputed-hash@0.1.1
-	prettyplease@0.2.25
-	proc-macro-crate@3.1.0
+	prettyplease@0.2.35
+	proc-macro-crate@3.3.0
 	proc-macro2-diagnostics@0.10.1
-	proc-macro2@1.0.85
-	profiling-procmacros@1.0.16
-	profiling@1.0.16
+	proc-macro2@1.0.95
+	profiling-procmacros@1.0.17
+	profiling@1.0.17
 	qoi@0.4.1
 	quick-error@2.0.1
-	quote@1.0.36
-	r-efi@5.2.0
+	quote@1.0.40
+	r-efi@5.3.0
 	r2d2@0.8.10
 	r2d2_sqlite@0.26.0
 	radium@0.7.0
 	rand@0.8.5
-	rand@0.9.0
+	rand@0.9.1
 	rand_chacha@0.3.1
 	rand_chacha@0.9.0
 	rand_core@0.6.4
 	rand_core@0.9.3
 	rand_distr@0.5.1
 	rav1e@0.7.1
-	ravif@0.11.7
+	ravif@0.11.20
 	rawpointer@0.2.1
 	rayon-core@1.12.1
 	rayon@1.10.0
 	rctree@0.6.0
-	redox_syscall@0.5.2
+	redox_syscall@0.5.13
 	redox_users@0.4.6
-	regex-automata@0.4.7
-	regex-syntax@0.8.4
-	regex@1.10.6
+	regex-automata@0.4.9
+	regex-syntax@0.8.5
+	regex@1.11.1
 	reqwest@0.11.27
-	reqwest@0.12.5
+	reqwest@0.12.22
 	resolve-path@0.1.0
-	rgb@0.8.40
+	rgb@0.8.52
 	ring@0.17.14
 	ringbuffer@0.15.0
 	rusqlite@0.33.0
-	rustc-demangle@0.1.24
+	rustc-demangle@0.1.25
 	rustc-hash@1.1.0
-	rustc-hash@2.0.0
-	rustc_version@0.4.0
-	rustix@0.38.34
-	rustls-pemfile@2.1.3
-	rustls-pki-types@1.10.1
-	rustls-webpki@0.102.8
-	rustls@0.23.21
-	ryu@1.0.18
-	safe_arch@0.7.2
+	rustc-hash@2.1.1
+	rustc_version@0.4.1
+	rustix@0.38.44
+	rustix@1.0.8
+	rustls-pki-types@1.12.0
+	rustls-webpki@0.103.4
+	rustls@0.23.29
+	rustversion@1.0.21
+	ryu@1.0.20
+	safe_arch@0.7.4
 	schannel@0.1.27
 	scheduled-thread-pool@0.2.7
 	scopeguard@1.2.0
@@ -386,175 +385,187 @@ CRATES="
 	security-framework-sys@2.14.0
 	security-framework@2.11.1
 	selectors@0.25.0
-	semver@1.0.23
-	serde@1.0.207
-	serde_bytes@0.11.15
-	serde_derive@1.0.207
-	serde_json@1.0.124
-	serde_repr@0.1.19
-	serde_spanned@0.6.6
+	semver@1.0.26
+	serde@1.0.219
+	serde_bytes@0.11.17
+	serde_derive@1.0.219
+	serde_json@1.0.141
+	serde_repr@0.1.20
+	serde_spanned@0.6.9
 	serde_urlencoded@0.7.1
 	servo_arc@0.3.0
 	sha1@0.10.6
 	shlex@1.3.0
-	signal-hook-registry@1.4.2
-	simba@0.8.1
+	signal-hook-registry@1.4.5
+	simba@0.9.0
 	simd-adler32@0.3.7
 	simd_helpers@0.1.0
 	siphasher@0.3.11
-	slab@0.4.9
-	smallvec@1.13.2
-	socket2@0.5.7
+	siphasher@1.0.1
+	slab@0.4.10
+	smallvec@1.15.1
+	socket2@0.5.10
 	spectrum-analyzer@0.5.2
-	spin@0.9.8
 	stable_deref_trait@1.2.0
 	static_assertions@1.1.0
 	stretto@0.8.4
-	string_cache@0.8.7
-	string_cache_codegen@0.5.2
+	string_cache@0.8.9
+	string_cache_codegen@0.5.4
 	subtle@2.6.1
 	syn@1.0.109
-	syn@2.0.87
+	syn@2.0.104
 	sync_wrapper@0.1.2
-	sync_wrapper@1.0.1
-	synstructure@0.13.1
+	sync_wrapper@1.0.2
+	synstructure@0.13.2
 	system-configuration-sys@0.5.0
+	system-configuration-sys@0.6.0
 	system-configuration@0.5.1
+	system-configuration@0.6.1
 	system-deps@6.2.2
-	system-deps@7.0.1
+	system-deps@7.0.5
 	tap@1.0.1
-	target-lexicon@0.12.14
-	temp-dir@0.1.13
-	tempfile@3.10.1
+	target-lexicon@0.12.16
+	target-lexicon@0.13.2
+	temp-dir@0.1.16
+	tempfile@3.20.0
 	tendril@0.4.3
-	thiserror-impl@1.0.61
-	thiserror@1.0.61
+	thiserror-impl@1.0.69
+	thiserror@1.0.69
 	tiff@0.9.1
-	time-core@0.1.2
-	time-macros@0.2.18
-	time@0.3.36
-	tinystr@0.7.6
-	tinyvec@1.6.1
+	time-core@0.1.4
+	time-macros@0.2.22
+	time@0.3.41
+	tinystr@0.8.1
+	tinyvec@1.9.0
 	tinyvec_macros@0.1.1
 	tokio-native-tls@0.3.1
-	tokio-rustls@0.26.0
-	tokio-util@0.7.11
-	tokio@1.43.1
-	toml@0.8.2
-	toml_datetime@0.6.6
-	toml_edit@0.20.2
-	toml_edit@0.21.1
-	tower-layer@0.3.2
-	tower-service@0.3.2
-	tower@0.4.13
-	tracing-attributes@0.1.27
-	tracing-core@0.1.32
-	tracing@0.1.40
+	tokio-rustls@0.26.2
+	tokio-util@0.7.15
+	tokio@1.46.1
+	toml@0.8.23
+	toml_datetime@0.6.11
+	toml_edit@0.22.27
+	tower-http@0.6.6
+	tower-layer@0.3.3
+	tower-service@0.3.3
+	tower@0.5.2
+	tracing-attributes@0.1.30
+	tracing-core@0.1.34
+	tracing@0.1.41
 	trait-variant@0.1.2
-	triomphe@0.1.13
+	triomphe@0.1.14
 	try-lock@0.2.5
-	typenum@1.17.0
+	typenum@1.18.0
 	uds_windows@1.1.0
-	unicode-bidi@0.3.15
-	unicode-ident@1.0.12
-	unicode-normalization@0.1.23
+	unicode-ident@1.0.18
 	unicode-segmentation@1.12.0
 	unicode-width@0.1.14
 	untrusted@0.9.0
-	url@2.5.2
+	url@2.5.4
 	urlencoding@2.1.3
 	utf-8@0.7.6
-	utf16_iter@1.0.5
 	utf8_iter@1.0.4
-	uuid-macro-internal@1.11.1
-	uuid@1.9.1
-	v_frame@0.3.8
+	uuid-macro-internal@1.17.0
+	uuid@1.17.0
+	v_frame@0.3.9
 	vcpkg@0.2.15
 	version-compare@0.2.0
 	version_check@0.9.5
 	want@0.3.1
-	wasi@0.11.0+wasi-snapshot-preview1
+	wasi@0.11.1+wasi-snapshot-preview1
 	wasi@0.14.2+wasi-0.2.4
-	wasm-bindgen-backend@0.2.92
-	wasm-bindgen-futures@0.4.42
-	wasm-bindgen-macro-support@0.2.92
-	wasm-bindgen-macro@0.2.92
-	wasm-bindgen-shared@0.2.92
-	wasm-bindgen@0.2.92
-	web-sys@0.3.69
-	weezl@0.1.8
-	wg@0.9.1
+	wasm-bindgen-backend@0.2.100
+	wasm-bindgen-futures@0.4.50
+	wasm-bindgen-macro-support@0.2.100
+	wasm-bindgen-macro@0.2.100
+	wasm-bindgen-shared@0.2.100
+	wasm-bindgen@0.2.100
+	web-sys@0.3.77
+	weezl@0.1.10
+	wg@0.9.2
 	which@4.4.2
-	wide@0.7.25
+	wide@0.7.33
 	winapi-i686-pc-windows-gnu@0.4.0
 	winapi-x86_64-pc-windows-gnu@0.4.0
 	winapi@0.3.9
-	windows-core@0.52.0
+	windows-core@0.61.2
+	windows-implement@0.60.0
+	windows-interface@0.59.1
+	windows-link@0.1.3
+	windows-registry@0.5.3
+	windows-result@0.3.4
+	windows-strings@0.4.2
 	windows-sys@0.48.0
 	windows-sys@0.52.0
 	windows-sys@0.59.0
+	windows-sys@0.60.2
 	windows-targets@0.48.5
 	windows-targets@0.52.6
+	windows-targets@0.53.2
 	windows_aarch64_gnullvm@0.48.5
 	windows_aarch64_gnullvm@0.52.6
+	windows_aarch64_gnullvm@0.53.0
 	windows_aarch64_msvc@0.48.5
 	windows_aarch64_msvc@0.52.6
+	windows_aarch64_msvc@0.53.0
 	windows_i686_gnu@0.48.5
 	windows_i686_gnu@0.52.6
+	windows_i686_gnu@0.53.0
 	windows_i686_gnullvm@0.52.6
+	windows_i686_gnullvm@0.53.0
 	windows_i686_msvc@0.48.5
 	windows_i686_msvc@0.52.6
+	windows_i686_msvc@0.53.0
 	windows_x86_64_gnu@0.48.5
 	windows_x86_64_gnu@0.52.6
+	windows_x86_64_gnu@0.53.0
 	windows_x86_64_gnullvm@0.48.5
 	windows_x86_64_gnullvm@0.52.6
+	windows_x86_64_gnullvm@0.53.0
 	windows_x86_64_msvc@0.48.5
 	windows_x86_64_msvc@0.52.6
-	winnow@0.5.40
-	winnow@0.7.2
+	windows_x86_64_msvc@0.53.0
+	winnow@0.7.12
 	winreg@0.50.0
-	winreg@0.52.0
 	wit-bindgen-rt@0.39.0
-	write16@1.0.0
-	writeable@0.5.5
+	writeable@0.6.1
 	wyz@0.5.1
 	xdg-home@1.3.0
-	xml5ever@0.17.0
-	xxhash-rust@0.8.11
+	xml5ever@0.18.1
+	xxhash-rust@0.8.15
 	yansi-term@0.1.2
 	yansi@1.0.1
-	yoke-derive@0.7.5
-	yoke@0.7.5
+	yoke-derive@0.8.0
+	yoke@0.8.0
 	zbus@4.4.0
-	zbus@5.0.0
+	zbus@5.9.0
 	zbus_macros@4.4.0
-	zbus_macros@5.0.0
+	zbus_macros@5.9.0
 	zbus_names@3.0.0
 	zbus_names@4.2.0
-	zerocopy-derive@0.7.35
-	zerocopy-derive@0.8.24
-	zerocopy@0.7.35
-	zerocopy@0.8.24
-	zerofrom-derive@0.1.5
-	zerofrom@0.1.5
+	zerocopy-derive@0.8.26
+	zerocopy@0.8.26
+	zerofrom-derive@0.1.6
+	zerofrom@0.1.6
 	zeroize@1.8.1
-	zerovec-derive@0.10.3
-	zerovec@0.10.4
+	zerotrie@0.2.2
+	zerovec-derive@0.11.1
+	zerovec@0.11.2
 	zune-core@0.4.12
 	zune-inflate@0.2.54
-	zune-jpeg@0.4.14
+	zune-jpeg@0.4.19
 	zvariant@4.2.0
-	zvariant@5.0.0
+	zvariant@5.6.0
 	zvariant_derive@4.2.0
-	zvariant_derive@5.0.0
+	zvariant_derive@5.6.0
 	zvariant_utils@2.1.0
-	zvariant_utils@3.0.0
+	zvariant_utils@3.2.0
 "
 
 inherit cargo meson gnome2-utils xdg
 
 MY_PV=$(ver_rs 3 '-')
-R_MPD_COMMIT=8eeee0116036bb345324f8b2328c25a434a892d1
+R_MPD_COMMIT=037d9a213b4a8dc2ead74b3f44d53351ddff67a2
 
 DESCRIPTION="An MPD client with delusions of grandeur"
 HOMEPAGE="https://github.com/htkhiem/euphonica"
@@ -570,7 +581,7 @@ LICENSE="GPL-3"
 # Dependent crate licenses
 LICENSE+="
 	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSD Boost-1.0 ISC
-	LGPL-2.1+ MIT MPL-2.0 openssl Unicode-3.0 Unicode-DFS-2016 ZLIB
+	LGPL-2.1+ MIT MPL-2.0 UoI-NCSA openssl Unicode-3.0 ZLIB
 "
 SLOT="0"
 KEYWORDS="~amd64"
