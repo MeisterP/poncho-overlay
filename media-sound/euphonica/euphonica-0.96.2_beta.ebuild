@@ -11,6 +11,7 @@ CRATES="
 	ahash@0.8.12
 	aho-corasick@1.1.3
 	aligned-vec@0.6.4
+	allocator-api2@0.2.21
 	android-tzdata@0.1.1
 	android_system_properties@0.1.5
 	annotate-snippets@0.9.2
@@ -32,7 +33,6 @@ CRATES="
 	async-task@4.7.1
 	async-trait@0.1.88
 	atomic-waker@1.1.2
-	atomic@0.6.1
 	auto-palette@0.6.0
 	autocfg@1.5.0
 	av1-grain@0.2.4
@@ -82,7 +82,6 @@ CRATES="
 	core-foundation@0.9.4
 	cpufeatures@0.2.17
 	crc32fast@1.5.0
-	crossbeam-channel@0.5.15
 	crossbeam-deque@0.8.6
 	crossbeam-epoch@0.9.18
 	crossbeam-utils@0.8.21
@@ -248,6 +247,7 @@ CRATES="
 	lock_api@0.4.13
 	log@0.4.27
 	loop9@0.1.5
+	lru@0.16.0
 	lucene_query_builder@0.3.0
 	lucene_query_builder_rs_derive@0.3.0
 	mac@0.1.1
@@ -322,8 +322,6 @@ CRATES="
 	pkg-config@0.3.32
 	png@0.17.16
 	polling@3.9.0
-	portable-atomic-util@0.2.4
-	portable-atomic@1.11.1
 	potential_utf@0.1.2
 	powerfmt@0.2.0
 	ppv-lite86@0.2.21
@@ -381,7 +379,6 @@ CRATES="
 	schannel@0.1.27
 	scheduled-thread-pool@0.2.7
 	scopeguard@1.2.0
-	seahash@4.1.0
 	security-framework-sys@2.14.0
 	security-framework@2.11.1
 	selectors@0.25.0
@@ -408,7 +405,6 @@ CRATES="
 	spectrum-analyzer@0.5.2
 	stable_deref_trait@1.2.0
 	static_assertions@1.1.0
-	stretto@0.8.4
 	string_cache@0.8.9
 	string_cache_codegen@0.5.4
 	subtle@2.6.1
@@ -453,7 +449,6 @@ CRATES="
 	tracing-core@0.1.34
 	tracing@0.1.41
 	trait-variant@0.1.2
-	triomphe@0.1.14
 	try-lock@0.2.5
 	typenum@1.18.0
 	uds_windows@1.1.0
@@ -482,7 +477,6 @@ CRATES="
 	wasm-bindgen@0.2.100
 	web-sys@0.3.77
 	weezl@0.1.10
-	wg@0.9.2
 	which@4.4.2
 	wide@0.7.33
 	winapi-i686-pc-windows-gnu@0.4.0
@@ -532,7 +526,6 @@ CRATES="
 	wyz@0.5.1
 	xdg-home@1.3.0
 	xml5ever@0.18.1
-	xxhash-rust@0.8.15
 	yansi-term@0.1.2
 	yansi@1.0.1
 	yoke-derive@0.8.0
@@ -564,6 +557,8 @@ CRATES="
 
 inherit cargo meson gnome2-utils xdg
 
+RUST_MIN_VER="1.85.0"
+
 MY_PV=$(ver_rs 3 '-')
 R_MPD_COMMIT=037d9a213b4a8dc2ead74b3f44d53351ddff67a2
 
@@ -580,8 +575,8 @@ S=${WORKDIR}/${PN}-${MY_PV}
 LICENSE="GPL-3"
 # Dependent crate licenses
 LICENSE+="
-	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSD Boost-1.0 ISC
-	LGPL-2.1+ MIT MPL-2.0 UoI-NCSA openssl Unicode-3.0 ZLIB
+	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSD ISC LGPL-2.1+
+	MIT MPL-2.0 UoI-NCSA openssl Unicode-3.0 ZLIB
 "
 SLOT="0"
 KEYWORDS="~amd64"
