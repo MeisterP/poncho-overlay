@@ -31,7 +31,7 @@ CRATES="
 	async-recursion@1.1.1
 	async-signal@0.2.12
 	async-task@4.7.1
-	async-trait@0.1.88
+	async-trait@0.1.89
 	atomic-waker@1.1.2
 	auto-palette@0.6.0
 	autocfg@1.5.0
@@ -399,7 +399,7 @@ CRATES="
 	simd_helpers@0.1.0
 	siphasher@0.3.11
 	siphasher@1.0.1
-	slab@0.4.10
+	slab@0.4.11
 	smallvec@1.15.1
 	socket2@0.5.10
 	spectrum-analyzer@0.5.2
