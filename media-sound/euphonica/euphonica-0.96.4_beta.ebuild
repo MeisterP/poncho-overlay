@@ -271,6 +271,7 @@ CRATES="
 	nix@0.27.1
 	nix@0.29.0
 	nix@0.30.1
+	nohash-hasher@0.2.0
 	nom@7.1.3
 	noop_proc_macro@0.3.0
 	num-bigint@0.4.6
@@ -555,18 +556,20 @@ CRATES="
 	zvariant_utils@3.2.0
 "
 
+declare -A GIT_CRATES=(
+	[mpd]='https://github.com/htkhiem/rust-mpd;3eedd021a0c46d22f1b31729e37a56a8f9bd99b0;rust-mpd-%commit%'
+)
+
 inherit cargo meson gnome2-utils xdg
 
 RUST_MIN_VER="1.85.0"
 
 MY_PV=$(ver_rs 3 '-')
-R_MPD_COMMIT=037d9a213b4a8dc2ead74b3f44d53351ddff67a2
 
 DESCRIPTION="An MPD client with delusions of grandeur"
 HOMEPAGE="https://github.com/htkhiem/euphonica"
 SRC_URI="
-	https://github.com/htkhiem/euphonica/archive/refs/tags/v${MY_PV}.tar.gz
-	https://github.com/htkhiem/rust-mpd/archive/${R_MPD_COMMIT}.tar.gz -> rust-mpd-${R_MPD_COMMIT}.tar.gz
+	https://github.com/htkhiem/euphonica/archive/refs/tags/v${MY_PV}.tar.gz -> ${P}.tar.gz
 	${CARGO_CRATE_URIS}
 "
 
@@ -591,12 +594,6 @@ RDEPEND="${DEPEND}"
 BDEPEND="sys-devel/gettext"
 
 PATCHES=( "${FILESDIR}/0.92.0-unset-CARGO_HOME.patch" )
-
-src_prepare() {
-	default
-	rm -r "${S}/rust-mpd" || die
-	mv "${WORKDIR}/rust-mpd-${R_MPD_COMMIT}" "${S}/rust-mpd" || die
-}
 
 src_configure() {
 	cargo_src_configure
