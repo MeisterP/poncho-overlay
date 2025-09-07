@@ -90,8 +90,6 @@ CRATES="
 	cssparser-macros@0.6.1
 	cssparser@0.31.2
 	data-url@0.3.1
-	dbus-secret-service@4.0.3
-	dbus@0.9.7
 	deranged@0.4.0
 	derive_more@0.99.20
 	digest@0.10.7
@@ -221,7 +219,6 @@ CRATES="
 	jobserver@0.1.33
 	jpeg-decoder@0.3.2
 	js-sys@0.3.77
-	keyring@3.6.2
 	language-tags@0.3.2
 	lazy_static@1.5.0
 	lazycell@1.3.0
@@ -230,16 +227,16 @@ CRATES="
 	libadwaita@0.8.0
 	libblur@0.14.10
 	libc@0.2.174
-	libdbus-sys@0.2.5
 	libfuzzer-sys@0.4.10
 	libloading@0.8.8
 	libm@0.2.15
 	libredox@0.1.6
 	librsvg@2.60.0
+	libsecret-sys@0.7.0
+	libsecret@0.7.0
 	libspa-sys@0.8.0
 	libspa@0.8.0
 	libsqlite3-sys@0.31.0
-	linux-keyutils@0.2.4
 	linux-raw-sys@0.4.15
 	linux-raw-sys@0.9.4
 	litemap@0.8.0
@@ -279,10 +276,8 @@ CRATES="
 	num-conv@0.1.0
 	num-derive@0.4.2
 	num-integer@0.1.46
-	num-iter@0.1.45
 	num-rational@0.4.2
 	num-traits@0.2.19
-	num@0.4.3
 	objc-foundation@0.1.1
 	objc@0.2.7
 	objc_id@0.1.1
@@ -585,6 +580,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 DEPEND="
+	app-crypt/libsecret
 	>=gui-libs/libadwaita-1.6
 	>=media-sound/mpd-0.24
 	dev-libs/glib
