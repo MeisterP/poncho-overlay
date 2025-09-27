@@ -125,7 +125,7 @@ CRATES="
 	foldhash@0.1.5
 	foreign-types-shared@0.1.1
 	foreign-types@0.3.2
-	form_urlencoded@1.2.1
+	form_urlencoded@1.2.2
 	fs_extra@1.3.0
 	funty@2.0.0
 	futf@0.1.5
@@ -201,7 +201,7 @@ CRATES="
 	icu_properties@2.0.1
 	icu_properties_data@2.0.1
 	icu_provider@2.0.0
-	idna@1.0.3
+	idna@1.1.0
 	idna_adapter@1.2.1
 	image-webp@0.2.3
 	image@0.25.6
@@ -300,7 +300,7 @@ CRATES="
 	parking_lot_core@0.9.11
 	paste@1.0.15
 	pathdiff@0.2.3
-	percent-encoding@2.3.1
+	percent-encoding@2.3.2
 	phf@0.10.1
 	phf@0.11.3
 	phf_codegen@0.10.0
@@ -452,7 +452,7 @@ CRATES="
 	unicode-segmentation@1.12.0
 	unicode-width@0.1.14
 	untrusted@0.9.0
-	url@2.5.4
+	url@2.5.7
 	urlencoding@2.1.3
 	utf-8@0.7.6
 	utf8_iter@1.0.4
@@ -552,7 +552,7 @@ CRATES="
 "
 
 declare -A GIT_CRATES=(
-	[mpd]='https://github.com/htkhiem/rust-mpd;3eedd021a0c46d22f1b31729e37a56a8f9bd99b0;rust-mpd-%commit%'
+	[mpd]='https://github.com/htkhiem/rust-mpd;04985377eb9c700d2237e6a895a689d204158f71;rust-mpd-%commit%'
 )
 
 inherit cargo meson gnome2-utils xdg
