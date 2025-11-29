@@ -51,7 +51,7 @@ CRATES="
 	block-buffer@0.10.4
 	block@0.1.6
 	blocking@1.6.2
-	bson@2.15.0
+	bson@3.0.0
 	bufstream@0.1.4
 	built@0.7.7
 	bumpalo@3.19.0
@@ -91,6 +91,7 @@ CRATES="
 	cssparser@0.31.2
 	data-url@0.3.1
 	deranged@0.4.0
+	derivative@2.2.0
 	derive_more@0.99.20
 	digest@0.10.7
 	dirs-sys@0.3.7
@@ -236,7 +237,7 @@ CRATES="
 	libsecret@0.7.0
 	libspa-sys@0.8.0
 	libspa@0.8.0
-	libsqlite3-sys@0.31.0
+	libsqlite3-sys@0.35.0
 	linux-raw-sys@0.4.15
 	linux-raw-sys@0.9.4
 	litemap@0.8.0
@@ -278,6 +279,7 @@ CRATES="
 	num-integer@0.1.46
 	num-rational@0.4.2
 	num-traits@0.2.19
+	num_threads@0.1.7
 	objc-foundation@0.1.1
 	objc@0.2.7
 	objc_id@0.1.1
@@ -333,10 +335,10 @@ CRATES="
 	quote@1.0.40
 	r-efi@5.3.0
 	r2d2@0.8.10
-	r2d2_sqlite@0.26.0
+	r2d2_sqlite@0.31.0
 	radium@0.7.0
 	rand@0.8.5
-	rand@0.9.1
+	rand@0.9.2
 	rand_chacha@0.3.1
 	rand_chacha@0.9.0
 	rand_core@0.6.4
@@ -359,7 +361,7 @@ CRATES="
 	rgb@0.8.52
 	ring@0.17.14
 	ringbuffer@0.15.0
-	rusqlite@0.33.0
+	rusqlite@0.37.0
 	rustc-demangle@0.1.25
 	rustc-hash@1.1.0
 	rustc-hash@2.1.1
@@ -393,6 +395,7 @@ CRATES="
 	simba@0.9.0
 	simd-adler32@0.3.7
 	simd_helpers@0.1.0
+	simdutf8@0.1.5
 	siphasher@0.3.11
 	siphasher@1.0.1
 	slab@0.4.11
@@ -403,6 +406,8 @@ CRATES="
 	static_assertions@1.1.0
 	string_cache@0.8.9
 	string_cache_codegen@0.5.4
+	strum@0.27.2
+	strum_macros@0.27.2
 	subtle@2.6.1
 	syn@1.0.109
 	syn@2.0.104
@@ -422,7 +427,9 @@ CRATES="
 	tempfile@3.20.0
 	tendril@0.4.3
 	thiserror-impl@1.0.69
+	thiserror-impl@2.0.17
 	thiserror@1.0.69
+	thiserror@2.0.17
 	tiff@0.9.1
 	time-core@0.1.4
 	time-macros@0.2.22
@@ -482,6 +489,7 @@ CRATES="
 	windows-implement@0.60.0
 	windows-interface@0.59.1
 	windows-link@0.1.3
+	windows-link@0.2.1
 	windows-registry@0.5.3
 	windows-result@0.3.4
 	windows-strings@0.4.2
@@ -489,6 +497,7 @@ CRATES="
 	windows-sys@0.52.0
 	windows-sys@0.59.0
 	windows-sys@0.60.2
+	windows-sys@0.61.2
 	windows-targets@0.48.5
 	windows-targets@0.52.6
 	windows-targets@0.53.2
@@ -527,9 +536,9 @@ CRATES="
 	yoke-derive@0.8.0
 	yoke@0.8.0
 	zbus@4.4.0
-	zbus@5.9.0
+	zbus@5.12.0
 	zbus_macros@4.4.0
-	zbus_macros@5.9.0
+	zbus_macros@5.12.0
 	zbus_names@3.0.0
 	zbus_names@4.2.0
 	zerocopy-derive@0.8.26
@@ -552,7 +561,7 @@ CRATES="
 "
 
 declare -A GIT_CRATES=(
-	[mpd]='https://github.com/htkhiem/rust-mpd;04985377eb9c700d2237e6a895a689d204158f71;rust-mpd-%commit%'
+	[mpd]='https://github.com/htkhiem/rust-mpd;f09e9d8ffd4a3316a4e9a3d84f9ef6a1d7adc483;rust-mpd-%commit%'
 )
 
 inherit cargo meson gnome2-utils xdg
