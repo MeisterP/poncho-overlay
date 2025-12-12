@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Source: Written from scratch for sunset-repo overlay -->
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>sunsetsergal@gmail.com</email>
+	</maintainer>
+	<upstream>
+		<remote-id type="github">frankcrawford/it87</remote-id>
+	</upstream>
+	<longdescription lang="en">
+	This driver implements support for the IT8603E, IT8620E, IT8622E, IT8623E,
+	IT8628E, IT8705F, IT8712F, IT8716F, IT8718F, IT8720F, IT8721F, IT8726F, IT8728F,
+	IT8732F, IT8758E, IT8771E, IT8772E, IT8781F, IT8782F, IT8783E/F, IT8786E,
+	IT8790E, and SiS950 chips.
+
+	These chips are 'Super I/O chips', supporting floppy disks, infrared ports,
+	joysticks and other miscellaneous stuff. For hardware monitoring, they
+	include an 'environment controller' with 3 temperature sensors, 3 fan
+	rotation speed sensors, 8 voltage sensors, associated alarms, and chassis
+	intrusion detection.
+	</longdescription>
+</pkgmetadata>
