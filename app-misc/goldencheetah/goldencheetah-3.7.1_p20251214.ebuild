@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="ed793191051e07f153968e322994141de1791533"
+MY_COMMIT="4177327a8bf4cb2e0791cd6354f935a19c7ad96f"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -73,7 +73,7 @@ src_configure() {
 	sip -c src/Python/SIP src/Python/SIP/goldencheetah.sip || die
 
 	replace-flags -O? -O3
-	eqmake6
+	eqmake6 -recursive
 }
 
 src_install() {
