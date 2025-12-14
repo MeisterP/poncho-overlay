@@ -23,7 +23,7 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 BDEPEND="${PYTHON_DEPS}
 	$(python_gen_cond_dep '
-		dev-python/sip:0[${PYTHON_USEDEP}]
+		dev-python/sip:5[${PYTHON_USEDEP}]
 	')
 	>=sys-devel/bison-3.7
 	sys-devel/flex
@@ -48,9 +48,19 @@ DEPEND="${PYTHON_DEPS}
 
 RDEPEND="${DEPEND}"
 
+PATCHES=( ${FILESDIR}/0001-Upgrade-SIP.patch )
+
 DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
+
+src_prepare() {
+	# remove pregenerated sip bindings
+	rm src/Python/SIP/sipAPIgoldencheetah.h || die
+	rm src/Python/SIP/sipgoldencheetah*.cpp || die
+
+	default
+}
 
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
@@ -59,18 +69,18 @@ src_configure() {
 		QMAKE_MOVE = cp
 		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical python3-embed
 
+		DEFINES += GC_WANT_PYTHON
+		PYTHON_VERSION = ${EPYTHON#python}
+
 		LIBUSB_INSTALL = true
 		LIBUSB_USE_V_1 = true
 		SAMPLERATE_INSTALL = true
 		ICAL_INSTALL = true
-		DEFINES += GC_WANT_PYTHON
 		DEFINES += GC_VIDEO_QT6
 		DEFINES += GC_WANT_ROBOT
 	EOF
 
 	cp -v qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
-
-	sip -c src/Python/SIP src/Python/SIP/goldencheetah.sip || die
 
 	replace-flags -O? -O3
 	eqmake6 -recursive
