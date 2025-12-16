@@ -1,21 +1,21 @@
-# Copyright 2020-2025 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
-
-# Source: Written from scratch for sunset-repo overlay
 
 EAPI=8
 
-inherit git-r3 linux-mod-r1
+inherit linux-mod-r1
+
+MY_COMMIT="60d9def80d65e7e34a73e6f32d8677ad5bfa58a9"
 
 DESCRIPTION="IT8705F/IT871xF/IT872xF hardware monitoring driver"
 HOMEPAGE="https://github.com/frankcrawford/it87"
-EGIT_REPO_URI="${HOMEPAGE}.git"
+
+SRC_URI="https://github.com/frankcrawford/it87/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+S="${WORKDIR}/it87-${MY_COMMIT}"
 
 LICENSE="GPL-2+"
 SLOT="0"
-if [[ "${PV%9999}" == "${PV}" ]] ; then
-	KEYWORDS="~amd64"
-fi
+KEYWORDS="~amd64"
 
 DOCS=(
 	"${S}/README"
