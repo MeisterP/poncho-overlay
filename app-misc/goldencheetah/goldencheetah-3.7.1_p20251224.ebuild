@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="be01a861b867a0511195839e14e57baa789750ce"
+MY_COMMIT="8a19c38b3ae21b1a0bbd60171ede08b84d8f6e86"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -48,25 +48,18 @@ DEPEND="${PYTHON_DEPS}
 
 RDEPEND="${DEPEND}"
 
-PATCHES=( ${FILESDIR}/0001-Upgrade-SIP.patch )
+PATCHES=( ${FILESDIR}/upgrade-sip.patch ${FILESDIR}/garmin-usb-rules.patch )
 
 DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
-
-src_prepare() {
-	# remove pregenerated sip bindings
-	rm src/Python/SIP/sipAPIgoldencheetah.h || die
-	rm src/Python/SIP/sipgoldencheetah*.cpp || die
-
-	default
-}
 
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt6_get_bindir)/lrelease
 		QMAKE_MOVE = cp
+		GC_USE_PCH = true
 		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical python3-embed
 
 		DEFINES += GC_WANT_PYTHON

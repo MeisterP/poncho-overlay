@@ -1,0 +1,34 @@
+From 4751f712a575bcdf82d3d2edab975f7c7dc34810 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Thu, 25 Dec 2025 11:34:13 +0100
+Subject: [PATCH] linux/51-garmin-usb.rules: use mode 0660 and tag uaccess
+
+Use a more modern approach for device access.
+
+The uaccess tag makes udev apply a dynamic user ACL to the device node, which
+makes the device usable to logged-in users.
+
+See https://wiki.archlinux.org/title/Udev#Allowing_regular_users_to_use_devices
+---
+ src/Resources/linux/51-garmin-usb.rules | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/Resources/linux/51-garmin-usb.rules b/src/Resources/linux/51-garmin-usb.rules
+index ff4531eeb..36643b928 100644
+--- a/src/Resources/linux/51-garmin-usb.rules
++++ b/src/Resources/linux/51-garmin-usb.rules
+@@ -1,8 +1,8 @@
+ # Garmin ANT+ - USB1
+-ATTRS{idVendor}=="0fcf", ATTRS{idProduct}=="1004", MODE="0666"
++ACTION!="remove", SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fcf", ATTRS{idProduct}=="1004", MODE="0660", TAG+="uaccess"
+ # Garmin ANT+ - USB2
+-ATTRS{idVendor}=="0fcf", ATTRS{idProduct}=="1008", MODE="0666"
++ACTION!="remove", SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fcf", ATTRS{idProduct}=="1008", MODE="0660", TAG+="uaccess"
+ # hLine USB2 ANT2
+-ATTRS{idVendor}=="0fcf", ATTRS{idProduct}=="1009", MODE="0666"
++ACTION!="remove", SUBSYSTEMS=="usb", ATTRS{idVendor}=="0fcf", ATTRS{idProduct}=="1009", MODE="0660", TAG+="uaccess"
+ 
+ 
+-- 
+2.51.2
+

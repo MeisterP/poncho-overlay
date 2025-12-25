@@ -1,0 +1,4752 @@
+From ff1ee894ebf02f53ba0ffd09f4c79a8677b3c21f Mon Sep 17 00:00:00 2001
+From: Magnus Gille <mgille@gmail.com>
+Date: Mon, 8 Dec 2025 14:57:47 -0800
+Subject: [PATCH] Upgrade Python, Pandas, and SIP versions. Make the builds
+ future proof(er).
+
+Python is moved to 3.11 and packaged in Appveyor. This version is a good spot in the lifecycle.
+
+Instead of packaging SIP we generate everything at build time. Will it break in the future?
+Almost certainly yes, but when that happens we can pin and fix instead of sticking to some
+version, waiting for it to become obsolete and then having lots of pain trying to upgrade.
+
+Simplify and improve the build scripts in general
+---
+ .gitignore                                    |   10 +
+ INSTALL-LINUX                                 |   27 +-
+ appveyor.yml                                  |   70 +-
+ appveyor/linux/after_build.sh                 |   33 +-
+ appveyor/linux/before_build.sh                |   10 +-
+ appveyor/linux/install.sh                     |   23 +-
+ appveyor/macos/after_build.sh                 |   94 +-
+ appveyor/macos/before_build.sh                |    9 +-
+ appveyor/macos/install.sh                     |   30 +-
+ build.pro                                     |   29 +-
+ deprecated/travis/linux/before_install.sh     |   15 +-
+ deprecated/travis/linux/before_script.sh      |    6 +-
+ src/.gitignore                                |   11 +
+ src/Charts/PythonChart.cpp                    |    3 -
+ src/Gui/Pages.cpp                             |    2 -
+ src/Python/PythonEmbed.cpp                    |   21 +-
+ src/Python/SIP/Bindings.cpp                   |    6 +-
+ src/Python/SIP/Makefile                       |   19 +
+ src/Python/SIP/Makefile.hack                  |   16 -
+ src/Python/SIP/goldencheetah.sip              |    4 +-
+ src/Python/SIP/pyproject.toml                 |    5 +
+ src/Python/SIP/sipAPIgoldencheetah.h          |  418 ----
+ src/Python/SIP/sip_lib.pro                    |   93 +
+ src/Python/SIP/sipgoldencheetahBindings.cpp   | 1685 -----------------
+ .../SIP/sipgoldencheetahPythonDataSeries.cpp  |  338 ----
+ .../SIP/sipgoldencheetahPythonXDataSeries.cpp |  428 -----
+ src/Python/SIP/sipgoldencheetahQString.cpp    |  105 -
+ .../SIP/sipgoldencheetahQStringList.cpp       |  183 --
+ src/Python/SIP/sipgoldencheetahcmodule.cpp    |  274 ---
+ src/Python/requirements.txt                   |    4 +-
+ src/gcconfig.pri.in                           |  137 +-
+ src/src.pro                                   |   53 +-
+ 32 files changed, 502 insertions(+), 3659 deletions(-)
+ create mode 100644 src/Python/SIP/Makefile
+ delete mode 100644 src/Python/SIP/Makefile.hack
+ create mode 100644 src/Python/SIP/pyproject.toml
+ delete mode 100644 src/Python/SIP/sipAPIgoldencheetah.h
+ create mode 100644 src/Python/SIP/sip_lib.pro
+ delete mode 100644 src/Python/SIP/sipgoldencheetahBindings.cpp
+ delete mode 100644 src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp
+ delete mode 100644 src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
+ delete mode 100644 src/Python/SIP/sipgoldencheetahQString.cpp
+ delete mode 100644 src/Python/SIP/sipgoldencheetahQStringList.cpp
+ delete mode 100644 src/Python/SIP/sipgoldencheetahcmodule.cpp
+
+diff --git a/.gitignore b/.gitignore
+index 2dd623ba9..d47f0fcaf 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,6 +7,8 @@ Makefile
+ *~
+ *.orig
+ *.rej
++*.log
++
+ # old skool
+ .svn
+ *.pri
+@@ -48,6 +50,7 @@ build-src*
+ qwt/src/debug/
+ qwt/src/release/
+ src/Makefile.Debug
++src/Makefile.src
+ src/Makefile.Release
+ src/object_script.GoldenCheetah.Debug
+ src/object_script.GoldenCheetah.Release
+@@ -82,4 +85,11 @@ _pch/
+ *_yacc.cpp
+ *_yacc.h
+ qrc_*.cpp
++*.moc
+ 
++# Unittests
++unittests/Core/season/season
++unittests/Core/seasonOffset/seasonOffset
++unittests/Core/seasonParser/seasonParser
++unittests/Core/units/units
++unittests/Gui/calendarData/calendarData
+diff --git a/INSTALL-LINUX b/INSTALL-LINUX
+index 0ace49f50..4d2e73cd6 100644
+--- a/INSTALL-LINUX
++++ b/INSTALL-LINUX
+@@ -284,29 +284,24 @@ $ make
+ Python Embedding
+ ----------------
+ 
+-Install Python 3.7
++Install Python 3.9+
+ 
+ sudo add-apt-repository ppa:deadsnakes/ppa
+ sudo apt-get update
+-sudo apt-get install python3.7-dev
+-python3.7 --version
+-
+-Install SIP 4.19.8:
+-cd ~/Projects
+-wget https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.8/sip-4.19.8.tar.gz
+-tar xf sip-4.19.8.tar.gz
+-cd sip-4.19.8
+-python3.7 configure.py
+-make
+-sudo make install
++sudo apt-get install python3.11 python3.11-dev
++python3.11 --version
++
++Install SIP and other dependencies
++pip install -r src/Python/requirements.txt
+ 
+ $ cd ~/Projects/GoldenCheetah/src
+ $ vi gcconfig.pri
+ 
+-Uncomment or add the following lines:
+-DEFINES += GC_WANT_PYTHON
+-PYTHONINCLUDES = -I/usr/include/python3.7/
+-PYTHONLIBS = -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7m
++Uncomment or change the following line(s):
++#GC_WANT_PYTHON = true
++Optionally configure includes & libraries, we try to auto configure them
++PYTHONINCLUDES = -I/usr/include/python3.11/
++PYTHONLIBS = -L/usr/lib/python3.11/config-3.11m-x86_64-linux-gnu -lpython3.11m
+ 
+ $ make clean
+ $ qmake
+diff --git a/appveyor.yml b/appveyor.yml
+index a38667779..55e3d752e 100644
+--- a/appveyor.yml
++++ b/appveyor.yml
+@@ -6,12 +6,13 @@ branches:
+     - master
+ 
+ image:
+-  - Visual Studio 2022
+-  - Ubuntu2204
+   - macos-sonoma
++  - Ubuntu2204
++  - Visual Studio 2022
+ 
+ environment:
+   APPVEYOR_SAVE_CACHE_ON_ERROR: true
++  MACOS_PYTHON_VERSION: "3.11"
+   GC_GOOGLE_CALENDAR_CLIENT_SECRET:
+     secure: hwjHTrSAMEbKd9PA+5x/zI4x5Uk4KQm1hdfZzkwiu8k=
+   GC_GOOGLE_DRIVE_CLIENT_ID:
+@@ -62,11 +63,6 @@ init:
+ - cmd: call c:\"Program Files"\"Microsoft Visual Studio"\2022\Community\VC\Auxiliary\Build\vcvarsall.bat amd64
+ # Setup NSIS
+ - cmd: set PATH=%PATH%;C:\"Program Files (x86)"\NSIS
+-# install Python 3.7
+-- cmd: appveyor DownloadFile "https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe"
+-- cmd: python-3.7.9-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 TargetDir="C:\Python37-x64"
+-- cmd: c:\python37-x64\python --version
+-- cmd: del python-3.7.9-amd64.exe
+ 
+ # Linux / macOS
+ - sh: >-
+@@ -92,14 +88,14 @@ init:
+ cache:
+ - gc-ci-libs.zip -> appveyor.yml
+ - jom_1_1_3.zip
+-- sip-4.19.8 -> appveyor.yml
+ - C:\R
+ - C:\Python -> src\Python\requirements.txt
+ - c:\tools\vcpkg\installed\
+ - qwt -> qwt/qwtconfig.pri.in, appveyor.yml
+ - srmio -> appveyor.yml
+ - D2XX
+-- site-packages
++- src\Python\SIP\release\sip_lib.lib -> src\Python\SIP\goldencheetah.sip
++- src\Python\SIP\libsip_lib.a -> src\Python\SIP\goldencheetah.sip
+ 
+ install:
+ 
+@@ -132,42 +128,40 @@ install:
+ - cmd: R --version
+ - cmd: echo DEFINES+=GC_WANT_R >> src\gcconfig.pri
+ 
+-# Get Python embeddable and install packages
+-- ps: >-
+-    if ($isWindows -And -not (Test-Path 'C:\Python')) {
+-      Start-FileDownload "https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-amd64.zip" Python.zip
+-      7z x Python.zip -oC:\Python\
+-      echo python37.zip . '' 'import site' | Out-File C:\Python\python37._pth -Encoding ascii
+-      mkdir C:\Python\lib\site-packages
+-      c:\python37-x64\python -m pip install --upgrade pip
+-      c:\python37-x64\python -m pip install -r src\Python\requirements.txt -t C:\Python\lib\site-packages
+-    }
+-
+-# Get SIP and and install on Python
++# Get Python and add to config
+ - ps: >-
+-    if ($isWindows -And -not (Test-Path 'sip-4.19.8')) {
+-      Start-FileDownload "https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.8/sip-4.19.8.zip"
+-        7z x sip-4.19.8.zip
+-        cd sip-4.19.8
+-        c:\python37-x64\python --version
+-        c:\python37-x64\python configure.py
+-        jom -j2
+-        cd ..
++    if ($isWindows -And -not (Test-Path 'C:\Python\python.exe')) {
++      $pyurl = "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip"
++      Start-FileDownload $pyurl "python-embed.zip"
++      Expand-Archive -Path python-embed.zip -DestinationPath C:\Python -Force
++      # Enable pip in embedded Python
++      (Get-Content C:\Python\python311._pth) -replace '#import site', 'import site' | Set-Content C:\Python\python311._pth
++      Start-FileDownload "https://bootstrap.pypa.io/get-pip.py" "get-pip.py"
++      C:\Python\python.exe get-pip.py --no-warn-script-location
+     }
+-- cmd: cd sip-4.19.8 & nmake install & cd ..
+-
+-# Add Python (avoiding collision between GC Context.h and Python context.h)
+-- cmd: echo DEFINES+=GC_WANT_PYTHON >> src\gcconfig.pri
+-- cmd: echo PYTHONINCLUDES=-ICore -I\"c:\python37-x64\include\" >> src\gcconfig.pri
+-- cmd: echo PYTHONLIBS=-L\"c:\python37-x64\libs\" -lpython37 >> src\gcconfig.pri
++- cmd: set PATH=C:\Python\Scripts\;C:\Python\;%PATH%
++- cmd: python --version
++- cmd: sed -i "s|#GC_WANT_PYTHON.=.*|GC_WANT_PYTHON=true|" src/gcconfig.pri
++# REMOVE!
++# Hardcode python version for Linux to avoid fragile auto-detection
++#- sh: if $CI_LINUX; then echo "PYTHON_VERSION = $(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')" >> src/gcconfig.pri; fi
++#- sh: if $CI_LINUX; then echo "PYTHONLIBS = $(python3-config --ldflags)" >> src/gcconfig.pri; fi
+ 
+ # GSL
+ - cmd: echo GSL_INCLUDES=c:\tools\vcpkg\installed\x64-windows\include >> src\gcconfig.pri
+ - cmd: echo GSL_LIBS=-Lc:\tools\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas >> src\gcconfig.pri
+ 
+-# Linux / macOS
++# Linux / macOS - install dependencies first (including Python 3.11 on macOS)
+ - sh: bash appveyor/$OS_NAME/install.sh
+ 
++# Upgrade pip to ensure you have the latest version
++- cmd: python -m pip install --upgrade pip
++- sh: if ! $CI_LINUX; then export PATH="/usr/local/opt/python@${MACOS_PYTHON_VERSION}/bin:$PATH"; fi && python3 -m pip install --upgrade pip
++# Install your project's dependencies from a requirements.txt file
++- sh: export PATH=$PATH:$(python3-config --exec-prefix)/bin
++- cmd: "python -m pip install --only-binary :all: -r src/Python/requirements.txt"
++- sh: if ! $CI_LINUX; then export PATH="/usr/local/opt/python@${MACOS_PYTHON_VERSION}/bin:$PATH"; fi && python3 -m pip install -r src/Python/requirements.txt
++
+ before_build:
+ 
+ # Windows
+@@ -224,12 +218,12 @@ build_script:
+ # Windows
+ - cmd: qmake.exe build.pro -r -spec win32-msvc
+ - cmd: if not exist qwt\lib\qwt.lib jom -j2 sub-qwt
+-- cmd: jom -j2 sub-src
++- cmd: jom -j2
+ 
+ # Linux / macOS
+ - sh: qmake build.pro -r QMAKE_CXXFLAGS_WARN_ON+="-Wno-unused-private-field -Wno-c++11-narrowing -Wno-deprecated-declarations -Wno-deprecated-register -Wno-nullability-completeness -Wno-sign-compare -Wno-inconsistent-missing-override" QMAKE_CFLAGS_WARN_ON+="-Wno-deprecated-declarations -Wno-sign-compare"
+ - sh: if test ! -f qwt/lib/libqwt.a; then make -j2 sub-qwt; fi
+-- sh: make -j2 sub-src
++- sh: make -j2
+ 
+ after_build:
+ 
+diff --git a/appveyor/linux/after_build.sh b/appveyor/linux/after_build.sh
+index 776dbafb4..2f9ce08ed 100644
+--- a/appveyor/linux/after_build.sh
++++ b/appveyor/linux/after_build.sh
+@@ -1,10 +1,15 @@
+ #!/bin/bash
+ set -ev
+ 
++# Python version configuration - update this when upgrading Python
++PYTHON_VERSION="3.11"
++PYTHON_APPIMAGE_VERSION="3.11.14"
++
+ ### This script should be run from GoldenCheetah src directory after build
+ cd src
+-if [ ! -x ./GoldenCheetah ]
+-then echo "Build GoldenCheetah and execute from distribution src"; exit 1
++if [ ! -x ./GoldenCheetah ]; then
++    echo "Build GoldenCheetah and execute from distribution src"
++    exit 1
+ fi
+ 
+ ### Create AppDir and start populating
+@@ -36,10 +41,11 @@ chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+ ./linuxdeployqt-continuous-x86_64.AppImage appdir/GoldenCheetah -verbose=2 -bundle-non-qt-libs -exclude-libs=libqsqlmysql,libqsqlpsql,libqsqlmimer,libqsqlodbc,libnss3,libnssutil3,libxcb-dri3.so.0 -unsupported-allow-new-glibc
+ 
+ # Add Python and core modules
+-wget --no-verbose https://github.com/niess/python-appimage/releases/download/python3.7/python3.7.17-cp37-cp37m-manylinux1_x86_64.AppImage
+-chmod +x python3.7.17-cp37-cp37m-manylinux1_x86_64.AppImage
+-./python3.7.17-cp37-cp37m-manylinux1_x86_64.AppImage --appimage-extract
+-rm -f python3.7.17-cp37-cp37m-manylinux1_x86_64.AppImage
++PYTHON_APPIMAGE_FILE="python${PYTHON_APPIMAGE_VERSION}-cp${PYTHON_VERSION//./}-cp${PYTHON_VERSION//./}-manylinux_2_28_x86_64.AppImage"
++wget --no-verbose "https://github.com/niess/python-appimage/releases/download/python${PYTHON_VERSION}/${PYTHON_APPIMAGE_FILE}"
++chmod +x "${PYTHON_APPIMAGE_FILE}"
++./"${PYTHON_APPIMAGE_FILE}" --appimage-extract
++rm -f "${PYTHON_APPIMAGE_FILE}"
+ export PATH="$(pwd)/squashfs-root/usr/bin:$PATH"
+ pip install --upgrade pip
+ pip install -q -r Python/requirements.txt
+@@ -49,11 +55,17 @@ rm -rf squashfs-root
+ 
+ # Fix RPATH on QtWebEngineProcess and copy missing resources
+ patchelf --set-rpath '$ORIGIN/../lib' appdir/libexec/QtWebEngineProcess
+-cp -r `qmake -v|awk '/Qt/ { print $6 "/../resources" }' -` appdir
++
++# Get Qt resources directory from qmake
++QT_INSTALL_PREFIX=$(qmake -query QT_INSTALL_PREFIX 2>/dev/null || echo "")
++if [ -n "$QT_INSTALL_PREFIX" ] && [ -d "${QT_INSTALL_PREFIX}/resources" ]; then
++    cp -r "${QT_INSTALL_PREFIX}/resources" appdir/
++else
++    echo "Warning: Could not find Qt resources directory"
++fi
+ 
+ # Generate AppImage
+ wget --no-verbose "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage"
+-# Fix RPATH on QtWebEngineProcess
+ chmod a+x appimagetool-x86_64.AppImage
+ ./appimagetool-x86_64.AppImage appdir
+ 
+@@ -62,8 +74,9 @@ rm linuxdeployqt-continuous-x86_64.AppImage
+ rm appimagetool-x86_64.AppImage
+ rm -rf appdir
+ 
+-if [ ! -x ./GoldenCheetah*.AppImage ]
+-then echo "AppImage not generated, check the errors"; exit 1
++if ! ls ./GoldenCheetah*.AppImage 1>/dev/null 2>&1; then
++    echo "AppImage not generated, check the errors"
++    exit 1
+ fi
+ 
+ echo "Renaming AppImage file to version number ready for deploy"
+diff --git a/appveyor/linux/before_build.sh b/appveyor/linux/before_build.sh
+index 605c53ce5..99fef780d 100644
+--- a/appveyor/linux/before_build.sh
++++ b/appveyor/linux/before_build.sh
+@@ -32,11 +32,13 @@ sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
+ # SRMIO
+ sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 /usr/local|" src/gcconfig.pri
+ # Python
+-echo DEFINES += GC_WANT_PYTHON >> src/gcconfig.pri
+-echo PYTHONINCLUDES = -I/usr/include/python3.7 >> src/gcconfig.pri
+-echo PYTHONLIBS = -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7m >> src/gcconfig.pri
++sed -i "s|#GC_WANT_PYTHON.=.*|GC_WANT_PYTHON=true|" src/gcconfig.pri
++# Hardcode python version for Linux to avoid fragile auto-detection
++echo "PYTHONINCLUDES = $(python3.11-config --includes)" >> src/gcconfig.pri
++echo "PYTHONLIBS = $(python3.11-config --ldflags --embed)" >> src/gcconfig.pri
+ # GSL
+-echo GSL_LIBS = -lgsl -lgslcblas -lm >> src/gcconfig.pri
++sed -i "s|#GSL_LIBS =.*|GSL_LIBS = -lgsl -lgslcblas -lm|" src/gcconfig.pri
++
+ # TrainerDay Query API
+ echo DEFINES += GC_WANT_TRAINERDAY_API >> src/gcconfig.pri
+ echo DEFINES += GC_TRAINERDAY_API_PAGESIZE=25 >> src/gcconfig.pri
+diff --git a/appveyor/linux/install.sh b/appveyor/linux/install.sh
+index 8975f8ccd..ae6a70091 100644
+--- a/appveyor/linux/install.sh
++++ b/appveyor/linux/install.sh
+@@ -38,26 +38,21 @@ cd ..
+ # LIBUSB
+ sudo apt-get install -qq libusb-1.0-0-dev libudev-dev
+ 
+-# Add Python 3.7 and SIP
++# Add Python 3 with dev headers for embedding
+ sudo add-apt-repository -y ppa:deadsnakes/ppa
+ sudo apt-get update -qq
+-sudo apt-get install -qq python3.7-dev python3.7-distutils
+-python3.7 --version
+-if [ -z "$(ls -A sip-4.19.8)" ]; then
+-    wget --no-verbose https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.8/sip-4.19.8.tar.gz
+-    tar xf sip-4.19.8.tar.gz
+-    cd sip-4.19.8
+-    python3.7 configure.py --incdir=/usr/include/python3.7
+-    make -j2
+-    cd ..
+-fi
+-cd sip-4.19.8
+-sudo make install
+-cd ..
++sudo apt-get install -qq python3 python3-dev python3-pip
++python3 --version
+ 
+ # GSL
+ sudo apt-get -qq install libgsl-dev
+ 
++# Python 3.11 for embedding
++sudo add-apt-repository -y ppa:deadsnakes/ppa
++sudo apt-get update -qq
++sudo apt-get install -qq python3.11 python3.11-dev python3.11-venv
++python3.11 --version
++
+ # Install fuse2 required to run older AppImages, and patchelf to fix QtWebEngineProcess
+ sudo add-apt-repository -y universe
+ sudo apt install libfuse2 patchelf
+diff --git a/appveyor/macos/after_build.sh b/appveyor/macos/after_build.sh
+index 8696e7be6..9887432e6 100755
+--- a/appveyor/macos/after_build.sh
++++ b/appveyor/macos/after_build.sh
+@@ -2,27 +2,99 @@
+ set -ev
+ cd src
+ 
++PYTHON_VER=${MACOS_PYTHON_VERSION}
++# Ensure we use the correct Python binary
++export PATH="/usr/local/opt/python@${PYTHON_VER}/bin:$PATH"
++
++# Homebrew install location
++BREW_PYTHON_FRAMEWORK="/usr/local/opt/python@${PYTHON_VER}/Frameworks/Python.framework"
++
+ echo "About to create dmg file and fix up"
+-mkdir GoldenCheetah.app/Contents/Frameworks
++mkdir -p GoldenCheetah.app/Contents/Frameworks
+ 
+ # This is a hack to include libicudata.*.dylib, not handled by macdployqt[fix]
+ cp /usr/local/opt/icu4c/lib/libicudata.*.dylib GoldenCheetah.app/Contents/Frameworks
+ 
+ # Copy python framework and change permissions to fix paths
+-cp -R /Library/Frameworks/Python.framework GoldenCheetah.app/Contents/Frameworks
++# Note: The framework already contains site-packages with numpy, sip, etc.
++# because appveyor.yml runs "pip install -r requirements.txt" which installs
++# packages into the brew Python's framework site-packages.
++echo "Copying Python Framework from ${BREW_PYTHON_FRAMEWORK}"
++# Remove any old attempts to avoid link confusion
++rm -rf GoldenCheetah.app/Contents/Frameworks/Python.framework
++rsync -axL "${BREW_PYTHON_FRAMEWORK}/" "GoldenCheetah.app/Contents/Frameworks/Python.framework/"
++
++# This ensures every level of the path is a real directory
++mkdir -p "GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/${PYTHON_VER}/lib/python${PYTHON_VER}"
++
+ chmod -R +w GoldenCheetah.app/Contents/Frameworks
++
++# Locate the actual site-packages where pip installed dependencies (e.g. numpy)
++# We rely on numpy being installed to find the true site-packages location
++SITE_PACKAGES_SRC=$( /usr/local/opt/python@${PYTHON_VER}/bin/python${PYTHON_VER} -c "import numpy; import os; print(os.path.dirname(os.path.dirname(numpy.__file__)))" )
++echo "Found source site-packages at: $SITE_PACKAGES_SRC"
++
++if [ -z "$SITE_PACKAGES_SRC" ]; then
++    echo "ERROR: Failed to locate site-packages using numpy."
++    echo "Python command returned an empty string."
++    echo "Aborting build to prevent rsync from copying the root filesystem."
++    exit 1
++fi
++
++# Verify Python framework was copied correctly
++PYTHON_LIB_DIR="GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/${PYTHON_VER}/lib/python${PYTHON_VER}"
++if [ ! -d "$PYTHON_LIB_DIR" ]; then
++    echo "ERROR: Python framework lib directory not found at $PYTHON_LIB_DIR"
++    echo "Contents of Frameworks directory:"
++    ls -laR GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/ || true
++    exit 1
++fi
++
++
++# Copy pip-installed packages from the actual install location
++# Homebrew Python installs packages to /usr/local/lib, not into the framework
++# Define the internal lib path clearly
++INTERNAL_PYTHON_DIR="GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/${PYTHON_VER}/lib/python${PYTHON_VER}"
++
++echo "Merging pip-installed packages into bundle..."
++# Create the parent path explicitly, avoiding symlink traversal issues
++mkdir -p "$INTERNAL_PYTHON_DIR"
++
++# Now create site-packages specifically
++SITE_PACKAGES="${INTERNAL_PYTHON_DIR}/site-packages"
++mkdir -p "$SITE_PACKAGES"
++
++# Copy from the source found via the specific python version
++rsync -ax --ignore-existing "$SITE_PACKAGES_SRC/" "$SITE_PACKAGES/"
++
+ # Update deployed Python framework path
+-install_name_tool -id @executable_path/../Frameworks/Python.framework/Versions/3.7/Python ./GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/3.7/Python
++# Change the ID of the library itself so it knows it lives in the app now
++install_name_tool -id @executable_path/../Frameworks/Python.framework/Versions/${PYTHON_VER}/Python ./GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/${PYTHON_VER}/Python
++
+ # Update GoldenCheetah binary to reference deployed lib
+-install_name_tool -change /Library/Frameworks/Python.framework/Versions/3.7/Python @executable_path/../Frameworks/Python.framework/Versions/3.7/Python ./GoldenCheetah.app/Contents/MacOS/GoldenCheetah
++# We replace the absolute path to the brew framework with the relative path inside the bundle
++install_name_tool -change "${BREW_PYTHON_FRAMEWORK}/Versions/${PYTHON_VER}/Python" @executable_path/../Frameworks/Python.framework/Versions/${PYTHON_VER}/Python ./GoldenCheetah.app/Contents/MacOS/GoldenCheetah
++
+ # Update Python binary to reference deployed lib instead of the Cellar one
+-OLD_PATH=`otool -L GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/3.7/bin/python3.7 | grep "Library" | cut -f 1 -d ' '`
+-echo $OLD_PATH
+-install_name_tool -change $OLD_PATH "@executable_path/../Python" GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/3.7/bin/python3.7
+-install_name_tool -change $OLD_PATH "@executable_path/../../../../Python" GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/3.7/Resources/Python.app/Contents/MacOS/Python
+-# Add mandatory Python dependencies
+-rm -r GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages
+-cp -R ../site-packages GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/3.7/lib/python3.7
++PYTHON_BIN="GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/${PYTHON_VER}/bin/python${PYTHON_VER}"
++if [ -f "$PYTHON_BIN" ]; then
++    OLD_PATH=$(otool -L "$PYTHON_BIN" | grep "Python.framework" | grep -v executable_path | awk '{print $1}' | head -n 1)
++    if [ -n "$OLD_PATH" ]; then
++        echo "Updating python binary dependency from $OLD_PATH"
++        install_name_tool -change "$OLD_PATH" "@executable_path/../Python" "$PYTHON_BIN"
++    fi
++else
++    echo "Warning: Python binary not found at $PYTHON_BIN"
++fi
++
++# Same for the Python app stub if it exists
++PYTHON_APP_BIN="GoldenCheetah.app/Contents/Frameworks/Python.framework/Versions/${PYTHON_VER}/Resources/Python.app/Contents/MacOS/Python"
++if [ -f "$PYTHON_APP_BIN" ]; then
++    OLD_PATH_APP=$(otool -L "$PYTHON_APP_BIN" | grep "Python.framework" | grep -v executable_path | awk '{print $1}' | head -n 1)
++    if [ -n "$OLD_PATH_APP" ]; then
++        install_name_tool -change "$OLD_PATH_APP" "@executable_path/../../../../Python" "$PYTHON_APP_BIN"
++    fi
++fi
+ 
+ # Deployment using macdeployqt
+ macdeployqt GoldenCheetah.app -verbose=2 -executable=GoldenCheetah.app/Contents/MacOS/GoldenCheetah -fs=hfs+ -dmg
+diff --git a/appveyor/macos/before_build.sh b/appveyor/macos/before_build.sh
+index 93e04e6ce..bcd3737fc 100755
+--- a/appveyor/macos/before_build.sh
++++ b/appveyor/macos/before_build.sh
+@@ -12,8 +12,9 @@ echo QMAKE_YACC=/usr/local/opt/bison@2.7/bin/bison >> src/gcconfig.pri
+ echo LIBZ_LIBS = -lz >> src/gcconfig.pri
+ 
+ # GSL
+-echo GSL_INCLUDES = /usr/local/include >> src/gcconfig.pri
+-echo GSL_LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm >> src/gcconfig.pri
++GSL_PATH=$(brew --prefix gsl)
++sed -i "" "s|#GSL_INCLUDES =.*|GSL_INCLUDES = ${GSL_PATH}/include|" src/gcconfig.pri
++sed -i "" "s|#GSL_LIBS =.*|GSL_LIBS = -L${GSL_PATH}/lib -lgsl -lgslcblas -lm|" src/gcconfig.pri
+ 
+ # Define GC version string, only for tagged builds
+ if [ -n "$TRAVIS_TAG" ]; then echo DEFINES += GC_VERSION=VERSION_STRING >> src/gcconfig.pri; fi
+@@ -62,9 +63,7 @@ sed -i "" "s|#\(DEFINES += GC_VIDEO_QT6.*\)|\1 |" src/gcconfig.pri
+ sed -i "" "s|#\(DEFINES += GC_WANT_R.*\)|\1 |" src/gcconfig.pri
+ 
+ # Python (avoiding collision between GC Context.h and Python context.h)
+-echo DEFINES += GC_WANT_PYTHON >> src/gcconfig.pri
+-echo PYTHONINCLUDES = -ICore `python3.7-config --includes` >> src/gcconfig.pri
+-echo PYTHONLIBS = `python3.7-config --ldflags` >> src/gcconfig.pri
++sed -i "" "s|#GC_WANT_PYTHON.=.*|GC_WANT_PYTHON=true|" src/gcconfig.pri
+ 
+ # TrainerDay Query API
+ echo DEFINES += GC_WANT_TRAINERDAY_API >> src/gcconfig.pri
+diff --git a/appveyor/macos/install.sh b/appveyor/macos/install.sh
+index df6c4ce56..cd26fe42c 100755
+--- a/appveyor/macos/install.sh
++++ b/appveyor/macos/install.sh
+@@ -44,30 +44,12 @@ if [ -z "$(ls -A D2XX)" ]; then
+ fi
+ sudo cp D2XX/libftd2xx.1.4.24.dylib /usr/local/lib
+ 
+-# Python 3.7.8
+-curl -O https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.pkg
+-sudo installer -pkg python-3.7.9-macosx10.9.pkg -target /
++# Python ${MACOS_PYTHON_VERSION} for embedding (system Python is too old for sip-tools)
++brew install python@${MACOS_PYTHON_VERSION}
++export PATH="/usr/local/opt/python@${MACOS_PYTHON_VERSION}/bin:$PATH"
++python3 --version
+ 
+-python3.7 --version
+-python3.7-config --prefix
+-
+-# Python mandatory packages - refresh cache if folder is empty
+-if [ -z "$(ls -A site-packages)" ]; then
+-    mkdir -p site-packages
+-    python3.7 -m pip install -q -r src/Python/requirements.txt -t site-packages
+-fi
+-
+-# Python SIP
+-if [ -z "$(ls -A sip-4.19.8)" ]; then
+-    curl -k -L -O https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.8/sip-4.19.8.tar.gz
+-    tar xf sip-4.19.8.tar.gz
+-    cd sip-4.19.8
+-    python3.7 configure.py
+-    make -j2
+-    cd ..
+-fi
+-cd sip-4.19.8
+-sudo make install
+-cd ..
++# Note: Python packages are installed in appveyor.yml via pip install -r requirements.txt
++# They go into the brew Python framework's site-packages, which is copied in after_build.sh
+ 
+ exit
+diff --git a/build.pro b/build.pro
+index efc4b5c04..177b0b234 100644
+--- a/build.pro
++++ b/build.pro
+@@ -1,5 +1,28 @@
+ TEMPLATE = subdirs
+-SUBDIRS = qwt
+-SUBDIRS += src
+-SUBDIRS += unittests
+ CONFIG += ordered
++
++# Include configuration to check for GC_WANT_PYTHON
++include(src/gcconfig.pri)
++
++# Define main application target, we call this
++# different from src to avoid confusion with
++# the src directory in the source tree
++gc.file = src/src.pro
++
++# Define dependencies to ensure link order
++contains(DEFINES, GC_WANT_PYTHON) {
++    # Define separate target for SIP bindings
++    siplib.file = src/Python/SIP/sip_lib.pro
++    
++    # This ensures 'make sub-gc' triggers 'sub-siplib'
++    gc.depends = siplib qwt
++    
++    # Ordered list of subdirectories to build
++    # qwt -> siplib -> gc -> unittests
++    SUBDIRS = qwt siplib gc unittests
++} else {
++    gc.depends = qwt
++    # Ordered list of subdirectories to build
++    # qwt -> gc -> unittests
++    SUBDIRS = qwt gc unittests
++}
+diff --git a/deprecated/travis/linux/before_install.sh b/deprecated/travis/linux/before_install.sh
+index ae0709385..6b7fa97fd 100755
+--- a/deprecated/travis/linux/before_install.sh
++++ b/deprecated/travis/linux/before_install.sh
+@@ -41,16 +41,11 @@ cd ${TRAVIS_BUILD_DIR}
+ sudo apt-get install -qq libusb-1.0-0-dev libudev-dev
+ 
+ # Add Python 3.7 and SIP
+-sudo add-apt-repository -y ppa:deadsnakes/ppa
+-sudo apt-get update -qq
+-sudo apt-get install -qq python3.7-dev python3.7-distutils
+-python3.7 --version
+-wget --no-verbose https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.8/sip-4.19.8.tar.gz
+-tar xf sip-4.19.8.tar.gz
+-cd sip-4.19.8
+-python3.7 configure.py --incdir=/usr/include/python3.7
+-make
+-sudo make install
++sudo apt-get install python3
++sudo apt-get install python3-pip
++pip install --upgrade pip
++pip install -r src/Python/requirements.txt
++
+ cd ${TRAVIS_BUILD_DIR}
+ 
+ # GSL
+diff --git a/deprecated/travis/linux/before_script.sh b/deprecated/travis/linux/before_script.sh
+index f7337f33f..a14757b03 100755
+--- a/deprecated/travis/linux/before_script.sh
++++ b/deprecated/travis/linux/before_script.sh
+@@ -35,10 +35,9 @@ sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
+ # SRMIO
+ sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 /usr/local|" src/gcconfig.pri
+ # Python
+-echo DEFINES += GC_WANT_PYTHON >> src/gcconfig.pri
+-echo PYTHONINCLUDES = -I/usr/include/python3.7 >> src/gcconfig.pri
+-echo PYTHONLIBS = -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7m >> src/gcconfig.pri
++sed -i "s/|#GC_WANT_PYTHON.=.*|GC_WANT_PYTHON=true|" src/gcconfig.pri
+ # GSL
++sed -i "s|#GSL_INCLUDES =.*|GSL_INCLUDES = /usr/include|" src/gcconfig.pri
+ echo GSL_LIBS = -lgsl -lgslcblas -lm >> src/gcconfig.pri
+ # TrainerDay Query API
+ echo DEFINES += GC_WANT_TRAINERDAY_API >> src/gcconfig.pri
+@@ -63,6 +62,7 @@ sed -i "s/__GC_SPORTTRACKS_CLIENT_SECRET__/"$GC_SPORTTRACKS_CLIENT_SECRET"/" src
+ sed -i "s/OPENDATA_DISABLE/OPENDATA_ENABLE/" src/Core/Secrets.h
+ sed -i "s/__GC_CLOUD_OPENDATA_SECRET__/"$GC_CLOUD_OPENDATA_SECRET"/" src/Core/Secrets.h
+ sed -i "s/__GC_RWGPS_API_KEY__/"$GC_RWGPS_API_KEY"/" src/Core/Secrets.h
++sed -i "s/__GC_POLARFLOW_CLIENT_SECRET__/"$GC_POLARFLOW_CLIENT_SECRET"/" src/Core/Secrets.h
+ sed -i "s/__GC_NOLIO_CLIENT_ID__/"$GC_NOLIO_CLIENT_ID"/" src/Core/Secrets.h
+ sed -i "s/__GC_NOLIO_SECRET__/"$GC_NOLIO_SECRET"/" src/Core/Secrets.h
+ sed -i "s/__GC_XERT_CLIENT_SECRET__/"$GC_XERT_CLIENT_SECRET"/" src/Core/Secrets.h
+diff --git a/src/.gitignore b/src/.gitignore
+index 82930dced..de58340bf 100644
+--- a/src/.gitignore
++++ b/src/.gitignore
+@@ -59,3 +59,14 @@ tags
+ #ignore qm
+ *.qm
+ 
++
++# Python SIP generated files
++Python/SIP/sip*.c
++Python/SIP/sip*.cpp
++Python/SIP/sip*.h
++Python/SIP/sip.h
++Python/SIP/build/
++
++# Whitelist SIP Makefile
++!Python/SIP/Makefile
++Python/SIP/Makefile.sip_lib
+diff --git a/src/Charts/PythonChart.cpp b/src/Charts/PythonChart.cpp
+index 58baa3023..5ae18ae2c 100644
+--- a/src/Charts/PythonChart.cpp
++++ b/src/Charts/PythonChart.cpp
+@@ -309,7 +309,6 @@ PythonChart::PythonChart(Context *context, bool ridesummary) : GcChartWindow(con
+     // if we failed to startup embedded R properly
+     // then disable the PythonConsole altogether.
+     if (python) {
+-
+         showCon = new QCheckBox(tr("Show Console"), this);
+         showCon->setChecked(true);
+         clv->addWidget(showCon);
+@@ -396,9 +395,7 @@ PythonChart::PythonChart(Context *context, bool ridesummary) : GcChartWindow(con
+         installEventFilter(console);
+         installEventFilter(splitter);
+         installEventFilter(canvas);
+-
+     } else {
+-
+         // not starting
+         noPython = new QLabel(tr("Warning: Python is disabled"), this);
+         clv->addWidget(noPython);
+diff --git a/src/Gui/Pages.cpp b/src/Gui/Pages.cpp
+index 904d0f1ab..5c9847e0c 100644
+--- a/src/Gui/Pages.cpp
++++ b/src/Gui/Pages.cpp
+@@ -210,7 +210,6 @@ GeneralPage::GeneralPage(Context *context) : context(context)
+             this, [this](Qt::CheckState state) { rDirectorySel->setEnabled(state); });
+ #endif
+ 
+-    embedR->setChecked(! appsettings->value(NULL, GC_EMBED_R, true).toBool());
+     embedR->setChecked(appsettings->value(NULL, GC_EMBED_R, true).toBool());
+ #endif
+ 
+@@ -240,7 +239,6 @@ GeneralPage::GeneralPage(Context *context) : context(context)
+             this, [this](Qt::CheckState state) { pythonDirectorySel->setEnabled(state); });
+ #endif
+ 
+-    embedPython->setChecked(! appsettings->value(NULL, GC_EMBED_PYTHON, true).toBool());
+     embedPython->setChecked(appsettings->value(NULL, GC_EMBED_PYTHON, true).toBool());
+ #endif
+ 
+diff --git a/src/Python/PythonEmbed.cpp b/src/Python/PythonEmbed.cpp
+index 0ec42cc3a..a9d859ee3 100644
+--- a/src/Python/PythonEmbed.cpp
++++ b/src/Python/PythonEmbed.cpp
+@@ -61,7 +61,6 @@ bool PythonEmbed::pythonInstalled(QString &pybin, QString &pypath, QString PYTHO
+ {
+     QStringList names; names << QString("python3.%1").arg(PYTHON3_VERSION) << QString("bin/python3.%1").arg(PYTHON3_VERSION) << "python3" << "bin/python3" << "python" << "bin/python";
+     QString pythonbinary;
+-
+     if (PYTHONHOME=="") {
+ 
+         // where to check
+@@ -154,6 +153,7 @@ bool PythonEmbed::pythonInstalled(QString &pybin, QString &pypath, QString PYTHO
+ 
+     // scan output
+     QRegExp contents("^ZZ(.*)ZZ.*ZZ(.*)ZZ.*ZZ(.*)ZZ.*$");
++    printd("Output: %s\n", output.toStdString().c_str());
+     if (contents.exactMatch(output)) {
+         QString vmajor=contents.cap(1);
+         QString vminor=contents.cap(2);
+@@ -161,7 +161,8 @@ bool PythonEmbed::pythonInstalled(QString &pybin, QString &pypath, QString PYTHO
+ 
+         // check its Python 3 matching the version used for build
+         if (vmajor.toInt() != 3 || vminor.toInt() != PYTHON3_VERSION) {
+-            printd( "%s is not version 3.%d, it's version %d.%d\n", pythonbinary.toStdString().c_str(), PYTHON3_VERSION, vmajor.toInt(), vminor.toInt());
++            fprintf(stderr, "Python version mismatch: GoldenCheetah was built with Python 3.%d, but found Python %d.%d at %s\n",
++                    PYTHON3_VERSION, vmajor.toInt(), vminor.toInt(), pythonbinary.toStdString().c_str());
+             return false;
+         }
+ 
+@@ -314,13 +315,15 @@ PythonEmbed::PythonEmbed(const bool verbose, const bool interactive) : verbose(v
+     } // pythonInstalled == true
+ 
+     // if we get here loading failed
+-    printd("Embedding failed\n");
+-    // Only inform the user if Python embedding is enabled
+-    if (appsettings->value(NULL, GC_EMBED_PYTHON, false).toBool()) {
+-        QMessageBox msg(QMessageBox::Information, QObject::tr("Python not installed or in path"), QObject::tr("Python v3.%1 is required for Python embedding.\nPython disabled in preferences.").arg(PYTHON3_VERSION));
+-        msg.exec();
+-    }
+-    appsettings->setValue(GC_EMBED_PYTHON, false);
++    fprintf(stderr, "Python embedding failed. GoldenCheetah requires Python 3.%d installed and in PATH.\n", PYTHON3_VERSION);
++    // Notify user of the problem (they can disable Python in preferences if they don't want to see this)
++    // Note: We don't permanently disable Python here - the user might fix the issue (install Python,
++    // fix PYTHONHOME, etc.) and we should try again on next startup.
++    QMessageBox msg(QMessageBox::Warning, QObject::tr("Python not available"),
++                    QObject::tr("GoldenCheetah was built with Python 3.%1 but could not initialize Python.\n\n"
++                                "Please ensure Python 3.%1 is installed and in your PATH.\n"
++                                "You can disable Python in Options > General if you don't need it.").arg(PYTHON3_VERSION));
++    msg.exec();
+     loaded=false;
+     return;
+ }
+diff --git a/src/Python/SIP/Bindings.cpp b/src/Python/SIP/Bindings.cpp
+index 8b38d1bff..35c350881 100644
+--- a/src/Python/SIP/Bindings.cpp
++++ b/src/Python/SIP/Bindings.cpp
+@@ -1,3 +1,4 @@
++#include "stable.h"
+ #include <PythonEmbed.h>
+ #include "Context.h"
+ #include "RideItem.h"
+@@ -23,7 +24,10 @@
+ 
+ #include <QWebEngineView>
+ #include <QUrl>
+-#include <datetime.h> // for Python datetime macros
++
++#undef slots
++#include <datetime.h>
++#define slots Q_SLOTS
+ 
+ long Bindings::threadid() const
+ {
+diff --git a/src/Python/SIP/Makefile b/src/Python/SIP/Makefile
+new file mode 100644
+index 000000000..5a53fd05e
+--- /dev/null
++++ b/src/Python/SIP/Makefile
+@@ -0,0 +1,19 @@
++SIP_BUILD_CMD ?= sip-build
++TARGET = sipgoldencheetahBindings.cpp
++DEPS = goldencheetah.sip
++
++all: $(TARGET)
++
++$(TARGET): $(DEPS)
++	@echo "Generating SIP bindings..."
++	$(SIP_BUILD_CMD) --no-compile
++	@cp build/goldencheetah/* .
++	@for f in sip*.cpp; do \
++		sed -i.bak '1s/^/#include "stable.h"\n/' $$f; \
++		sed -i.bak 's/#include "sipAPIgoldencheetah.h"/#undef slots\n#include "sipAPIgoldencheetah.h"\n#define slots Q_SLOTS/' $$f; \
++		rm -f $$f.bak; \
++	done
++	@touch $(TARGET)
++
++clean:
++	rm -rf build sip*.cpp sip*.c sip*.h
+diff --git a/src/Python/SIP/Makefile.hack b/src/Python/SIP/Makefile.hack
+deleted file mode 100644
+index 3d1235ecb..000000000
+--- a/src/Python/SIP/Makefile.hack
++++ /dev/null
+@@ -1,16 +0,0 @@
+-#
+-# Run 'make' manually to regenerate the SRC files
+-# at some point later we will integrate into src.pro
+-#
+-
+-SRC= sipgoldencheetahBindings.cpp sipgoldencheetahcmodule.cpp sipAPIgoldencheetah.h \
+-     sipgoldencheetahQString.cpp sipgoldencheetahQStringRef.cpp sipgoldencheetahQStringList.cpp
+-
+-DEPS= goldencheetah.sip
+-
+-$(SRC): $(DEPS)
+-	sip -c . goldencheetah.sip
+-
+-clean: 
+-	-rm $(SRC)
+-
+diff --git a/src/Python/SIP/goldencheetah.sip b/src/Python/SIP/goldencheetah.sip
+index d6a14b45e..a24d9c3c1 100644
+--- a/src/Python/SIP/goldencheetah.sip
++++ b/src/Python/SIP/goldencheetah.sip
+@@ -85,7 +85,7 @@ public:
+         %MethodCode
+         sipRes = new QString(sipCpp->name);
+         %End
+-    SIP_SSIZE_T __len__();
++    Py_ssize_t __len__();
+         %MethodCode
+         sipRes = sipCpp->count;
+         %End
+@@ -270,7 +270,7 @@ public:
+         %MethodCode
+         sipRes = new QString(sipCpp->name());
+         %End
+-    SIP_SSIZE_T __len__();
++    Py_ssize_t __len__();
+         %MethodCode
+         sipRes = sipCpp->count();
+         %End
+diff --git a/src/Python/SIP/pyproject.toml b/src/Python/SIP/pyproject.toml
+new file mode 100644
+index 000000000..74045c9ac
+--- /dev/null
++++ b/src/Python/SIP/pyproject.toml
+@@ -0,0 +1,5 @@
++[project]
++name = "goldencheetah"
++
++[tool.sip.project]
++sip-files-dir = "." 
+diff --git a/src/Python/SIP/sipAPIgoldencheetah.h b/src/Python/SIP/sipAPIgoldencheetah.h
+deleted file mode 100644
+index f2ab7b251..000000000
+--- a/src/Python/SIP/sipAPIgoldencheetah.h
++++ /dev/null
+@@ -1,418 +0,0 @@
+-/*
+- * Internal module API header file.
+- *
+- * Generated by SIP 4.19.8
+- */
+-
+-#ifndef _goldencheetahAPI_H
+-#define _goldencheetahAPI_H
+-
+-#include <sip.h>
+-
+-/*
+- * Convenient names to refer to various strings defined in this module.
+- * Only the class names are part of the public API.
+- */
+-#define sipNameNr_deleteActivitySample 0
+-#define sipName_deleteActivitySample &sipStrings_goldencheetah[0]
+-#define sipNameNr_deleteXDataSeries 21
+-#define sipName_deleteXDataSeries &sipStrings_goldencheetah[21]
+-#define sipNameNr_createXDataSeries 39
+-#define sipName_createXDataSeries &sipStrings_goldencheetah[39]
+-#define sipNameNr_activityIntervals 57
+-#define sipName_activityIntervals &sipStrings_goldencheetah[57]
+-#define sipNameNr_PythonXDataSeries 75
+-#define sipName_PythonXDataSeries &sipStrings_goldencheetah[75]
+-#define sipNameNr_PythonDataSeries 93
+-#define sipName_PythonDataSeries &sipStrings_goldencheetah[93]
+-#define sipNameNr_seasonIntervals 110
+-#define sipName_seasonIntervals &sipStrings_goldencheetah[110]
+-#define sipNameNr_activityMeanmax 126
+-#define sipName_activityMeanmax &sipStrings_goldencheetah[126]
+-#define sipNameNr_activityMetrics 142
+-#define sipName_activityMetrics &sipStrings_goldencheetah[142]
+-#define sipNameNr_seasonMeasures 158
+-#define sipName_seasonMeasures &sipStrings_goldencheetah[158]
+-#define sipNameNr_addAnnotation 173
+-#define sipName_addAnnotation &sipStrings_goldencheetah[173]
+-#define sipNameNr_seasonMeanmax 187
+-#define sipName_seasonMeanmax &sipStrings_goldencheetah[187]
+-#define sipNameNr_seasonMetrics 201
+-#define sipName_seasonMetrics &sipStrings_goldencheetah[201]
+-#define sipNameNr_seriesPresent 215
+-#define sipName_seriesPresent &sipStrings_goldencheetah[215]
+-#define sipNameNr_goldencheetah 229
+-#define sipName_goldencheetah &sipStrings_goldencheetah[229]
+-#define sipNameNr_deleteSeries 243
+-#define sipName_deleteSeries &sipStrings_goldencheetah[243]
+-#define sipNameNr_intervalType 256
+-#define sipName_intervalType &sipStrings_goldencheetah[256]
+-#define sipNameNr_activityWbal 269
+-#define sipName_activityWbal &sipStrings_goldencheetah[269]
+-#define sipNameNr_compareindex 282
+-#define sipName_compareindex &sipStrings_goldencheetah[282]
+-#define sipNameNr_athleteZones 295
+-#define sipName_athleteZones &sipStrings_goldencheetah[295]
+-#define sipNameNr_configChart 308
+-#define sipName_configChart &sipStrings_goldencheetah[308]
+-#define sipNameNr_orientation 320
+-#define sipName_orientation &sipStrings_goldencheetah[320]
+-#define sipNameNr_postProcess 332
+-#define sipName_postProcess &sipStrings_goldencheetah[332]
+-#define sipNameNr_deleteXData 344
+-#define sipName_deleteXData &sipStrings_goldencheetah[344]
+-#define sipNameNr_seasonPeaks 356
+-#define sipName_seasonPeaks &sipStrings_goldencheetah[356]
+-#define sipNameNr_xdataSeries 368
+-#define sipName_xdataSeries &sipStrings_goldencheetah[368]
+-#define sipNameNr_QStringList 380
+-#define sipName_QStringList &sipStrings_goldencheetah[380]
+-#define sipNameNr___setitem__ 392
+-#define sipName___setitem__ &sipStrings_goldencheetah[392]
+-#define sipNameNr___getitem__ 404
+-#define sipName___getitem__ &sipStrings_goldencheetah[404]
+-#define sipNameNr_configAxis 416
+-#define sipName_configAxis &sipStrings_goldencheetah[416]
+-#define sipNameNr_categories 427
+-#define sipName_categories &sipStrings_goldencheetah[427]
+-#define sipNameNr_labelcolor 438
+-#define sipName_labelcolor &sipStrings_goldencheetah[438]
+-#define sipNameNr_datalabels 449
+-#define sipName_datalabels &sipStrings_goldencheetah[449]
+-#define sipNameNr_symbolsize 460
+-#define sipName_symbolsize &sipStrings_goldencheetah[460]
+-#define sipNameNr_seriesUnit 471
+-#define sipName_seriesUnit &sipStrings_goldencheetah[471]
+-#define sipNameNr_xdataNames 482
+-#define sipName_xdataNames &sipStrings_goldencheetah[482]
+-#define sipNameNr_seriesLast 493
+-#define sipName_seriesLast &sipStrings_goldencheetah[493]
+-#define sipNameNr_seriesName 504
+-#define sipName_seriesName &sipStrings_goldencheetah[504]
+-#define sipNameNr_activities 515
+-#define sipName_activities &sipStrings_goldencheetah[515]
+-#define sipNameNr_processor 526
+-#define sipName_processor &sipStrings_goldencheetah[526]
+-#define sipNameNr_seasonPmc 536
+-#define sipName_seasonPmc &sipStrings_goldencheetah[536]
+-#define sipNameNr_setCurve 546
+-#define sipName_setCurve &sipStrings_goldencheetah[546]
+-#define sipNameNr_duration 555
+-#define sipName_duration &sipStrings_goldencheetah[555]
+-#define sipNameNr_activity 564
+-#define sipName_activity &sipStrings_goldencheetah[564]
+-#define sipNameNr_threadid 573
+-#define sipName_threadid &sipStrings_goldencheetah[573]
+-#define sipNameNr_Bindings 582
+-#define sipName_Bindings &sipStrings_goldencheetah[582]
+-#define sipNameNr_visible 591
+-#define sipName_visible &sipStrings_goldencheetah[591]
+-#define sipNameNr_opacity 599
+-#define sipName_opacity &sipStrings_goldencheetah[599]
+-#define sipNameNr_fseries 607
+-#define sipName_fseries &sipStrings_goldencheetah[607]
+-#define sipNameNr_yseries 615
+-#define sipName_yseries &sipStrings_goldencheetah[615]
+-#define sipNameNr_xseries 623
+-#define sipName_xseries &sipStrings_goldencheetah[623]
+-#define sipNameNr_animate 631
+-#define sipName_animate &sipStrings_goldencheetah[631]
+-#define sipNameNr_metrics 639
+-#define sipName_metrics &sipStrings_goldencheetah[639]
+-#define sipNameNr_compare 647
+-#define sipName_compare &sipStrings_goldencheetah[647]
+-#define sipNameNr_athlete 655
+-#define sipName_athlete &sipStrings_goldencheetah[655]
+-#define sipNameNr_webpage 663
+-#define sipName_webpage &sipStrings_goldencheetah[663]
+-#define sipNameNr_version 671
+-#define sipName_version &sipStrings_goldencheetah[671]
+-#define sipNameNr___len__ 679
+-#define sipName___len__ &sipStrings_goldencheetah[679]
+-#define sipNameNr___str__ 687
+-#define sipName___str__ &sipStrings_goldencheetah[687]
+-#define sipNameNr_QString 695
+-#define sipName_QString &sipStrings_goldencheetah[695]
+-#define sipNameNr_legend 703
+-#define sipName_legend &sipStrings_goldencheetah[703]
+-#define sipNameNr_opengl 710
+-#define sipName_opengl &sipStrings_goldencheetah[710]
+-#define sipNameNr_symbol 717
+-#define sipName_symbol &sipStrings_goldencheetah[717]
+-#define sipNameNr_colors 724
+-#define sipName_colors &sipStrings_goldencheetah[724]
+-#define sipNameNr_labels 453
+-#define sipName_labels &sipStrings_goldencheetah[453]
+-#define sipNameNr_legpos 731
+-#define sipName_legpos &sipStrings_goldencheetah[731]
+-#define sipNameNr_getTag 738
+-#define sipName_getTag &sipStrings_goldencheetah[738]
+-#define sipNameNr_hasTag 745
+-#define sipName_hasTag &sipStrings_goldencheetah[745]
+-#define sipNameNr_delTag 752
+-#define sipName_delTag &sipStrings_goldencheetah[752]
+-#define sipNameNr_setTag 759
+-#define sipName_setTag &sipStrings_goldencheetah[759]
+-#define sipNameNr_metric 766
+-#define sipName_metric &sipStrings_goldencheetah[766]
+-#define sipNameNr_series 608
+-#define sipName_series &sipStrings_goldencheetah[608]
+-#define sipNameNr_season 773
+-#define sipName_season &sipStrings_goldencheetah[773]
+-#define sipNameNr_filter 780
+-#define sipName_filter &sipStrings_goldencheetah[780]
+-#define sipNameNr_result 787
+-#define sipName_result &sipStrings_goldencheetah[787]
+-#define sipNameNr_remove 794
+-#define sipName_remove &sipStrings_goldencheetah[794]
+-#define sipNameNr_append 801
+-#define sipName_append &sipStrings_goldencheetah[801]
+-#define sipNameNr_align 808
+-#define sipName_align &sipStrings_goldencheetah[808]
+-#define sipNameNr_color 443
+-#define sipName_color &sipStrings_goldencheetah[443]
+-#define sipNameNr_yname 814
+-#define sipName_yname &sipStrings_goldencheetah[814]
+-#define sipNameNr_xname 820
+-#define sipName_xname &sipStrings_goldencheetah[820]
+-#define sipNameNr_stack 826
+-#define sipName_stack &sipStrings_goldencheetah[826]
+-#define sipNameNr_title 832
+-#define sipName_title &sipStrings_goldencheetah[832]
+-#define sipNameNr_index 289
+-#define sipName_index &sipStrings_goldencheetah[289]
+-#define sipNameNr_group 838
+-#define sipName_group &sipStrings_goldencheetah[838]
+-#define sipNameNr_xdata 844
+-#define sipName_xdata &sipStrings_goldencheetah[844]
+-#define sipNameNr_sport 850
+-#define sipName_sport &sipStrings_goldencheetah[850]
+-#define sipNameNr_value 856
+-#define sipName_value &sipStrings_goldencheetah[856]
+-#define sipNameNr_build 862
+-#define sipName_build &sipStrings_goldencheetah[862]
+-#define sipNameNr_fill 868
+-#define sipName_fill &sipStrings_goldencheetah[868]
+-#define sipNameNr_line 873
+-#define sipName_line &sipStrings_goldencheetah[873]
+-#define sipNameNr_join 878
+-#define sipName_join &sipStrings_goldencheetah[878]
+-#define sipNameNr_name 815
+-#define sipName_name &sipStrings_goldencheetah[815]
+-#define sipNameNr_type 883
+-#define sipName_type &sipStrings_goldencheetah[883]
+-#define sipNameNr_date 888
+-#define sipName_date &sipStrings_goldencheetah[888]
+-#define sipNameNr_log 893
+-#define sipName_log &sipStrings_goldencheetah[893]
+-#define sipNameNr_max 138
+-#define sipName_max &sipStrings_goldencheetah[138]
+-#define sipNameNr_min 897
+-#define sipName_min &sipStrings_goldencheetah[897]
+-#define sipNameNr_all 901
+-#define sipName_all &sipStrings_goldencheetah[901]
+-#define sipNameNr_url 905
+-#define sipName_url &sipStrings_goldencheetah[905]
+-#define sipNameNr_s2 909
+-#define sipName_s2 &sipStrings_goldencheetah[909]
+-#define sipNameNr_s1 912
+-#define sipName_s1 &sipStrings_goldencheetah[912]
+-
+-#define sipMalloc                   sipAPI_goldencheetah->api_malloc
+-#define sipFree                     sipAPI_goldencheetah->api_free
+-#define sipBuildResult              sipAPI_goldencheetah->api_build_result
+-#define sipCallMethod               sipAPI_goldencheetah->api_call_method
+-#define sipCallProcedureMethod      sipAPI_goldencheetah->api_call_procedure_method
+-#define sipCallErrorHandler         sipAPI_goldencheetah->api_call_error_handler
+-#define sipParseResultEx            sipAPI_goldencheetah->api_parse_result_ex
+-#define sipParseResult              sipAPI_goldencheetah->api_parse_result
+-#define sipParseArgs                sipAPI_goldencheetah->api_parse_args
+-#define sipParseKwdArgs             sipAPI_goldencheetah->api_parse_kwd_args
+-#define sipParsePair                sipAPI_goldencheetah->api_parse_pair
+-#define sipInstanceDestroyed        sipAPI_goldencheetah->api_instance_destroyed
+-#define sipInstanceDestroyedEx      sipAPI_goldencheetah->api_instance_destroyed_ex
+-#define sipConvertFromSequenceIndex sipAPI_goldencheetah->api_convert_from_sequence_index
+-#define sipConvertFromVoidPtr       sipAPI_goldencheetah->api_convert_from_void_ptr
+-#define sipConvertToVoidPtr         sipAPI_goldencheetah->api_convert_to_void_ptr
+-#define sipAddException             sipAPI_goldencheetah->api_add_exception
+-#define sipNoFunction               sipAPI_goldencheetah->api_no_function
+-#define sipNoMethod                 sipAPI_goldencheetah->api_no_method
+-#define sipAbstractMethod           sipAPI_goldencheetah->api_abstract_method
+-#define sipBadClass                 sipAPI_goldencheetah->api_bad_class
+-#define sipBadCatcherResult         sipAPI_goldencheetah->api_bad_catcher_result
+-#define sipBadCallableArg           sipAPI_goldencheetah->api_bad_callable_arg
+-#define sipBadOperatorArg           sipAPI_goldencheetah->api_bad_operator_arg
+-#define sipTrace                    sipAPI_goldencheetah->api_trace
+-#define sipTransferBack             sipAPI_goldencheetah->api_transfer_back
+-#define sipTransferTo               sipAPI_goldencheetah->api_transfer_to
+-#define sipTransferBreak            sipAPI_goldencheetah->api_transfer_break
+-#define sipSimpleWrapper_Type       sipAPI_goldencheetah->api_simplewrapper_type
+-#define sipWrapper_Type             sipAPI_goldencheetah->api_wrapper_type
+-#define sipWrapperType_Type         sipAPI_goldencheetah->api_wrappertype_type
+-#define sipVoidPtr_Type             sipAPI_goldencheetah->api_voidptr_type
+-#define sipGetPyObject              sipAPI_goldencheetah->api_get_pyobject
+-#define sipGetAddress               sipAPI_goldencheetah->api_get_address
+-#define sipGetMixinAddress          sipAPI_goldencheetah->api_get_mixin_address
+-#define sipGetCppPtr                sipAPI_goldencheetah->api_get_cpp_ptr
+-#define sipGetComplexCppPtr         sipAPI_goldencheetah->api_get_complex_cpp_ptr
+-#define sipIsPyMethod               sipAPI_goldencheetah->api_is_py_method
+-#define sipCallHook                 sipAPI_goldencheetah->api_call_hook
+-#define sipEndThread                sipAPI_goldencheetah->api_end_thread
+-#define sipConnectRx                sipAPI_goldencheetah->api_connect_rx
+-#define sipDisconnectRx             sipAPI_goldencheetah->api_disconnect_rx
+-#define sipRaiseUnknownException    sipAPI_goldencheetah->api_raise_unknown_exception
+-#define sipRaiseTypeException       sipAPI_goldencheetah->api_raise_type_exception
+-#define sipBadLengthForSlice        sipAPI_goldencheetah->api_bad_length_for_slice
+-#define sipAddTypeInstance          sipAPI_goldencheetah->api_add_type_instance
+-#define sipFreeSipslot              sipAPI_goldencheetah->api_free_sipslot
+-#define sipSameSlot                 sipAPI_goldencheetah->api_same_slot
+-#define sipPySlotExtend             sipAPI_goldencheetah->api_pyslot_extend
+-#define sipConvertRx                sipAPI_goldencheetah->api_convert_rx
+-#define sipAddDelayedDtor           sipAPI_goldencheetah->api_add_delayed_dtor
+-#define sipCanConvertToType         sipAPI_goldencheetah->api_can_convert_to_type
+-#define sipConvertToType            sipAPI_goldencheetah->api_convert_to_type
+-#define sipForceConvertToType       sipAPI_goldencheetah->api_force_convert_to_type
+-#define sipCanConvertToEnum         sipAPI_goldencheetah->api_can_convert_to_enum
+-#define sipConvertToEnum            sipAPI_goldencheetah->api_convert_to_enum
+-#define sipConvertToBool            sipAPI_goldencheetah->api_convert_to_bool
+-#define sipReleaseType              sipAPI_goldencheetah->api_release_type
+-#define sipConvertFromType          sipAPI_goldencheetah->api_convert_from_type
+-#define sipConvertFromNewType       sipAPI_goldencheetah->api_convert_from_new_type
+-#define sipConvertFromNewPyType     sipAPI_goldencheetah->api_convert_from_new_pytype
+-#define sipConvertFromEnum          sipAPI_goldencheetah->api_convert_from_enum
+-#define sipGetState                 sipAPI_goldencheetah->api_get_state
+-#define sipExportSymbol             sipAPI_goldencheetah->api_export_symbol
+-#define sipImportSymbol             sipAPI_goldencheetah->api_import_symbol
+-#define sipFindType                 sipAPI_goldencheetah->api_find_type
+-#define sipFindNamedEnum            sipAPI_goldencheetah->api_find_named_enum
+-#define sipBytes_AsChar             sipAPI_goldencheetah->api_bytes_as_char
+-#define sipBytes_AsString           sipAPI_goldencheetah->api_bytes_as_string
+-#define sipString_AsASCIIChar       sipAPI_goldencheetah->api_string_as_ascii_char
+-#define sipString_AsASCIIString     sipAPI_goldencheetah->api_string_as_ascii_string
+-#define sipString_AsLatin1Char      sipAPI_goldencheetah->api_string_as_latin1_char
+-#define sipString_AsLatin1String    sipAPI_goldencheetah->api_string_as_latin1_string
+-#define sipString_AsUTF8Char        sipAPI_goldencheetah->api_string_as_utf8_char
+-#define sipString_AsUTF8String      sipAPI_goldencheetah->api_string_as_utf8_string
+-#define sipUnicode_AsWChar          sipAPI_goldencheetah->api_unicode_as_wchar
+-#define sipUnicode_AsWString        sipAPI_goldencheetah->api_unicode_as_wstring
+-#define sipConvertFromConstVoidPtr  sipAPI_goldencheetah->api_convert_from_const_void_ptr
+-#define sipConvertFromVoidPtrAndSize    sipAPI_goldencheetah->api_convert_from_void_ptr_and_size
+-#define sipConvertFromConstVoidPtrAndSize   sipAPI_goldencheetah->api_convert_from_const_void_ptr_and_size
+-#define sipInvokeSlot               sipAPI_goldencheetah->api_invoke_slot
+-#define sipInvokeSlotEx             sipAPI_goldencheetah->api_invoke_slot_ex
+-#define sipSaveSlot                 sipAPI_goldencheetah->api_save_slot
+-#define sipClearAnySlotReference    sipAPI_goldencheetah->api_clear_any_slot_reference
+-#define sipVisitSlot                sipAPI_goldencheetah->api_visit_slot
+-#define sipWrappedTypeName(wt)      ((wt)->wt_td->td_cname)
+-#define sipDeprecated               sipAPI_goldencheetah->api_deprecated
+-#define sipGetReference             sipAPI_goldencheetah->api_get_reference
+-#define sipKeepReference            sipAPI_goldencheetah->api_keep_reference
+-#define sipRegisterProxyResolver    sipAPI_goldencheetah->api_register_proxy_resolver
+-#define sipRegisterPyType           sipAPI_goldencheetah->api_register_py_type
+-#define sipTypeFromPyTypeObject     sipAPI_goldencheetah->api_type_from_py_type_object
+-#define sipTypeScope                sipAPI_goldencheetah->api_type_scope
+-#define sipResolveTypedef           sipAPI_goldencheetah->api_resolve_typedef
+-#define sipRegisterAttributeGetter  sipAPI_goldencheetah->api_register_attribute_getter
+-#define sipIsAPIEnabled             sipAPI_goldencheetah->api_is_api_enabled
+-#define sipSetDestroyOnExit         sipAPI_goldencheetah->api_set_destroy_on_exit
+-#define sipEnableAutoconversion     sipAPI_goldencheetah->api_enable_autoconversion
+-#define sipEnableOverflowChecking   sipAPI_goldencheetah->api_enable_overflow_checking
+-#define sipInitMixin                sipAPI_goldencheetah->api_init_mixin
+-#define sipExportModule             sipAPI_goldencheetah->api_export_module
+-#define sipInitModule               sipAPI_goldencheetah->api_init_module
+-#define sipGetInterpreter           sipAPI_goldencheetah->api_get_interpreter
+-#define sipSetNewUserTypeHandler    sipAPI_goldencheetah->api_set_new_user_type_handler
+-#define sipSetTypeUserData          sipAPI_goldencheetah->api_set_type_user_data
+-#define sipGetTypeUserData          sipAPI_goldencheetah->api_get_type_user_data
+-#define sipPyTypeDict               sipAPI_goldencheetah->api_py_type_dict
+-#define sipPyTypeName               sipAPI_goldencheetah->api_py_type_name
+-#define sipGetCFunction             sipAPI_goldencheetah->api_get_c_function
+-#define sipGetMethod                sipAPI_goldencheetah->api_get_method
+-#define sipFromMethod               sipAPI_goldencheetah->api_from_method
+-#define sipGetDate                  sipAPI_goldencheetah->api_get_date
+-#define sipFromDate                 sipAPI_goldencheetah->api_from_date
+-#define sipGetDateTime              sipAPI_goldencheetah->api_get_datetime
+-#define sipFromDateTime             sipAPI_goldencheetah->api_from_datetime
+-#define sipGetTime                  sipAPI_goldencheetah->api_get_time
+-#define sipFromTime                 sipAPI_goldencheetah->api_from_time
+-#define sipIsUserType               sipAPI_goldencheetah->api_is_user_type
+-#define sipGetFrame                 sipAPI_goldencheetah->api_get_frame
+-#define sipCheckPluginForType       sipAPI_goldencheetah->api_check_plugin_for_type
+-#define sipUnicodeNew               sipAPI_goldencheetah->api_unicode_new
+-#define sipUnicodeWrite             sipAPI_goldencheetah->api_unicode_write
+-#define sipUnicodeData              sipAPI_goldencheetah->api_unicode_data
+-#define sipGetBufferInfo            sipAPI_goldencheetah->api_get_buffer_info
+-#define sipReleaseBufferInfo        sipAPI_goldencheetah->api_release_buffer_info
+-#define sipIsOwnedByPython          sipAPI_goldencheetah->api_is_owned_by_python
+-#define sipIsDerivedClass           sipAPI_goldencheetah->api_is_derived_class
+-#define sipGetUserObject            sipAPI_goldencheetah->api_get_user_object
+-#define sipSetUserObject            sipAPI_goldencheetah->api_set_user_object
+-#define sipRegisterEventHandler     sipAPI_goldencheetah->api_register_event_handler
+-#define sipLong_AsChar              sipAPI_goldencheetah->api_long_as_char
+-#define sipLong_AsSignedChar        sipAPI_goldencheetah->api_long_as_signed_char
+-#define sipLong_AsUnsignedChar      sipAPI_goldencheetah->api_long_as_unsigned_char
+-#define sipLong_AsShort             sipAPI_goldencheetah->api_long_as_short
+-#define sipLong_AsUnsignedShort     sipAPI_goldencheetah->api_long_as_unsigned_short
+-#define sipLong_AsInt               sipAPI_goldencheetah->api_long_as_int
+-#define sipLong_AsUnsignedInt       sipAPI_goldencheetah->api_long_as_unsigned_int
+-#define sipLong_AsLong              sipAPI_goldencheetah->api_long_as_long
+-#define sipLong_AsUnsignedLong      sipAPI_goldencheetah->api_long_as_unsigned_long
+-#define sipLong_AsLongLong          sipAPI_goldencheetah->api_long_as_long_long
+-#define sipLong_AsUnsignedLongLong  sipAPI_goldencheetah->api_long_as_unsigned_long_long
+-
+-/* These are deprecated. */
+-#define sipMapStringToClass         sipAPI_goldencheetah->api_map_string_to_class
+-#define sipMapIntToClass            sipAPI_goldencheetah->api_map_int_to_class
+-#define sipFindClass                sipAPI_goldencheetah->api_find_class
+-#define sipFindMappedType           sipAPI_goldencheetah->api_find_mapped_type
+-#define sipConvertToArray           sipAPI_goldencheetah->api_convert_to_array
+-#define sipConvertToTypedArray      sipAPI_goldencheetah->api_convert_to_typed_array
+-#define sipEnableGC                 sipAPI_goldencheetah->api_enable_gc
+-#define sipPrintObject              sipAPI_goldencheetah->api_print_object
+-#define sipWrapper_Check(w)         PyObject_TypeCheck((w), sipAPI_goldencheetah->api_wrapper_type)
+-#define sipGetWrapper(p, wt)        sipGetPyObject((p), (wt)->wt_td)
+-#define sipReleaseInstance(p, wt, s)    sipReleaseType((p), (wt)->wt_td, (s))
+-#define sipReleaseMappedType        sipReleaseType
+-#define sipCanConvertToInstance(o, wt, f)   sipCanConvertToType((o), (wt)->wt_td, (f))
+-#define sipCanConvertToMappedType   sipCanConvertToType
+-#define sipConvertToInstance(o, wt, t, f, s, e)     sipConvertToType((o), (wt)->wt_td, (t), (f), (s), (e))
+-#define sipConvertToMappedType      sipConvertToType
+-#define sipForceConvertToInstance(o, wt, t, f, s, e)    sipForceConvertToType((o), (wt)->wt_td, (t), (f), (s), (e))
+-#define sipForceConvertToMappedType sipForceConvertToType
+-#define sipConvertFromInstance(p, wt, t)    sipConvertFromType((p), (wt)->wt_td, (t))
+-#define sipConvertFromMappedType    sipConvertFromType
+-#define sipConvertFromNamedEnum(v, pt)  sipConvertFromEnum((v), ((sipEnumTypeObject *)(pt))->type)
+-#define sipConvertFromNewInstance(p, wt, t) sipConvertFromNewType((p), (wt)->wt_td, (t))
+-
+-/* The strings used by this module. */
+-extern const char sipStrings_goldencheetah[];
+-
+-#define sipType_PythonDataSeries sipExportedTypes_goldencheetah[1]
+-#define sipClass_PythonDataSeries sipExportedTypes_goldencheetah[1]->u.td_wrapper_type
+-
+-extern sipClassTypeDef sipTypeDef_goldencheetah_PythonDataSeries;
+-
+-#define sipType_PythonXDataSeries sipExportedTypes_goldencheetah[2]
+-#define sipClass_PythonXDataSeries sipExportedTypes_goldencheetah[2]->u.td_wrapper_type
+-
+-extern sipClassTypeDef sipTypeDef_goldencheetah_PythonXDataSeries;
+-
+-#define sipType_Bindings sipExportedTypes_goldencheetah[0]
+-#define sipClass_Bindings sipExportedTypes_goldencheetah[0]->u.td_wrapper_type
+-
+-extern sipClassTypeDef sipTypeDef_goldencheetah_Bindings;
+-
+-#define sipType_QStringList sipExportedTypes_goldencheetah[4]
+-
+-extern sipMappedTypeDef sipTypeDef_goldencheetah_QStringList;
+-
+-#define sipType_QString sipExportedTypes_goldencheetah[3]
+-
+-extern sipMappedTypeDef sipTypeDef_goldencheetah_QString;
+-
+-/* The SIP API, this module's API and the APIs of any imported modules. */
+-extern const sipAPIDef *sipAPI_goldencheetah;
+-extern sipExportedModuleDef sipModuleAPI_goldencheetah;
+-extern sipTypeDef *sipExportedTypes_goldencheetah[];
+-
+-#endif
+diff --git a/src/Python/SIP/sip_lib.pro b/src/Python/SIP/sip_lib.pro
+new file mode 100644
+index 000000000..6661a2f42
+--- /dev/null
++++ b/src/Python/SIP/sip_lib.pro
+@@ -0,0 +1,93 @@
++TEMPLATE = lib
++CONFIG += staticlib
++CONFIG -= precompile_header
++
++
++TARGET = sip_lib
++
++# Common settings
++app_path = ../..
++include($${app_path}/gcconfig.pri)
++
++INCLUDEPATH += $${GSL_INCLUDES}
++INCLUDEPATH += $${LIBZ_INCLUDE}
++INCLUDEPATH += $${D2XX_INCLUDE}
++INCLUDEPATH += $${SRMIO_INCLUDE}
++INCLUDEPATH += $${ICAL_INCLUDE}
++INCLUDEPATH += $${LIBUSB_INCLUDE}
++INCLUDEPATH += $${USBXPRESS_INCLUDE}
++INCLUDEPATH += $${VLC_INCLUDE}
++INCLUDEPATH += $${SAMPLERATE_INCLUDE}
++
++# Include paths (adjusted from src.pro)
++INCLUDEPATH += . \
++               $${app_path}/ANT \
++               $${app_path}/Train \
++               $${app_path}/FileIO \
++               $${app_path}/Cloud \
++               $${app_path}/Charts \
++               $${app_path}/Metrics \
++               $${app_path}/Gui \
++               $${app_path}/Core \
++               $${app_path}/Planning
++
++# External dependencies (adjust paths relative to here)
++INCLUDEPATH +=  $${app_path}/../qwt/src \
++                $${app_path}/../contrib/qxt/src \
++                $${app_path}/../contrib/qtsolutions/json \
++                $${app_path}/../contrib/qtsolutions/qwtcurve \
++                $${app_path}/../contrib/qtsolutions/flowlayout \
++                $${app_path}/../contrib/lmfit \
++                $${app_path}/../contrib/boost \
++                $${app_path}/../contrib/kmeans \
++                $${app_path}/../contrib/voronoi
++
++# Python Config
++DEFINES += SIP_STATIC_MODULE
++QT += core gui widgets core5compat xml sql network svg concurrent charts opengl webenginecore webenginewidgets webchannel positioning webenginequick
++
++INCLUDEPATH += ../.. ..
++
++!isEmpty(PYTHONINCLUDES) {
++    QMAKE_CXXFLAGS += $${PYTHONINCLUDES}
++    QMAKE_CFLAGS += $${PYTHONINCLUDES}
++}
++
++!isEmpty(GC_USE_PCH) {
++    CONFIG += precompile_header
++    PRECOMPILED_HEADER = ../../stable.h
++}
++
++# Source Generation
++# We run make in the current directory to generate the SIP C++ files
++win32 {
++    SYSTEM_MAKE = $(MAKE)
++} else {
++    SYSTEM_MAKE = make
++}
++
++# Hook to run data generation before compilation
++compile.commands = $${SYSTEM_MAKE}
++compile.depends = FORCE
++QMAKE_EXTRA_TARGETS += compile
++PRE_TARGETDEPS += compile
++
++# Explicitly add the generated sources
++# We use a wildcard, but we need to ensure they exist first.
++# qmake expands wildcards at parse time, so this is tricky if they don't exist yet.
++# However, SIP generation usually happens before qmake in many flows, or we rely on them being present.
++# If they are not present, qmake might miss them.
++# A better approach for the sources list:
++SOURCES += Bindings.cpp
++SOURCES += $$files(sip*.cpp)
++HEADERS += $$files(sip*.h)
++
++# If no SIP files file found (clean build), we might need to rely on the fact that
++# the user installs sip-build and runs it. 
++# But let's try to trigger it.
++system($${SYSTEM_MAKE})
++
++# Re-glob after system call
++SOURCES += $$files(sip*.cpp)
++SOURCES += $$files(sip*.c)
++HEADERS += $$files(sip*.h)
+diff --git a/src/Python/SIP/sipgoldencheetahBindings.cpp b/src/Python/SIP/sipgoldencheetahBindings.cpp
+deleted file mode 100644
+index b6edc766e..000000000
+--- a/src/Python/SIP/sipgoldencheetahBindings.cpp
++++ /dev/null
+@@ -1,1685 +0,0 @@
+-/*
+- * Interface wrapper code.
+- *
+- * Generated by SIP 4.19.8
+- */
+-
+-#include "sipAPIgoldencheetah.h"
+-
+-#line 334 "goldencheetah.sip"
+-//#include "Bindings.h"
+-#line 12 "./sipgoldencheetahBindings.cpp"
+-
+-#line 28 "goldencheetah.sip"
+-#include <qstring.h>
+-#line 16 "./sipgoldencheetahBindings.cpp"
+-#line 134 "goldencheetah.sip"
+-#include <qstringlist.h>
+-#line 19 "./sipgoldencheetahBindings.cpp"
+-#line 59 "goldencheetah.sip"
+-#include "Bindings.h"
+-#line 22 "./sipgoldencheetahBindings.cpp"
+-#line 244 "goldencheetah.sip"
+-#include "Bindings.h"
+-#line 25 "./sipgoldencheetahBindings.cpp"
+-
+-
+-extern "C" {static PyObject *meth_Bindings_threadid(PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_threadid(PyObject *sipSelf, PyObject *sipArgs)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        const  ::Bindings *sipCpp;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "B", &sipSelf, sipType_Bindings, &sipCpp))
+-        {
+-            long sipRes;
+-
+-            sipRes = sipCpp->threadid();
+-
+-            return PyLong_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_threadid, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_build(PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_build(PyObject *sipSelf, PyObject *sipArgs)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        const  ::Bindings *sipCpp;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "B", &sipSelf, sipType_Bindings, &sipCpp))
+-        {
+-            int sipRes;
+-
+-            sipRes = sipCpp->build();
+-
+-            return SIPLong_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_build, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_version(PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_version(PyObject *sipSelf, PyObject *sipArgs)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        const  ::Bindings *sipCpp;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "B", &sipSelf, sipType_Bindings, &sipCpp))
+-        {
+-             ::QString*sipRes;
+-
+-            sipRes = new  ::QString(sipCpp->version());
+-
+-            return sipConvertFromNewType(sipRes,sipType_QString,NULL);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_version, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_webpage(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_webpage(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_url,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State))
+-        {
+-            int sipRes;
+-
+-            sipRes = sipCpp->webpage(*a0);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return SIPLong_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_webpage, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_result(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_result(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        double a0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_value,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "Bd", &sipSelf, sipType_Bindings, &sipCpp, &a0))
+-        {
+-            sipCpp->result(a0);
+-
+-            Py_INCREF(Py_None);
+-            return Py_None;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_result, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_athlete(PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_athlete(PyObject *sipSelf, PyObject *sipArgs)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::Bindings *sipCpp;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "B", &sipSelf, sipType_Bindings, &sipCpp))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->athlete();
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_athlete, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_athleteZones(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_athleteZones(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        PyObject * a0 = 0;
+-         ::QString a1def = "";
+-         ::QString* a1 = &a1def;
+-        int a1State = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_date,
+-            sipName_sport,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|P0J1", &sipSelf, sipType_Bindings, &sipCpp, &a0, sipType_QString,&a1, &a1State))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->athleteZones(a0,*a1);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_athleteZones, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_activities(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_activities(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString a0def = QString();
+-         ::QString* a0 = &a0def;
+-        int a0State = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_filter,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|J1", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->activities(*a0);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_activities, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_season(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_season(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        bool a0 = 0;
+-        bool a1 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_all,
+-            sipName_compare,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|bb", &sipSelf, sipType_Bindings, &sipCpp, &a0, &a1))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->season(a0,a1);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_season, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seriesPresent(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seriesPresent(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        int a0 = 10;
+-        PyObject * a1 = 0;
+-        int a2 = -1;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-            sipName_activity,
+-            sipName_compareindex,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|iP0i", &sipSelf, sipType_Bindings, &sipCpp, &a0, &a1, &a2))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->seriesPresent(a0,a1,a2);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seriesPresent, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seriesName(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seriesName(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        int a0 = 10;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|i", &sipSelf, sipType_Bindings, &sipCpp, &a0))
+-        {
+-             ::QString*sipRes;
+-
+-            sipRes = new  ::QString(sipCpp->seriesName(a0));
+-
+-            return sipConvertFromNewType(sipRes,sipType_QString,NULL);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seriesName, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seriesLast(PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seriesLast(PyObject *sipSelf, PyObject *sipArgs)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        const  ::Bindings *sipCpp;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "B", &sipSelf, sipType_Bindings, &sipCpp))
+-        {
+-            int sipRes;
+-
+-            sipRes = sipCpp->seriesLast();
+-
+-            return SIPLong_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seriesLast, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_series(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_series(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        int a0 = 10;
+-        PyObject * a1 = 0;
+-        int a2 = -1;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-            sipName_activity,
+-            sipName_compareindex,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|iP0i", &sipSelf, sipType_Bindings, &sipCpp, &a0, &a1, &a2))
+-        {
+-             ::PythonDataSeries*sipRes;
+-
+-            sipRes = new  ::PythonDataSeries(sipCpp->series(a0,a1,a2));
+-
+-            return sipConvertFromNewType(sipRes,sipType_PythonDataSeries,Py_None);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_series, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_activityWbal(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_activityWbal(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        PyObject * a0 = 0;
+-        int a1 = -1;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_activity,
+-            sipName_compareindex,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|P0i", &sipSelf, sipType_Bindings, &sipCpp, &a0, &a1))
+-        {
+-             ::PythonDataSeries*sipRes;
+-
+-            sipRes = new  ::PythonDataSeries(sipCpp->activityWbal(a0,a1));
+-
+-            return sipConvertFromNewType(sipRes,sipType_PythonDataSeries,Py_None);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_activityWbal, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_xdata(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_xdata(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-         ::QString* a1;
+-        int a1State = 0;
+-         ::QString a2def = "repeat";
+-         ::QString* a2 = &a2def;
+-        int a2State = 0;
+-        PyObject * a3 = 0;
+-        int a4 = -1;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_series,
+-            sipName_join,
+-            sipName_activity,
+-            sipName_compareindex,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1J1|J1P0i", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, sipType_QString,&a1, &a1State, sipType_QString,&a2, &a2State, &a3, &a4))
+-        {
+-             ::PythonDataSeries*sipRes;
+-
+-            sipRes = new  ::PythonDataSeries(sipCpp->xdata(*a0,*a1,*a2,a3,a4));
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-            sipReleaseType(a2,sipType_QString,a2State);
+-
+-            return sipConvertFromNewType(sipRes,sipType_PythonDataSeries,Py_None);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_xdata, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_xdataSeries(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_xdataSeries(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-         ::QString* a1;
+-        int a1State = 0;
+-        PyObject * a2 = 0;
+-        int a3 = -1;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_series,
+-            sipName_activity,
+-            sipName_compareindex,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1J1|P0i", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, sipType_QString,&a1, &a1State, &a2, &a3))
+-        {
+-             ::PythonXDataSeries*sipRes;
+-
+-            sipRes = new  ::PythonXDataSeries(sipCpp->xdataSeries(*a0,*a1,a2,a3));
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-
+-            return sipConvertFromNewType(sipRes,sipType_PythonXDataSeries,Py_None);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_xdataSeries, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_xdataNames(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_xdataNames(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString a0def = QString();
+-         ::QString* a0 = &a0def;
+-        int a0State = 0;
+-        PyObject * a1 = 0;
+-        int a2 = -1;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_activity,
+-            sipName_compareindex,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|J1P0i", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1, &a2))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->xdataNames(*a0,a1,a2);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_xdataNames, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_activityMetrics(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_activityMetrics(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        bool a0 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_compare,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|b", &sipSelf, sipType_Bindings, &sipCpp, &a0))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->activityMetrics(a0);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_activityMetrics, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seasonMetrics(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seasonMetrics(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        bool a0 = 0;
+-         ::QString a1def = QString();
+-         ::QString* a1 = &a1def;
+-        int a1State = 0;
+-        bool a2 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_all,
+-            sipName_filter,
+-            sipName_compare,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|bJ1b", &sipSelf, sipType_Bindings, &sipCpp, &a0, sipType_QString,&a1, &a1State, &a2))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->seasonMetrics(a0,*a1,a2);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seasonMetrics, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_metrics(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_metrics(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        bool a1 = 0;
+-         ::QString a2def = QString();
+-         ::QString* a2 = &a2def;
+-        int a2State = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_metric,
+-            sipName_all,
+-            sipName_filter,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1|bJ1", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1, sipType_QString,&a2, &a2State))
+-        {
+-             ::PythonDataSeries*sipRes;
+-
+-            sipRes = sipCpp->metrics(*a0,a1,*a2);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a2,sipType_QString,a2State);
+-
+-            return sipConvertFromType(sipRes,sipType_PythonDataSeries,Py_None);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_metrics, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seasonPmc(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seasonPmc(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        bool a0 = 0;
+-         ::QString a1def = QString("BikeStress");
+-         ::QString* a1 = &a1def;
+-        int a1State = 0;
+-         ::QString a2def = QString("Actual");
+-         ::QString* a2 = &a2def;
+-        int a2State = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_all,
+-            sipName_metric,
+-            sipName_type,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|bJ1J1", &sipSelf, sipType_Bindings, &sipCpp, &a0, sipType_QString,&a1, &a1State, sipType_QString,&a2, &a2State))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->seasonPmc(a0,*a1,*a2);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-            sipReleaseType(a2,sipType_QString,a2State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seasonPmc, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seasonMeasures(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seasonMeasures(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        bool a0 = 0;
+-         ::QString a1def = QString("Body");
+-         ::QString* a1 = &a1def;
+-        int a1State = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_all,
+-            sipName_group,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|bJ1", &sipSelf, sipType_Bindings, &sipCpp, &a0, sipType_QString,&a1, &a1State))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->seasonMeasures(a0,*a1);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seasonMeasures, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_activityMeanmax(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_activityMeanmax(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        bool a0 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_compare,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|b", &sipSelf, sipType_Bindings, &sipCpp, &a0))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->activityMeanmax(a0);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_activityMeanmax, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seasonMeanmax(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seasonMeanmax(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        bool a0 = 0;
+-         ::QString a1def = QString();
+-         ::QString* a1 = &a1def;
+-        int a1State = 0;
+-        bool a2 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_all,
+-            sipName_filter,
+-            sipName_compare,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|bJ1b", &sipSelf, sipType_Bindings, &sipCpp, &a0, sipType_QString,&a1, &a1State, &a2))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->seasonMeanmax(a0,*a1,a2);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seasonMeanmax, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seasonPeaks(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seasonPeaks(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        int a1;
+-        bool a2 = 0;
+-         ::QString a3def = QString();
+-         ::QString* a3 = &a3def;
+-        int a3State = 0;
+-        bool a4 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_series,
+-            sipName_duration,
+-            sipName_all,
+-            sipName_filter,
+-            sipName_compare,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1i|bJ1b", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1, &a2, sipType_QString,&a3, &a3State, &a4))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->seasonPeaks(*a0,a1,a2,*a3,a4);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a3,sipType_QString,a3State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seasonPeaks, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_intervalType(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_intervalType(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        int a0 = 1;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|i", &sipSelf, sipType_Bindings, &sipCpp, &a0))
+-        {
+-             ::QString*sipRes;
+-
+-            sipRes = new  ::QString(sipCpp->intervalType(a0));
+-
+-            return sipConvertFromNewType(sipRes,sipType_QString,NULL);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_intervalType, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_seasonIntervals(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_seasonIntervals(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString a0def = QString();
+-         ::QString* a0 = &a0def;
+-        int a0State = 0;
+-        bool a1 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-            sipName_compare,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|J1b", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->seasonIntervals(*a0,a1);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_seasonIntervals, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_activityIntervals(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_activityIntervals(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString a0def = QString();
+-         ::QString* a0 = &a0def;
+-        int a0State = 0;
+-        PyObject * a1 = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|J1P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1))
+-        {
+-            PyObject * sipRes;
+-
+-            sipRes = sipCpp->activityIntervals(*a0,a1);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_activityIntervals, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_createXDataSeries(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_createXDataSeries(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-         ::QString* a1;
+-        int a1State = 0;
+-         ::QString* a2;
+-        int a2State = 0;
+-        PyObject * a3 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_series,
+-            sipName_seriesUnit,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1J1J1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, sipType_QString,&a1, &a1State, sipType_QString,&a2, &a2State, &a3))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->createXDataSeries(*a0,*a1,*a2,a3);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-            sipReleaseType(a2,sipType_QString,a2State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_createXDataSeries, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_deleteXDataSeries(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_deleteXDataSeries(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-         ::QString* a1;
+-        int a1State = 0;
+-        PyObject * a2 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_series,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1J1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, sipType_QString,&a1, &a1State, &a2))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->deleteXDataSeries(*a0,*a1,a2);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_deleteXDataSeries, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_deleteXData(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_deleteXData(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        PyObject * a1 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->deleteXData(*a0,a1);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_deleteXData, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_deleteActivitySample(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_deleteActivitySample(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        int a0 = -1;
+-        PyObject * a1 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_index,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "B|iP0", &sipSelf, sipType_Bindings, &sipCpp, &a0, &a1))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->deleteActivitySample(a0,a1);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_deleteActivitySample, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_deleteSeries(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_deleteSeries(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        int a0;
+-        PyObject * a1 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "Bi|P0", &sipSelf, sipType_Bindings, &sipCpp, &a0, &a1))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->deleteSeries(a0,a1);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_deleteSeries, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_postProcess(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_postProcess(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        PyObject * a1 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_processor,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->postProcess(*a0,a1);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_postProcess, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_setTag(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_setTag(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-         ::QString* a1;
+-        int a1State = 0;
+-        PyObject * a2 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_value,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1J1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, sipType_QString,&a1, &a1State, &a2))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->setTag(*a0,*a1,a2);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_setTag, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_delTag(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_delTag(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        PyObject * a1 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->delTag(*a0,a1);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_delTag, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_hasTag(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_hasTag(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        PyObject * a1 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->hasTag(*a0,a1);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_hasTag, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_getTag(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_getTag(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        PyObject * a1 = 0;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_activity,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1|P0", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1))
+-        {
+-             ::QString*sipRes;
+-
+-            sipRes = new  ::QString(sipCpp->getTag(*a0,a1));
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return sipConvertFromNewType(sipRes,sipType_QString,NULL);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_getTag, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_configChart(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_configChart(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        int a1;
+-        bool a2;
+-        int a3;
+-        bool a4;
+-        int a5;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_title,
+-            sipName_type,
+-            sipName_animate,
+-            sipName_legpos,
+-            sipName_stack,
+-            sipName_orientation,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1ibibi", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1, &a2, &a3, &a4, &a5))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->configChart(*a0,a1,a2,a3,a4,a5);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_configChart, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_setCurve(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_setCurve(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        PyObject * a1;
+-        PyObject * a2;
+-         ::QStringList* a3;
+-        int a3State = 0;
+-         ::QString* a4;
+-        int a4State = 0;
+-         ::QString* a5;
+-        int a5State = 0;
+-         ::QStringList* a6;
+-        int a6State = 0;
+-         ::QStringList* a7;
+-        int a7State = 0;
+-        int a8;
+-        int a9;
+-        int a10;
+-         ::QString* a11;
+-        int a11State = 0;
+-        int a12;
+-        bool a13;
+-        bool a14;
+-        bool a15;
+-        bool a16;
+-        const  ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_xseries,
+-            sipName_yseries,
+-            sipName_fseries,
+-            sipName_xname,
+-            sipName_yname,
+-            sipName_labels,
+-            sipName_colors,
+-            sipName_line,
+-            sipName_symbol,
+-            sipName_symbolsize,
+-            sipName_color,
+-            sipName_opacity,
+-            sipName_opengl,
+-            sipName_legend,
+-            sipName_datalabels,
+-            sipName_fill,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1P0P0J1J1J1J1J1iiiJ1ibbbb", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1, &a2, sipType_QStringList,&a3, &a3State, sipType_QString,&a4, &a4State, sipType_QString,&a5, &a5State, sipType_QStringList,&a6, &a6State, sipType_QStringList,&a7, &a7State, &a8, &a9, &a10, sipType_QString,&a11, &a11State, &a12, &a13, &a14, &a15, &a16))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->setCurve(*a0,a1,a2,*a3,*a4,*a5,*a6,*a7,a8,a9,a10,*a11,a12,a13,a14,a15,a16);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a3,sipType_QStringList,a3State);
+-            sipReleaseType(a4,sipType_QString,a4State);
+-            sipReleaseType(a5,sipType_QString,a5State);
+-            sipReleaseType(a6,sipType_QStringList,a6State);
+-            sipReleaseType(a7,sipType_QStringList,a7State);
+-            sipReleaseType(a11,sipType_QString,a11State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_setCurve, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_configAxis(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_configAxis(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-        bool a1;
+-        int a2;
+-        double a3;
+-        double a4;
+-        int a5;
+-         ::QString* a6;
+-        int a6State = 0;
+-         ::QString* a7;
+-        int a7State = 0;
+-        bool a8;
+-         ::QStringList* a9;
+-        int a9State = 0;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_name,
+-            sipName_visible,
+-            sipName_align,
+-            sipName_min,
+-            sipName_max,
+-            sipName_type,
+-            sipName_labelcolor,
+-            sipName_color,
+-            sipName_log,
+-            sipName_categories,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1biddiJ1J1bJ1", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, &a1, &a2, &a3, &a4, &a5, sipType_QString,&a6, &a6State, sipType_QString,&a7, &a7State, &a8, sipType_QStringList,&a9, &a9State))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->configAxis(*a0,a1,a2,a3,a4,a5,*a6,*a7,a8,*a9);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a6,sipType_QString,a6State);
+-            sipReleaseType(a7,sipType_QString,a7State);
+-            sipReleaseType(a9,sipType_QStringList,a9State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_configAxis, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_Bindings_addAnnotation(PyObject *, PyObject *, PyObject *);}
+-static PyObject *meth_Bindings_addAnnotation(PyObject *sipSelf, PyObject *sipArgs, PyObject *sipKwds)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-         ::QString* a0;
+-        int a0State = 0;
+-         ::QString* a1;
+-        int a1State = 0;
+-         ::QString* a2;
+-        int a2State = 0;
+-        double a3;
+-         ::Bindings *sipCpp;
+-
+-        static const char *sipKwdList[] = {
+-            sipName_type,
+-            sipName_s1,
+-            sipName_s2,
+-            sipName_value,
+-        };
+-
+-        if (sipParseKwdArgs(&sipParseErr, sipArgs, sipKwds, sipKwdList, NULL, "BJ1J1J1d", &sipSelf, sipType_Bindings, &sipCpp, sipType_QString,&a0, &a0State, sipType_QString,&a1, &a1State, sipType_QString,&a2, &a2State, &a3))
+-        {
+-            bool sipRes;
+-
+-            sipRes = sipCpp->addAnnotation(*a0,*a1,*a2,a3);
+-            sipReleaseType(a0,sipType_QString,a0State);
+-            sipReleaseType(a1,sipType_QString,a1State);
+-            sipReleaseType(a2,sipType_QString,a2State);
+-
+-            return PyBool_FromLong(sipRes);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_Bindings, sipName_addAnnotation, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-/* Call the instance's destructor. */
+-extern "C" {static void release_Bindings(void *, int);}
+-static void release_Bindings(void *sipCppV, int)
+-{
+-    delete reinterpret_cast< ::Bindings *>(sipCppV);
+-}
+-
+-
+-extern "C" {static void assign_Bindings(void *, SIP_SSIZE_T, void *);}
+-static void assign_Bindings(void *sipDst, SIP_SSIZE_T sipDstIdx, void *sipSrc)
+-{
+-    reinterpret_cast< ::Bindings *>(sipDst)[sipDstIdx] = *reinterpret_cast< ::Bindings *>(sipSrc);
+-}
+-
+-
+-extern "C" {static void *array_Bindings(SIP_SSIZE_T);}
+-static void *array_Bindings(SIP_SSIZE_T sipNrElem)
+-{
+-    return new  ::Bindings[sipNrElem];
+-}
+-
+-
+-extern "C" {static void *copy_Bindings(const void *, SIP_SSIZE_T);}
+-static void *copy_Bindings(const void *sipSrc, SIP_SSIZE_T sipSrcIdx)
+-{
+-    return new  ::Bindings(reinterpret_cast<const  ::Bindings *>(sipSrc)[sipSrcIdx]);
+-}
+-
+-
+-extern "C" {static void dealloc_Bindings(sipSimpleWrapper *);}
+-static void dealloc_Bindings(sipSimpleWrapper *sipSelf)
+-{
+-    if (sipIsOwnedByPython(sipSelf))
+-    {
+-        release_Bindings(sipGetAddress(sipSelf), 0);
+-    }
+-}
+-
+-
+-extern "C" {static void *init_type_Bindings(sipSimpleWrapper *, PyObject *, PyObject *, PyObject **, PyObject **, PyObject **);}
+-static void *init_type_Bindings(sipSimpleWrapper *, PyObject *sipArgs, PyObject *sipKwds, PyObject **sipUnused, PyObject **, PyObject **sipParseErr)
+-{
+-     ::Bindings *sipCpp = 0;
+-
+-    {
+-        if (sipParseKwdArgs(sipParseErr, sipArgs, sipKwds, NULL, sipUnused, ""))
+-        {
+-            sipCpp = new  ::Bindings();
+-
+-            return sipCpp;
+-        }
+-    }
+-
+-    {
+-        const  ::Bindings* a0;
+-
+-        if (sipParseKwdArgs(sipParseErr, sipArgs, sipKwds, NULL, sipUnused, "J9", sipType_Bindings, &a0))
+-        {
+-            sipCpp = new  ::Bindings(*a0);
+-
+-            return sipCpp;
+-        }
+-    }
+-
+-    return NULL;
+-}
+-
+-
+-static PyMethodDef methods_Bindings[] = {
+-    {SIP_MLNAME_CAST(sipName_activities), (PyCFunction)meth_Bindings_activities, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_activityIntervals), (PyCFunction)meth_Bindings_activityIntervals, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_activityMeanmax), (PyCFunction)meth_Bindings_activityMeanmax, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_activityMetrics), (PyCFunction)meth_Bindings_activityMetrics, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_activityWbal), (PyCFunction)meth_Bindings_activityWbal, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_addAnnotation), (PyCFunction)meth_Bindings_addAnnotation, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_athlete), meth_Bindings_athlete, METH_VARARGS, NULL},
+-    {SIP_MLNAME_CAST(sipName_athleteZones), (PyCFunction)meth_Bindings_athleteZones, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_build), meth_Bindings_build, METH_VARARGS, NULL},
+-    {SIP_MLNAME_CAST(sipName_configAxis), (PyCFunction)meth_Bindings_configAxis, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_configChart), (PyCFunction)meth_Bindings_configChart, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_createXDataSeries), (PyCFunction)meth_Bindings_createXDataSeries, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_delTag), (PyCFunction)meth_Bindings_delTag, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_deleteActivitySample), (PyCFunction)meth_Bindings_deleteActivitySample, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_deleteSeries), (PyCFunction)meth_Bindings_deleteSeries, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_deleteXData), (PyCFunction)meth_Bindings_deleteXData, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_deleteXDataSeries), (PyCFunction)meth_Bindings_deleteXDataSeries, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_getTag), (PyCFunction)meth_Bindings_getTag, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_hasTag), (PyCFunction)meth_Bindings_hasTag, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_intervalType), (PyCFunction)meth_Bindings_intervalType, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_metrics), (PyCFunction)meth_Bindings_metrics, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_postProcess), (PyCFunction)meth_Bindings_postProcess, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_result), (PyCFunction)meth_Bindings_result, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_season), (PyCFunction)meth_Bindings_season, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seasonIntervals), (PyCFunction)meth_Bindings_seasonIntervals, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seasonMeanmax), (PyCFunction)meth_Bindings_seasonMeanmax, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seasonMeasures), (PyCFunction)meth_Bindings_seasonMeasures, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seasonMetrics), (PyCFunction)meth_Bindings_seasonMetrics, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seasonPeaks), (PyCFunction)meth_Bindings_seasonPeaks, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seasonPmc), (PyCFunction)meth_Bindings_seasonPmc, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_series), (PyCFunction)meth_Bindings_series, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seriesLast), meth_Bindings_seriesLast, METH_VARARGS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seriesName), (PyCFunction)meth_Bindings_seriesName, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_seriesPresent), (PyCFunction)meth_Bindings_seriesPresent, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_setCurve), (PyCFunction)meth_Bindings_setCurve, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_setTag), (PyCFunction)meth_Bindings_setTag, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_threadid), meth_Bindings_threadid, METH_VARARGS, NULL},
+-    {SIP_MLNAME_CAST(sipName_version), meth_Bindings_version, METH_VARARGS, NULL},
+-    {SIP_MLNAME_CAST(sipName_webpage), (PyCFunction)meth_Bindings_webpage, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_xdata), (PyCFunction)meth_Bindings_xdata, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_xdataNames), (PyCFunction)meth_Bindings_xdataNames, METH_VARARGS|METH_KEYWORDS, NULL},
+-    {SIP_MLNAME_CAST(sipName_xdataSeries), (PyCFunction)meth_Bindings_xdataSeries, METH_VARARGS|METH_KEYWORDS, NULL}
+-};
+-
+-
+-sipClassTypeDef sipTypeDef_goldencheetah_Bindings = {
+-    {
+-        -1,
+-        0,
+-        0,
+-        SIP_TYPE_CLASS,
+-        sipNameNr_Bindings,
+-        {0},
+-        0
+-    },
+-    {
+-        sipNameNr_Bindings,
+-        {0, 0, 1},
+-        42, methods_Bindings,
+-        0, 0,
+-        0, 0,
+-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+-    },
+-    0,
+-    -1,
+-    -1,
+-    0,
+-    0,
+-    init_type_Bindings,
+-    0,
+-    0,
+-#if PY_MAJOR_VERSION >= 3
+-    0,
+-    0,
+-#else
+-    0,
+-    0,
+-    0,
+-    0,
+-#endif
+-    dealloc_Bindings,
+-    assign_Bindings,
+-    array_Bindings,
+-    copy_Bindings,
+-    release_Bindings,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0
+-};
+diff --git a/src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp b/src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp
+deleted file mode 100644
+index af0cebdd0..000000000
+--- a/src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp
++++ /dev/null
+@@ -1,338 +0,0 @@
+-/*
+- * Interface wrapper code.
+- *
+- * Generated by SIP 4.19.8
+- */
+-
+-#include "sipAPIgoldencheetah.h"
+-
+-#line 59 "goldencheetah.sip"
+-#include "Bindings.h"
+-#line 12 "./sipgoldencheetahPythonDataSeries.cpp"
+-
+-#line 28 "goldencheetah.sip"
+-#include <qstring.h>
+-#line 16 "./sipgoldencheetahPythonDataSeries.cpp"
+-
+-
+-extern "C" {static int slot_PythonDataSeries___setitem__(PyObject *,PyObject *);}
+-static int slot_PythonDataSeries___setitem__(PyObject *sipSelf,PyObject *sipArgs)
+-{
+-     ::PythonDataSeries *sipCpp = reinterpret_cast< ::PythonDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonDataSeries));
+-
+-    if (!sipCpp)
+-        return -1;
+-
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        long a0;
+-        double a1;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "ld", &a0, &a1))
+-        {
+-            sipErrorState sipError = sipErrorNone;
+-
+-#line 104 "goldencheetah.sip"
+-        if (sipCpp->readOnly) {
+-            PyErr_SetString(PyExc_AttributeError, "Object is read-only");
+-            sipError = sipErrorFail;
+-        } else {
+-            if (a0 < 0) a0 += sipCpp->count;
+-            if (a0 >= 0 && a0 < sipCpp->count) {
+-                sipCpp->data[a0] = a1;
+-                RideFile *rideFile = sipCpp->rideFile;
+-                if (rideFile) {
+-                    RideFile::SeriesType seriesType = static_cast<RideFile::SeriesType>(sipCpp->seriesType);
+-                    rideFile->command->setPointValue(a0, seriesType, a1);
+-                    if (!rideFile->isDataPresent(seriesType)) rideFile->command->setDataPresent(seriesType, true);
+-                }
+-            } else {
+-                PyErr_SetString(PyExc_IndexError, "Index out of range");
+-                sipError = sipErrorFail;
+-            }
+-        }
+-#line 56 "./sipgoldencheetahPythonDataSeries.cpp"
+-
+-            if (sipError == sipErrorFail)
+-                return -1;
+-
+-            if (sipError == sipErrorNone)
+-            {
+-            return 0;
+-            }
+-
+-            sipAddException(sipError, &sipParseErr);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_PythonDataSeries, sipName___setitem__, NULL);
+-
+-    return -1;
+-}
+-
+-
+-extern "C" {static PyObject *slot_PythonDataSeries___getitem__(PyObject *,PyObject *);}
+-static PyObject *slot_PythonDataSeries___getitem__(PyObject *sipSelf,PyObject *sipArg)
+-{
+-     ::PythonDataSeries *sipCpp = reinterpret_cast< ::PythonDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonDataSeries));
+-
+-    if (!sipCpp)
+-        return 0;
+-
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        long a0;
+-
+-        if (sipParseArgs(&sipParseErr, sipArg, "1l", &a0))
+-        {
+-            double sipRes = 0;
+-            sipErrorState sipError = sipErrorNone;
+-
+-#line 94 "goldencheetah.sip"
+-        if (a0 < 0) a0 += sipCpp->count;
+-        if (a0 >= 0 && a0 < sipCpp->count) {
+-            sipRes = sipCpp->data[a0];
+-        } else {
+-            PyErr_SetString(PyExc_IndexError, "Index out of range");
+-            sipError = sipErrorFail;
+-        }
+-#line 103 "./sipgoldencheetahPythonDataSeries.cpp"
+-
+-            if (sipError == sipErrorFail)
+-                return 0;
+-
+-            if (sipError == sipErrorNone)
+-            {
+-            return PyFloat_FromDouble(sipRes);
+-            }
+-
+-            sipAddException(sipError, &sipParseErr);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_PythonDataSeries, sipName___getitem__, NULL);
+-
+-    return 0;
+-}
+-
+-
+-extern "C" {static SIP_SSIZE_T slot_PythonDataSeries___len__(PyObject *);}
+-static SIP_SSIZE_T slot_PythonDataSeries___len__(PyObject *sipSelf)
+-{
+-     ::PythonDataSeries *sipCpp = reinterpret_cast< ::PythonDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonDataSeries));
+-
+-    if (!sipCpp)
+-        return 0;
+-
+-
+-    {
+-        {
+-            SIP_SSIZE_T sipRes = 0;
+-
+-#line 90 "goldencheetah.sip"
+-        sipRes = sipCpp->count;
+-#line 139 "./sipgoldencheetahPythonDataSeries.cpp"
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    return 0;
+-}
+-
+-
+-extern "C" {static PyObject *slot_PythonDataSeries___str__(PyObject *);}
+-static PyObject *slot_PythonDataSeries___str__(PyObject *sipSelf)
+-{
+-     ::PythonDataSeries *sipCpp = reinterpret_cast< ::PythonDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonDataSeries));
+-
+-    if (!sipCpp)
+-        return 0;
+-
+-
+-    {
+-        {
+-             ::QString*sipRes = 0;
+-
+-#line 86 "goldencheetah.sip"
+-        sipRes = new QString(sipCpp->name);
+-#line 164 "./sipgoldencheetahPythonDataSeries.cpp"
+-
+-            return sipConvertFromNewType(sipRes,sipType_QString,NULL);
+-        }
+-    }
+-
+-    return 0;
+-}
+-
+-
+-/* Call the instance's destructor. */
+-extern "C" {static void release_PythonDataSeries(void *, int);}
+-static void release_PythonDataSeries(void *sipCppV, int)
+-{
+-    delete reinterpret_cast< ::PythonDataSeries *>(sipCppV);
+-}
+-
+-
+-#if PY_MAJOR_VERSION >= 3
+-extern "C" {static int getbuffer_PythonDataSeries(PyObject *, void *, Py_buffer *, int);}
+-static int getbuffer_PythonDataSeries(PyObject *sipSelf, void *sipCppV, Py_buffer *sipBuffer, int )
+-{
+-     ::PythonDataSeries *sipCpp = reinterpret_cast< ::PythonDataSeries *>(sipCppV);
+-    int sipRes;
+-
+-#line 63 "goldencheetah.sip"
+-    sipBuffer->obj = sipSelf;
+-    sipBuffer->buf = (void*)sipCpp->data;
+-    sipBuffer->len = sipCpp->count * sizeof(double);
+-    sipBuffer->readonly = 0;
+-    sipBuffer->itemsize = sizeof(double);
+-    sipBuffer->format = (char*)"d";  // double
+-    sipBuffer->ndim = 1;
+-    sipBuffer->shape = &sipCpp->count;  // length-1 sequence of dimensions
+-    sipBuffer->strides = &sipBuffer->itemsize;  // for the simple case we can do this
+-    sipBuffer->suboffsets = NULL;
+-    sipBuffer->internal = NULL;
+-
+-    Py_INCREF(sipSelf);  // need to increase the reference count
+-    sipRes = 0;
+-#line 204 "./sipgoldencheetahPythonDataSeries.cpp"
+-
+-    return sipRes;
+-}
+-#endif
+-
+-
+-#if PY_MAJOR_VERSION >= 3
+-extern "C" {static void releasebuffer_PythonDataSeries(PyObject *, void *, Py_buffer *);}
+-static void releasebuffer_PythonDataSeries(PyObject *, void *, Py_buffer *)
+-{
+-#line 80 "goldencheetah.sip"
+-    // we do not require any special release function
+-#line 217 "./sipgoldencheetahPythonDataSeries.cpp"
+-}
+-#endif
+-
+-
+-extern "C" {static void assign_PythonDataSeries(void *, SIP_SSIZE_T, void *);}
+-static void assign_PythonDataSeries(void *sipDst, SIP_SSIZE_T sipDstIdx, void *sipSrc)
+-{
+-    reinterpret_cast< ::PythonDataSeries *>(sipDst)[sipDstIdx] = *reinterpret_cast< ::PythonDataSeries *>(sipSrc);
+-}
+-
+-
+-extern "C" {static void *array_PythonDataSeries(SIP_SSIZE_T);}
+-static void *array_PythonDataSeries(SIP_SSIZE_T sipNrElem)
+-{
+-    return new  ::PythonDataSeries[sipNrElem];
+-}
+-
+-
+-extern "C" {static void *copy_PythonDataSeries(const void *, SIP_SSIZE_T);}
+-static void *copy_PythonDataSeries(const void *sipSrc, SIP_SSIZE_T sipSrcIdx)
+-{
+-    return new  ::PythonDataSeries(reinterpret_cast<const  ::PythonDataSeries *>(sipSrc)[sipSrcIdx]);
+-}
+-
+-
+-extern "C" {static void dealloc_PythonDataSeries(sipSimpleWrapper *);}
+-static void dealloc_PythonDataSeries(sipSimpleWrapper *sipSelf)
+-{
+-    if (sipIsOwnedByPython(sipSelf))
+-    {
+-        release_PythonDataSeries(sipGetAddress(sipSelf), 0);
+-    }
+-}
+-
+-
+-extern "C" {static void *init_type_PythonDataSeries(sipSimpleWrapper *, PyObject *, PyObject *, PyObject **, PyObject **, PyObject **);}
+-static void *init_type_PythonDataSeries(sipSimpleWrapper *, PyObject *sipArgs, PyObject *sipKwds, PyObject **sipUnused, PyObject **, PyObject **sipParseErr)
+-{
+-     ::PythonDataSeries *sipCpp = 0;
+-
+-    {
+-        if (sipParseKwdArgs(sipParseErr, sipArgs, sipKwds, NULL, sipUnused, ""))
+-        {
+-            sipCpp = new  ::PythonDataSeries();
+-
+-            return sipCpp;
+-        }
+-    }
+-
+-    {
+-        const  ::PythonDataSeries* a0;
+-
+-        if (sipParseKwdArgs(sipParseErr, sipArgs, sipKwds, NULL, sipUnused, "J9", sipType_PythonDataSeries, &a0))
+-        {
+-            sipCpp = new  ::PythonDataSeries(*a0);
+-
+-            return sipCpp;
+-        }
+-    }
+-
+-    return NULL;
+-}
+-
+-
+-/* Define this type's Python slots. */
+-static sipPySlotDef slots_PythonDataSeries[] = {
+-    {(void *)slot_PythonDataSeries___setitem__, setitem_slot},
+-    {(void *)slot_PythonDataSeries___getitem__, getitem_slot},
+-    {(void *)slot_PythonDataSeries___len__, len_slot},
+-    {(void *)slot_PythonDataSeries___str__, str_slot},
+-    {0, (sipPySlotType)0}
+-};
+-
+-
+-sipClassTypeDef sipTypeDef_goldencheetah_PythonDataSeries = {
+-    {
+-        -1,
+-        0,
+-        0,
+-        SIP_TYPE_CLASS,
+-        sipNameNr_PythonDataSeries,
+-        {0},
+-        0
+-    },
+-    {
+-        sipNameNr_PythonDataSeries,
+-        {0, 0, 1},
+-        0, 0,
+-        0, 0,
+-        0, 0,
+-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+-    },
+-    0,
+-    -1,
+-    -1,
+-    0,
+-    slots_PythonDataSeries,
+-    init_type_PythonDataSeries,
+-    0,
+-    0,
+-#if PY_MAJOR_VERSION >= 3
+-    getbuffer_PythonDataSeries,
+-    releasebuffer_PythonDataSeries,
+-#else
+-    0,
+-    0,
+-    0,
+-    0,
+-#endif
+-    dealloc_PythonDataSeries,
+-    assign_PythonDataSeries,
+-    array_PythonDataSeries,
+-    copy_PythonDataSeries,
+-    release_PythonDataSeries,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0
+-};
+diff --git a/src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp b/src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
+deleted file mode 100644
+index 5dbcc361c..000000000
+--- a/src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
++++ /dev/null
+@@ -1,428 +0,0 @@
+-/*
+- * Interface wrapper code.
+- *
+- * Generated by SIP 4.19.8
+- */
+-
+-#include "sipAPIgoldencheetah.h"
+-
+-#line 244 "goldencheetah.sip"
+-#include "Bindings.h"
+-#line 12 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-#line 28 "goldencheetah.sip"
+-#include <qstring.h>
+-#line 16 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-
+-extern "C" {static PyObject *meth_PythonXDataSeries_append(PyObject *, PyObject *);}
+-static PyObject *meth_PythonXDataSeries_append(PyObject *sipSelf, PyObject *sipArgs)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        double a0;
+-         ::PythonXDataSeries *sipCpp;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "Bd", &sipSelf, sipType_PythonXDataSeries, &sipCpp, &a0))
+-        {
+-            sipErrorState sipError = sipErrorNone;
+-
+-#line 306 "goldencheetah.sip"
+-        if (sipCpp->readOnly) {
+-            PyErr_SetString(PyExc_AttributeError, "Object is read-only");
+-            sipError = sipErrorFail;
+-        } else {
+-            if (!sipCpp->add(a0)) {
+-                PyErr_SetString(PyExc_RuntimeError, "XData series does not exist");
+-            }
+-        }
+-#line 41 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-            if (sipError == sipErrorFail)
+-                return 0;
+-
+-            if (sipError == sipErrorNone)
+-            {
+-            Py_INCREF(Py_None);
+-            return Py_None;
+-            }
+-
+-            sipAddException(sipError, &sipParseErr);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_PythonXDataSeries, sipName_append, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static PyObject *meth_PythonXDataSeries_remove(PyObject *, PyObject *);}
+-static PyObject *meth_PythonXDataSeries_remove(PyObject *sipSelf, PyObject *sipArgs)
+-{
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        long a0;
+-         ::PythonXDataSeries *sipCpp;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "Bl", &sipSelf, sipType_PythonXDataSeries, &sipCpp, &a0))
+-        {
+-            sipErrorState sipError = sipErrorNone;
+-
+-#line 317 "goldencheetah.sip"
+-        if (sipCpp->readOnly) {
+-            PyErr_SetString(PyExc_AttributeError, "Object is read-only");
+-            sipError = sipErrorFail;
+-        } else {
+-            if (!sipCpp->remove(a0)) {
+-                PyErr_SetString(PyExc_RuntimeError, "XData series does not exist");
+-            }
+-        }
+-#line 85 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-            if (sipError == sipErrorFail)
+-                return 0;
+-
+-            if (sipError == sipErrorNone)
+-            {
+-            Py_INCREF(Py_None);
+-            return Py_None;
+-            }
+-
+-            sipAddException(sipError, &sipParseErr);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_PythonXDataSeries, sipName_remove, NULL);
+-
+-    return NULL;
+-}
+-
+-
+-extern "C" {static int slot_PythonXDataSeries___setitem__(PyObject *,PyObject *);}
+-static int slot_PythonXDataSeries___setitem__(PyObject *sipSelf,PyObject *sipArgs)
+-{
+-     ::PythonXDataSeries *sipCpp = reinterpret_cast< ::PythonXDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonXDataSeries));
+-
+-    if (!sipCpp)
+-        return -1;
+-
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        long a0;
+-        double a1;
+-
+-        if (sipParseArgs(&sipParseErr, sipArgs, "ld", &a0, &a1))
+-        {
+-            sipErrorState sipError = sipErrorNone;
+-
+-#line 289 "goldencheetah.sip"
+-        if (sipCpp->readOnly) {
+-            PyErr_SetString(PyExc_AttributeError, "Object is read-only");
+-            sipError = sipErrorFail;
+-        } else {
+-            if (a0 < 0) a0 += sipCpp->count();
+-            if (a0 >= 0 && a0 < sipCpp->count()) {
+-                if (!sipCpp->set(a0, a1)) {
+-                    PyErr_SetString(PyExc_RuntimeError, "XData series does not exist");
+-                }
+-            } else {
+-                PyErr_SetString(PyExc_IndexError, "Index out of range");
+-                sipError = sipErrorFail;
+-            }
+-        }
+-#line 140 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-            if (sipError == sipErrorFail)
+-                return -1;
+-
+-            if (sipError == sipErrorNone)
+-            {
+-            return 0;
+-            }
+-
+-            sipAddException(sipError, &sipParseErr);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_PythonXDataSeries, sipName___setitem__, NULL);
+-
+-    return -1;
+-}
+-
+-
+-extern "C" {static PyObject *slot_PythonXDataSeries___getitem__(PyObject *,PyObject *);}
+-static PyObject *slot_PythonXDataSeries___getitem__(PyObject *sipSelf,PyObject *sipArg)
+-{
+-     ::PythonXDataSeries *sipCpp = reinterpret_cast< ::PythonXDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonXDataSeries));
+-
+-    if (!sipCpp)
+-        return 0;
+-
+-    PyObject *sipParseErr = NULL;
+-
+-    {
+-        long a0;
+-
+-        if (sipParseArgs(&sipParseErr, sipArg, "1l", &a0))
+-        {
+-            double sipRes = 0;
+-            sipErrorState sipError = sipErrorNone;
+-
+-#line 279 "goldencheetah.sip"
+-        if (a0 < 0) a0 += sipCpp->count();
+-        if (a0 >= 0 && a0 < sipCpp->count()) {
+-            sipRes = sipCpp->get(a0);
+-        } else {
+-            PyErr_SetString(PyExc_IndexError, "Index out of range");
+-            sipError = sipErrorFail;
+-        }
+-#line 187 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-            if (sipError == sipErrorFail)
+-                return 0;
+-
+-            if (sipError == sipErrorNone)
+-            {
+-            return PyFloat_FromDouble(sipRes);
+-            }
+-
+-            sipAddException(sipError, &sipParseErr);
+-        }
+-    }
+-
+-    /* Raise an exception if the arguments couldn't be parsed. */
+-    sipNoMethod(sipParseErr, sipName_PythonXDataSeries, sipName___getitem__, NULL);
+-
+-    return 0;
+-}
+-
+-
+-extern "C" {static SIP_SSIZE_T slot_PythonXDataSeries___len__(PyObject *);}
+-static SIP_SSIZE_T slot_PythonXDataSeries___len__(PyObject *sipSelf)
+-{
+-     ::PythonXDataSeries *sipCpp = reinterpret_cast< ::PythonXDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonXDataSeries));
+-
+-    if (!sipCpp)
+-        return 0;
+-
+-
+-    {
+-        {
+-            SIP_SSIZE_T sipRes = 0;
+-
+-#line 275 "goldencheetah.sip"
+-        sipRes = sipCpp->count();
+-#line 223 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-            return sipRes;
+-        }
+-    }
+-
+-    return 0;
+-}
+-
+-
+-extern "C" {static PyObject *slot_PythonXDataSeries___str__(PyObject *);}
+-static PyObject *slot_PythonXDataSeries___str__(PyObject *sipSelf)
+-{
+-     ::PythonXDataSeries *sipCpp = reinterpret_cast< ::PythonXDataSeries *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_PythonXDataSeries));
+-
+-    if (!sipCpp)
+-        return 0;
+-
+-
+-    {
+-        {
+-             ::QString*sipRes = 0;
+-
+-#line 271 "goldencheetah.sip"
+-        sipRes = new QString(sipCpp->name());
+-#line 248 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-            return sipConvertFromNewType(sipRes,sipType_QString,NULL);
+-        }
+-    }
+-
+-    return 0;
+-}
+-
+-
+-/* Call the instance's destructor. */
+-extern "C" {static void release_PythonXDataSeries(void *, int);}
+-static void release_PythonXDataSeries(void *sipCppV, int)
+-{
+-    delete reinterpret_cast< ::PythonXDataSeries *>(sipCppV);
+-}
+-
+-
+-#if PY_MAJOR_VERSION >= 3
+-extern "C" {static int getbuffer_PythonXDataSeries(PyObject *, void *, Py_buffer *, int);}
+-static int getbuffer_PythonXDataSeries(PyObject *sipSelf, void *sipCppV, Py_buffer *sipBuffer, int )
+-{
+-     ::PythonXDataSeries *sipCpp = reinterpret_cast< ::PythonXDataSeries *>(sipCppV);
+-    int sipRes;
+-
+-#line 248 "goldencheetah.sip"
+-    sipBuffer->obj = sipSelf;
+-    sipBuffer->buf = sipCpp->rawDataPtr();
+-    sipBuffer->len = sipCpp->count() * sizeof(double);
+-    sipBuffer->readonly = 0;
+-    sipBuffer->itemsize = sizeof(double);
+-    sipBuffer->format = (char*)"d";  // double
+-    sipBuffer->ndim = 1;
+-    sipBuffer->shape = sipCpp->shape.data();  // length-1 sequence of dimensions
+-    sipBuffer->strides = &sipBuffer->itemsize;  // for the simple case we can do this
+-    sipBuffer->suboffsets = NULL;
+-    sipBuffer->internal = NULL;
+-
+-    Py_INCREF(sipSelf);  // need to increase the reference count
+-    sipRes = 0;
+-#line 288 "./sipgoldencheetahPythonXDataSeries.cpp"
+-
+-    return sipRes;
+-}
+-#endif
+-
+-
+-#if PY_MAJOR_VERSION >= 3
+-extern "C" {static void releasebuffer_PythonXDataSeries(PyObject *, void *, Py_buffer *);}
+-static void releasebuffer_PythonXDataSeries(PyObject *, void *, Py_buffer *)
+-{
+-#line 265 "goldencheetah.sip"
+-    // we do not require any special release function
+-#line 301 "./sipgoldencheetahPythonXDataSeries.cpp"
+-}
+-#endif
+-
+-
+-extern "C" {static void assign_PythonXDataSeries(void *, SIP_SSIZE_T, void *);}
+-static void assign_PythonXDataSeries(void *sipDst, SIP_SSIZE_T sipDstIdx, void *sipSrc)
+-{
+-    reinterpret_cast< ::PythonXDataSeries *>(sipDst)[sipDstIdx] = *reinterpret_cast< ::PythonXDataSeries *>(sipSrc);
+-}
+-
+-
+-extern "C" {static void *array_PythonXDataSeries(SIP_SSIZE_T);}
+-static void *array_PythonXDataSeries(SIP_SSIZE_T sipNrElem)
+-{
+-    return new  ::PythonXDataSeries[sipNrElem];
+-}
+-
+-
+-extern "C" {static void *copy_PythonXDataSeries(const void *, SIP_SSIZE_T);}
+-static void *copy_PythonXDataSeries(const void *sipSrc, SIP_SSIZE_T sipSrcIdx)
+-{
+-    return new  ::PythonXDataSeries(reinterpret_cast<const  ::PythonXDataSeries *>(sipSrc)[sipSrcIdx]);
+-}
+-
+-
+-extern "C" {static void dealloc_PythonXDataSeries(sipSimpleWrapper *);}
+-static void dealloc_PythonXDataSeries(sipSimpleWrapper *sipSelf)
+-{
+-    if (sipIsOwnedByPython(sipSelf))
+-    {
+-        release_PythonXDataSeries(sipGetAddress(sipSelf), 0);
+-    }
+-}
+-
+-
+-extern "C" {static void *init_type_PythonXDataSeries(sipSimpleWrapper *, PyObject *, PyObject *, PyObject **, PyObject **, PyObject **);}
+-static void *init_type_PythonXDataSeries(sipSimpleWrapper *, PyObject *sipArgs, PyObject *sipKwds, PyObject **sipUnused, PyObject **, PyObject **sipParseErr)
+-{
+-     ::PythonXDataSeries *sipCpp = 0;
+-
+-    {
+-        if (sipParseKwdArgs(sipParseErr, sipArgs, sipKwds, NULL, sipUnused, ""))
+-        {
+-            sipCpp = new  ::PythonXDataSeries();
+-
+-            return sipCpp;
+-        }
+-    }
+-
+-    {
+-        const  ::PythonXDataSeries* a0;
+-
+-        if (sipParseKwdArgs(sipParseErr, sipArgs, sipKwds, NULL, sipUnused, "J9", sipType_PythonXDataSeries, &a0))
+-        {
+-            sipCpp = new  ::PythonXDataSeries(*a0);
+-
+-            return sipCpp;
+-        }
+-    }
+-
+-    return NULL;
+-}
+-
+-
+-/* Define this type's Python slots. */
+-static sipPySlotDef slots_PythonXDataSeries[] = {
+-    {(void *)slot_PythonXDataSeries___setitem__, setitem_slot},
+-    {(void *)slot_PythonXDataSeries___getitem__, getitem_slot},
+-    {(void *)slot_PythonXDataSeries___len__, len_slot},
+-    {(void *)slot_PythonXDataSeries___str__, str_slot},
+-    {0, (sipPySlotType)0}
+-};
+-
+-
+-static PyMethodDef methods_PythonXDataSeries[] = {
+-    {SIP_MLNAME_CAST(sipName_append), meth_PythonXDataSeries_append, METH_VARARGS, NULL},
+-    {SIP_MLNAME_CAST(sipName_remove), meth_PythonXDataSeries_remove, METH_VARARGS, NULL}
+-};
+-
+-
+-sipClassTypeDef sipTypeDef_goldencheetah_PythonXDataSeries = {
+-    {
+-        -1,
+-        0,
+-        0,
+-        SIP_TYPE_CLASS,
+-        sipNameNr_PythonXDataSeries,
+-        {0},
+-        0
+-    },
+-    {
+-        sipNameNr_PythonXDataSeries,
+-        {0, 0, 1},
+-        2, methods_PythonXDataSeries,
+-        0, 0,
+-        0, 0,
+-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+-    },
+-    0,
+-    -1,
+-    -1,
+-    0,
+-    slots_PythonXDataSeries,
+-    init_type_PythonXDataSeries,
+-    0,
+-    0,
+-#if PY_MAJOR_VERSION >= 3
+-    getbuffer_PythonXDataSeries,
+-    releasebuffer_PythonXDataSeries,
+-#else
+-    0,
+-    0,
+-    0,
+-    0,
+-#endif
+-    dealloc_PythonXDataSeries,
+-    assign_PythonXDataSeries,
+-    array_PythonXDataSeries,
+-    copy_PythonXDataSeries,
+-    release_PythonXDataSeries,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0,
+-    0
+-};
+diff --git a/src/Python/SIP/sipgoldencheetahQString.cpp b/src/Python/SIP/sipgoldencheetahQString.cpp
+deleted file mode 100644
+index 1d002499d..000000000
+--- a/src/Python/SIP/sipgoldencheetahQString.cpp
++++ /dev/null
+@@ -1,105 +0,0 @@
+-/*
+- * Interface wrapper code.
+- *
+- * Generated by SIP 4.19.8
+- */
+-
+-#include "sipAPIgoldencheetah.h"
+-
+-#line 28 "goldencheetah.sip"
+-#include <qstring.h>
+-#line 12 "./sipgoldencheetahQString.cpp"
+-
+-
+-
+-extern "C" {static void assign_QString(void *, SIP_SSIZE_T, void *);}
+-static void assign_QString(void *sipDst, SIP_SSIZE_T sipDstIdx, void *sipSrc)
+-{
+-    reinterpret_cast< ::QString *>(sipDst)[sipDstIdx] = *reinterpret_cast< ::QString *>(sipSrc);
+-}
+-
+-
+-extern "C" {static void *array_QString(SIP_SSIZE_T);}
+-static void *array_QString(SIP_SSIZE_T sipNrElem)
+-{
+-    return new  ::QString[sipNrElem];
+-}
+-
+-
+-extern "C" {static void *copy_QString(const void *, SIP_SSIZE_T);}
+-static void *copy_QString(const void *sipSrc, SIP_SSIZE_T sipSrcIdx)
+-{
+-    return new  ::QString(reinterpret_cast<const  ::QString *>(sipSrc)[sipSrcIdx]);
+-}
+-
+-
+-/* Call the mapped type's destructor. */
+-extern "C" {static void release_QString(void *, int);}
+-static void release_QString(void *ptr, int)
+-{
+-    delete reinterpret_cast< ::QString *>(ptr);
+-}
+-
+-
+-
+-extern "C" {static int convertTo_QString(PyObject *, void **, int *, PyObject *);}
+-static int convertTo_QString(PyObject *sipPy,void **sipCppPtrV,int *sipIsErr,PyObject *)
+-{
+-     ::QString **sipCppPtr = reinterpret_cast< ::QString **>(sipCppPtrV);
+-
+-#line 32 "goldencheetah.sip"
+-    if (sipIsErr == NULL) return PyUnicode_Check(sipPy);
+-    if (sipPy == Py_None) {
+-        *sipCppPtr = new QString();
+-        return 1;
+-    }
+-    if (PyUnicode_Check(sipPy)) {
+-        Py_ssize_t size;
+-        wchar_t *string = PyUnicode_AsWideCharString(sipPy, &size);
+-        if (string) {
+-            if (size) *sipCppPtr = new QString(QString::fromWCharArray(string));
+-            else *sipCppPtr = new QString();
+-        }
+-        return 1;
+-    }
+-    return 0;
+-#line 67 "./sipgoldencheetahQString.cpp"
+-}
+-
+-
+-extern "C" {static PyObject *convertFrom_QString(void *, PyObject *);}
+-static PyObject *convertFrom_QString(void *sipCppV, PyObject *)
+-{
+-    ::QString *sipCpp = reinterpret_cast< ::QString *>(sipCppV);
+-
+-#line 49 "goldencheetah.sip"
+-    return PyUnicode_FromString(sipCpp->toUtf8().data());
+-#line 78 "./sipgoldencheetahQString.cpp"
+-}
+-
+-
+-sipMappedTypeDef sipTypeDef_goldencheetah_QString = {
+-    {
+-        -1,
+-        0,
+-        0,
+-        SIP_TYPE_ALLOW_NONE|SIP_TYPE_MAPPED,
+-        sipNameNr_QString,     /* QString */
+-        {0},
+-        0
+-    },
+-    {
+-        -1,
+-        {0, 0, 1},
+-        0, 0,
+-        0, 0,
+-        0, 0,
+-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+-    },
+-    assign_QString,
+-    array_QString,
+-    copy_QString,
+-    release_QString,
+-    convertTo_QString,
+-    convertFrom_QString
+-};
+diff --git a/src/Python/SIP/sipgoldencheetahQStringList.cpp b/src/Python/SIP/sipgoldencheetahQStringList.cpp
+deleted file mode 100644
+index 4b5ab4061..000000000
+--- a/src/Python/SIP/sipgoldencheetahQStringList.cpp
++++ /dev/null
+@@ -1,183 +0,0 @@
+-/*
+- * Interface wrapper code.
+- *
+- * Generated by SIP 4.19.8
+- */
+-
+-#include "sipAPIgoldencheetah.h"
+-
+-#line 134 "goldencheetah.sip"
+-#include <qstringlist.h>
+-#line 12 "./sipgoldencheetahQStringList.cpp"
+-
+-
+-
+-extern "C" {static void assign_QStringList(void *, SIP_SSIZE_T, void *);}
+-static void assign_QStringList(void *sipDst, SIP_SSIZE_T sipDstIdx, void *sipSrc)
+-{
+-    reinterpret_cast< ::QStringList *>(sipDst)[sipDstIdx] = *reinterpret_cast< ::QStringList *>(sipSrc);
+-}
+-
+-
+-extern "C" {static void *array_QStringList(SIP_SSIZE_T);}
+-static void *array_QStringList(SIP_SSIZE_T sipNrElem)
+-{
+-    return new  ::QStringList[sipNrElem];
+-}
+-
+-
+-extern "C" {static void *copy_QStringList(const void *, SIP_SSIZE_T);}
+-static void *copy_QStringList(const void *sipSrc, SIP_SSIZE_T sipSrcIdx)
+-{
+-    return new  ::QStringList(reinterpret_cast<const  ::QStringList *>(sipSrc)[sipSrcIdx]);
+-}
+-
+-
+-/* Call the mapped type's destructor. */
+-extern "C" {static void release_QStringList(void *, int);}
+-static void release_QStringList(void *ptr, int)
+-{
+-    delete reinterpret_cast< ::QStringList *>(ptr);
+-}
+-
+-
+-
+-extern "C" {static int convertTo_QStringList(PyObject *, void **, int *, PyObject *);}
+-static int convertTo_QStringList(PyObject *sipPy,void **sipCppPtrV,int *sipIsErr,PyObject *sipTransferObj)
+-{
+-     ::QStringList **sipCppPtr = reinterpret_cast< ::QStringList **>(sipCppPtrV);
+-
+-#line 164 "goldencheetah.sip"
+-    PyObject *iter = PyObject_GetIter(sipPy);
+-
+-    if (!sipIsErr)
+-    {
+-        PyErr_Clear();
+-        Py_XDECREF(iter);
+-
+-        return (iter
+-#if PY_MAJOR_VERSION < 3
+-                && !PyString_Check(sipPy)
+-#endif
+-                && !PyUnicode_Check(sipPy));
+-    }
+-
+-    if (!iter)
+-    {
+-        *sipIsErr = 1;
+-
+-        return 0;
+-    }
+-
+-    QStringList *ql = new QStringList;
+- 
+-    for (Py_ssize_t i = 0; ; ++i)
+-    {
+-        PyErr_Clear();
+-        PyObject *itm = PyIter_Next(iter);
+-
+-        if (!itm)
+-        {
+-            if (PyErr_Occurred())
+-            {
+-                delete ql;
+-                Py_DECREF(iter);
+-                *sipIsErr = 1;
+-
+-                return 0;
+-            }
+-
+-            break;
+-        }
+-
+-        int state;
+-        QString *t = reinterpret_cast<QString *>(
+-                sipForceConvertToType(itm, sipType_QString, sipTransferObj,
+-                        SIP_NOT_NONE, &state, sipIsErr));
+-
+-        if (*sipIsErr)
+-        {
+-            PyErr_Format(PyExc_TypeError,
+-                    "index %zd has type '%s' but 'str' is expected", i,
+-                    sipPyTypeName(Py_TYPE(itm)));
+-
+-            Py_DECREF(itm);
+-            delete ql;
+-            Py_DECREF(iter);
+-
+-            return 0;
+-        }
+-
+-        ql->append(*t);
+-
+-        sipReleaseType(t, sipType_QString, state);
+-        Py_DECREF(itm);
+-    }
+- 
+-    Py_DECREF(iter);
+-
+-    *sipCppPtr = ql;
+- 
+-    return sipGetState(sipTransferObj);
+-#line 123 "./sipgoldencheetahQStringList.cpp"
+-}
+-
+-
+-extern "C" {static PyObject *convertFrom_QStringList(void *, PyObject *);}
+-static PyObject *convertFrom_QStringList(void *sipCppV, PyObject *sipTransferObj)
+-{
+-    ::QStringList *sipCpp = reinterpret_cast< ::QStringList *>(sipCppV);
+-
+-#line 138 "goldencheetah.sip"
+-    PyObject *l = PyList_New(sipCpp->size());
+-
+-    if (!l)
+-        return 0;
+-
+-    for (int i = 0; i < sipCpp->size(); ++i)
+-    {
+-        QString *t = new QString(sipCpp->at(i));
+-        PyObject *tobj = sipConvertFromNewType(t, sipType_QString,
+-                sipTransferObj);
+-
+-        if (!tobj)
+-        {
+-            delete t;
+-            Py_DECREF(l);
+-
+-            return 0;
+-        }
+-
+-        PyList_SetItem(l, i, tobj);
+-    }
+-
+-    return l;
+-#line 156 "./sipgoldencheetahQStringList.cpp"
+-}
+-
+-
+-sipMappedTypeDef sipTypeDef_goldencheetah_QStringList = {
+-    {
+-        -1,
+-        0,
+-        0,
+-        SIP_TYPE_MAPPED,
+-        sipNameNr_QStringList,     /* QStringList */
+-        {0},
+-        0
+-    },
+-    {
+-        -1,
+-        {0, 0, 1},
+-        0, 0,
+-        0, 0,
+-        0, 0,
+-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+-    },
+-    assign_QStringList,
+-    array_QStringList,
+-    copy_QStringList,
+-    release_QStringList,
+-    convertTo_QStringList,
+-    convertFrom_QStringList
+-};
+diff --git a/src/Python/SIP/sipgoldencheetahcmodule.cpp b/src/Python/SIP/sipgoldencheetahcmodule.cpp
+deleted file mode 100644
+index 3a8431c05..000000000
+--- a/src/Python/SIP/sipgoldencheetahcmodule.cpp
++++ /dev/null
+@@ -1,274 +0,0 @@
+-/*
+- * Module code.
+- *
+- * Generated by SIP 4.19.8
+- */
+-
+-#include "sipAPIgoldencheetah.h"
+-
+-#line 59 "goldencheetah.sip"
+-#include "Bindings.h"
+-#line 12 "./sipgoldencheetahcmodule.cpp"
+-#line 244 "goldencheetah.sip"
+-#include "Bindings.h"
+-#line 15 "./sipgoldencheetahcmodule.cpp"
+-#line 334 "goldencheetah.sip"
+-//#include "Bindings.h"
+-#line 18 "./sipgoldencheetahcmodule.cpp"
+-
+-/* Define the strings used by this module. */
+-const char sipStrings_goldencheetah[] = {
+-    'd', 'e', 'l', 'e', 't', 'e', 'A', 'c', 't', 'i', 'v', 'i', 't', 'y', 'S', 'a', 'm', 'p', 'l', 'e', 0,
+-    'd', 'e', 'l', 'e', 't', 'e', 'X', 'D', 'a', 't', 'a', 'S', 'e', 'r', 'i', 'e', 's', 0,
+-    'c', 'r', 'e', 'a', 't', 'e', 'X', 'D', 'a', 't', 'a', 'S', 'e', 'r', 'i', 'e', 's', 0,
+-    'a', 'c', 't', 'i', 'v', 'i', 't', 'y', 'I', 'n', 't', 'e', 'r', 'v', 'a', 'l', 's', 0,
+-    'P', 'y', 't', 'h', 'o', 'n', 'X', 'D', 'a', 't', 'a', 'S', 'e', 'r', 'i', 'e', 's', 0,
+-    'P', 'y', 't', 'h', 'o', 'n', 'D', 'a', 't', 'a', 'S', 'e', 'r', 'i', 'e', 's', 0,
+-    's', 'e', 'a', 's', 'o', 'n', 'I', 'n', 't', 'e', 'r', 'v', 'a', 'l', 's', 0,
+-    'a', 'c', 't', 'i', 'v', 'i', 't', 'y', 'M', 'e', 'a', 'n', 'm', 'a', 'x', 0,
+-    'a', 'c', 't', 'i', 'v', 'i', 't', 'y', 'M', 'e', 't', 'r', 'i', 'c', 's', 0,
+-    's', 'e', 'a', 's', 'o', 'n', 'M', 'e', 'a', 's', 'u', 'r', 'e', 's', 0,
+-    'a', 'd', 'd', 'A', 'n', 'n', 'o', 't', 'a', 't', 'i', 'o', 'n', 0,
+-    's', 'e', 'a', 's', 'o', 'n', 'M', 'e', 'a', 'n', 'm', 'a', 'x', 0,
+-    's', 'e', 'a', 's', 'o', 'n', 'M', 'e', 't', 'r', 'i', 'c', 's', 0,
+-    's', 'e', 'r', 'i', 'e', 's', 'P', 'r', 'e', 's', 'e', 'n', 't', 0,
+-    'g', 'o', 'l', 'd', 'e', 'n', 'c', 'h', 'e', 'e', 't', 'a', 'h', 0,
+-    'd', 'e', 'l', 'e', 't', 'e', 'S', 'e', 'r', 'i', 'e', 's', 0,
+-    'i', 'n', 't', 'e', 'r', 'v', 'a', 'l', 'T', 'y', 'p', 'e', 0,
+-    'a', 'c', 't', 'i', 'v', 'i', 't', 'y', 'W', 'b', 'a', 'l', 0,
+-    'c', 'o', 'm', 'p', 'a', 'r', 'e', 'i', 'n', 'd', 'e', 'x', 0,
+-    'a', 't', 'h', 'l', 'e', 't', 'e', 'Z', 'o', 'n', 'e', 's', 0,
+-    'c', 'o', 'n', 'f', 'i', 'g', 'C', 'h', 'a', 'r', 't', 0,
+-    'o', 'r', 'i', 'e', 'n', 't', 'a', 't', 'i', 'o', 'n', 0,
+-    'p', 'o', 's', 't', 'P', 'r', 'o', 'c', 'e', 's', 's', 0,
+-    'd', 'e', 'l', 'e', 't', 'e', 'X', 'D', 'a', 't', 'a', 0,
+-    's', 'e', 'a', 's', 'o', 'n', 'P', 'e', 'a', 'k', 's', 0,
+-    'x', 'd', 'a', 't', 'a', 'S', 'e', 'r', 'i', 'e', 's', 0,
+-    'Q', 'S', 't', 'r', 'i', 'n', 'g', 'L', 'i', 's', 't', 0,
+-    '_', '_', 's', 'e', 't', 'i', 't', 'e', 'm', '_', '_', 0,
+-    '_', '_', 'g', 'e', 't', 'i', 't', 'e', 'm', '_', '_', 0,
+-    'c', 'o', 'n', 'f', 'i', 'g', 'A', 'x', 'i', 's', 0,
+-    'c', 'a', 't', 'e', 'g', 'o', 'r', 'i', 'e', 's', 0,
+-    'l', 'a', 'b', 'e', 'l', 'c', 'o', 'l', 'o', 'r', 0,
+-    'd', 'a', 't', 'a', 'l', 'a', 'b', 'e', 'l', 's', 0,
+-    's', 'y', 'm', 'b', 'o', 'l', 's', 'i', 'z', 'e', 0,
+-    's', 'e', 'r', 'i', 'e', 's', 'U', 'n', 'i', 't', 0,
+-    'x', 'd', 'a', 't', 'a', 'N', 'a', 'm', 'e', 's', 0,
+-    's', 'e', 'r', 'i', 'e', 's', 'L', 'a', 's', 't', 0,
+-    's', 'e', 'r', 'i', 'e', 's', 'N', 'a', 'm', 'e', 0,
+-    'a', 'c', 't', 'i', 'v', 'i', 't', 'i', 'e', 's', 0,
+-    'p', 'r', 'o', 'c', 'e', 's', 's', 'o', 'r', 0,
+-    's', 'e', 'a', 's', 'o', 'n', 'P', 'm', 'c', 0,
+-    's', 'e', 't', 'C', 'u', 'r', 'v', 'e', 0,
+-    'd', 'u', 'r', 'a', 't', 'i', 'o', 'n', 0,
+-    'a', 'c', 't', 'i', 'v', 'i', 't', 'y', 0,
+-    't', 'h', 'r', 'e', 'a', 'd', 'i', 'd', 0,
+-    'B', 'i', 'n', 'd', 'i', 'n', 'g', 's', 0,
+-    'v', 'i', 's', 'i', 'b', 'l', 'e', 0,
+-    'o', 'p', 'a', 'c', 'i', 't', 'y', 0,
+-    'f', 's', 'e', 'r', 'i', 'e', 's', 0,
+-    'y', 's', 'e', 'r', 'i', 'e', 's', 0,
+-    'x', 's', 'e', 'r', 'i', 'e', 's', 0,
+-    'a', 'n', 'i', 'm', 'a', 't', 'e', 0,
+-    'm', 'e', 't', 'r', 'i', 'c', 's', 0,
+-    'c', 'o', 'm', 'p', 'a', 'r', 'e', 0,
+-    'a', 't', 'h', 'l', 'e', 't', 'e', 0,
+-    'w', 'e', 'b', 'p', 'a', 'g', 'e', 0,
+-    'v', 'e', 'r', 's', 'i', 'o', 'n', 0,
+-    '_', '_', 'l', 'e', 'n', '_', '_', 0,
+-    '_', '_', 's', 't', 'r', '_', '_', 0,
+-    'Q', 'S', 't', 'r', 'i', 'n', 'g', 0,
+-    'l', 'e', 'g', 'e', 'n', 'd', 0,
+-    'o', 'p', 'e', 'n', 'g', 'l', 0,
+-    's', 'y', 'm', 'b', 'o', 'l', 0,
+-    'c', 'o', 'l', 'o', 'r', 's', 0,
+-    'l', 'e', 'g', 'p', 'o', 's', 0,
+-    'g', 'e', 't', 'T', 'a', 'g', 0,
+-    'h', 'a', 's', 'T', 'a', 'g', 0,
+-    'd', 'e', 'l', 'T', 'a', 'g', 0,
+-    's', 'e', 't', 'T', 'a', 'g', 0,
+-    'm', 'e', 't', 'r', 'i', 'c', 0,
+-    's', 'e', 'a', 's', 'o', 'n', 0,
+-    'f', 'i', 'l', 't', 'e', 'r', 0,
+-    'r', 'e', 's', 'u', 'l', 't', 0,
+-    'r', 'e', 'm', 'o', 'v', 'e', 0,
+-    'a', 'p', 'p', 'e', 'n', 'd', 0,
+-    'a', 'l', 'i', 'g', 'n', 0,
+-    'y', 'n', 'a', 'm', 'e', 0,
+-    'x', 'n', 'a', 'm', 'e', 0,
+-    's', 't', 'a', 'c', 'k', 0,
+-    't', 'i', 't', 'l', 'e', 0,
+-    'g', 'r', 'o', 'u', 'p', 0,
+-    'x', 'd', 'a', 't', 'a', 0,
+-    's', 'p', 'o', 'r', 't', 0,
+-    'v', 'a', 'l', 'u', 'e', 0,
+-    'b', 'u', 'i', 'l', 'd', 0,
+-    'f', 'i', 'l', 'l', 0,
+-    'l', 'i', 'n', 'e', 0,
+-    'j', 'o', 'i', 'n', 0,
+-    't', 'y', 'p', 'e', 0,
+-    'd', 'a', 't', 'e', 0,
+-    'l', 'o', 'g', 0,
+-    'm', 'i', 'n', 0,
+-    'a', 'l', 'l', 0,
+-    'u', 'r', 'l', 0,
+-    's', '2', 0,
+-    's', '1', 0,
+-};
+-
+-
+-/*
+- * This defines each type in this module.
+- */
+-sipTypeDef *sipExportedTypes_goldencheetah[] = {
+-    &sipTypeDef_goldencheetah_Bindings.ctd_base,
+-    &sipTypeDef_goldencheetah_PythonDataSeries.ctd_base,
+-    &sipTypeDef_goldencheetah_PythonXDataSeries.ctd_base,
+-    &sipTypeDef_goldencheetah_QString.mtd_base,
+-    &sipTypeDef_goldencheetah_QStringList.mtd_base,
+-};
+-
+-
+-/* This defines this module. */
+-sipExportedModuleDef sipModuleAPI_goldencheetah = {
+-    0,
+-    SIP_API_MINOR_NR,
+-    sipNameNr_goldencheetah,
+-    0,
+-    sipStrings_goldencheetah,
+-    NULL,
+-    NULL,
+-    5,
+-    sipExportedTypes_goldencheetah,
+-    NULL,
+-    0,
+-    NULL,
+-    0,
+-    NULL,
+-    NULL,
+-    NULL,
+-    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+-    NULL,
+-    NULL,
+-    NULL,
+-    NULL,
+-    NULL,
+-    NULL,
+-    NULL,
+-    NULL
+-};
+-
+-
+-/* The SIP API and the APIs of any imported modules. */
+-const sipAPIDef *sipAPI_goldencheetah;
+-
+-
+-/* The Python module initialisation function. */
+-#if PY_MAJOR_VERSION >= 3
+-#define SIP_MODULE_ENTRY        PyInit_goldencheetah
+-#define SIP_MODULE_TYPE         PyObject *
+-#define SIP_MODULE_DISCARD(r)   Py_DECREF(r)
+-#define SIP_MODULE_RETURN(r)    return (r)
+-#else
+-#define SIP_MODULE_ENTRY        initgoldencheetah
+-#define SIP_MODULE_TYPE         void
+-#define SIP_MODULE_DISCARD(r)
+-#define SIP_MODULE_RETURN(r)    return
+-#endif
+-
+-#if defined(SIP_STATIC_MODULE)
+-extern "C" SIP_MODULE_TYPE SIP_MODULE_ENTRY()
+-#else
+-PyMODINIT_FUNC SIP_MODULE_ENTRY()
+-#endif
+-{
+-    static PyMethodDef sip_methods[] = {
+-        {0, 0, 0, 0}
+-    };
+-
+-#if PY_MAJOR_VERSION >= 3
+-    static PyModuleDef sip_module_def = {
+-        PyModuleDef_HEAD_INIT,
+-        "goldencheetah",
+-        NULL,
+-        -1,
+-        sip_methods,
+-        NULL,
+-        NULL,
+-        NULL,
+-        NULL
+-    };
+-#endif
+-
+-    PyObject *sipModule, *sipModuleDict;
+-    PyObject *sip_sipmod, *sip_capiobj;
+-
+-    /* Initialise the module and get it's dictionary. */
+-#if PY_MAJOR_VERSION >= 3
+-    sipModule = PyModule_Create(&sip_module_def);
+-#elif PY_VERSION_HEX >= 0x02050000
+-    sipModule = Py_InitModule(sipName_goldencheetah, sip_methods);
+-#else
+-    sipModule = Py_InitModule(const_cast<char *>(sipName_goldencheetah), sip_methods);
+-#endif
+-
+-    if (sipModule == NULL)
+-        SIP_MODULE_RETURN(NULL);
+-
+-    sipModuleDict = PyModule_GetDict(sipModule);
+-
+-    /* Get the SIP module's API. */
+-#if PY_VERSION_HEX >= 0x02050000
+-    sip_sipmod = PyImport_ImportModule(SIP_MODULE_NAME);
+-#else
+-    sip_sipmod = PyImport_ImportModule(const_cast<char *>(SIP_MODULE_NAME));
+-#endif
+-
+-    if (sip_sipmod == NULL)
+-    {
+-        SIP_MODULE_DISCARD(sipModule);
+-        SIP_MODULE_RETURN(NULL);
+-    }
+-
+-    sip_capiobj = PyDict_GetItemString(PyModule_GetDict(sip_sipmod), "_C_API");
+-    Py_DECREF(sip_sipmod);
+-
+-#if defined(SIP_USE_PYCAPSULE)
+-    if (sip_capiobj == NULL || !PyCapsule_CheckExact(sip_capiobj))
+-#else
+-    if (sip_capiobj == NULL || !PyCObject_Check(sip_capiobj))
+-#endif
+-    {
+-        SIP_MODULE_DISCARD(sipModule);
+-        SIP_MODULE_RETURN(NULL);
+-    }
+-
+-#if defined(SIP_USE_PYCAPSULE)
+-    sipAPI_goldencheetah = reinterpret_cast<const sipAPIDef *>(PyCapsule_GetPointer(sip_capiobj, SIP_MODULE_NAME "._C_API"));
+-#else
+-    sipAPI_goldencheetah = reinterpret_cast<const sipAPIDef *>(PyCObject_AsVoidPtr(sip_capiobj));
+-#endif
+-
+-#if defined(SIP_USE_PYCAPSULE)
+-    if (sipAPI_goldencheetah == NULL)
+-    {
+-        SIP_MODULE_DISCARD(sipModule);
+-        SIP_MODULE_RETURN(NULL);
+-    }
+-#endif
+-
+-    /* Export the module and publish it's API. */
+-    if (sipExportModule(&sipModuleAPI_goldencheetah,SIP_API_MAJOR_NR,SIP_API_MINOR_NR,0) < 0)
+-    {
+-        SIP_MODULE_DISCARD(sipModule);
+-        SIP_MODULE_RETURN(0);
+-    }
+-    /* Initialise the module now all its dependencies have been set up. */
+-    if (sipInitModule(&sipModuleAPI_goldencheetah,sipModuleDict) < 0)
+-    {
+-        SIP_MODULE_DISCARD(sipModule);
+-        SIP_MODULE_RETURN(0);
+-    }
+-
+-    SIP_MODULE_RETURN(sipModule);
+-}
+diff --git a/src/Python/requirements.txt b/src/Python/requirements.txt
+index 2fea4a365..3c75c752e 100644
+--- a/src/Python/requirements.txt
++++ b/src/Python/requirements.txt
+@@ -2,9 +2,9 @@
+ #
+ # Core Tools
+ #
+-sip == 4.19.8
++sip
+ numpy
+-pandas == 1.2.3
++pandas
+ scipy
+ lmfit
+ plotly
+diff --git a/src/gcconfig.pri.in b/src/gcconfig.pri.in
+index af0489b7e..51e7c75fa 100644
+--- a/src/gcconfig.pri.in
++++ b/src/gcconfig.pri.in
+@@ -8,16 +8,71 @@
+ #CONFIG += debug
+ #CONFIG += release
+ 
+-# uncomment below and configure the location of the GNU scientific library,
+-# this is a mandatory dependency.
++###############################################################################
++# PRECOMPILED HEADER SUPPORT (this can improve builds a lot!)
++###############################################################################
++macx {
++  message("Skipping PCH because Mac multiarch doesn't work")
++} else {
++  GC_USE_PCH = true
++  message("Enabling PCH")
++}
++
++###############################################################################
++# GSL (GNU SCIENTIFIC LIBRARY) CONFIGURATION - REQUIRED
++###############################################################################
++# The GNU Scientific Library is a mandatory dependency.
++# 
++# RECOMMENDED INSTALLATION:
++#   Linux:   sudo apt-get install libgsl-dev
++#   macOS:   brew install gsl
++#   Windows: vcpkg install gsl
+ #
+-# Linux/Mac - use apt/homebrew to install and edit to your install location
+-#GSL_INCLUDES = /usr/include
+-#GSL_LIBS = -lgsl -lgslcblas -lm
++# The build system will attempt to auto-configure based on your platform.
++# You can override by uncommenting and setting the variables below.
+ #
+-# Windows - use vcpkg to install and edit to your install location
+-#GSL_INCLUDES = c:\vcpkg\installed\x64-windows\include
+-#GSL_LIBS = -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas
++###############################################################################
++
++# Override GSL paths if needed (optional - auto-configured if not set):
++#GSL_INCLUDES = /usr/include
++#GSL_LIBS = -L/usr/lib -lgsl -lgslcblas -lm
++
++###############################################################################
++# AUTOMATIC GSL CONFIGURATION (DO NOT EDIT BELOW THIS LINE)
++###############################################################################
++
++isEmpty(GSL_INCLUDES)|isEmpty(GSL_LIBS) {
++    win32 {
++        # Windows with vcpkg
++        isEmpty(GSL_INCLUDES) {
++            GSL_INCLUDES = c:\\vcpkg\\installed\\x64-windows\\include
++        }
++        isEmpty(GSL_LIBS) {
++            GSL_LIBS = -LC:\\vcpkg\\installed\\x64-windows\\lib -lgsl -lgslcblas
++        }
++    } else {
++        # Linux and macOS
++        isEmpty(GSL_INCLUDES) {
++            GSL_INCLUDES = /usr/include
++        }
++        isEmpty(GSL_LIBS) {
++            GSL_LIBS = -lgsl -lgslcblas -lm
++        }
++    }
++    isEmpty(GSL_INCLUDES) {
++        error("GSL include path not found. Please set GSL_INCLUDES.")
++    }
++    !exists($${GSL_INCLUDES}/gsl/gsl_version.h) {
++        error("GSL header not found! Please fix GSL_INCLUDES")
++    }
++    isEmpty(GSL_LIBS) {
++        error("GSL library path not found. Please set GSL_LIBS.")
++    }
++}
++
++message("GSL configuration:")
++message("  Includes: $$GSL_INCLUDES")
++message("  Libs: $$GSL_LIBS")
+ 
+ # If you have conflicts with min/max macros defined in windows.h
+ # then uncomment the following line.
+@@ -29,24 +84,58 @@
+ # can be run to install these packages; see it for more info.
+ #DEFINES += GC_WANT_R
+ 
+-# Uncomment below if you want Python charting / ML etc
+-# You will need Python Development tools installed
++###############################################################################
++# PYTHON CONFIGURATION
++###############################################################################
++# To enable Python support, set GC_WANT_PYTHON = true and optionally configure the
++# Python version. The build system will automatically detect your platform
++# and configure the appropriate paths.
++#
++# REQUIRED SETTING:
++#   GC_WANT_PYTHON = true              # Enable Python support
+ #
+-# Libs needed can typically be found by calling e.g
+-# python3.6-config --libs
++# OPTIONAL SETTINGS:
++#   PYTHON_VERSION = <version>         # Override Python version
++#   PYTHONINCLUDES = <custom path>     # Override include path
++#   PYTHONLIBS = <custom libs>         # Override library path
+ #
+-# below 3 lines work well on Linux style OS
+-#DEFINES += GC_WANT_PYTHON
+-#PYTHONINCLUDES = -I/usr/include/python3.6
+-#PYTHONLIBS = -L/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu -lpython3.6m
+-# below 3 lines work well on Windows
+-#DEFINES += GC_WANT_PYTHON
+-#PYTHONINCLUDES = -I\"C:\Program Files\Python36\include\"
+-#PYTHONLIBS = -L\"C:\Program Files\Python36\libs\" -lpython36
+-#Below work ok on MacOS High Sierra
+-#DEFINES += GC_WANT_PYTHON
+-#PYTHONINCLUDES = -I/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
+-#PYTHONLIBS = -L/Library/Frameworks/Python.framework/Versions/3.6/lib -lpython3.6m
++# You can find the correct library paths by running:
++#   python3.11-config --includes
++#   python3.11-config --libs
++#
++###############################################################################
++
++# Uncomment and configure these lines to enable Python:
++#GC_WANT_PYTHON = true
++
++# Custom paths (optional - auto-configured if not set):
++#PYTHONINCLUDES = -I/usr/include/python3.11
++#PYTHONLIBS = -L/usr/lib/python3.11/config-3.11-x86_64-linux-gnu -lpython3.11
++
++###############################################################################
++# AUTOMATIC PYTHON CONFIGURATION (DO NOT EDIT BELOW THIS LINE)
++###############################################################################
++
++equals(GC_WANT_PYTHON, true) {
++    DEFINES += GC_WANT_PYTHON    
++    # Auto-configure platform-specific paths if not manually set
++    isEmpty(PYTHONINCLUDES) {     
++        PYTHONINCLUDES = $$system("python3-config --includes")
++    }
++    isEmpty(PYTHONLIBS) {
++        PYTHONLIBS = $$system("python3-config --ldflags --embed")        
++    }    
++    message("Python configuration:")
++    message("  Includes: $$PYTHONINCLUDES")
++    message("  Libs: $$PYTHONLIBS")
++
++    isEmpty(PYTHONINCLUDES) {
++        error("Python include path not found. Please set PYTHONINCLUDES.")
++    }
++    isEmpty(PYTHONLIBS) {
++        error("Python library path not found. Please set PYTHONLIBS.")
++    }
++}
+ 
+ # put output into a separate dir
+ # to keep main directory clear
+diff --git a/src/src.pro b/src/src.pro
+index f414821ce..70d7046c8 100644
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -40,14 +40,6 @@ QT += xml sql network svg  widgets concurrent serialport multimedia multimediawi
+       webenginecore webenginewidgets webchannel positioning webenginequick core5compat
+ CONFIG += c++17
+ 
+-###==========================
+-### PRECOMPILED HEADER
+-###==========================
+-PRECOMPILED_HEADER = stable.h
+-CONFIG += precompile_header
+-
+-
+-
+ ###=======================================================================
+ ### Directory Structure - Split into subdirs to be more manageable
+ ###=======================================================================
+@@ -104,15 +96,11 @@ LIBS += $${GSL_LIBS}
+ 
+ # Microsoft Visual Studion toolchain dependencies
+ win32-msvc* {
+-
+     # we need windows kit 8.2 or higher with MSVC, offer default location
+     isEmpty(WINKIT_INSTALL) WINKIT_INSTALL= "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64"
+     LIBS += -L$${WINKIT_INSTALL} -lGdi32 -lUser32
+     CONFIG += force_debug_info
+-
+-
+ } else {
+-
+     # gnu toolchain wants math libs
+     LIBS += -lm
+ 
+@@ -155,13 +143,7 @@ macx {
+     # otherwise we have a blank videowindow, it will do nothing
+     HEADERS += Train/VideoWindow.h
+     SOURCES += Train/VideoWindow.cpp
+-
+-    # PCH crashes clang if we have multiple -arch flags (universal binary)
+-    message("Disabling Precompiled Headers on macOS to avoid multi-arch Clang errors.")
+-    CONFIG -= precompile_header
+-
+ } else {
+-
+     # not on mac we need our own full screen support and segment control button
+     HEADERS += Gui/QTFullScreen.h
+     SOURCES += Gui/QTFullScreen.cpp
+@@ -239,31 +221,30 @@ contains(DEFINES, "GC_WANT_PYTHON") {
+             INCLUDEPATH += ./Python
+ 
+             DEFINES += SIP_STATIC_MODULE
+-            !isEmpty(PYTHONINCLUDES) QMAKE_CXXFLAGS += $${PYTHONINCLUDES}
++            !isEmpty(PYTHONINCLUDES) {
++                QMAKE_CXXFLAGS += $${PYTHONINCLUDES}
++                QMAKE_CFLAGS += $${PYTHONINCLUDES}
++            }
+             LIBS += $${PYTHONLIBS}
+ 
++            # Link against the separate SIP static library
++            LIBS += -L$$PWD/Python/SIP/ -lsip_lib
++
+             ## Python integration
+             HEADERS += Python/PythonEmbed.h Charts/PythonChart.h Python/PythonSyntax.h
+             SOURCES += Python/PythonEmbed.cpp Charts/PythonChart.cpp Python/PythonSyntax.cpp
+ 
+-            ## Python SIP generated module
+-            SOURCES += Python/SIP/sipgoldencheetahBindings.cpp Python/SIP/sipgoldencheetahcmodule.cpp
+-            SOURCES += Python/SIP/Bindings.cpp
+-
+-            ## SIP type conversion
+-            SOURCES += Python/SIP/sipgoldencheetahQString.cpp
+-            SOURCES += Python/SIP/sipgoldencheetahQStringList.cpp
+-            SOURCES += Python/SIP/sipgoldencheetahPythonDataSeries.cpp \
+-                       Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
+             DEFINES += GC_HAVE_PYTHON
+ 
++            ## Python data processors
++
++
+             ## Python data processors
+             HEADERS += FileIO/FixPyScriptsDialog.h FileIO/FixPySettings.h FileIO/FixPyRunner.h \
+                        FileIO/FixPyScript.h FileIO/FixPyDataProcessor.h
+ 
+             SOURCES += FileIO/FixPyScriptsDialog.cpp FileIO/FixPySettings.cpp FileIO/FixPyRunner.cpp \
+                        FileIO/FixPyDataProcessor.cpp
+-
+ }
+ 
+ ###====================
+@@ -837,6 +818,18 @@ DEFERRES += Core/RouteWindow.h Core/RouteWindow.cpp Core/RouteItem.h Core/RouteI
+ OTHER_FILES +=   Resources/python/library.py Python/SIP/goldencheetah.sip
+ 
+ 
++###==========================
++### PRECOMPILED HEADER
++###==========================   
++PRECOMPILED_HEADER = stable.h
++!isEmpty(GC_USE_PCH) {
++    message("Enabling precompile_header")
++    CONFIG += precompile_header
++} else {
++    message("Disabling precompile_header (default)")
++    CONFIG -= precompile_header
++}
++
+ ###============================================================================
+ ### FIX: Disable Precompiled Header for C files
+ ### The PCH contains C++ specific headers (Qt, STL) which causes compilation errors
+@@ -848,5 +841,3 @@ for(src, SOURCES) {
+         eval($${src}.CONFIG -= precompile_header)
+     }
+ }
+-
+-
+-- 
+2.51.2
+
