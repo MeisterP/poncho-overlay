@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="8a19c38b3ae21b1a0bbd60171ede08b84d8f6e86"
+MY_COMMIT="c4e880622b02f1d993b55f04f0559c158dc3a51f"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -48,7 +48,7 @@ DEPEND="${PYTHON_DEPS}
 
 RDEPEND="${DEPEND}"
 
-PATCHES=( ${FILESDIR}/upgrade-sip.patch ${FILESDIR}/garmin-usb-rules.patch )
+PATCHES=( "${FILESDIR}/upgrade-sip.patch" )
 
 DOCS=( README.md CONTRIBUTING.md )
 
