@@ -20,7 +20,7 @@ KEYWORDS="~amd64"
 DEPEND="
 	dev-libs/libcbor:=
 	dev-libs/openssl:=
-	sys-libs/zlib:=
+	virtual/zlib:=
 	virtual/libudev:=
 "
 RDEPEND="

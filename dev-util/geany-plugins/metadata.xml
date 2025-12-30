@@ -9,6 +9,9 @@
 		<email>proxy-maint@gentoo.org</email>
 		<name>Gentoo Proxy Maintainers Project</name>
 	</maintainer>
+	<upstream>
+		<remote-id type="github">geany/geany-plugins</remote-id>
+	</upstream>
 	<use>
 		<flag name="ctags">Enable ctags plugin</flag>
 		<flag name="debugger">Enable the debugger plugin which interfaces with <pkg>dev-debug/gdb</pkg></flag>

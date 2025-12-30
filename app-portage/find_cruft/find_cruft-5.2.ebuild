@@ -1,9 +1,9 @@
-# Copyright 2013-2023 Gentoo Authors
+# Copyright 2013-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-inherit optfeature
+inherit optfeature shell-completion
 
 DESCRIPTION="find cruft files not managed by portage"
 HOMEPAGE="https://github.com/vaeth/find_cruft/"
@@ -29,8 +29,7 @@ src_install() {
 	dodoc README.md
 	insinto /usr/lib/find_cruft
 	doins -r etc/*
-	insinto /usr/share/zsh/site-functions
-	doins zsh/_*
+	dozshcomp zsh/_*
 }
 
 pkg_postinst() {
