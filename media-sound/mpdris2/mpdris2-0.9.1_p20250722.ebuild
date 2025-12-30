@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit python-single-r1 autotools optfeature
 
-MY_COMMIT="e40238ba1d3c7a81d34e5f96b150e40b5b29d4af"
+MY_COMMIT="d73f32c2b74528e94032331cd6cecb0b7e7bcada"
 
 DESCRIPTION="An implementation of the MPRIS 2 interface as a client for MPD"
 
