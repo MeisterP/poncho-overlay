@@ -1,4 +1,4 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -76,7 +76,7 @@ src_configure() {
 	cp -v qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
 
 	replace-flags -O? -O3
-	eqmake6 -recursive
+	eqmake6
 }
 
 src_install() {
