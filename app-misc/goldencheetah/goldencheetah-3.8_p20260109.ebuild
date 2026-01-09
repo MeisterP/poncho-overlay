@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="9bae3a7658560cd6bd0c14fc875243dc082e0bd9"
+MY_COMMIT="95531b043a9f7dfa73938b8ce973263de13cf243"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -59,7 +59,6 @@ src_configure() {
 		CONFIG += release link_pkgconfig
 		QMAKE_LRELEASE = $(qt6_get_bindir)/lrelease
 		QMAKE_MOVE = cp
-		GC_USE_PCH = true
 		PKGCONFIG = zlib gsl libusb-1.0 samplerate libical python3-embed
 
 		DEFINES += GC_WANT_PYTHON

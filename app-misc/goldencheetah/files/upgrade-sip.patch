@@ -1,4 +1,4 @@
-From ff1ee894ebf02f53ba0ffd09f4c79a8677b3c21f Mon Sep 17 00:00:00 2001
+From 4e095c4b6cd091e7036a44a271c09fdb2a556edf Mon Sep 17 00:00:00 2001
 From: Magnus Gille <mgille@gmail.com>
 Date: Mon, 8 Dec 2025 14:57:47 -0800
 Subject: [PATCH] Upgrade Python, Pandas, and SIP versions. Make the builds
@@ -12,29 +12,28 @@ version, waiting for it to become obsolete and then having lots of pain trying t
 
 Simplify and improve the build scripts in general
 ---
- .gitignore                                    |   10 +
- INSTALL-LINUX                                 |   27 +-
- appveyor.yml                                  |   70 +-
+ INSTALL-LINUX                                 |   25 +-
+ appveyor.yml                                  |   63 +-
  appveyor/linux/after_build.sh                 |   33 +-
- appveyor/linux/before_build.sh                |   10 +-
+ appveyor/linux/before_build.sh                |    7 +-
  appveyor/linux/install.sh                     |   23 +-
  appveyor/macos/after_build.sh                 |   94 +-
  appveyor/macos/before_build.sh                |    9 +-
  appveyor/macos/install.sh                     |   30 +-
- build.pro                                     |   29 +-
+ build.pro                                     |    4 +-
  deprecated/travis/linux/before_install.sh     |   15 +-
  deprecated/travis/linux/before_script.sh      |    6 +-
- src/.gitignore                                |   11 +
+ src/.gitignore                                |    8 +
  src/Charts/PythonChart.cpp                    |    3 -
  src/Gui/Pages.cpp                             |    2 -
  src/Python/PythonEmbed.cpp                    |   21 +-
- src/Python/SIP/Bindings.cpp                   |    6 +-
- src/Python/SIP/Makefile                       |   19 +
+ src/Python/SIP/Bindings.cpp                   |    3 +
+ src/Python/SIP/Makefile.SIP                   |   18 +
  src/Python/SIP/Makefile.hack                  |   16 -
+ src/Python/SIP/SIP.pro                        |   88 +
  src/Python/SIP/goldencheetah.sip              |    4 +-
  src/Python/SIP/pyproject.toml                 |    5 +
  src/Python/SIP/sipAPIgoldencheetah.h          |  418 ----
- src/Python/SIP/sip_lib.pro                    |   93 +
  src/Python/SIP/sipgoldencheetahBindings.cpp   | 1685 -----------------
  .../SIP/sipgoldencheetahPythonDataSeries.cpp  |  338 ----
  .../SIP/sipgoldencheetahPythonXDataSeries.cpp |  428 -----
@@ -42,14 +41,14 @@ Simplify and improve the build scripts in general
  .../SIP/sipgoldencheetahQStringList.cpp       |  183 --
  src/Python/SIP/sipgoldencheetahcmodule.cpp    |  274 ---
  src/Python/requirements.txt                   |    4 +-
- src/gcconfig.pri.in                           |  137 +-
- src/src.pro                                   |   53 +-
- 32 files changed, 502 insertions(+), 3659 deletions(-)
- create mode 100644 src/Python/SIP/Makefile
+ src/gcconfig.pri.in                           |   83 +-
+ src/src.pro                                   |   86 +-
+ 31 files changed, 413 insertions(+), 3668 deletions(-)
+ create mode 100644 src/Python/SIP/Makefile.SIP
  delete mode 100644 src/Python/SIP/Makefile.hack
+ create mode 100644 src/Python/SIP/SIP.pro
  create mode 100644 src/Python/SIP/pyproject.toml
  delete mode 100644 src/Python/SIP/sipAPIgoldencheetah.h
- create mode 100644 src/Python/SIP/sip_lib.pro
  delete mode 100644 src/Python/SIP/sipgoldencheetahBindings.cpp
  delete mode 100644 src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp
  delete mode 100644 src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
@@ -57,41 +56,8 @@ Simplify and improve the build scripts in general
  delete mode 100644 src/Python/SIP/sipgoldencheetahQStringList.cpp
  delete mode 100644 src/Python/SIP/sipgoldencheetahcmodule.cpp
 
-diff --git a/.gitignore b/.gitignore
-index 2dd623ba9..d47f0fcaf 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -7,6 +7,8 @@ Makefile
- *~
- *.orig
- *.rej
-+*.log
-+
- # old skool
- .svn
- *.pri
-@@ -48,6 +50,7 @@ build-src*
- qwt/src/debug/
- qwt/src/release/
- src/Makefile.Debug
-+src/Makefile.src
- src/Makefile.Release
- src/object_script.GoldenCheetah.Debug
- src/object_script.GoldenCheetah.Release
-@@ -82,4 +85,11 @@ _pch/
- *_yacc.cpp
- *_yacc.h
- qrc_*.cpp
-+*.moc
- 
-+# Unittests
-+unittests/Core/season/season
-+unittests/Core/seasonOffset/seasonOffset
-+unittests/Core/seasonParser/seasonParser
-+unittests/Core/units/units
-+unittests/Gui/calendarData/calendarData
 diff --git a/INSTALL-LINUX b/INSTALL-LINUX
-index 0ace49f50..4d2e73cd6 100644
+index 0ace49f50d..672582fef5 100644
 --- a/INSTALL-LINUX
 +++ b/INSTALL-LINUX
 @@ -284,29 +284,24 @@ $ make
@@ -99,7 +65,7 @@ index 0ace49f50..4d2e73cd6 100644
  ----------------
  
 -Install Python 3.7
-+Install Python 3.9+
++Install Python 3.11+
  
  sudo add-apt-repository ppa:deadsnakes/ppa
  sudo apt-get update
@@ -124,30 +90,21 @@ index 0ace49f50..4d2e73cd6 100644
  $ vi gcconfig.pri
  
 -Uncomment or add the following lines:
--DEFINES += GC_WANT_PYTHON
++Uncomment or change the following line(s):
+ DEFINES += GC_WANT_PYTHON
 -PYTHONINCLUDES = -I/usr/include/python3.7/
 -PYTHONLIBS = -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7m
-+Uncomment or change the following line(s):
-+#GC_WANT_PYTHON = true
 +Optionally configure includes & libraries, we try to auto configure them
-+PYTHONINCLUDES = -I/usr/include/python3.11/
-+PYTHONLIBS = -L/usr/lib/python3.11/config-3.11m-x86_64-linux-gnu -lpython3.11m
++#PYTHONINCLUDES = -I/usr/include/python3.11/
++#PYTHONLIBS = -L/usr/lib/python3.11/config-3.11m-x86_64-linux-gnu -lpython3.11m
  
  $ make clean
  $ qmake
 diff --git a/appveyor.yml b/appveyor.yml
-index a38667779..55e3d752e 100644
+index 3006e0047c..f014463be3 100644
 --- a/appveyor.yml
 +++ b/appveyor.yml
-@@ -6,12 +6,13 @@ branches:
-     - master
- 
- image:
--  - Visual Studio 2022
--  - Ubuntu2204
-   - macos-sonoma
-+  - Ubuntu2204
-+  - Visual Studio 2022
+@@ -12,6 +12,7 @@ image:
  
  environment:
    APPVEYOR_SAVE_CACHE_ON_ERROR: true
@@ -167,7 +124,7 @@ index a38667779..55e3d752e 100644
  
  # Linux / macOS
  - sh: >-
-@@ -92,14 +88,14 @@ init:
+@@ -92,7 +88,6 @@ init:
  cache:
  - gc-ci-libs.zip -> appveyor.yml
  - jom_1_1_3.zip
@@ -175,21 +132,22 @@ index a38667779..55e3d752e 100644
  - C:\R
  - C:\Python -> src\Python\requirements.txt
  - c:\tools\vcpkg\installed\
- - qwt -> qwt/qwtconfig.pri.in, appveyor.yml
+@@ -100,6 +95,8 @@ cache:
  - srmio -> appveyor.yml
  - D2XX
--- site-packages
+ - site-packages
 +- src\Python\SIP\release\sip_lib.lib -> src\Python\SIP\goldencheetah.sip
 +- src\Python\SIP\libsip_lib.a -> src\Python\SIP\goldencheetah.sip
  
  install:
  
-@@ -132,42 +128,40 @@ install:
+@@ -132,42 +129,40 @@ install:
  - cmd: R --version
  - cmd: echo DEFINES+=GC_WANT_R >> src\gcconfig.pri
  
 -# Get Python embeddable and install packages
--- ps: >-
++# Get Python and add to config
+ - ps: >-
 -    if ($isWindows -And -not (Test-Path 'C:\Python')) {
 -      Start-FileDownload "https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-amd64.zip" Python.zip
 -      7z x Python.zip -oC:\Python\
@@ -197,20 +155,7 @@ index a38667779..55e3d752e 100644
 -      mkdir C:\Python\lib\site-packages
 -      c:\python37-x64\python -m pip install --upgrade pip
 -      c:\python37-x64\python -m pip install -r src\Python\requirements.txt -t C:\Python\lib\site-packages
--    }
--
--# Get SIP and and install on Python
-+# Get Python and add to config
- - ps: >-
--    if ($isWindows -And -not (Test-Path 'sip-4.19.8')) {
--      Start-FileDownload "https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.8/sip-4.19.8.zip"
--        7z x sip-4.19.8.zip
--        cd sip-4.19.8
--        c:\python37-x64\python --version
--        c:\python37-x64\python configure.py
--        jom -j2
--        cd ..
-+    if ($isWindows -And -not (Test-Path 'C:\Python\python.exe')) {
++    if ($isWindows -And -not (Test-Path 'C:\Python3\python.exe')) {
 +      $pyurl = "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip"
 +      Start-FileDownload $pyurl "python-embed.zip"
 +      Expand-Archive -Path python-embed.zip -DestinationPath C:\Python -Force
@@ -219,20 +164,32 @@ index a38667779..55e3d752e 100644
 +      Start-FileDownload "https://bootstrap.pypa.io/get-pip.py" "get-pip.py"
 +      C:\Python\python.exe get-pip.py --no-warn-script-location
      }
+-
+-# Get SIP and and install on Python
+-- ps: >-
+-    if ($isWindows -And -not (Test-Path 'sip-4.19.8')) {
+-      Start-FileDownload "https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.8/sip-4.19.8.zip"
+-        7z x sip-4.19.8.zip
+-        cd sip-4.19.8
+-        c:\python37-x64\python --version
+-        c:\python37-x64\python configure.py
+-        jom -j2
+-        cd ..
+-    }
 -- cmd: cd sip-4.19.8 & nmake install & cd ..
 -
 -# Add Python (avoiding collision between GC Context.h and Python context.h)
--- cmd: echo DEFINES+=GC_WANT_PYTHON >> src\gcconfig.pri
++- cmd: set PATH=C:\Python311-x64\Scripts\;C:\Python311-x64\;%PATH%
++- cmd: python --version
+ - cmd: echo DEFINES+=GC_WANT_PYTHON >> src\gcconfig.pri
 -- cmd: echo PYTHONINCLUDES=-ICore -I\"c:\python37-x64\include\" >> src\gcconfig.pri
 -- cmd: echo PYTHONLIBS=-L\"c:\python37-x64\libs\" -lpython37 >> src\gcconfig.pri
-+- cmd: set PATH=C:\Python\Scripts\;C:\Python\;%PATH%
-+- cmd: python --version
-+- cmd: sed -i "s|#GC_WANT_PYTHON.=.*|GC_WANT_PYTHON=true|" src/gcconfig.pri
-+# REMOVE!
-+# Hardcode python version for Linux to avoid fragile auto-detection
-+#- sh: if $CI_LINUX; then echo "PYTHON_VERSION = $(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')" >> src/gcconfig.pri; fi
-+#- sh: if $CI_LINUX; then echo "PYTHONLIBS = $(python3-config --ldflags)" >> src/gcconfig.pri; fi
- 
+-
++- cmd: echo "PYTHONINCLUDES=-Ic:\Python311-x64\include" >> src\gcconfig.pri
++- cmd: echo "PYTHONLIBS=-Lc:\Python311-x64\libs -lpython311" >> src\gcconfig.pri
++- cmd: dir c:\python311-x64
++- cmd: dir c:\python311-x64\include
++- cmd: dir c:\python311-x64\libs
  # GSL
  - cmd: echo GSL_INCLUDES=c:\tools\vcpkg\installed\x64-windows\include >> src\gcconfig.pri
  - cmd: echo GSL_LIBS=-Lc:\tools\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas >> src\gcconfig.pri
@@ -252,23 +209,22 @@ index a38667779..55e3d752e 100644
  before_build:
  
  # Windows
-@@ -224,12 +218,12 @@ build_script:
+@@ -224,11 +219,13 @@ build_script:
  # Windows
  - cmd: qmake.exe build.pro -r -spec win32-msvc
- - cmd: if not exist qwt\lib\qwt.lib jom -j2 sub-qwt
--- cmd: jom -j2 sub-src
-+- cmd: jom -j2
+ - cmd: if not exist qwt\lib\qwt.lib jom -j1 sub-qwt
++- cmd: jom -j2 sub-src-Python-SIP
+ - cmd: jom -j2 sub-src
  
  # Linux / macOS
  - sh: qmake build.pro -r QMAKE_CXXFLAGS_WARN_ON+="-Wno-unused-private-field -Wno-c++11-narrowing -Wno-deprecated-declarations -Wno-deprecated-register -Wno-nullability-completeness -Wno-sign-compare -Wno-inconsistent-missing-override" QMAKE_CFLAGS_WARN_ON+="-Wno-deprecated-declarations -Wno-sign-compare"
  - sh: if test ! -f qwt/lib/libqwt.a; then make -j2 sub-qwt; fi
--- sh: make -j2 sub-src
-+- sh: make -j2
++- sh: make -j2 sub-src-Python-SIP
+ - sh: make -j2 sub-src
  
  after_build:
- 
 diff --git a/appveyor/linux/after_build.sh b/appveyor/linux/after_build.sh
-index 776dbafb4..2f9ce08ed 100644
+index 776dbafb43..2437afda80 100644
 --- a/appveyor/linux/after_build.sh
 +++ b/appveyor/linux/after_build.sh
 @@ -1,10 +1,15 @@
@@ -331,27 +287,24 @@ index 776dbafb4..2f9ce08ed 100644
  
 -if [ ! -x ./GoldenCheetah*.AppImage ]
 -then echo "AppImage not generated, check the errors"; exit 1
-+if ! ls ./GoldenCheetah*.AppImage 1>/dev/null 2>&1; then
++if [ ! -x ./GoldenCheetah*.AppImage ]; then
 +    echo "AppImage not generated, check the errors"
 +    exit 1
  fi
  
  echo "Renaming AppImage file to version number ready for deploy"
 diff --git a/appveyor/linux/before_build.sh b/appveyor/linux/before_build.sh
-index 605c53ce5..99fef780d 100644
+index 605c53ce59..3a83ddf510 100644
 --- a/appveyor/linux/before_build.sh
 +++ b/appveyor/linux/before_build.sh
-@@ -32,11 +32,13 @@ sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
+@@ -32,11 +32,10 @@ sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
  # SRMIO
  sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 /usr/local|" src/gcconfig.pri
  # Python
 -echo DEFINES += GC_WANT_PYTHON >> src/gcconfig.pri
 -echo PYTHONINCLUDES = -I/usr/include/python3.7 >> src/gcconfig.pri
 -echo PYTHONLIBS = -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7m >> src/gcconfig.pri
-+sed -i "s|#GC_WANT_PYTHON.=.*|GC_WANT_PYTHON=true|" src/gcconfig.pri
-+# Hardcode python version for Linux to avoid fragile auto-detection
-+echo "PYTHONINCLUDES = $(python3.11-config --includes)" >> src/gcconfig.pri
-+echo "PYTHONLIBS = $(python3.11-config --ldflags --embed)" >> src/gcconfig.pri
++sed -i "s|#\(DEFINES += GC_WANT_PYTHON\).*|\1|" src/gcconfig.pri
  # GSL
 -echo GSL_LIBS = -lgsl -lgslcblas -lm >> src/gcconfig.pri
 +sed -i "s|#GSL_LIBS =.*|GSL_LIBS = -lgsl -lgslcblas -lm|" src/gcconfig.pri
@@ -360,7 +313,7 @@ index 605c53ce5..99fef780d 100644
  echo DEFINES += GC_WANT_TRAINERDAY_API >> src/gcconfig.pri
  echo DEFINES += GC_TRAINERDAY_API_PAGESIZE=25 >> src/gcconfig.pri
 diff --git a/appveyor/linux/install.sh b/appveyor/linux/install.sh
-index 8975f8ccd..ae6a70091 100644
+index 8975f8ccd1..ae6a70091e 100644
 --- a/appveyor/linux/install.sh
 +++ b/appveyor/linux/install.sh
 @@ -38,26 +38,21 @@ cd ..
@@ -400,7 +353,7 @@ index 8975f8ccd..ae6a70091 100644
  sudo add-apt-repository -y universe
  sudo apt install libfuse2 patchelf
 diff --git a/appveyor/macos/after_build.sh b/appveyor/macos/after_build.sh
-index 8696e7be6..9887432e6 100755
+index 8696e7be6f..9887432e64 100755
 --- a/appveyor/macos/after_build.sh
 +++ b/appveyor/macos/after_build.sh
 @@ -2,27 +2,99 @@
@@ -515,7 +468,7 @@ index 8696e7be6..9887432e6 100755
  # Deployment using macdeployqt
  macdeployqt GoldenCheetah.app -verbose=2 -executable=GoldenCheetah.app/Contents/MacOS/GoldenCheetah -fs=hfs+ -dmg
 diff --git a/appveyor/macos/before_build.sh b/appveyor/macos/before_build.sh
-index 93e04e6ce..bcd3737fc 100755
+index 93e04e6ce5..eb3295af63 100755
 --- a/appveyor/macos/before_build.sh
 +++ b/appveyor/macos/before_build.sh
 @@ -12,8 +12,9 @@ echo QMAKE_YACC=/usr/local/opt/bison@2.7/bin/bison >> src/gcconfig.pri
@@ -537,12 +490,12 @@ index 93e04e6ce..bcd3737fc 100755
 -echo DEFINES += GC_WANT_PYTHON >> src/gcconfig.pri
 -echo PYTHONINCLUDES = -ICore `python3.7-config --includes` >> src/gcconfig.pri
 -echo PYTHONLIBS = `python3.7-config --ldflags` >> src/gcconfig.pri
-+sed -i "" "s|#GC_WANT_PYTHON.=.*|GC_WANT_PYTHON=true|" src/gcconfig.pri
++sed -i "" "s|#\(DEFINES += GC_WANT_PYTHON\)\.*|\1 |" src/gcconfig.pri
  
  # TrainerDay Query API
  echo DEFINES += GC_WANT_TRAINERDAY_API >> src/gcconfig.pri
 diff --git a/appveyor/macos/install.sh b/appveyor/macos/install.sh
-index df6c4ce56..cd26fe42c 100755
+index df6c4ce568..cd26fe42c3 100755
 --- a/appveyor/macos/install.sh
 +++ b/appveyor/macos/install.sh
 @@ -44,30 +44,12 @@ if [ -z "$(ls -A D2XX)" ]; then
@@ -583,43 +536,20 @@ index df6c4ce56..cd26fe42c 100755
  
  exit
 diff --git a/build.pro b/build.pro
-index efc4b5c04..177b0b234 100644
+index efc4b5c04f..29ed691812 100644
 --- a/build.pro
 +++ b/build.pro
-@@ -1,5 +1,28 @@
+@@ -1,5 +1,7 @@
  TEMPLATE = subdirs
--SUBDIRS = qwt
--SUBDIRS += src
--SUBDIRS += unittests
- CONFIG += ordered
++CONFIG += ordered
 +
-+# Include configuration to check for GC_WANT_PYTHON
-+include(src/gcconfig.pri)
-+
-+# Define main application target, we call this
-+# different from src to avoid confusion with
-+# the src directory in the source tree
-+gc.file = src/src.pro
-+
-+# Define dependencies to ensure link order
-+contains(DEFINES, GC_WANT_PYTHON) {
-+    # Define separate target for SIP bindings
-+    siplib.file = src/Python/SIP/sip_lib.pro
-+    
-+    # This ensures 'make sub-gc' triggers 'sub-siplib'
-+    gc.depends = siplib qwt
-+    
-+    # Ordered list of subdirectories to build
-+    # qwt -> siplib -> gc -> unittests
-+    SUBDIRS = qwt siplib gc unittests
-+} else {
-+    gc.depends = qwt
-+    # Ordered list of subdirectories to build
-+    # qwt -> gc -> unittests
-+    SUBDIRS = qwt gc unittests
-+}
+ SUBDIRS = qwt
++SUBDIRS += src/Python/SIP
+ SUBDIRS += src
+ SUBDIRS += unittests
+-CONFIG += ordered
 diff --git a/deprecated/travis/linux/before_install.sh b/deprecated/travis/linux/before_install.sh
-index ae0709385..6b7fa97fd 100755
+index ae07093855..6b7fa97fd5 100755
 --- a/deprecated/travis/linux/before_install.sh
 +++ b/deprecated/travis/linux/before_install.sh
 @@ -41,16 +41,11 @@ cd ${TRAVIS_BUILD_DIR}
@@ -645,7 +575,7 @@ index ae0709385..6b7fa97fd 100755
  
  # GSL
 diff --git a/deprecated/travis/linux/before_script.sh b/deprecated/travis/linux/before_script.sh
-index f7337f33f..a14757b03 100755
+index f7337f33f3..a14757b036 100755
 --- a/deprecated/travis/linux/before_script.sh
 +++ b/deprecated/travis/linux/before_script.sh
 @@ -35,10 +35,9 @@ sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
@@ -670,10 +600,10 @@ index f7337f33f..a14757b03 100755
  sed -i "s/__GC_NOLIO_SECRET__/"$GC_NOLIO_SECRET"/" src/Core/Secrets.h
  sed -i "s/__GC_XERT_CLIENT_SECRET__/"$GC_XERT_CLIENT_SECRET"/" src/Core/Secrets.h
 diff --git a/src/.gitignore b/src/.gitignore
-index 82930dced..de58340bf 100644
+index 82930dcedc..b71feac9bc 100644
 --- a/src/.gitignore
 +++ b/src/.gitignore
-@@ -59,3 +59,14 @@ tags
+@@ -59,3 +59,11 @@ tags
  #ignore qm
  *.qm
  
@@ -685,11 +615,8 @@ index 82930dced..de58340bf 100644
 +Python/SIP/sip.h
 +Python/SIP/build/
 +
-+# Whitelist SIP Makefile
-+!Python/SIP/Makefile
-+Python/SIP/Makefile.sip_lib
 diff --git a/src/Charts/PythonChart.cpp b/src/Charts/PythonChart.cpp
-index 58baa3023..5ae18ae2c 100644
+index 58baa30239..5ae18ae2cc 100644
 --- a/src/Charts/PythonChart.cpp
 +++ b/src/Charts/PythonChart.cpp
 @@ -309,7 +309,6 @@ PythonChart::PythonChart(Context *context, bool ridesummary) : GcChartWindow(con
@@ -711,7 +638,7 @@ index 58baa3023..5ae18ae2c 100644
          noPython = new QLabel(tr("Warning: Python is disabled"), this);
          clv->addWidget(noPython);
 diff --git a/src/Gui/Pages.cpp b/src/Gui/Pages.cpp
-index 904d0f1ab..5c9847e0c 100644
+index 904d0f1ab9..5c9847e0c4 100644
 --- a/src/Gui/Pages.cpp
 +++ b/src/Gui/Pages.cpp
 @@ -210,7 +210,6 @@ GeneralPage::GeneralPage(Context *context) : context(context)
@@ -731,7 +658,7 @@ index 904d0f1ab..5c9847e0c 100644
  #endif
  
 diff --git a/src/Python/PythonEmbed.cpp b/src/Python/PythonEmbed.cpp
-index 0ec42cc3a..a9d859ee3 100644
+index 0ec42cc3a3..a9d859ee39 100644
 --- a/src/Python/PythonEmbed.cpp
 +++ b/src/Python/PythonEmbed.cpp
 @@ -61,7 +61,6 @@ bool PythonEmbed::pythonInstalled(QString &pybin, QString &pypath, QString PYTHO
@@ -784,33 +711,27 @@ index 0ec42cc3a..a9d859ee3 100644
      return;
  }
 diff --git a/src/Python/SIP/Bindings.cpp b/src/Python/SIP/Bindings.cpp
-index 8b38d1bff..35c350881 100644
+index 8b38d1bff4..43d41c205f 100644
 --- a/src/Python/SIP/Bindings.cpp
 +++ b/src/Python/SIP/Bindings.cpp
-@@ -1,3 +1,4 @@
-+#include "stable.h"
- #include <PythonEmbed.h>
- #include "Context.h"
- #include "RideItem.h"
-@@ -23,7 +24,10 @@
+@@ -23,7 +23,10 @@
  
  #include <QWebEngineView>
  #include <QUrl>
--#include <datetime.h> // for Python datetime macros
 +
 +#undef slots
-+#include <datetime.h>
+ #include <datetime.h> // for Python datetime macros
 +#define slots Q_SLOTS
  
  long Bindings::threadid() const
  {
-diff --git a/src/Python/SIP/Makefile b/src/Python/SIP/Makefile
+diff --git a/src/Python/SIP/Makefile.SIP b/src/Python/SIP/Makefile.SIP
 new file mode 100644
-index 000000000..5a53fd05e
+index 0000000000..6147f147bb
 --- /dev/null
-+++ b/src/Python/SIP/Makefile
-@@ -0,0 +1,19 @@
-+SIP_BUILD_CMD ?= sip-build
++++ b/src/Python/SIP/Makefile.SIP
+@@ -0,0 +1,18 @@
++SIP_BUILD_CMD = sip-build
 +TARGET = sipgoldencheetahBindings.cpp
 +DEPS = goldencheetah.sip
 +
@@ -821,7 +742,6 @@ index 000000000..5a53fd05e
 +	$(SIP_BUILD_CMD) --no-compile
 +	@cp build/goldencheetah/* .
 +	@for f in sip*.cpp; do \
-+		sed -i.bak '1s/^/#include "stable.h"\n/' $$f; \
 +		sed -i.bak 's/#include "sipAPIgoldencheetah.h"/#undef slots\n#include "sipAPIgoldencheetah.h"\n#define slots Q_SLOTS/' $$f; \
 +		rm -f $$f.bak; \
 +	done
@@ -831,7 +751,7 @@ index 000000000..5a53fd05e
 +	rm -rf build sip*.cpp sip*.c sip*.h
 diff --git a/src/Python/SIP/Makefile.hack b/src/Python/SIP/Makefile.hack
 deleted file mode 100644
-index 3d1235ecb..000000000
+index 3d1235ecb4..0000000000
 --- a/src/Python/SIP/Makefile.hack
 +++ /dev/null
 @@ -1,16 +0,0 @@
@@ -851,8 +771,102 @@ index 3d1235ecb..000000000
 -clean: 
 -	-rm $(SRC)
 -
+diff --git a/src/Python/SIP/SIP.pro b/src/Python/SIP/SIP.pro
+new file mode 100644
+index 0000000000..0236fbf970
+--- /dev/null
++++ b/src/Python/SIP/SIP.pro
+@@ -0,0 +1,88 @@
++TEMPLATE = lib
++CONFIG += staticlib
++CONFIG -= precompile_header
++
++TARGET = sip_lib
++
++# Common settings
++app_path = ../..
++# We need to include gcconfig, because it can contain the paths to the headers if we do not use autodetection.
++include($${app_path}/gcconfig.pri)
++
++# Only build this library if we enable Python support.
++contains(DEFINES, "GC_WANT_PYTHON") {
++    message("Enabling SIP Python bindings")
++    INCLUDEPATH += $$replace(PYTHONINCLUDES, ^-I, )
++    INCLUDEPATH += $${GSL_INCLUDES}
++    INCLUDEPATH += $${LIBZ_INCLUDE}
++    INCLUDEPATH += $${D2XX_INCLUDE}
++    INCLUDEPATH += $${SRMIO_INCLUDE}
++    INCLUDEPATH += $${ICAL_INCLUDE}
++    INCLUDEPATH += $${LIBUSB_INCLUDE}
++    INCLUDEPATH += $${USBXPRESS_INCLUDE}
++    INCLUDEPATH += $${VLC_INCLUDE}
++    INCLUDEPATH += $${SAMPLERATE_INCLUDE}
++    # Include paths (adjusted from src.pro)
++    INCLUDEPATH += . \
++                $${app_path}/ANT \
++                $${app_path}/Train \
++                $${app_path}/FileIO \
++                $${app_path}/Cloud \
++                $${app_path}/Charts \
++                $${app_path}/Metrics \
++                $${app_path}/Gui \
++                $${app_path}/Core \
++                $${app_path}/Planning
++
++    # External dependencies (adjust paths relative to here)
++    INCLUDEPATH +=  $${app_path}/../qwt/src \
++                    $${app_path}/../contrib/qxt/src \
++                    $${app_path}/../contrib/qtsolutions/json \
++                    $${app_path}/../contrib/qtsolutions/qwtcurve \
++                    $${app_path}/../contrib/qtsolutions/flowlayout \
++                    $${app_path}/../contrib/lmfit \
++                    $${app_path}/../contrib/boost \
++                    $${app_path}/../contrib/kmeans \
++                    $${app_path}/../contrib/voronoi
++
++    # Python Config
++    DEFINES += SIP_STATIC_MODULE
++    QT += core gui widgets core5compat xml sql network svg concurrent charts opengl webenginecore webenginewidgets webchannel positioning webenginequick
++
++    INCLUDEPATH += $${app_path} ..
++
++    # Source Generation
++
++    # Hook to run data generation before compilation
++    win32 {
++        SYSTEM_MAKE = make
++    } else {
++        SYSTEM_MAKE = make
++    }
++    # We run make in the current directory to generate the SIP C++ files
++    compile.commands = $${SYSTEM_MAKE} -f Makefile.SIP
++    compile.depends = goldencheetah.sip
++    QMAKE_EXTRA_TARGETS += compile
++    PRE_TARGETDEPS += compile
++
++    # Explicitly add the generated sources
++    CPPSOURCES += $$files(sip*.cpp)
++    CSOURCES += $$files(sip*.c)
++    HEADERS += $$files(sip*.h)
++
++    # If no SIP files file found (clean build), we might need to rely on the fact that
++    # the user installs sip-build and runs it.
++    # But let's try to trigger it.
++    isEmpty(CPPSOURCES) || isEmpty(CSOURCES) || isEmpty(HEADERS) {
++        message("Generating SIP bindings")
++        system($${SYSTEM_MAKE} -f Makefile.SIP)
++        # Re-glob after system call
++    } else {
++        message("SIP bindings already generated")
++    }
++    SOURCES += $$files(sip*.cpp)
++    SOURCES += $$files(sip*.c)
++    HEADERS += $$files(sip*.h)
++
++    SOURCES += Bindings.cpp
++}
 diff --git a/src/Python/SIP/goldencheetah.sip b/src/Python/SIP/goldencheetah.sip
-index d6a14b45e..a24d9c3c1 100644
+index d6a14b45e1..a24d9c3c1b 100644
 --- a/src/Python/SIP/goldencheetah.sip
 +++ b/src/Python/SIP/goldencheetah.sip
 @@ -85,7 +85,7 @@ public:
@@ -875,7 +889,7 @@ index d6a14b45e..a24d9c3c1 100644
          %End
 diff --git a/src/Python/SIP/pyproject.toml b/src/Python/SIP/pyproject.toml
 new file mode 100644
-index 000000000..74045c9ac
+index 0000000000..74045c9ac4
 --- /dev/null
 +++ b/src/Python/SIP/pyproject.toml
 @@ -0,0 +1,5 @@
@@ -886,7 +900,7 @@ index 000000000..74045c9ac
 +sip-files-dir = "." 
 diff --git a/src/Python/SIP/sipAPIgoldencheetah.h b/src/Python/SIP/sipAPIgoldencheetah.h
 deleted file mode 100644
-index f2ab7b251..000000000
+index f2ab7b2514..0000000000
 --- a/src/Python/SIP/sipAPIgoldencheetah.h
 +++ /dev/null
 @@ -1,418 +0,0 @@
@@ -1308,108 +1322,9 @@ index f2ab7b251..000000000
 -extern sipTypeDef *sipExportedTypes_goldencheetah[];
 -
 -#endif
-diff --git a/src/Python/SIP/sip_lib.pro b/src/Python/SIP/sip_lib.pro
-new file mode 100644
-index 000000000..6661a2f42
---- /dev/null
-+++ b/src/Python/SIP/sip_lib.pro
-@@ -0,0 +1,93 @@
-+TEMPLATE = lib
-+CONFIG += staticlib
-+CONFIG -= precompile_header
-+
-+
-+TARGET = sip_lib
-+
-+# Common settings
-+app_path = ../..
-+include($${app_path}/gcconfig.pri)
-+
-+INCLUDEPATH += $${GSL_INCLUDES}
-+INCLUDEPATH += $${LIBZ_INCLUDE}
-+INCLUDEPATH += $${D2XX_INCLUDE}
-+INCLUDEPATH += $${SRMIO_INCLUDE}
-+INCLUDEPATH += $${ICAL_INCLUDE}
-+INCLUDEPATH += $${LIBUSB_INCLUDE}
-+INCLUDEPATH += $${USBXPRESS_INCLUDE}
-+INCLUDEPATH += $${VLC_INCLUDE}
-+INCLUDEPATH += $${SAMPLERATE_INCLUDE}
-+
-+# Include paths (adjusted from src.pro)
-+INCLUDEPATH += . \
-+               $${app_path}/ANT \
-+               $${app_path}/Train \
-+               $${app_path}/FileIO \
-+               $${app_path}/Cloud \
-+               $${app_path}/Charts \
-+               $${app_path}/Metrics \
-+               $${app_path}/Gui \
-+               $${app_path}/Core \
-+               $${app_path}/Planning
-+
-+# External dependencies (adjust paths relative to here)
-+INCLUDEPATH +=  $${app_path}/../qwt/src \
-+                $${app_path}/../contrib/qxt/src \
-+                $${app_path}/../contrib/qtsolutions/json \
-+                $${app_path}/../contrib/qtsolutions/qwtcurve \
-+                $${app_path}/../contrib/qtsolutions/flowlayout \
-+                $${app_path}/../contrib/lmfit \
-+                $${app_path}/../contrib/boost \
-+                $${app_path}/../contrib/kmeans \
-+                $${app_path}/../contrib/voronoi
-+
-+# Python Config
-+DEFINES += SIP_STATIC_MODULE
-+QT += core gui widgets core5compat xml sql network svg concurrent charts opengl webenginecore webenginewidgets webchannel positioning webenginequick
-+
-+INCLUDEPATH += ../.. ..
-+
-+!isEmpty(PYTHONINCLUDES) {
-+    QMAKE_CXXFLAGS += $${PYTHONINCLUDES}
-+    QMAKE_CFLAGS += $${PYTHONINCLUDES}
-+}
-+
-+!isEmpty(GC_USE_PCH) {
-+    CONFIG += precompile_header
-+    PRECOMPILED_HEADER = ../../stable.h
-+}
-+
-+# Source Generation
-+# We run make in the current directory to generate the SIP C++ files
-+win32 {
-+    SYSTEM_MAKE = $(MAKE)
-+} else {
-+    SYSTEM_MAKE = make
-+}
-+
-+# Hook to run data generation before compilation
-+compile.commands = $${SYSTEM_MAKE}
-+compile.depends = FORCE
-+QMAKE_EXTRA_TARGETS += compile
-+PRE_TARGETDEPS += compile
-+
-+# Explicitly add the generated sources
-+# We use a wildcard, but we need to ensure they exist first.
-+# qmake expands wildcards at parse time, so this is tricky if they don't exist yet.
-+# However, SIP generation usually happens before qmake in many flows, or we rely on them being present.
-+# If they are not present, qmake might miss them.
-+# A better approach for the sources list:
-+SOURCES += Bindings.cpp
-+SOURCES += $$files(sip*.cpp)
-+HEADERS += $$files(sip*.h)
-+
-+# If no SIP files file found (clean build), we might need to rely on the fact that
-+# the user installs sip-build and runs it. 
-+# But let's try to trigger it.
-+system($${SYSTEM_MAKE})
-+
-+# Re-glob after system call
-+SOURCES += $$files(sip*.cpp)
-+SOURCES += $$files(sip*.c)
-+HEADERS += $$files(sip*.h)
 diff --git a/src/Python/SIP/sipgoldencheetahBindings.cpp b/src/Python/SIP/sipgoldencheetahBindings.cpp
 deleted file mode 100644
-index b6edc766e..000000000
+index b6edc766eb..0000000000
 --- a/src/Python/SIP/sipgoldencheetahBindings.cpp
 +++ /dev/null
 @@ -1,1685 +0,0 @@
@@ -3100,7 +3015,7 @@ index b6edc766e..000000000
 -};
 diff --git a/src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp b/src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp
 deleted file mode 100644
-index af0cebdd0..000000000
+index af0cebdd07..0000000000
 --- a/src/Python/SIP/sipgoldencheetahPythonDataSeries.cpp
 +++ /dev/null
 @@ -1,338 +0,0 @@
@@ -3444,7 +3359,7 @@ index af0cebdd0..000000000
 -};
 diff --git a/src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp b/src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
 deleted file mode 100644
-index 5dbcc361c..000000000
+index 5dbcc361cc..0000000000
 --- a/src/Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
 +++ /dev/null
 @@ -1,428 +0,0 @@
@@ -3878,7 +3793,7 @@ index 5dbcc361c..000000000
 -};
 diff --git a/src/Python/SIP/sipgoldencheetahQString.cpp b/src/Python/SIP/sipgoldencheetahQString.cpp
 deleted file mode 100644
-index 1d002499d..000000000
+index 1d002499db..0000000000
 --- a/src/Python/SIP/sipgoldencheetahQString.cpp
 +++ /dev/null
 @@ -1,105 +0,0 @@
@@ -3989,7 +3904,7 @@ index 1d002499d..000000000
 -};
 diff --git a/src/Python/SIP/sipgoldencheetahQStringList.cpp b/src/Python/SIP/sipgoldencheetahQStringList.cpp
 deleted file mode 100644
-index 4b5ab4061..000000000
+index 4b5ab4061e..0000000000
 --- a/src/Python/SIP/sipgoldencheetahQStringList.cpp
 +++ /dev/null
 @@ -1,183 +0,0 @@
@@ -4178,7 +4093,7 @@ index 4b5ab4061..000000000
 -};
 diff --git a/src/Python/SIP/sipgoldencheetahcmodule.cpp b/src/Python/SIP/sipgoldencheetahcmodule.cpp
 deleted file mode 100644
-index 3a8431c05..000000000
+index 3a8431c059..0000000000
 --- a/src/Python/SIP/sipgoldencheetahcmodule.cpp
 +++ /dev/null
 @@ -1,274 +0,0 @@
@@ -4457,7 +4372,7 @@ index 3a8431c05..000000000
 -    SIP_MODULE_RETURN(sipModule);
 -}
 diff --git a/src/Python/requirements.txt b/src/Python/requirements.txt
-index 2fea4a365..3c75c752e 100644
+index 2fea4a365d..3c75c752e9 100644
 --- a/src/Python/requirements.txt
 +++ b/src/Python/requirements.txt
 @@ -2,9 +2,9 @@
@@ -4473,90 +4388,41 @@ index 2fea4a365..3c75c752e 100644
  lmfit
  plotly
 diff --git a/src/gcconfig.pri.in b/src/gcconfig.pri.in
-index af0489b7e..51e7c75fa 100644
+index af0489b7e7..199758e548 100644
 --- a/src/gcconfig.pri.in
 +++ b/src/gcconfig.pri.in
-@@ -8,16 +8,71 @@
- #CONFIG += debug
- #CONFIG += release
+@@ -10,14 +10,26 @@
  
--# uncomment below and configure the location of the GNU scientific library,
--# this is a mandatory dependency.
-+###############################################################################
-+# PRECOMPILED HEADER SUPPORT (this can improve builds a lot!)
-+###############################################################################
-+macx {
-+  message("Skipping PCH because Mac multiarch doesn't work")
-+} else {
-+  GC_USE_PCH = true
-+  message("Enabling PCH")
-+}
-+
+ # uncomment below and configure the location of the GNU scientific library,
+ # this is a mandatory dependency.
 +###############################################################################
 +# GSL (GNU SCIENTIFIC LIBRARY) CONFIGURATION - REQUIRED
 +###############################################################################
-+# The GNU Scientific Library is a mandatory dependency.
-+# 
++#
 +# RECOMMENDED INSTALLATION:
-+#   Linux:   sudo apt-get install libgsl-dev
-+#   macOS:   brew install gsl
-+#   Windows: vcpkg install gsl
++#  Linux:   sudo apt-get install libgsl-dev
++#  macOS:   brew install gsl
++#  Windows: vcpkg install gsl
  #
--# Linux/Mac - use apt/homebrew to install and edit to your install location
+ # Linux/Mac - use apt/homebrew to install and edit to your install location
 -#GSL_INCLUDES = /usr/include
 -#GSL_LIBS = -lgsl -lgslcblas -lm
-+# The build system will attempt to auto-configure based on your platform.
-+# You can override by uncommenting and setting the variables below.
++#  GSL_INCLUDES = /usr/include
++#  GSL_LIBS = -lgsl -lgslcblas -lm
  #
--# Windows - use vcpkg to install and edit to your install location
+ # Windows - use vcpkg to install and edit to your install location
 -#GSL_INCLUDES = c:\vcpkg\installed\x64-windows\include
 -#GSL_LIBS = -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas
++#  GSL_INCLUDES = c:\vcpkg\installed\x64-windows\include
++#  GSL_LIBS = -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas
 +###############################################################################
-+
-+# Override GSL paths if needed (optional - auto-configured if not set):
++#
 +#GSL_INCLUDES = /usr/include
 +#GSL_LIBS = -L/usr/lib -lgsl -lgslcblas -lm
-+
-+###############################################################################
-+# AUTOMATIC GSL CONFIGURATION (DO NOT EDIT BELOW THIS LINE)
-+###############################################################################
-+
-+isEmpty(GSL_INCLUDES)|isEmpty(GSL_LIBS) {
-+    win32 {
-+        # Windows with vcpkg
-+        isEmpty(GSL_INCLUDES) {
-+            GSL_INCLUDES = c:\\vcpkg\\installed\\x64-windows\\include
-+        }
-+        isEmpty(GSL_LIBS) {
-+            GSL_LIBS = -LC:\\vcpkg\\installed\\x64-windows\\lib -lgsl -lgslcblas
-+        }
-+    } else {
-+        # Linux and macOS
-+        isEmpty(GSL_INCLUDES) {
-+            GSL_INCLUDES = /usr/include
-+        }
-+        isEmpty(GSL_LIBS) {
-+            GSL_LIBS = -lgsl -lgslcblas -lm
-+        }
-+    }
-+    isEmpty(GSL_INCLUDES) {
-+        error("GSL include path not found. Please set GSL_INCLUDES.")
-+    }
-+    !exists($${GSL_INCLUDES}/gsl/gsl_version.h) {
-+        error("GSL header not found! Please fix GSL_INCLUDES")
-+    }
-+    isEmpty(GSL_LIBS) {
-+        error("GSL library path not found. Please set GSL_LIBS.")
-+    }
-+}
-+
-+message("GSL configuration:")
-+message("  Includes: $$GSL_INCLUDES")
-+message("  Libs: $$GSL_LIBS")
  
  # If you have conflicts with min/max macros defined in windows.h
  # then uncomment the following line.
-@@ -29,24 +84,58 @@
+@@ -29,24 +41,57 @@
  # can be run to install these packages; see it for more info.
  #DEFINES += GC_WANT_R
  
@@ -4568,16 +4434,11 @@ index af0489b7e..51e7c75fa 100644
 +# To enable Python support, set GC_WANT_PYTHON = true and optionally configure the
 +# Python version. The build system will automatically detect your platform
 +# and configure the appropriate paths.
-+#
-+# REQUIRED SETTING:
-+#   GC_WANT_PYTHON = true              # Enable Python support
  #
 -# Libs needed can typically be found by calling e.g
 -# python3.6-config --libs
-+# OPTIONAL SETTINGS:
-+#   PYTHON_VERSION = <version>         # Override Python version
-+#   PYTHONINCLUDES = <custom path>     # Override include path
-+#   PYTHONLIBS = <custom libs>         # Override library path
++# REQUIRED SETTING:
++#   DEFINES += GC_WANT_PYTHON             # Enable Python support
  #
 -# below 3 lines work well on Linux style OS
 -#DEFINES += GC_WANT_PYTHON
@@ -4588,9 +4449,10 @@ index af0489b7e..51e7c75fa 100644
 -#PYTHONINCLUDES = -I\"C:\Program Files\Python36\include\"
 -#PYTHONLIBS = -L\"C:\Program Files\Python36\libs\" -lpython36
 -#Below work ok on MacOS High Sierra
--#DEFINES += GC_WANT_PYTHON
--#PYTHONINCLUDES = -I/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
--#PYTHONLIBS = -L/Library/Frameworks/Python.framework/Versions/3.6/lib -lpython3.6m
++# OPTIONAL SETTINGS:
++#   PYTHONINCLUDES = <custom path>     # Override include path
++#   PYTHONLIBS = <custom libs>         # Override library path
++#
 +# You can find the correct library paths by running:
 +#   python3.11-config --includes
 +#   python3.11-config --libs
@@ -4598,25 +4460,25 @@ index af0489b7e..51e7c75fa 100644
 +###############################################################################
 +
 +# Uncomment and configure these lines to enable Python:
-+#GC_WANT_PYTHON = true
+ #DEFINES += GC_WANT_PYTHON
+-#PYTHONINCLUDES = -I/Library/Frameworks/Python.framework/Versions/3.6/include/python3.6m
+-#PYTHONLIBS = -L/Library/Frameworks/Python.framework/Versions/3.6/lib -lpython3.6m
 +
 +# Custom paths (optional - auto-configured if not set):
-+#PYTHONINCLUDES = -I/usr/include/python3.11
-+#PYTHONLIBS = -L/usr/lib/python3.11/config-3.11-x86_64-linux-gnu -lpython3.11
++#PYTHONINCLUDES =
++#PYTHONLIBS =
 +
 +###############################################################################
 +# AUTOMATIC PYTHON CONFIGURATION (DO NOT EDIT BELOW THIS LINE)
 +###############################################################################
-+
-+equals(GC_WANT_PYTHON, true) {
-+    DEFINES += GC_WANT_PYTHON    
++contains(DEFINES, "GC_WANT_PYTHON") {
 +    # Auto-configure platform-specific paths if not manually set
-+    isEmpty(PYTHONINCLUDES) {     
++    isEmpty(PYTHONINCLUDES) {
 +        PYTHONINCLUDES = $$system("python3-config --includes")
 +    }
 +    isEmpty(PYTHONLIBS) {
-+        PYTHONLIBS = $$system("python3-config --ldflags --embed")        
-+    }    
++        PYTHONLIBS = $$system("python3-config --ldflags --embed")
++    }
 +    message("Python configuration:")
 +    message("  Includes: $$PYTHONINCLUDES")
 +    message("  Libs: $$PYTHONLIBS")
@@ -4627,12 +4489,14 @@ index af0489b7e..51e7c75fa 100644
 +    isEmpty(PYTHONLIBS) {
 +        error("Python library path not found. Please set PYTHONLIBS.")
 +    }
++    # NOTE, we don't manipulate global configs in this file as it is not always
++    # entirely reused in CI, instead we set INCLUDEPATH + LIBS in the .prod files.
 +}
  
  # put output into a separate dir
  # to keep main directory clear
 diff --git a/src/src.pro b/src/src.pro
-index f414821ce..70d7046c8 100644
+index 4fe4f8e58f..c1a334dec5 100644
 --- a/src/src.pro
 +++ b/src/src.pro
 @@ -40,14 +40,6 @@ QT += xml sql network svg  widgets concurrent serialport multimedia multimediawi
@@ -4666,7 +4530,7 @@ index f414821ce..70d7046c8 100644
      # gnu toolchain wants math libs
      LIBS += -lm
  
-@@ -155,13 +143,7 @@ macx {
+@@ -151,13 +139,7 @@ macx {
      # otherwise we have a blank videowindow, it will do nothing
      HEADERS += Train/VideoWindow.h
      SOURCES += Train/VideoWindow.cpp
@@ -4680,24 +4544,26 @@ index f414821ce..70d7046c8 100644
      # not on mac we need our own full screen support and segment control button
      HEADERS += Gui/QTFullScreen.h
      SOURCES += Gui/QTFullScreen.cpp
-@@ -239,31 +221,30 @@ contains(DEFINES, "GC_WANT_PYTHON") {
-             INCLUDEPATH += ./Python
+@@ -226,40 +208,27 @@ RESOURCES = $${PWD}/Resources/application.qrc
+ ### OPTIONAL => Embed Python
+ ###=========================
  
-             DEFINES += SIP_STATIC_MODULE
+-notsupported = "INFO: Embedded Python requires version QT >= 6.5.3, no support for"
+-notsupported += $${QT_VERSION}
+-
+ contains(DEFINES, "GC_WANT_PYTHON") {
+-
+-            # add Python subdirectory to include path
+-            INCLUDEPATH += ./Python
+-
+-            DEFINES += SIP_STATIC_MODULE
 -            !isEmpty(PYTHONINCLUDES) QMAKE_CXXFLAGS += $${PYTHONINCLUDES}
-+            !isEmpty(PYTHONINCLUDES) {
-+                QMAKE_CXXFLAGS += $${PYTHONINCLUDES}
-+                QMAKE_CFLAGS += $${PYTHONINCLUDES}
-+            }
-             LIBS += $${PYTHONLIBS}
- 
-+            # Link against the separate SIP static library
-+            LIBS += -L$$PWD/Python/SIP/ -lsip_lib
-+
-             ## Python integration
-             HEADERS += Python/PythonEmbed.h Charts/PythonChart.h Python/PythonSyntax.h
-             SOURCES += Python/PythonEmbed.cpp Charts/PythonChart.cpp Python/PythonSyntax.cpp
- 
+-            LIBS += $${PYTHONLIBS}
+-
+-            ## Python integration
+-            HEADERS += Python/PythonEmbed.h Charts/PythonChart.h Python/PythonSyntax.h
+-            SOURCES += Python/PythonEmbed.cpp Charts/PythonChart.cpp Python/PythonSyntax.cpp
+-
 -            ## Python SIP generated module
 -            SOURCES += Python/SIP/sipgoldencheetahBindings.cpp Python/SIP/sipgoldencheetahcmodule.cpp
 -            SOURCES += Python/SIP/Bindings.cpp
@@ -4707,46 +4573,62 @@ index f414821ce..70d7046c8 100644
 -            SOURCES += Python/SIP/sipgoldencheetahQStringList.cpp
 -            SOURCES += Python/SIP/sipgoldencheetahPythonDataSeries.cpp \
 -                       Python/SIP/sipgoldencheetahPythonXDataSeries.cpp
-             DEFINES += GC_HAVE_PYTHON
- 
-+            ## Python data processors
-+
-+
-             ## Python data processors
-             HEADERS += FileIO/FixPyScriptsDialog.h FileIO/FixPySettings.h FileIO/FixPyRunner.h \
-                        FileIO/FixPyScript.h FileIO/FixPyDataProcessor.h
- 
-             SOURCES += FileIO/FixPyScriptsDialog.cpp FileIO/FixPySettings.cpp FileIO/FixPyRunner.cpp \
-                        FileIO/FixPyDataProcessor.cpp
+-            DEFINES += GC_HAVE_PYTHON
 -
+-            ## Python data processors
+-            HEADERS += FileIO/FixPyScriptsDialog.h FileIO/FixPySettings.h FileIO/FixPyRunner.h \
+-                       FileIO/FixPyScript.h FileIO/FixPyDataProcessor.h
+-
+-            SOURCES += FileIO/FixPyScriptsDialog.cpp FileIO/FixPySettings.cpp FileIO/FixPyRunner.cpp \
+-                       FileIO/FixPyDataProcessor.cpp
+-
++    message("Enabling Python support")
++    INCLUDEPATH += $$replace(PYTHONINCLUDES, ^-I, )
++    LIBS += $${PYTHONLIBS}
++
++    # add Python subdirectory to include path
++    INCLUDEPATH += ./Python
++    DEFINES += SIP_STATIC_MODULE
++
++    # Link against the separate SIP static library
++    LIBS += -L$$PWD/Python/SIP/ -lsip_lib
++
++    ## Python integration
++    HEADERS += Python/PythonEmbed.h Charts/PythonChart.h Python/PythonSyntax.h
++    SOURCES += Python/PythonEmbed.cpp Charts/PythonChart.cpp Python/PythonSyntax.cpp
++
++    ## Python data processors
++    HEADERS += FileIO/FixPyScriptsDialog.h FileIO/FixPySettings.h FileIO/FixPyRunner.h \
++                FileIO/FixPyScript.h FileIO/FixPyDataProcessor.h
++    SOURCES += FileIO/FixPyScriptsDialog.cpp FileIO/FixPySettings.cpp FileIO/FixPyRunner.cpp \
++                FileIO/FixPyDataProcessor.cpp
  }
  
  ###====================
-@@ -837,6 +818,18 @@ DEFERRES += Core/RouteWindow.h Core/RouteWindow.cpp Core/RouteItem.h Core/RouteI
+@@ -829,8 +798,19 @@ DEFERRES += Core/RouteWindow.h Core/RouteWindow.cpp Core/RouteItem.h Core/RouteI
  OTHER_FILES +=   Resources/python/library.py Python/SIP/goldencheetah.sip
  
  
 +###==========================
 +### PRECOMPILED HEADER
-+###==========================   
-+PRECOMPILED_HEADER = stable.h
-+!isEmpty(GC_USE_PCH) {
-+    message("Enabling precompile_header")
-+    CONFIG += precompile_header
++###==========================
++macx {
++    message("Disabling Precompiled Headers on macOS to avoid multi-arch Clang errors.")
 +} else {
-+    message("Disabling precompile_header (default)")
-+    CONFIG -= precompile_header
++    message("Enabling precompile_header")
++    PRECOMPILED_HEADER = stable.h
++    CONFIG += precompile_header
 +}
 +
  ###============================================================================
- ### FIX: Disable Precompiled Header for C files
+-### FIX: Disable Precompiled Header for C files
++### Disable Precompiled Header for C files
  ### The PCH contains C++ specific headers (Qt, STL) which causes compilation errors
-@@ -848,5 +841,3 @@ for(src, SOURCES) {
+ ### when the PCH is forced upon C files by gcc.
+ ###============================================================================
+@@ -840,5 +820,3 @@ for(src, SOURCES) {
          eval($${src}.CONFIG -= precompile_header)
      }
  }
 -
 -
--- 
-2.51.2
-
