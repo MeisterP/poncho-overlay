@@ -1,11 +1,11 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 inherit linux-mod-r1
 
-MY_COMMIT="60d9def80d65e7e34a73e6f32d8677ad5bfa58a9"
+MY_COMMIT="a9eb2495220cba861ef3df63fa15265e878293b6"
 
 DESCRIPTION="IT8705F/IT871xF/IT872xF hardware monitoring driver"
 HOMEPAGE="https://github.com/frankcrawford/it87"
