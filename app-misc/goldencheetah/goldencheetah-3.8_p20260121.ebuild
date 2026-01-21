@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="225923209f13b6d382c7acd3e16894657a8514c6"
+MY_COMMIT="1a4dd1d10f346bfea25b7086522146703288325a"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -21,15 +21,18 @@ KEYWORDS="~amd64"
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
-BDEPEND="${PYTHON_DEPS}
+BDEPEND="
+	${PYTHON_DEPS}
 	$(python_gen_cond_dep '
 		dev-python/sip:5[${PYTHON_USEDEP}]
 	')
 	>=sys-devel/bison-3.7
 	sys-devel/flex
-	virtual/pkgconfig"
+	virtual/pkgconfig
+"
 
-DEPEND="${PYTHON_DEPS}
+DEPEND="
+	${PYTHON_DEPS}
 	dev-libs/libical
 	dev-qt/qt5compat
 	dev-qt/qtbase:6[concurrent,gui,network,opengl,sql,sqlite,widgets,xml]
@@ -44,11 +47,15 @@ DEPEND="${PYTHON_DEPS}
 	dev-qt/qtwebengine:6[widgets,qml]
 	media-libs/libsamplerate
 	sci-libs/gsl:=
-	virtual/libusb:1"
+	virtual/libusb:1
+"
 
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/upgrade-sip.patch" )
+PATCHES=(
+	"${FILESDIR}/upgrade-sip.patch"
+	"${FILESDIR}/pandas-comp.patch"
+)
 
 DOCS=( README.md CONTRIBUTING.md )
 

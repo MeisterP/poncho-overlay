@@ -1,7 +1,7 @@
-From 5346476b24385995cba234e9c3de6ddc1af8fb04 Mon Sep 17 00:00:00 2001
+From 6bfc509431fe10f0709cbe76da7b199f387c9506 Mon Sep 17 00:00:00 2001
 From: Magnus Gille <mgille@gmail.com>
 Date: Mon, 8 Dec 2025 14:57:47 -0800
-Subject: [PATCH] Upgrade Python, Pandas, and SIP versions. Make the builds
+Subject: [PATCH 1/2] Upgrade Python, Pandas, and SIP versions. Make the builds
  future proof(er).
 
 Python is moved to 3.11 and packaged in Appveyor. This version is a good spot in the lifecycle.
@@ -15,9 +15,10 @@ Added code signing for MacOS as this was a requirement to run my local binaries 
 This puts us at a good jumping off spot for building a universal Mac binary but there's a lot of work left.
 ---
  INSTALL-LINUX                                 |    25 +-
- build.pro                                     |     3 +-
+ build.pro                                     |     1 +
  src/.gitignore                                |     4 +
  src/Charts/PythonChart.cpp                    |     3 -
+ src/Gui/GcCrashDialog.cpp                     |     2 +-
  src/Gui/Pages.cpp                             |     2 -
  src/Python/PythonEmbed.cpp                    |    31 +-
  src/Python/PythonEmbed.h                      |    16 +-
@@ -48,8 +49,8 @@ This puts us at a good jumping off spot for building a universal Mac binary but 
  src/Python/requirements.txt                   |     4 +-
  src/Resources/win32/GC3.8-Master-W64-QT6.nsi  |     8 +-
  src/gcconfig.pri.in                           |    83 +-
- src/src.pro                                   |    91 +-
- 35 files changed, 18718 insertions(+), 1280 deletions(-)
+ src/src.pro                                   |    90 +-
+ 36 files changed, 18717 insertions(+), 1280 deletions(-)
  create mode 100644 src/Python/SIP/Makefile.SIP
  delete mode 100644 src/Python/SIP/Makefile.hack
  create mode 100644 src/Python/SIP/pyproject.toml
@@ -111,17 +112,15 @@ index 0ace49f50..672582fef 100644
  $ make clean
  $ qmake
 diff --git a/build.pro b/build.pro
-index efc4b5c04..e77f50188 100644
+index efc4b5c04..b539a5340 100644
 --- a/build.pro
 +++ b/build.pro
-@@ -1,5 +1,6 @@
+@@ -1,4 +1,5 @@
  TEMPLATE = subdirs
-+CONFIG += ordered
 +
  SUBDIRS = qwt
  SUBDIRS += src
  SUBDIRS += unittests
--CONFIG += ordered
 diff --git a/src/.gitignore b/src/.gitignore
 index d1bf62de9..71dd89f81 100644
 --- a/src/.gitignore
@@ -156,6 +155,19 @@ index 58baa3023..5ae18ae2c 100644
          // not starting
          noPython = new QLabel(tr("Warning: Python is disabled"), this);
          clv->addWidget(noPython);
+diff --git a/src/Gui/GcCrashDialog.cpp b/src/Gui/GcCrashDialog.cpp
+index b4b0ce9a2..f157b6939 100644
+--- a/src/Gui/GcCrashDialog.cpp
++++ b/src/Gui/GcCrashDialog.cpp
+@@ -292,7 +292,7 @@ QString GcCrashDialog::versionHTML()
+ #else
+             .arg("none")
+ #endif
+-#ifdef GC_HAVE_PYTHON
++#ifdef GC_WANT_PYTHON
+             .arg(QString("%1 [%2]").arg(python ? python->version.split(" ").at(0) : QString("none")).arg(PythonEmbed::buildVersion()))
+ #else
+             .arg("none")
 diff --git a/src/Gui/Pages.cpp b/src/Gui/Pages.cpp
 index 904d0f1ab..5c9847e0c 100644
 --- a/src/Gui/Pages.cpp
@@ -22241,7 +22253,7 @@ index af0489b7e..199758e54 100644
  # put output into a separate dir
  # to keep main directory clear
 diff --git a/src/src.pro b/src/src.pro
-index 4fe4f8e58..c91506221 100644
+index 95f1167e3..35d4be8b6 100644
 --- a/src/src.pro
 +++ b/src/src.pro
 @@ -40,14 +40,6 @@ QT += xml sql network svg  widgets concurrent serialport multimedia multimediawi
@@ -22289,7 +22301,7 @@ index 4fe4f8e58..c91506221 100644
      # not on mac we need our own full screen support and segment control button
      HEADERS += Gui/QTFullScreen.h
      SOURCES += Gui/QTFullScreen.cpp
-@@ -226,40 +208,30 @@ RESOURCES = $${PWD}/Resources/application.qrc
+@@ -226,40 +208,29 @@ RESOURCES = $${PWD}/Resources/application.qrc
  ### OPTIONAL => Embed Python
  ###=========================
  
@@ -22336,7 +22348,6 @@ index 4fe4f8e58..c91506221 100644
 +    DEFINES += SIP_STATIC_MODULE
 +
 +    ## Python integration & SIP files
-+    ## Python integration & SIP files
 +    HEADERS += $$files(Python/SIP/sip*.h) Python/SIP/Bindings.h
 +    SOURCES += $$files(Python/SIP/sip*.c)
 +    SOURCES += $$files(Python/SIP/sip*.cpp) Python/SIP/Bindings.cpp
@@ -22353,7 +22364,7 @@ index 4fe4f8e58..c91506221 100644
  }
  
  ###====================
-@@ -614,7 +586,7 @@ HEADERS += Cloud/CalendarDownload.h Cloud/CloudService.h \
+@@ -614,7 +585,7 @@ HEADERS += Cloud/CalendarDownload.h Cloud/CloudService.h \
             Cloud/AddCloudWizard.h Cloud/Withings.h Cloud/MeasuresDownload.h Cloud/Xert.h \
             Cloud/Azum.h
  
@@ -22362,7 +22373,7 @@ index 4fe4f8e58..c91506221 100644
  HEADERS += Core/Athlete.h Core/Context.h Core/DataFilter.h Core/FreeSearch.h Core/GcCalendarModel.h Core/GcUpgrade.h \
             Core/IdleTimer.h Core/IntervalItem.h Core/NamedSearch.h Core/RideCache.h Core/RideCacheModel.h Core/RideDB.h \
             Core/RideItem.h Core/Route.h Core/RouteParser.h Core/Season.h Core/SeasonDialogs.h Core/Seasons.h Core/Secrets.h Core/Settings.h \
-@@ -829,8 +801,19 @@ DEFERRES += Core/RouteWindow.h Core/RouteWindow.cpp Core/RouteItem.h Core/RouteI
+@@ -829,8 +800,19 @@ DEFERRES += Core/RouteWindow.h Core/RouteWindow.cpp Core/RouteItem.h Core/RouteI
  OTHER_FILES +=   Resources/python/library.py Python/SIP/goldencheetah.sip
  
  
@@ -22383,7 +22394,7 @@ index 4fe4f8e58..c91506221 100644
  ### The PCH contains C++ specific headers (Qt, STL) which causes compilation errors
  ### when the PCH is forced upon C files by gcc.
  ###============================================================================
-@@ -840,5 +823,3 @@ for(src, SOURCES) {
+@@ -840,5 +822,3 @@ for(src, SOURCES) {
          eval($${src}.CONFIG -= precompile_header)
      }
  }
