@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Source: Written from scratch for sunset-repo overlay -->
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<maintainer type="person">
-		<email>sunsetsergal@gmail.com</email>
+		<email>poncho@spahan.ch</email>
+		<name>Poncho</name>
 	</maintainer>
 	<upstream>
 		<remote-id type="github">frankcrawford/it87</remote-id>
