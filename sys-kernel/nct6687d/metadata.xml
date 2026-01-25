@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>poncho@spahan.ch</email>
+		<name>Poncho</name>
+	</maintainer>
+	<upstream>
+		<remote-id type="github">Fred78290/nct6687d</remote-id>
+	</upstream>
+	<longdescription lang="en">
+	This kernel module permit to recognize the chipset Nuvoton NCT6687-R in lm-sensors package.
+	This sensor is present on some B550 motherboard such as MSI or ASUS.
+	</longdescription>
+</pkgmetadata>
