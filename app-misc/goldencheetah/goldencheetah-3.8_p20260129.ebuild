@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="1a4dd1d10f346bfea25b7086522146703288325a"
+MY_COMMIT="2eaf1bccc1611a219a9a8822c6ba5b89f5e8681a"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -52,11 +52,6 @@ DEPEND="
 
 RDEPEND="${DEPEND}"
 
-PATCHES=(
-	"${FILESDIR}/upgrade-sip.patch"
-	"${FILESDIR}/pandas-comp.patch"
-)
-
 DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
@@ -82,7 +77,8 @@ src_configure() {
 	cp -v qwt/qwtconfig.pri.in qwt/qwtconfig.pri || die
 
 	replace-flags -O? -O3
-	eqmake6
+	emake -B -C src/Python/SIP -f Makefile.SIP
+	eqmake6 -recursive
 }
 
 src_install() {
