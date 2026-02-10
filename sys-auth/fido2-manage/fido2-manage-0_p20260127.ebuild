@@ -1,13 +1,13 @@
-# Copyright 2024-2025 Gentoo Authors
+# Copyright 2024-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-inherit cmake udev linux-info
+inherit cmake
 
-MY_COMMIT="62ef1dd5904951125b8f70f1f315a49b800bf0a7"
+MY_COMMIT="9be076ce4b5a878201d0bec9b23c459afdf53846"
 
-DESCRIPTION="Forked from libfido2 to provide a FIDO2.1 key management tool"
+DESCRIPTION="An open-source FIDO2.1 key management tool"
 HOMEPAGE="https://github.com/token2/fido2-manage"
 
 SRC_URI="https://github.com/token2/fido2-manage/archive/$MY_COMMIT.tar.gz -> ${P}.tar.gz"
@@ -19,28 +19,26 @@ KEYWORDS="~amd64"
 
 DEPEND="
 	dev-libs/libcbor:=
+	dev-libs/libfido2
 	dev-libs/openssl:=
 	virtual/zlib:=
-	virtual/libudev:=
 "
 RDEPEND="
 	${DEPEND}
-	acct-group/plugdev
-	!dev-libs/libfido2
 "
 
-pkg_pretend() {
-	CONFIG_CHECK="
-		~USB_HID
-		~HIDRAW
-	"
-
-	check_extra_config
-}
+DOCS=( README.md TODO.md )
 
 src_prepare(){
 	cmake_src_prepare
-	sed -i -e "s:/usr/local/bin/fido2-token2:/usr/bin/fido2-token2:" fido2-manage.sh || die
+
+	# Patch the script to replace ./fido2-manage.sh with fido2-manage
+	find . -type f -name "*.py" -o -name "*.sh" -o -name "*.txt" -o -name "*.md" | \
+		xargs sed -i 's|./fido2-manage\.sh|fido2-manage|g' || die
+
+	# Update the fido2-manage.sh script to use the correct path for fido2-token2
+	sed -i 's|FIDO2_TOKEN_CMD="/usr/local/bin/fido2-token2"|FIDO2_TOKEN_CMD="/usr/bin/fido2-token2"|g' \
+		fido2-manage.sh || die
 }
 
 src_configure() {
@@ -63,15 +61,8 @@ src_configure() {
 
 src_install() {
 	cmake_src_install
-	dobin fido2-manage.sh
+	newbin fido2-manage.sh fido2-manage
 
-	udev_newrules udev/70-u2f.rules 70-libfido2-u2f.rules
-}
-
-pkg_postinst() {
-	udev_reload
-}
-
-pkg_postrm() {
-	udev_reload
+	# remove bundled libfido2
+	rm -r "${D}/usr/include"  "${D}/usr/lib64" || die
 }
