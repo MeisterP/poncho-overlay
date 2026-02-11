@@ -1,0 +1,291 @@
+# Copyright 2025-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+EAPI=8
+
+CRATES="
+	addr2line@0.24.2
+	adler2@2.0.1
+	allocator-api2@0.2.21
+	android-tzdata@0.1.1
+	android_system_properties@0.1.5
+	ansi-to-tui@7.0.0
+	anyhow@1.0.98
+	async-broadcast@0.7.2
+	async-channel@2.3.1
+	async-executor@1.13.2
+	async-io@2.4.1
+	async-lock@3.4.0
+	async-process@2.3.1
+	async-recursion@1.1.1
+	async-signal@0.2.11
+	async-task@4.7.1
+	async-trait@0.1.88
+	atomic-waker@1.1.2
+	autocfg@1.4.0
+	backtrace@0.3.75
+	base64@0.22.1
+	bitflags@2.9.1
+	blocking@1.6.1
+	bumpalo@3.18.1
+	bytes@1.10.1
+	cassowary@0.3.0
+	castaway@0.2.3
+	cc@1.2.27
+	cfg-if@1.0.1
+	cfg_aliases@0.2.1
+	chrono@0.4.41
+	compact_str@0.8.1
+	concurrent-queue@2.5.0
+	core-foundation-sys@0.8.7
+	core-foundation@0.9.4
+	crossbeam-utils@0.8.21
+	crossterm@0.28.1
+	crossterm_winapi@0.9.1
+	darling@0.20.11
+	darling_core@0.20.11
+	darling_macro@0.20.11
+	displaydoc@0.2.5
+	either@1.15.0
+	encoding_rs@0.8.35
+	endi@1.1.0
+	enumflags2@0.7.12
+	enumflags2_derive@0.7.12
+	equivalent@1.0.2
+	errno@0.3.12
+	event-listener-strategy@0.5.4
+	event-listener@5.4.0
+	fastrand@2.3.0
+	fnv@1.0.7
+	foldhash@0.1.5
+	foreign-types-shared@0.1.1
+	foreign-types@0.3.2
+	form_urlencoded@1.2.1
+	futures-channel@0.3.31
+	futures-core@0.3.31
+	futures-io@0.3.31
+	futures-lite@2.6.0
+	futures-sink@0.3.31
+	futures-task@0.3.31
+	futures-util@0.3.31
+	getrandom@0.2.16
+	getrandom@0.3.3
+	gimli@0.31.1
+	h2@0.4.10
+	hashbrown@0.15.4
+	heck@0.5.0
+	hermit-abi@0.5.2
+	hex@0.4.3
+	http-body-util@0.1.3
+	http-body@1.0.1
+	http@1.3.1
+	httparse@1.10.1
+	hyper-rustls@0.27.7
+	hyper-tls@0.6.0
+	hyper-util@0.1.14
+	hyper@1.6.0
+	iana-time-zone-haiku@0.1.2
+	iana-time-zone@0.1.63
+	icu_collections@2.0.0
+	icu_locale_core@2.0.0
+	icu_normalizer@2.0.0
+	icu_normalizer_data@2.0.0
+	icu_properties@2.0.1
+	icu_properties_data@2.0.1
+	icu_provider@2.0.0
+	ident_case@1.0.1
+	idna@1.0.3
+	idna_adapter@1.2.1
+	indexmap@2.9.0
+	indoc@2.0.6
+	instability@0.3.7
+	ipnet@2.11.0
+	iri-string@0.7.8
+	itertools@0.13.0
+	itoa@1.0.15
+	js-sys@0.3.77
+	libc@0.2.173
+	linux-raw-sys@0.4.15
+	linux-raw-sys@0.9.4
+	litemap@0.8.0
+	lock_api@0.4.13
+	log@0.4.27
+	lru@0.12.5
+	memchr@2.7.5
+	memoffset@0.9.1
+	mime@0.3.17
+	minimal-lexical@0.2.1
+	miniz_oxide@0.8.9
+	mio@1.0.4
+	native-tls@0.2.14
+	nix@0.30.1
+	nom@7.1.3
+	num-traits@0.2.19
+	object@0.36.7
+	once_cell@1.21.3
+	openssl-macros@0.1.1
+	openssl-probe@0.1.6
+	openssl-sys@0.9.109
+	openssl@0.10.73
+	ordered-stream@0.2.0
+	parking@2.2.1
+	parking_lot@0.12.4
+	parking_lot_core@0.9.11
+	paste@1.0.15
+	percent-encoding@2.3.1
+	pin-project-lite@0.2.16
+	pin-utils@0.1.0
+	piper@0.2.4
+	pkg-config@0.3.32
+	polling@3.8.0
+	potential_utf@0.1.2
+	proc-macro-crate@3.3.0
+	proc-macro2@1.0.95
+	quote@1.0.40
+	r-efi@5.2.0
+	ratatui@0.29.0
+	redox_syscall@0.5.13
+	reqwest@0.12.20
+	ring@0.17.14
+	rustc-demangle@0.1.25
+	rustix@0.38.44
+	rustix@1.0.7
+	rustls-pki-types@1.12.0
+	rustls-webpki@0.103.3
+	rustls@0.23.27
+	rustversion@1.0.21
+	ryu@1.0.20
+	schannel@0.1.27
+	scopeguard@1.2.0
+	security-framework-sys@2.14.0
+	security-framework@2.11.1
+	serde@1.0.219
+	serde_derive@1.0.219
+	serde_json@1.0.140
+	serde_repr@0.1.20
+	serde_spanned@0.6.9
+	serde_urlencoded@0.7.1
+	shlex@1.3.0
+	signal-hook-mio@0.2.4
+	signal-hook-registry@1.4.5
+	signal-hook@0.3.18
+	simdutf8@0.1.5
+	slab@0.4.10
+	smallvec@1.15.1
+	socket2@0.5.10
+	stable_deref_trait@1.2.0
+	static_assertions@1.1.0
+	strsim@0.11.1
+	strum@0.26.3
+	strum_macros@0.26.4
+	subtle@2.6.1
+	syn@2.0.103
+	sync_wrapper@1.0.2
+	synstructure@0.13.2
+	system-configuration-sys@0.6.0
+	system-configuration@0.6.1
+	tempfile@3.20.0
+	thiserror-impl@1.0.69
+	thiserror@1.0.69
+	tinystr@0.8.1
+	tokio-native-tls@0.3.1
+	tokio-rustls@0.26.2
+	tokio-util@0.7.15
+	tokio@1.45.1
+	toml@0.8.23
+	toml_datetime@0.6.11
+	toml_edit@0.22.27
+	toml_write@0.1.2
+	tower-http@0.6.6
+	tower-layer@0.3.3
+	tower-service@0.3.3
+	tower@0.5.2
+	tracing-attributes@0.1.29
+	tracing-core@0.1.34
+	tracing@0.1.41
+	try-lock@0.2.5
+	uds_windows@1.1.0
+	unicode-ident@1.0.18
+	unicode-segmentation@1.12.0
+	unicode-truncate@1.1.0
+	unicode-width@0.1.14
+	unicode-width@0.2.0
+	untrusted@0.9.0
+	url@2.5.4
+	utf8_iter@1.0.4
+	vcpkg@0.2.15
+	want@0.3.1
+	wasi@0.11.1+wasi-snapshot-preview1
+	wasi@0.14.2+wasi-0.2.4
+	wasm-bindgen-backend@0.2.100
+	wasm-bindgen-futures@0.4.50
+	wasm-bindgen-macro-support@0.2.100
+	wasm-bindgen-macro@0.2.100
+	wasm-bindgen-shared@0.2.100
+	wasm-bindgen@0.2.100
+	web-sys@0.3.77
+	winapi-i686-pc-windows-gnu@0.4.0
+	winapi-x86_64-pc-windows-gnu@0.4.0
+	winapi@0.3.9
+	windows-core@0.61.2
+	windows-implement@0.60.0
+	windows-interface@0.59.1
+	windows-link@0.1.3
+	windows-registry@0.5.2
+	windows-result@0.3.4
+	windows-strings@0.4.2
+	windows-sys@0.52.0
+	windows-sys@0.59.0
+	windows-targets@0.52.6
+	windows_aarch64_gnullvm@0.52.6
+	windows_aarch64_msvc@0.52.6
+	windows_i686_gnu@0.52.6
+	windows_i686_gnullvm@0.52.6
+	windows_i686_msvc@0.52.6
+	windows_x86_64_gnu@0.52.6
+	windows_x86_64_gnullvm@0.52.6
+	windows_x86_64_msvc@0.52.6
+	winnow@0.7.11
+	wit-bindgen-rt@0.39.0
+	writeable@0.6.1
+	yoke-derive@0.8.0
+	yoke@0.8.0
+	zbus@5.7.1
+	zbus_macros@5.7.1
+	zbus_names@4.2.0
+	zerofrom-derive@0.1.6
+	zerofrom@0.1.6
+	zeroize@1.8.1
+	zerotrie@0.2.2
+	zerovec-derive@0.11.1
+	zerovec@0.11.2
+	zvariant@5.5.3
+	zvariant_derive@5.5.3
+	zvariant_utils@3.2.0
+"
+RUST_MIN_VER="1.85.0"
+
+inherit cargo
+
+MY_COMMIT="0c7154ab"
+
+DESCRIPTION="Terminal interface for CoolerControl"
+HOMEPAGE="https://gitlab.com/coolercontrol/cctv"
+
+SRC_URI="
+	https://gitlab.com/coolercontrol/cctv/-/archive/${MY_COMMIT}/cctv-${MY_COMMIT}.tar.bz2 -> ${P}.tar.bz2
+	${CARGO_CRATE_URIS}
+"
+S=${WORKDIR}/cctv-${MY_COMMIT}
+
+LICENSE="GPL-3+"
+# Dependent crate licenses
+LICENSE+=" Apache-2.0 BSD ISC MIT Unicode-3.0 ZLIB"
+SLOT="0"
+KEYWORDS="~amd64"
+
+RDEPEND="
+	dev-libs/openssl:=
+	sys-apps/coolercontrold
+"
+DEPEND="${RDEPEND}"
