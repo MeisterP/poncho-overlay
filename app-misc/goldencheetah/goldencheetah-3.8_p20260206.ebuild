@@ -22,17 +22,17 @@ KEYWORDS="~amd64"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 BDEPEND="
+	>=sys-devel/bison-3.7
+	sys-devel/flex
+	virtual/pkgconfig
+
 	${PYTHON_DEPS}
 	$(python_gen_cond_dep '
 		dev-python/sip:5[${PYTHON_USEDEP}]
 	')
-	>=sys-devel/bison-3.7
-	sys-devel/flex
-	virtual/pkgconfig
 "
 
 DEPEND="
-	${PYTHON_DEPS}
 	dev-libs/libical
 	dev-qt/qt5compat
 	dev-qt/qtbase:6[concurrent,gui,network,opengl,sql,sqlite,widgets,xml]
@@ -48,6 +48,16 @@ DEPEND="
 	media-libs/libsamplerate
 	sci-libs/gsl:=
 	virtual/libusb:1
+
+	${PYTHON_DEPS}
+	$(python_gen_cond_dep '
+		dev-python/importlib-metadata[${PYTHON_USEDEP}]
+		dev-python/lmfit[${PYTHON_USEDEP}]
+		dev-python/numpy[${PYTHON_USEDEP}]
+		dev-python/pandas[${PYTHON_USEDEP}]
+		dev-python/plotly[${PYTHON_USEDEP}]
+		dev-python/scipy[${PYTHON_USEDEP}]
+	')
 "
 
 RDEPEND="${DEPEND}"
