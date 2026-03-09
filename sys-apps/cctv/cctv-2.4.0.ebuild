@@ -1,0 +1,226 @@
+# Copyright 2025-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+EAPI=8
+
+CRATES="
+	aho-corasick@1.1.4
+	allocator-api2@0.2.21
+	android_system_properties@0.1.5
+	ansi-to-tui@8.0.1
+	anstyle@1.0.13
+	anyhow@1.0.102
+	autocfg@1.5.0
+	base64@0.22.1
+	bitflags@2.11.0
+	bumpalo@3.20.2
+	bytes@1.11.1
+	castaway@0.2.4
+	cc@1.2.56
+	cfg-if@1.0.4
+	chrono@0.4.44
+	clap@4.5.60
+	clap_builder@4.5.60
+	clap_derive@4.5.55
+	clap_lex@1.0.0
+	compact_str@0.9.0
+	convert_case@0.10.0
+	cookie@0.18.1
+	cookie_store@0.22.1
+	core-foundation-sys@0.8.7
+	crossterm@0.29.0
+	crossterm_winapi@0.9.1
+	darling@0.23.0
+	darling_core@0.23.0
+	darling_macro@0.23.0
+	deranged@0.5.8
+	derive_more-impl@2.1.1
+	derive_more@2.1.1
+	displaydoc@0.2.5
+	document-features@0.2.12
+	either@1.15.0
+	equivalent@1.0.2
+	errno@0.3.14
+	fastrand@2.3.0
+	find-msvc-tools@0.1.9
+	foldhash@0.1.5
+	foldhash@0.2.0
+	form_urlencoded@1.2.2
+	getrandom@0.4.1
+	hashbrown@0.15.5
+	hashbrown@0.16.1
+	heck@0.5.0
+	http@1.4.0
+	httparse@1.10.1
+	iana-time-zone-haiku@0.1.2
+	iana-time-zone@0.1.65
+	icu_collections@2.1.1
+	icu_locale_core@2.1.1
+	icu_normalizer@2.1.1
+	icu_normalizer_data@2.1.1
+	icu_properties@2.1.2
+	icu_properties_data@2.1.2
+	icu_provider@2.1.1
+	id-arena@2.3.0
+	ident_case@1.0.1
+	idna@1.1.0
+	idna_adapter@1.2.1
+	indexmap@2.13.0
+	indoc@2.0.7
+	instability@0.3.11
+	itertools@0.14.0
+	itoa@1.0.17
+	js-sys@0.3.90
+	kasuari@0.4.11
+	lazy_static@1.5.0
+	leb128fmt@0.1.0
+	libc@0.2.182
+	line-clipping@0.3.5
+	linux-raw-sys@0.12.1
+	litemap@0.8.1
+	litrs@1.0.0
+	lock_api@0.4.14
+	log@0.4.29
+	lru@0.16.3
+	matchers@0.2.0
+	memchr@2.8.0
+	mio@1.1.1
+	nom@8.0.0
+	nu-ansi-term@0.50.3
+	num-conv@0.2.0
+	num-traits@0.2.19
+	num_threads@0.1.7
+	once_cell@1.21.3
+	parking_lot@0.12.5
+	parking_lot_core@0.9.12
+	percent-encoding@2.3.2
+	pin-project-lite@0.2.16
+	portable-atomic@1.13.1
+	potential_utf@0.1.4
+	powerfmt@0.2.0
+	prettyplease@0.2.37
+	proc-macro2@1.0.106
+	quote@1.0.44
+	r-efi@5.3.0
+	ratatui-core@0.1.0
+	ratatui-crossterm@0.1.0
+	ratatui-widgets@0.3.0
+	ratatui@0.30.0
+	redox_syscall@0.5.18
+	regex-automata@0.4.14
+	regex-syntax@0.8.10
+	rustc_version@0.4.1
+	rustix@1.1.4
+	rustversion@1.0.22
+	ryu@1.0.23
+	scopeguard@1.2.0
+	semver@1.0.27
+	serde@1.0.228
+	serde_core@1.0.228
+	serde_derive@1.0.228
+	serde_json@1.0.149
+	serde_spanned@1.0.4
+	sharded-slab@0.1.7
+	shlex@1.3.0
+	signal-hook-mio@0.2.5
+	signal-hook-registry@1.4.8
+	signal-hook@0.3.18
+	smallvec@1.15.1
+	stable_deref_trait@1.2.1
+	static_assertions@1.1.0
+	strsim@0.11.1
+	strum@0.27.2
+	strum_macros@0.27.2
+	syn@2.0.117
+	synstructure@0.13.2
+	tempfile@3.26.0
+	thiserror-impl@2.0.18
+	thiserror@2.0.18
+	thread_local@1.1.9
+	time-core@0.1.8
+	time-macros@0.2.27
+	time@0.3.47
+	tinystr@0.8.2
+	toml@1.0.3+spec-1.1.0
+	toml_datetime@1.0.0+spec-1.1.0
+	toml_parser@1.0.9+spec-1.1.0
+	toml_writer@1.0.6+spec-1.1.0
+	tracing-attributes@0.1.31
+	tracing-core@0.1.36
+	tracing-subscriber@0.3.22
+	tracing@0.1.44
+	unicode-ident@1.0.24
+	unicode-segmentation@1.12.0
+	unicode-truncate@2.0.1
+	unicode-width@0.2.2
+	unicode-xid@0.2.6
+	ureq-proto@0.5.3
+	ureq@3.2.0
+	url@2.5.8
+	utf-8@0.7.6
+	utf8_iter@1.0.4
+	version_check@0.9.5
+	wasi@0.11.1+wasi-snapshot-preview1
+	wasip2@1.0.2+wasi-0.2.9
+	wasip3@0.4.0+wasi-0.3.0-rc-2026-01-06
+	wasm-bindgen-macro-support@0.2.113
+	wasm-bindgen-macro@0.2.113
+	wasm-bindgen-shared@0.2.113
+	wasm-bindgen@0.2.113
+	wasm-encoder@0.244.0
+	wasm-metadata@0.244.0
+	wasmparser@0.244.0
+	winapi-i686-pc-windows-gnu@0.4.0
+	winapi-x86_64-pc-windows-gnu@0.4.0
+	winapi@0.3.9
+	windows-core@0.62.2
+	windows-implement@0.60.2
+	windows-interface@0.59.3
+	windows-link@0.2.1
+	windows-result@0.4.1
+	windows-strings@0.5.1
+	windows-sys@0.61.2
+	winnow@0.7.14
+	wit-bindgen-core@0.51.0
+	wit-bindgen-rust-macro@0.51.0
+	wit-bindgen-rust@0.51.0
+	wit-bindgen@0.51.0
+	wit-component@0.244.0
+	wit-parser@0.244.0
+	writeable@0.6.2
+	yoke-derive@0.8.1
+	yoke@0.8.1
+	zerofrom-derive@0.1.6
+	zerofrom@0.1.6
+	zerotrie@0.2.3
+	zerovec-derive@0.11.2
+	zerovec@0.11.5
+	zmij@1.0.21
+"
+RUST_MIN_VER="1.88.0"
+
+inherit cargo
+
+DESCRIPTION="Terminal interface for CoolerControl"
+HOMEPAGE="https://gitlab.com/coolercontrol/cctv"
+
+SRC_URI="
+	https://gitlab.com/coolercontrol/cctv/-/archive/v${PV}/cctv-v${PV}.tar.bz2
+	${CARGO_CRATE_URIS}
+"
+S=${WORKDIR}/cctv-v${PV}
+
+LICENSE="GPL-3+"
+# Dependent crate licenses
+LICENSE+="
+	MIT Unicode-3.0 ZLIB
+	|| ( Apache-2.0 Boost-1.0 )
+"
+SLOT="0"
+KEYWORDS="~amd64"
+
+RDEPEND="
+	dev-libs/openssl:=
+	sys-apps/coolercontrold
+"
+DEPEND="${RDEPEND}"
