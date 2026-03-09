@@ -6,7 +6,7 @@ EAPI=8
 CRATES="
 "
 
-RUST_MIN_VER=1.86
+RUST_MIN_VER=1.87.0
 
 PYTHON_COMPAT=( python3_{11..14} )
 
@@ -50,10 +50,6 @@ BDEPEND="dev-libs/protobuf[protoc(+)]"
 
 QA_FLAGS_IGNORED=".*"
 
-PATCHES=(
-	"${FILESDIR}"/coolercontrold-3.0.2-liquidctl.patch
-)
-
 pkg_setup() {
 	rust_pkg_setup
 	use liquidctl && python-single-r1_pkg_setup
@@ -86,7 +82,7 @@ src_configure() {
 }
 
 src_install() {
-	cargo_src_install
+	cargo_src_install --path daemon
 
 	einstalldocs
 
