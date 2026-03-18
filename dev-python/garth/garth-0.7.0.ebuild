@@ -19,6 +19,16 @@ RESTRICT="test"
 
 RDEPEND="
 	>=dev-python/requests-2.0.0[${PYTHON_USEDEP}]
-	>=dev-python/pydantic-1.10.12[${PYTHON_USEDEP}]
+	>=dev-python/pydantic-2.11.7[${PYTHON_USEDEP}]
+	dev-python/pydantic-settings[${PYTHON_USEDEP}]
 	>=dev-python/requests-oauthlib-1.3.1[${PYTHON_USEDEP}]
 "
+
+python_install() {
+	distutils-r1_python_install
+
+	newenvd - 90garth <<-EOF
+		# https://github.com/matin/garth/blob/main/docs/telemetry.md#why-telemetry-is-on-by-default
+		GARTH_TELEMETRY_ENABLED=false
+	EOF
+}
