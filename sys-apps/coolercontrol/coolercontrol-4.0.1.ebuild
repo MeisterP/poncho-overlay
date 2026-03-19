@@ -22,11 +22,13 @@ DEPEND="
 	dev-qt/qtbase:6[dbus,widgets]
 	dev-qt/qtwebchannel:6
 	dev-qt/qtwebengine:6[widgets]
+	x11-themes/hicolor-icon-theme
 "
 RDEPEND="
 	${DEPEND}
 	sys-apps/coolercontrold
 "
+BDEPEND="virtual/pkgconfig"
 
 src_install() {
 	cmake_src_install

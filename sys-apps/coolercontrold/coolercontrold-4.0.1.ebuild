@@ -6,9 +6,9 @@ EAPI=8
 CRATES="
 "
 
-RUST_MIN_VER=1.87.0
+RUST_MIN_VER="1.87.0"
 
-PYTHON_COMPAT=( python3_{11..14} )
+PYTHON_COMPAT=( python3_{12..14} )
 
 inherit cargo eapi9-ver optfeature python-single-r1 systemd
 
@@ -25,10 +25,13 @@ SRC_URI="
 S="${WORKDIR}/${MY_P}/${PN}"
 
 LICENSE="GPL-3+"
+# https://gitlab.com/coolercontrol/coolercontrol/-/blob/main/coolercontrold/cc-detect/README.md#attribution
+LICENSE+=" GPL-2+"
 # Dependent crate licenses
 LICENSE+="
 	AGPL-3+ Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSD GPL-3+
-	ISC MIT UoI-NCSA Unicode-3.0 ZLIB
+	ISC MIT UoI-NCSA openssl Unicode-3.0 ZLIB
+
 "
 SLOT="0"
 KEYWORDS="~amd64"
@@ -49,6 +52,10 @@ DEPEND="${RDEPEND}"
 BDEPEND="dev-libs/protobuf[protoc(+)]"
 
 QA_FLAGS_IGNORED=".*"
+
+PATCHES=(
+	"${FILESDIR}"/coolercontrold-4.0.1-liquidctl.patch
+)
 
 pkg_setup() {
 	rust_pkg_setup
