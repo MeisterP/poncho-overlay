@@ -23,12 +23,3 @@ RDEPEND="
 	dev-python/pydantic-settings[${PYTHON_USEDEP}]
 	>=dev-python/requests-oauthlib-1.3.1[${PYTHON_USEDEP}]
 "
-
-python_install() {
-	distutils-r1_python_install
-
-	newenvd - 90garth <<-EOF
-		# https://github.com/matin/garth/blob/main/docs/telemetry.md#why-telemetry-is-on-by-default
-		GARTH_TELEMETRY_ENABLED=false
-	EOF
-}
