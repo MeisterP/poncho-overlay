@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{11..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="ad84a589206b111f35e83ebebd4f2fe51c963989"
+MY_COMMIT="e30ce69ef2931fdef677a1b86bbfafc2af648ad0"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -52,6 +52,7 @@ DEPEND="
 	${PYTHON_DEPS}
 	$(python_gen_cond_dep '
 		dev-python/importlib-metadata[${PYTHON_USEDEP}]
+		dev-python/jinja2[${PYTHON_USEDEP}]
 		dev-python/lmfit[${PYTHON_USEDEP}]
 		dev-python/numpy[${PYTHON_USEDEP}]
 		dev-python/pandas[${PYTHON_USEDEP}]
