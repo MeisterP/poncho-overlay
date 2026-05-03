@@ -170,6 +170,7 @@ CRATES="
 	heck@0.5.0
 	hermit-abi@0.5.2
 	hex@0.4.3
+	hsl@0.1.1
 	http-body-util@0.1.3
 	http-body@1.0.1
 	http@1.4.0
@@ -271,8 +272,8 @@ CRATES="
 	open@5.3.3
 	openssl-macros@0.1.1
 	openssl-probe@0.1.6
-	openssl-sys@0.9.111
-	openssl@0.10.75
+	openssl-sys@0.9.114
+	openssl@0.10.78
 	ordered-stream@0.2.0
 	pango-sys@0.21.5
 	pango@0.21.5
@@ -344,7 +345,7 @@ CRATES="
 	rustc_version@0.4.1
 	rustix@1.1.3
 	rustls-pki-types@1.13.2
-	rustls-webpki@0.103.8
+	rustls-webpki@0.103.13
 	rustls@0.23.35
 	rustversion@1.0.22
 	ryu@1.0.22
@@ -547,7 +548,7 @@ LICENSE="GPL-3"
 # Dependent crate licenses
 LICENSE+="
 	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD-2 BSD ISC LGPL-2.1+
-	MIT MPL-2.0 UoI-NCSA openssl Unicode-3.0 ZLIB
+	MIT MPL-2.0 UoI-NCSA Unicode-3.0 ZLIB
 "
 SLOT="0"
 KEYWORDS="~amd64"
