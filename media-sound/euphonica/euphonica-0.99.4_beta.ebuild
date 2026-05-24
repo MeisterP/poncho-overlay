@@ -221,6 +221,7 @@ CRATES="
 	libspa-sys@0.9.2
 	libspa@0.9.2
 	libsqlite3-sys@0.35.0
+	libwebp-sys@0.9.6
 	linux-raw-sys@0.11.0
 	litemap@0.8.1
 	locale_config@0.3.0
@@ -272,8 +273,8 @@ CRATES="
 	open@5.3.3
 	openssl-macros@0.1.1
 	openssl-probe@0.1.6
-	openssl-sys@0.9.114
-	openssl@0.10.78
+	openssl-sys@0.9.116
+	openssl@0.10.80
 	ordered-stream@0.2.0
 	pango-sys@0.21.5
 	pango@0.21.5
@@ -454,6 +455,7 @@ CRATES="
 	wasm-bindgen@0.2.106
 	web-sys@0.3.83
 	web_atoms@0.1.3
+	webp@0.3.1
 	weezl@0.1.12
 	wide@0.7.33
 	winapi-i686-pc-windows-gnu@0.4.0
