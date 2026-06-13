@@ -528,7 +528,7 @@ CRATES="
 "
 
 declare -A GIT_CRATES=(
-	[mpd]='https://github.com/htkhiem/rust-mpd;a8ddd7d624ee7ea2f4128e6df878e6b05fe5b0e7;rust-mpd-%commit%'
+	[mpd]='https://github.com/htkhiem/rust-mpd;e9f5ad589e0eaaeb1d9758cc3a6b5762bb67e4b5;rust-mpd-%commit%'
 )
 
 inherit cargo meson gnome2-utils xdg
