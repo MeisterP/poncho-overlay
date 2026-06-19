@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>poncho@spahan.ch</email>
+		<name>Poncho</name>
+	</maintainer>
+	<upstream>
+		<remote-id type="github">lexiforest/curl-impersonate</remote-id>
+	</upstream>
+	<use>
+		<flag name="clients">Install the curl wrapper scripts</flag>
+	</use>
+</pkgmetadata>
