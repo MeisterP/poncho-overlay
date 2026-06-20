@@ -17,4 +17,8 @@ KEYWORDS="~amd64"
 
 RESTRICT="test"
 
-RDEPEND=">=dev-python/garth-0.5.17[${PYTHON_USEDEP}]"
+RDEPEND="
+	>=dev-python/curl-cffi-0.6[${PYTHON_USEDEP}]
+	>=dev-python/requests-2.28[${PYTHON_USEDEP}]
+	>=dev-python/ua-generator-1.0[${PYTHON_USEDEP}]
+"
