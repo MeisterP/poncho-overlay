@@ -20,7 +20,6 @@ IUSE="clients"
 
 DEPEND="app-arch/brotli:=
 	dev-libs/nss:=
-	llvm-runtimes/libcxx:=
 	net-libs/nghttp2:=
 	app-arch/zstd
 	net-libs/libpsl
