@@ -5,7 +5,7 @@ EAPI=8
 
 inherit cmake
 
-MY_COMMIT="9be076ce4b5a878201d0bec9b23c459afdf53846"
+MY_COMMIT="4b85f49d3feb4173c3a58364f70ac692d6dab0f1"
 
 DESCRIPTION="An open-source FIDO2.1 key management tool"
 HOMEPAGE="https://github.com/token2/fido2-manage"
@@ -35,10 +35,6 @@ src_prepare(){
 	# Patch the script to replace ./fido2-manage.sh with fido2-manage
 	find . -type f -name "*.py" -o -name "*.sh" -o -name "*.txt" -o -name "*.md" | \
 		xargs sed -i 's|./fido2-manage\.sh|fido2-manage|g' || die
-
-	# Update the fido2-manage.sh script to use the correct path for fido2-token2
-	sed -i 's|FIDO2_TOKEN_CMD="/usr/local/bin/fido2-token2"|FIDO2_TOKEN_CMD="/usr/bin/fido2-token2"|g' \
-		fido2-manage.sh || die
 }
 
 src_configure() {
