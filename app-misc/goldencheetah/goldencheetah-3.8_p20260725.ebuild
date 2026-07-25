@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{12..14} )
 
 inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
-MY_COMMIT="ecdcc72c565cdc3ad4b6c8e17bb2ad3c4fbbd8ed"
+MY_COMMIT="466c43b87356a02c312042cd5c821aa0ebc3d283"
 
 DESCRIPTION="Performance Software for Cyclists, Runners and Triathletes"
 HOMEPAGE="https://www.goldencheetah.org"
@@ -66,8 +66,6 @@ RDEPEND="${DEPEND}"
 DOCS=( README.md CONTRIBUTING.md )
 
 FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
-
-PATCHES=( "${FILESDIR}/python-flexiblas.patch" )
 
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
