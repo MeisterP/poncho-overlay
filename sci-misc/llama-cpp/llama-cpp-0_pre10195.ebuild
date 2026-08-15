@@ -1,0 +1,186 @@
+# Copyright 2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+EAPI=8
+
+ROCM_VERSION="7.0"
+CMAKE_BUILD_TYPE="Release"
+
+inherit cmake cuda rocm linux-info
+
+TINY_LLAMAS_COMMIT="99dd1a73db5a37100bd4ae633f4cfce6560e1567"
+
+DESCRIPTION="Port of Facebook's LLaMA model in C/C++"
+HOMEPAGE="https://github.com/ggml-org/llama.cpp"
+
+if [[ ${PV} == *9999* ]]; then
+	inherit git-r3
+	EGIT_REPO_URI="https://github.com/ggml-org/llama.cpp.git"
+else
+	MY_PV="b${PV#0_pre}"
+	SRC_URI="https://github.com/ggml-org/llama.cpp/archive/refs/tags/${MY_PV}.tar.gz -> ${P}.tar.gz"
+	S="${WORKDIR}/llama.cpp-${MY_PV}"
+	KEYWORDS="~amd64"
+fi
+
+SRC_URI+="
+	examples? (
+		https://huggingface.co/ggml-org/tiny-llamas/resolve/${TINY_LLAMAS_COMMIT}/stories15M-q4_0.gguf
+			-> ggml-org_models_tinyllamas_stories15M-q4_0-${TINY_LLAMAS_COMMIT}.gguf
+	)
+	webui? (
+		https://github.com/ggml-org/llama.cpp/releases/download/${MY_PV}/llama-${MY_PV}-ui.tar.gz -> ${P}-ui.tar.gz
+	)
+"
+
+LICENSE="MIT"
+SLOT="0"
+# ggml/CMakeLists.txt
+CPU_FLAGS_X86=( sse4_2 avx avx_vnni avx2 bmi2 avx512f avx512vbmi avx512_vnni avx512_bf16 fma3 f16c)
+
+IUSE="openblas +openmp blis rocm cuda opencl openssl vulkan flexiblas webui examples"
+IUSE+=" ${CPU_FLAGS_X86[@]/#/cpu_flags_x86_}"
+
+REQUIRED_USE="
+	?? (
+		openblas
+		blis
+		flexiblas
+	)
+"
+
+# numpy is used by convert_hf_to_gguf.py
+CDEPEND="
+	openblas? ( sci-libs/openblas:= )
+	openmp? ( llvm-runtimes/openmp:= )
+	blis? ( sci-libs/blis:= )
+	flexiblas? ( sci-libs/flexiblas:= )
+	rocm? (
+		>=dev-util/hip-${ROCM_VERSION}:=
+		>=sci-libs/hipBLAS-${ROCM_VERSION}:=
+	)
+	cuda? ( dev-util/nvidia-cuda-toolkit:= )
+	openssl? ( dev-libs/openssl:= )
+"
+DEPEND="${CDEPEND}
+	opencl? ( dev-util/opencl-headers )
+	vulkan? (
+		dev-util/spirv-headers
+		dev-util/vulkan-headers
+	)
+"
+RDEPEND="${CDEPEND}
+	dev-python/numpy
+	opencl? ( dev-libs/opencl-icd-loader )
+	vulkan? ( media-libs/vulkan-loader )
+"
+BDEPEND="media-libs/shaderc"
+
+pkg_setup() {
+	if use rocm; then
+		linux-info_pkg_setup
+		if linux-info_get_any_version && linux_config_exists; then
+			if ! linux_chkconfig_present HSA_AMD_SVM; then
+				ewarn "To use ROCm/HIP, you need to have HSA_AMD_SVM option enabled in your kernel."
+			fi
+		fi
+	fi
+}
+
+src_prepare() {
+	use cuda && cuda_src_prepare
+	cmake_src_prepare
+
+	if use webui; then
+		mkdir -p "${S}/tools/ui/" || die
+		cp -rv "${WORKDIR}/llama-${MY_PV}" "${S}/tools/ui/dist" || die
+	fi
+
+	if use examples; then
+		mkdir -p "${BUILD_DIR}/tinyllamas" || die
+		cp "${DISTDIR}/ggml-org_models_tinyllamas_stories15M-q4_0-${TINY_LLAMAS_COMMIT}.gguf" \
+			"${BUILD_DIR}/tinyllamas/stories15M-q4_0.gguf" || die
+	fi
+}
+
+src_configure() {
+	local mycmakeargs=(
+		-DLLAMA_BUILD_UI=$(usex webui)
+		-DLLAMA_USE_PREBUILT_UI=OFF
+		-DLLAMA_BUILD_TESTS=OFF
+		-DLLAMA_BUILD_EXAMPLES=$(usex examples)
+		-DLLAMA_BUILD_SERVER=ON
+		-DCMAKE_SKIP_BUILD_RPATH=ON
+		-DGGML_NATIVE=0	# don't set march
+		-DCMAKE_CUDA_ARCHITECTURES="120" # my gpu only
+		-DGGML_RPC=ON
+		-DLLAMA_OPENSSL=$(usex openssl)
+		-DLLAMA_BUILD_NUMBER="${PV#0_pre}"
+		-DLLAMA_BUILD_COMMIT="b${PV#0_pre}"
+		-DGENTOO_REMOVE_CMAKE_BLAS_HACK=ON
+		-DGGML_CUDA=$(usex cuda)
+		-DGGML_CUDA_NCCL=OFF
+		-DGGML_OPENCL=$(usex opencl)
+		-DGGML_OPENMP=$(usex openmp)
+		-DGGML_VULKAN=$(usex vulkan)
+
+		# avoid clashing with whisper.cpp
+		-DCMAKE_INSTALL_LIBDIR="${EPREFIX}/usr/$(get_libdir)/llama.cpp"
+		-DCMAKE_INSTALL_RPATH="${EPREFIX}/usr/$(get_libdir)/llama.cpp"
+	)
+
+	mycmakeargs+=(
+		-DGGML_SSE42=$(usex cpu_flags_x86_sse4_2)
+		-DGGML_AVX=$(usex cpu_flags_x86_avx)
+		-DGGML_AVX_VNNI=$(usex cpu_flags_x86_avx_vnni)
+		-DGGML_AVX2=$(usex cpu_flags_x86_avx2)
+		-DGGML_BMI2=$(usex cpu_flags_x86_bmi2)
+		-DGGML_AVX512=$(usex cpu_flags_x86_avx512f)
+		-DGGML_AVX512_VBMI=$(usex cpu_flags_x86_avx512vbmi)
+		-DGGML_AVX512_VNNI=$(usex cpu_flags_x86_avx512_vnni)
+		-DGGML_AVX512_BF16=$(usex cpu_flags_x86_avx512_bf16)
+		-DGGML_FMA=$(usex cpu_flags_x86_fma3)
+		-DGGML_F16C=$(usex cpu_flags_x86_f16c)
+	)
+
+	if use openblas ; then
+		mycmakeargs+=(
+			-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS
+		)
+	fi
+
+	if use blis ; then
+		mycmakeargs+=(
+			-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=FLAME
+		)
+	fi
+
+	if use flexiblas; then
+		mycmakeargs+=(
+			-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=FlexiBLAS
+		)
+	fi
+
+	if use cuda; then
+		local -x CUDAHOSTCXX="$(cuda_gccdir)"
+		# tries to recreate dev symlinks
+		cuda_add_sandbox
+		addpredict "/dev/char/"
+	fi
+
+	if use rocm; then
+		rocm_use_hipcc
+		mycmakeargs+=(
+			-DGGML_HIP=ON -DAMDGPU_TARGETS=$(get_amdgpu_flags)
+		)
+	fi
+
+	cmake_src_configure
+}
+
+src_install() {
+	cmake_src_install
+
+	# avoid clashing with whisper.cpp
+	rm -rf "${ED}/usr/include"
+}
