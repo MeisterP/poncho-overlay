@@ -1,0 +1,43 @@
+From 750e02fbf87652aea37000d20cb27805f1a85417 Mon Sep 17 00:00:00 2001
+From: Poncho <poncho@spahan.ch>
+Date: Sun, 16 Aug 2026 11:22:07 +0200
+Subject: [PATCH] fit: Restore hp_ngl to include MTP layers in GPU offload
+ budget
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Commit 9a688e51e changed hp_ngl to exclude MTP layers when load_mtp is
+false, intending to avoid allocating memory for unused tensors. However
+hp_ngl is not a memory budget — it is the assertion bound for
+n_gpu_layers and determines how many layers the fitter can assign to GPU.
+
+Reducing hp_ngl by n_layer_nextn capped assignable layers from 42 to 41,
+forcing layer 0 onto CPU and causing ~28% throughput regression on MoE
+models with MTP (e.g. Qwen3.5-A3B). Tensor skipping for unloaded MTP
+layers is handled independently by TENSOR_SKIP in llama-model.cpp.
+
+Restore the original calculation: hp_ngl = n_layer + n_layer_nextn.
+---
+ common/fit.cpp | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/common/fit.cpp b/common/fit.cpp
+index dd1f3ef76..c82d066ad 100644
+--- a/common/fit.cpp
++++ b/common/fit.cpp
+@@ -136,10 +136,7 @@ static std::vector<llama_device_memory_data> common_get_device_memory_data_impl(
+         devs.push_back(llama_model_get_device(model, i));
+     }
+ 
+-    hp_ngl         = llama_model_n_layer(model);
+-    if (mparams->load_mtp) {
+-        hp_ngl    += llama_model_n_layer_nextn(model);
+-    }
++    hp_ngl         = llama_model_n_layer(model) + llama_model_n_layer_nextn(model);
+     hp_n_ctx_train = llama_model_n_ctx_train(model);
+     hp_n_expert    = llama_model_n_expert(model);
+ 
+-- 
+2.54.0
+
