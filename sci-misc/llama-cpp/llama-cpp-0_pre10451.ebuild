@@ -121,6 +121,7 @@ src_configure() {
 		-DLLAMA_BUILD_COMMIT="b${PV#0_pre}"
 		-DGENTOO_REMOVE_CMAKE_BLAS_HACK=ON
 		-DGGML_CUDA=$(usex cuda)
+		-DGGML_CUDA_FA_ALL_QUANTS=$(usex cuda)
 		-DGGML_CUDA_NCCL=OFF
 		-DGGML_OPENCL=$(usex opencl)
 		-DGGML_OPENMP=$(usex openmp)
