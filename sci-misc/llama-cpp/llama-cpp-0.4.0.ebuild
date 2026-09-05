@@ -8,7 +8,7 @@ CMAKE_BUILD_TYPE="Release"
 
 inherit cmake cuda rocm linux-info
 
-LLAMA_COMMIT="b10621"
+LLAMA_COMMIT="b10809"
 TINY_LLAMAS_COMMIT="99dd1a73db5a37100bd4ae633f4cfce6560e1567"
 
 DESCRIPTION="Port of Facebook's LLaMA model in C/C++"
