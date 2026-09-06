@@ -1,0 +1,46 @@
+From 76cc58477c7fe545a3a3e43bdfc72256972c5603 Mon Sep 17 00:00:00 2001
+From: Robot <robot@compact>
+Date: Sun, 6 Sep 2026 23:02:41 +0200
+Subject: [PATCH] cuda : ignore GGML_CUDA_ENABLE_UNIFIED_MEMORY in device
+ free-memory query
+
+ggml_backend_cuda_device_get_memory() reported /proc/meminfo MemAvailable as
+free device memory whenever GGML_CUDA_ENABLE_UNIFIED_MEMORY was set, not only
+on truly integrated (UMA) devices. On a discrete GPU that made --fit see the
+whole system RAM as free VRAM, so it never offloaded anything: every layer and
+the KV cache ended up allocated via cudaMallocManaged and page-migrated over
+PCIe, which tanks performance for models that rely on fit for CPU offload.
+
+The env var still controls the allocation path (cudaMallocManaged), so
+allocations beyond VRAM keep spilling instead of failing. Only prop.integrated
+devices use the /proc/meminfo pool, which is what that path was added for
+(DGX Spark).
+---
+ ggml/src/ggml-cuda/ggml-cuda.cu | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/ggml/src/ggml-cuda/ggml-cuda.cu b/ggml/src/ggml-cuda/ggml-cuda.cu
+index 45e9537f0..68dfd5ef6 100644
+--- a/ggml/src/ggml-cuda/ggml-cuda.cu
++++ b/ggml/src/ggml-cuda/ggml-cuda.cu
+@@ -4980,9 +4980,14 @@ static void ggml_backend_cuda_device_get_memory(ggml_backend_dev_t dev, size_t *
+     cudaDeviceProp prop;
+     CUDA_CHECK(cudaGetDeviceProperties(&prop, ggml_cuda_get_physical_device(ctx->device)));
+ 
+-    // Check if UMA is explicitly enabled via environment variable
+-    bool uma_env = getenv("GGML_CUDA_ENABLE_UNIFIED_MEMORY") != nullptr;
+-    bool is_uma = prop.integrated > 0 || uma_env;
++    // Only truly integrated devices report the shared system memory pool here.
++    // GGML_CUDA_ENABLE_UNIFIED_MEMORY is deliberately not considered: it makes
++    // allocations spill into system RAM (cudaMallocManaged), which keeps them
++    // succeeding beyond VRAM, but does not change how much physically fits in
++    // VRAM. Reporting /proc/meminfo MemAvailable as free memory on a discrete
++    // GPU would make --fit offload everything to "the GPU" and tank performance
++    // via page migration, instead of budgeting against physical VRAM.
++    bool is_uma = prop.integrated > 0;
+ 
+     if (is_uma) {
+         // For UMA systems (like DGX Spark), use system memory info
+-- 
+2.55.0
+

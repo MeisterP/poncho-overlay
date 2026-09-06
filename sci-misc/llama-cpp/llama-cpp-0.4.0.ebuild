@@ -71,7 +71,10 @@ RDEPEND="${CDEPEND}
 "
 BDEPEND="media-libs/shaderc"
 
-PATCHES=( $FILESDIR/fit-Restore-hp_ngl-to-include-MTP-layers.patch )
+PATCHES=(
+	$FILESDIR/fit-Restore-hp_ngl-to-include-MTP-layers.patch 
+	$FILESDIR/GGML_CUDA_ENABLE_UNIFIED_MEMORY.patch
+)
 
 pkg_setup() {
 	if use rocm; then
