@@ -5,7 +5,7 @@ EAPI=8
 
 PYTHON_COMPAT=( python3_{12..14} )
 
-inherit fcaps desktop xdg flag-o-matic udev qmake-utils python-single-r1
+inherit desktop xdg flag-o-matic udev qmake-utils python-single-r1
 
 MY_COMMIT="60f7ac9c707d8dcf2467e4c281a0acc1f521fa61"
 
@@ -65,8 +65,6 @@ RDEPEND="${DEPEND}"
 
 DOCS=( README.md CONTRIBUTING.md )
 
-FILECAPS=( cap_net_admin usr/bin/GoldenCheetah )
-
 src_configure() {
 	cat <<- EOF > src/gcconfig.pri || die
 		CONFIG += release link_pkgconfig
@@ -112,7 +110,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	fcaps_pkg_postinst
 	xdg_pkg_postinst
 	udev_reload
 }
