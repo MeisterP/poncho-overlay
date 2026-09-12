@@ -44,6 +44,7 @@ src_install() {
 	insinto /usr/share/icons/hicolor/symbolic/apps
 	doins  ../packaging/metadata/org.coolercontrol.CoolerControl-symbolic.svg
 	doins  ../packaging/metadata/org.coolercontrol.CoolerControl-symbolic-alert.svg
+	doins  ../packaging/metadata/org.coolercontrol.CoolerControl-alert-symbolic.svg
 	insinto /usr/share/metainfo
 	doins ../packaging/metadata/org.coolercontrol.CoolerControl.metainfo.xml
 }
