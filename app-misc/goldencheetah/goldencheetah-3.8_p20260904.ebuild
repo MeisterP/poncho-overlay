@@ -101,7 +101,7 @@ src_install() {
 		Type=Application
 		Name=GoldenCheetah
 		Comment=Cycling Power Analysis Software.
-		Exec=GoldenCheetah
+		Exec=env __NV_DISABLE_EXPLICIT_SYNC=1 GoldenCheetah
 		Icon=gc
 		Categories=Science;Sports;
 	EOF
