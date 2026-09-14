@@ -8,7 +8,7 @@ CMAKE_BUILD_TYPE="Release"
 
 inherit cmake cuda rocm linux-info
 
-LLAMA_COMMIT="b10809"
+LLAMA_COMMIT="b10964"
 TINY_LLAMAS_COMMIT="99dd1a73db5a37100bd4ae633f4cfce6560e1567"
 
 DESCRIPTION="Port of Facebook's LLaMA model in C/C++"
@@ -119,7 +119,7 @@ src_configure() {
 		-DLLAMA_BUILD_COMMIT="${LLAMA_COMMIT}"
 		-DGENTOO_REMOVE_CMAKE_BLAS_HACK=ON
 		-DGGML_CUDA=$(usex cuda)
-		-DGGML_CUDA_FA_ALL_QUANTS=$(usex cuda)
+		-DGGML_CUDA_FA_QUANTS=all
 		-DGGML_CUDA_NCCL=OFF
 		-DGGML_OPENCL=$(usex opencl)
 		-DGGML_OPENMP=$(usex openmp)
