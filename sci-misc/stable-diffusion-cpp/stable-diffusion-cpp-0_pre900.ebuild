@@ -12,18 +12,31 @@ MY_PN="${PN/-cpp/.cpp}"
 MY_PV="master-900-c92d73c"
 GGML_COMMIT="4bf5f6000653b7881d00963cd6ddb665ccd62a8d"
 
+WEBUI_COMMIT="c4bce3d6b3f236614cca21014f076083b7270ba8"
+# git clone https://github.com/leejet/sdcpp-webui
+# git -C sdcpp-webui checkout ${WEBUI_COMMIT}
+# cd sdcpp-webui
+# npm install
+# npm run build
+# npm run build:header
+# tar czf /var/cache/distfiles/${P}-webui.tar.gz dist
+
 DESCRIPTION="Diffusion model(SD,Flux,Wan,Qwen Image,Z-Image,...) inference in pure C/C++"
 HOMEPAGE="https://github.com/leejet/stable-diffusion.cpp"
 
 SRC_URI="https://github.com/leejet/stable-diffusion.cpp/archive/refs/tags/${MY_PV}.tar.gz -> ${P}.tar.gz
-	https://github.com/leejet/ggml/archive/${GGML_COMMIT}.tar.gz -> ${P}-GGML.tar.gz"
+	https://github.com/leejet/ggml/archive/${GGML_COMMIT}.tar.gz -> ${P}-GGML.tar.gz
+	webui? (
+		${P}-webui.tar.gz
+	)
+"
 S="${WORKDIR}/${MY_PN}-${MY_PV}"
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="blis cuda flexiblas openblas opencl +openmp rocm vulkan webm webp"
+IUSE="blis cuda flexiblas openblas opencl +openmp rocm vulkan webm webp webui"
 
 # ggml/CMakeLists.txt
 CPU_FLAGS_X86=( sse4_2 avx avx_vnni avx2 bmi2 avx512f avx512vbmi avx512_vnni avx512_bf16 fma3 f16c amx_tile amx_int8 amx_bf16)
@@ -67,6 +80,8 @@ RDEPEND="${COMMON_DEPEND}
 "
 BDEPEND="vulkan? ( media-libs/shaderc )"
 
+PATCHES=( ${FILESDIR}/prefer-prebuilt-frontend.patch )
+
 pkg_pretend() {
 	[[ ${MERGE_TYPE} != binary ]] && use openmp && tc-check-openmp
 }
@@ -90,6 +105,10 @@ src_prepare() {
 
 	rm -r ${S}/ggml || die
 	mv ${WORKDIR}/ggml-${GGML_COMMIT} ${S}/ggml || die
+
+	if use webui; then
+		mv ${WORKDIR}/dist ${S}/examples/server/frontend/ || die
+	fi
 }
 
 src_configure() {
@@ -107,7 +126,7 @@ src_configure() {
 		-DSD_RPC=ON
 
 		-DSD_BUILD_SHARED_LIBS=OFF
-		-DSD_SERVER_BUILD_FRONTEND=OFF # requires pnpm and network access
+		-DSD_SERVER_BUILD_FRONTEND=$(usex webui ON OFF)
 
 		# avoid clashing with sci-ml/ggml
 		-DCMAKE_INSTALL_INCLUDEDIR="include/${MY_PN}"

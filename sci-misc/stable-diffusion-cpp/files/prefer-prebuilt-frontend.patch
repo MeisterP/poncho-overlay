@@ -1,0 +1,22 @@
+--- a/examples/server/CMakeLists.txt
++++ b/examples/server/CMakeLists.txt
+@@ -8,6 +8,11 @@
+ set(HAVE_FRONTEND_BUILD OFF)
+ 
+ if(SD_SERVER_BUILD_FRONTEND AND EXISTS "${FRONTEND_DIR}")
++    if(EXISTS "${GENERATED_HTML_HEADER}")
++        message(STATUS "Using pre-built frontend header: ${GENERATED_HTML_HEADER}")
++        set(HAVE_FRONTEND_BUILD ON)
++        add_custom_target(${TARGET}_frontend)
++    else()
+     if(WIN32)
+         find_program(PNPM_EXECUTABLE NAMES pnpm.cmd pnpm)
+     else()
+@@ -58,6 +63,7 @@
+             message(WARNING "pnpm not found; frontend build disabled.")
+         endif()
+     endif()
++    endif()
+ else()
+     message(STATUS "Frontend disabled or directory not found: ${FRONTEND_DIR}")
+ endif()
