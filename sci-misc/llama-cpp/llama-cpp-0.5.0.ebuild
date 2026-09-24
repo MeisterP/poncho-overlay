@@ -8,18 +8,13 @@ CMAKE_BUILD_TYPE="Release"
 
 inherit cmake cuda rocm linux-info
 
-LLAMA_COMMIT="b10964"
-TINY_LLAMAS_COMMIT="99dd1a73db5a37100bd4ae633f4cfce6560e1567"
+LLAMA_COMMIT="b11146"
 
 DESCRIPTION="Port of Facebook's LLaMA model in C/C++"
 HOMEPAGE="https://github.com/ggml-org/llama.cpp"
 
 SRC_URI="https://github.com/ggml-org/llama.cpp/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
 SRC_URI+="
-	examples? (
-		https://huggingface.co/ggml-org/tiny-llamas/resolve/${TINY_LLAMAS_COMMIT}/stories15M-q4_0.gguf
-			-> ggml-org_models_tinyllamas_stories15M-q4_0-${TINY_LLAMAS_COMMIT}.gguf
-	)
 	webui? (
 		https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_COMMIT}/llama-${LLAMA_COMMIT}-ui.tar.gz -> ${P}-ui.tar.gz
 	)
@@ -30,7 +25,7 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="openblas +openmp blis rocm cuda opencl openssl vulkan flexiblas webui examples"
+IUSE="openblas +openmp blis rocm cuda opencl openssl vulkan flexiblas webui"
 
 # ggml/CMakeLists.txt
 CPU_FLAGS_X86=( sse4_2 avx avx_vnni avx2 bmi2 avx512f avx512vbmi avx512_vnni avx512_bf16 fma3 f16c amx_tile amx_int8 amx_bf16)
@@ -53,6 +48,7 @@ CDEPEND="
 	rocm? (
 		>=dev-util/hip-${ROCM_VERSION}:=
 		>=sci-libs/hipBLAS-${ROCM_VERSION}:=
+		>=sci-libs/rocBLAS-${ROCM_VERSION}:=
 	)
 	cuda? ( dev-util/nvidia-cuda-toolkit:= )
 	openssl? ( dev-libs/openssl:= )
@@ -69,7 +65,7 @@ RDEPEND="${CDEPEND}
 	opencl? ( dev-libs/opencl-icd-loader )
 	vulkan? ( media-libs/vulkan-loader )
 "
-BDEPEND="media-libs/shaderc"
+BDEPEND="vulkan? ( media-libs/shaderc )"
 
 PATCHES=(
 	$FILESDIR/fit-Restore-hp_ngl-to-include-MTP-layers.patch 
@@ -95,12 +91,6 @@ src_prepare() {
 		mkdir -p "${BUILD_DIR}/tools/ui/" || die
 		cp -rv "${WORKDIR}/llama-${LLAMA_COMMIT}" "${BUILD_DIR}/tools/ui/dist" || die
 	fi
-
-	if use examples; then
-		mkdir -p "${BUILD_DIR}/tinyllamas" || die
-		cp "${DISTDIR}/ggml-org_models_tinyllamas_stories15M-q4_0-${TINY_LLAMAS_COMMIT}.gguf" \
-			"${BUILD_DIR}/tinyllamas/stories15M-q4_0.gguf" || die
-	fi
 }
 
 src_configure() {
@@ -108,19 +98,17 @@ src_configure() {
 		-DLLAMA_BUILD_UI=$(usex webui)
 		-DLLAMA_USE_PREBUILT_UI=OFF
 		-DLLAMA_BUILD_TESTS=OFF
-		-DLLAMA_BUILD_EXAMPLES=$(usex examples)
+		-DLLAMA_BUILD_EXAMPLES=OFF
 		-DLLAMA_BUILD_SERVER=ON
 		-DCMAKE_SKIP_BUILD_RPATH=ON
 		-DGGML_NATIVE=0	# don't set march
-		-DCMAKE_CUDA_ARCHITECTURES="120" # my gpu only
 		-DGGML_RPC=ON
+		-DGGML_RPC_RDMA=OFF
 		-DLLAMA_OPENSSL=$(usex openssl)
 		-DLLAMA_BUILD_NUMBER="${LLAMA_COMMIT#b}"
 		-DLLAMA_BUILD_COMMIT="${LLAMA_COMMIT}"
 		-DGENTOO_REMOVE_CMAKE_BLAS_HACK=ON
 		-DGGML_CUDA=$(usex cuda)
-		-DGGML_CUDA_FA_QUANTS=all
-		-DGGML_CUDA_NCCL=OFF
 		-DGGML_OPENCL=$(usex opencl)
 		-DGGML_OPENMP=$(usex openmp)
 		-DGGML_VULKAN=$(usex vulkan)
@@ -166,10 +154,15 @@ src_configure() {
 	fi
 
 	if use cuda; then
-		local -x CUDAHOSTCXX="$(cuda_gccdir)"
-		# tries to recreate dev symlinks
-		cuda_add_sandbox
+		cuda_add_sandbox -w
 		addpredict "/dev/char/"
+		cuda_sanitize
+		mycmakeargs+=(
+			-DCMAKE_CUDA_FLAGS="${NVCCFLAGS}"
+			-DCMAKE_CUDA_ARCHITECTURES="120" # my gpu only
+			-DGGML_CUDA_FA_ALL_QUANTS=ON
+			-DGGML_CUDA_NCCL=OFF
+		)
 	fi
 
 	if use rocm; then
