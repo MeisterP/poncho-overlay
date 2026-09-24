@@ -3,7 +3,7 @@
 
 EAPI=8
 
-ROCM_VERSION="7.0"
+ROCM_VERSION="7.2"
 CMAKE_BUILD_TYPE="Release"
 
 inherit cmake cuda rocm linux-info
