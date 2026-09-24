@@ -9,7 +9,7 @@ CMAKE_BUILD_TYPE="Release"
 inherit cmake cuda rocm linux-info toolchain-funcs
 
 MY_PN="${PN/-cpp/.cpp}"
-MY_PV="master-900-c92d73c"
+MY_PV="master-908-88411ef"
 GGML_COMMIT="4bf5f6000653b7881d00963cd6ddb665ccd62a8d"
 
 WEBUI_COMMIT="c4bce3d6b3f236614cca21014f076083b7270ba8"
@@ -25,9 +25,9 @@ DESCRIPTION="Diffusion model(SD,Flux,Wan,Qwen Image,Z-Image,...) inference in pu
 HOMEPAGE="https://github.com/leejet/stable-diffusion.cpp"
 
 SRC_URI="https://github.com/leejet/stable-diffusion.cpp/archive/refs/tags/${MY_PV}.tar.gz -> ${P}.tar.gz
-	https://github.com/leejet/ggml/archive/${GGML_COMMIT}.tar.gz -> ${P}-GGML.tar.gz
+	https://github.com/leejet/ggml/archive/${GGML_COMMIT}.tar.gz -> ${PN}-${GGML_COMMIT}-GGML.tar.gz
 	webui? (
-		${P}-webui.tar.gz
+		${PN}-${WEBUI_COMMIT}-webui.tar.gz
 	)
 "
 S="${WORKDIR}/${MY_PN}-${MY_PV}"
@@ -137,9 +137,6 @@ src_configure() {
 	# GGML backends
 	mycmakeargs+=(
 		-DGGML_NATIVE=OFF	# don't set march
-		-DCMAKE_CUDA_ARCHITECTURES="120" # my gpu only
-		-DGGML_CUDA_FA_QUANTS=all
-		-DGGML_CUDA_NCCL=OFF
 
 		# CPU Flags
 		-DGGML_SSE42=$(usex cpu_flags_x86_sse4_2)
@@ -179,10 +176,15 @@ src_configure() {
 	fi
 
 	if use cuda; then
-		local -x CUDAHOSTCXX="$(cuda_gccdir)"
-		# tries to recreate dev symlinks
-		cuda_add_sandbox
+		cuda_add_sandbox -w
 		addpredict "/dev/char/"
+		cuda_sanitize
+		mycmakeargs+=(
+			-DCMAKE_CUDA_FLAGS="${NVCCFLAGS}"
+			-DCMAKE_CUDA_ARCHITECTURES="120" # my gpu only
+			-DGGML_CUDA_FA_ALL_QUANTS=ON
+			-DGGML_CUDA_NCCL=OFF
+		)
 	fi
 
 	if use rocm; then
