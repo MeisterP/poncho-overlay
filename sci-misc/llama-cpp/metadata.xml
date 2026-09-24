@@ -2,8 +2,8 @@
 <!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<maintainer type="person">
-		<email>negril.nx+gentoo@gmail.com</email>
-		<name>Paul Zander</name>
+		<email>poncho@spahan.ch</email>
+		<name>Poncho</name>
 	</maintainer>
 	<use>
 		<flag name="blis">Build a BLIS backend</flag>
