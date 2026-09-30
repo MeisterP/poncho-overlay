@@ -36,12 +36,29 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="blis cuda flexiblas openblas opencl +openmp rocm vulkan webm webp webui"
+# GGML CPU flags
+X86_CPU_FLAGS=(
+	amx_bf16
+	amx_int8
+	amx_tile
+	avx
+	avx2
+	avx512_bf16
+	avx512_vnni
+	avx512f
+	avx512vbmi
+	avx_vnni
+	bmi2
+	f16c
+	fma3
+	sse4_2
+)
+CPU_FLAGS=( "${X86_CPU_FLAGS[@]/#/cpu_flags_x86_}" )
+GGML_IUSE="${CPU_FLAGS[*]} blis cuda flexiblas openblas opencl +openmp rocm vulkan"
+unset X86_CPU_FLAGS CPU_FLAGS
 
-# ggml/CMakeLists.txt
-CPU_FLAGS_X86=( sse4_2 avx avx_vnni avx2 bmi2 avx512f avx512vbmi avx512_vnni avx512_bf16 fma3 f16c amx_tile amx_int8 amx_bf16)
-IUSE+=" ${CPU_FLAGS_X86[@]/#/cpu_flags_x86_}"
-
+IUSE="${GGML_IUSE} webm webp webui"
+unset GGML_IUSE
 REQUIRED_USE="
 	?? (
 		openblas
@@ -137,6 +154,8 @@ src_configure() {
 	# GGML backends
 	mycmakeargs+=(
 		-DGGML_NATIVE=OFF	# don't set march
+		-DGGML_CCACHE=OFF
+		-DGGML_LTO="$(tc-is-lto)"
 
 		# CPU Flags
 		-DGGML_SSE42=$(usex cpu_flags_x86_sse4_2)
@@ -188,7 +207,7 @@ src_configure() {
 	fi
 
 	if use rocm; then
-		export HIPCXX="$(hipconfig -l)/clang" HIP_PATH="$(hipconfig -p)"
+		rocm_use_hipcc
 		mycmakeargs+=(
 			-DSD_HIPBLAS=ON
 			-DGPU_TARGETS=$(get_amdgpu_flags)
