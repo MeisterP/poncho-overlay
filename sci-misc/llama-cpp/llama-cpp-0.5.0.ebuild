@@ -6,41 +6,81 @@ EAPI=8
 ROCM_VERSION="7.2"
 CMAKE_BUILD_TYPE="Release"
 
-inherit cmake cuda rocm linux-info
+inherit cmake cuda rocm linux-info toolchain-funcs
 
-LLAMA_COMMIT="b11146"
+MY_PN="${PN/-/.}"
+TINY_LLAMAS_COMMIT="99dd1a73db5a37100bd4ae633f4cfce6560e1567"
 
 DESCRIPTION="Port of Facebook's LLaMA model in C/C++"
 HOMEPAGE="https://github.com/ggml-org/llama.cpp"
 
-SRC_URI="https://github.com/ggml-org/llama.cpp/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
-SRC_URI+="
-	webui? (
-		https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_COMMIT}/llama-${LLAMA_COMMIT}-ui.tar.gz -> ${P}-ui.tar.gz
-	)
+if [[ $(ver_cut 4) == "p" ]]; then
+	LLAMA_BUILD_IS_DEV=ON
+	LLAMA_BUILD_NUMBER="b$(ver_cut 5)"
+	MY_PV="${LLAMA_BUILD_NUMBER}"
+	S="${WORKDIR}/${MY_PN}-${MY_PV}"
+else
+	LLAMA_BUILD_IS_DEV=OFF
+	# Set from https://github.com/ggml-org/llama.cpp/releases/download/v${PV}/nightly-tag.txt
+	LLAMA_BUILD_NUMBER="b11146"
+	MY_PV="v${PV}"
+	S="${WORKDIR}/${MY_PN}-${PV}"
+fi
+LLAMA_UI_VERSION="${LLAMA_BUILD_NUMBER}"
+SRC_URI="https://github.com/ggml-org/llama.cpp/archive/refs/tags/${MY_PV}.tar.gz -> ${P}.tar.gz"
+KEYWORDS="~amd64"
+
+MODEL_STORIES15M_URI="
+	https://huggingface.co/ggml-org/tiny-llamas/resolve/${TINY_LLAMAS_COMMIT}/stories15M-q4_0.gguf
+		-> ggml-org_models_tinyllamas_stories15M-q4_0-${TINY_LLAMAS_COMMIT}.gguf
 "
-S="${WORKDIR}/llama.cpp-${PV}"
+
+SRC_URI+="
+	https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_UI_VERSION}/llama-${LLAMA_UI_VERSION}-ui.tar.gz
+	examples? ( ${MODEL_STORIES15M_URI} )
+	test? ( ${MODEL_STORIES15M_URI} )
+"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64"
 
-IUSE="openblas +openmp blis rocm cuda opencl openssl vulkan flexiblas webui"
+# GGML CPU flags
+X86_CPU_FLAGS=(
+	amx_bf16
+	amx_int8
+	amx_tile
+	avx
+	avx2
+	avx512_bf16
+	avx512_vnni
+	avx512f
+	avx512vbmi
+	avx_vnni
+	bmi2
+	f16c
+	fma3
+	sse4_2
+)
+CPU_FLAGS=( "${X86_CPU_FLAGS[@]/#/cpu_flags_x86_}" )
+GGML_IUSE="${CPU_FLAGS[*]} blis cuda flexiblas openblas opencl +openmp rocm vulkan"
+unset X86_CPU_FLAGS CPU_FLAGS
 
-# ggml/CMakeLists.txt
-CPU_FLAGS_X86=( sse4_2 avx avx_vnni avx2 bmi2 avx512f avx512vbmi avx512_vnni avx512_bf16 fma3 f16c amx_tile amx_int8 amx_bf16)
-IUSE+=" ${CPU_FLAGS_X86[@]/#/cpu_flags_x86_}"
-
+IUSE="${GGML_IUSE} curl examples openssl test"
+unset GGML_IUSE
 REQUIRED_USE="
 	?? (
 		openblas
 		blis
 		flexiblas
 	)
+	rocm? ( ${ROCM_REQUIRED_USE} )
 "
+RESTRICT="!test? ( test )"
 
+# curl is needed for pulling models from huggingface
 # numpy is used by convert_hf_to_gguf.py
-CDEPEND="
+COMMON_DEPEND="
+	curl? ( net-misc/curl:= )
 	openblas? ( sci-libs/openblas:= )
 	openmp? ( llvm-runtimes/openmp:= )
 	blis? ( sci-libs/blis:= )
@@ -48,20 +88,19 @@ CDEPEND="
 	rocm? (
 		>=dev-util/hip-${ROCM_VERSION}:=
 		>=sci-libs/hipBLAS-${ROCM_VERSION}:=
-		>=sci-libs/rocBLAS-${ROCM_VERSION}:=
 	)
 	cuda? ( dev-util/nvidia-cuda-toolkit:= )
 	openssl? ( dev-libs/openssl:= )
 "
-DEPEND="${CDEPEND}
+DEPEND="${COMMON_DEPEND}
 	opencl? ( dev-util/opencl-headers )
 	vulkan? (
 		dev-util/spirv-headers
 		dev-util/vulkan-headers
 	)
 "
-RDEPEND="${CDEPEND}
-	dev-python/numpy
+RDEPEND="${COMMON_DEPEND}
+	>=dev-python/numpy-2.2.6
 	opencl? ( dev-libs/opencl-icd-loader )
 	vulkan? ( media-libs/vulkan-loader )
 "
@@ -72,6 +111,10 @@ PATCHES=(
 	$FILESDIR/GGML_CUDA_ENABLE_UNIFIED_MEMORY.patch
 )
 
+pkg_pretend() {
+	[[ ${MERGE_TYPE} != binary ]] && use openmp && tc-check-openmp
+}
+
 pkg_setup() {
 	if use rocm; then
 		linux-info_pkg_setup
@@ -81,44 +124,48 @@ pkg_setup() {
 			fi
 		fi
 	fi
+
+	[[ ${MERGE_TYPE} != binary ]] && use openmp && tc-check-openmp
 }
 
 src_prepare() {
 	use cuda && cuda_src_prepare
 	cmake_src_prepare
-
-	if use webui; then
-		mkdir -p "${BUILD_DIR}/tools/ui/" || die
-		cp -rv "${WORKDIR}/llama-${LLAMA_COMMIT}" "${BUILD_DIR}/tools/ui/dist" || die
+	if use examples || use test; then
+		mkdir -p "${BUILD_DIR}/tinyllamas" || die
+		cp "${DISTDIR}/ggml-org_models_tinyllamas_stories15M-q4_0-${TINY_LLAMAS_COMMIT}.gguf" \
+			"${BUILD_DIR}/tinyllamas/stories15M-q4_0.gguf" || die
 	fi
+
+	# Move web UI assets where they belong, bug #979245
+	mkdir -p "${S}"/tools/ui || die
+	cp -a "${WORKDIR}"/llama-${LLAMA_UI_VERSION} "${S}"/tools/ui/dist || die
 }
 
 src_configure() {
 	local mycmakeargs=(
-		-DLLAMA_BUILD_UI=$(usex webui)
-		-DLLAMA_USE_PREBUILT_UI=OFF
-		-DLLAMA_BUILD_TESTS=OFF
-		-DLLAMA_BUILD_EXAMPLES=OFF
+		-DLLAMA_BUILD_IS_DEV=${LLAMA_BUILD_IS_DEV}
+		-DLLAMA_BUILD_TESTS=$(usex test)
+		-DLLAMA_BUILD_EXAMPLES=$(usex examples)
 		-DLLAMA_BUILD_SERVER=ON
-		-DCMAKE_SKIP_BUILD_RPATH=ON
-		-DGGML_NATIVE=0	# don't set march
-		-DGGML_RPC=ON
-		-DGGML_RPC_RDMA=OFF
+		-DLLAMA_TESTS_INSTALL=OFF
+		-DBUILD_NUMBER="${LLAMA_BUILD_NUMBER}"
+		-DLLAMA_CURL=$(usex curl)
 		-DLLAMA_OPENSSL=$(usex openssl)
-		-DLLAMA_BUILD_NUMBER="${LLAMA_COMMIT#b}"
-		-DLLAMA_BUILD_COMMIT="${LLAMA_COMMIT}"
-		-DGENTOO_REMOVE_CMAKE_BLAS_HACK=ON
-		-DGGML_CUDA=$(usex cuda)
-		-DGGML_OPENCL=$(usex opencl)
-		-DGGML_OPENMP=$(usex openmp)
-		-DGGML_VULKAN=$(usex vulkan)
 
-		# avoid clashing with whisper.cpp
-		-DCMAKE_INSTALL_LIBDIR="${EPREFIX}/usr/$(get_libdir)/llama.cpp"
-		-DCMAKE_INSTALL_RPATH="${EPREFIX}/usr/$(get_libdir)/llama.cpp"
+		# avoid clashing with sci-ml/ggml
+		-DCMAKE_INSTALL_INCLUDEDIR="include/${MY_PN}"
+		-DCMAKE_INSTALL_LIBDIR="$(get_libdir)/${MY_PN}"
+		-DCMAKE_INSTALL_RPATH="\$ORIGIN/../$(get_libdir)/${MY_PN};\$ORIGIN"
 	)
 
+	# GGML backends
 	mycmakeargs+=(
+		-DGGML_NATIVE=OFF	# don't set march
+		-DGGML_CCACHE=OFF
+		-DGGML_LTO="$(tc-is-lto)"
+
+		# CPU Flags
 		-DGGML_SSE42=$(usex cpu_flags_x86_sse4_2)
 		-DGGML_AVX=$(usex cpu_flags_x86_avx)
 		-DGGML_AVX_VNNI=$(usex cpu_flags_x86_avx_vnni)
@@ -133,6 +180,12 @@ src_configure() {
 		-DGGML_AMX_TILE=$(usex cpu_flags_x86_amx_tile)
 		-DGGML_AMX_INT8=$(usex cpu_flags_x86_amx_int8)
 		-DGGML_AMX_BF16=$(usex cpu_flags_x86_amx_bf16)
+
+		-DGGML_CUDA=$(usex cuda)
+		-DGGML_VULKAN=$(usex vulkan)
+		-DGGML_OPENMP=$(usex openmp)
+		-DGGML_RPC=ON
+		-DGGML_OPENCL=$(usex opencl)
 	)
 
 	if use openblas ; then
@@ -168,16 +221,18 @@ src_configure() {
 	if use rocm; then
 		rocm_use_hipcc
 		mycmakeargs+=(
-			-DGGML_HIP=ON -DAMDGPU_TARGETS=$(get_amdgpu_flags)
+			-DGGML_HIP=ON
+			-DGPU_TARGETS=$(get_amdgpu_flags)
 		)
 	fi
 
 	cmake_src_configure
 }
 
-src_install() {
-	cmake_src_install
-
-	# avoid clashing with whisper.cpp
-	rm -rf "${ED}/usr/include"
+src_test() {
+	local CMAKE_SKIP_TESTS=(
+		test-download-model  # due to network sandbox
+		test-arg-parser  # due to network sandbox in download functions test
+	)
+	cmake_src_test
 }
