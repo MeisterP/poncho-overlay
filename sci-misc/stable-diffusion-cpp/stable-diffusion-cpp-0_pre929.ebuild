@@ -9,17 +9,17 @@ CMAKE_BUILD_TYPE="Release"
 inherit cmake cuda rocm linux-info toolchain-funcs
 
 MY_PN="${PN/-cpp/.cpp}"
-MY_PV="master-908-88411ef"
-GGML_COMMIT="4bf5f6000653b7881d00963cd6ddb665ccd62a8d"
+MY_PV="master-929-3f8527a"
+GGML_COMMIT="89c4413f5da6fb20cc796f16033d37f129be81fd"
 
-WEBUI_COMMIT="c4bce3d6b3f236614cca21014f076083b7270ba8"
+WEBUI_COMMIT="dd74a8e808aaa8b26124217424b23058935184de"
 # git clone https://github.com/leejet/sdcpp-webui
-# git -C sdcpp-webui checkout ${WEBUI_COMMIT}
 # cd sdcpp-webui
+# git checkout ${WEBUI_COMMIT}
 # npm install
 # npm run build
 # npm run build:header
-# tar czf /var/cache/distfiles/${P}-webui.tar.gz dist
+# tar czf /var/cache/distfiles/stable-diffusion-cpp-${WEBUI_COMMIT}-webui.tar.gz dist
 
 DESCRIPTION="Diffusion model(SD,Flux,Wan,Qwen Image,Z-Image,...) inference in pure C/C++"
 HOMEPAGE="https://github.com/leejet/stable-diffusion.cpp"
