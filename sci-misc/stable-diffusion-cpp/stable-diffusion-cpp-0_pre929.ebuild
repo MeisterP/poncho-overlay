@@ -201,7 +201,7 @@ src_configure() {
 		mycmakeargs+=(
 			-DCMAKE_CUDA_FLAGS="${NVCCFLAGS}"
 			-DCMAKE_CUDA_ARCHITECTURES="120" # my gpu only
-			-DGGML_CUDA_FA_ALL_QUANTS=ON
+			-DGGML_CUDA_FA_QUANTS=all
 			-DGGML_CUDA_NCCL=OFF
 		)
 	fi

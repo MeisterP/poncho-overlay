@@ -65,7 +65,7 @@ CPU_FLAGS=( "${X86_CPU_FLAGS[@]/#/cpu_flags_x86_}" )
 GGML_IUSE="${CPU_FLAGS[*]} blis cuda flexiblas openblas opencl +openmp rocm vulkan"
 unset X86_CPU_FLAGS CPU_FLAGS
 
-IUSE="${GGML_IUSE} curl examples openssl test"
+IUSE="${GGML_IUSE} examples openssl test"
 unset GGML_IUSE
 REQUIRED_USE="
 	?? (
@@ -80,7 +80,7 @@ RESTRICT="!test? ( test )"
 # curl is needed for pulling models from huggingface
 # numpy is used by convert_hf_to_gguf.py
 COMMON_DEPEND="
-	curl? ( net-misc/curl:= )
+	net-misc/curl:=
 	openblas? ( sci-libs/openblas:= )
 	openmp? ( llvm-runtimes/openmp:= )
 	blis? ( sci-libs/blis:= )
@@ -150,7 +150,6 @@ src_configure() {
 		-DLLAMA_BUILD_SERVER=ON
 		-DLLAMA_TESTS_INSTALL=OFF
 		-DBUILD_NUMBER="${LLAMA_BUILD_NUMBER}"
-		-DLLAMA_CURL=$(usex curl)
 		-DLLAMA_OPENSSL=$(usex openssl)
 
 		# avoid clashing with sci-ml/ggml
@@ -213,7 +212,7 @@ src_configure() {
 		mycmakeargs+=(
 			-DCMAKE_CUDA_FLAGS="${NVCCFLAGS}"
 			-DCMAKE_CUDA_ARCHITECTURES="120" # my gpu only
-			-DGGML_CUDA_FA_ALL_QUANTS=ON
+			-DGGML_CUDA_FA_QUANTS=all
 			-DGGML_CUDA_NCCL=OFF
 		)
 	fi
