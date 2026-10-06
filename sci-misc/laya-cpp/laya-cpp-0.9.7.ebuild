@@ -7,14 +7,19 @@ CMAKE_BUILD_TYPE="Release"
 
 inherit cmake
 
-DESCRIPTION="Compiler lowering PyTorch, JAX, Flax, and Keras models to portable GGML execution"
-HOMEPAGE="https://github.com/monatis/ggmlc"
+MY_PN=ggmlc
 
-SRC_URI="https://github.com/monatis/ggmlc/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="laya.cpp — Standalone System 1 Decision Engine"
+HOMEPAGE="https://github.com/monatis/ggmlc/tree/main/examples/laya"
+
+SRC_URI="https://github.com/monatis/ggmlc/archive/refs/tags/v${PV}.tar.gz -> ${PV}.tar.gz"
+S=${WORKDIR}/${MY_PN}-${PV}
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
+
+PATCHES=( ${FILESDIR}/laya-serve-add-host-flag.patch )
 
 src_configure() {
 	local mycmakeargs=(
@@ -31,9 +36,5 @@ src_configure() {
 }
 
 src_install() {
-	dobin "${BUILD_DIR}"/runtime/ggmlc-run
-	dobin "${BUILD_DIR}"/runtime/ggmlc-bench
-	dolib.so "${BUILD_DIR}"/runtime/libggmlc_runtime_shared.so
-
 	dobin "${BUILD_DIR}"/examples/laya/laya
 }
