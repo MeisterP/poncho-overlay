@@ -22,7 +22,7 @@ if [[ $(ver_cut 4) == "p" ]]; then
 else
 	LLAMA_BUILD_IS_DEV=OFF
 	# Set from https://github.com/ggml-org/llama.cpp/releases/download/v${PV}/nightly-tag.txt
-	LLAMA_BUILD_NUMBER="b11146"
+	LLAMA_BUILD_NUMBER="b11429"
 	MY_PV="v${PV}"
 	S="${WORKDIR}/${MY_PN}-${PV}"
 fi
